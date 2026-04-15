@@ -388,4 +388,578 @@ label.field { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 
 /* ====== Callout ====== */
 .callout {
   display: grid; grid-template-columns: 20px 1fr; gap: 12px;
-  padding: 14px 16px; border-radius: var(--r-md); font
+  padding: 14px 16px; border-radius: var(--r-md); font-size: 13.5px;
+  border: 1px solid;
+}
+.callout.info  { background: var(--primary-light); border-color: transparent; color: var(--primary); }
+.callout.success { background: var(--cta-light); border-color: transparent; color: var(--cta-hover); }
+.callout.warn { background: #FEF3C7; border-color: transparent; color: #92400E; }
+
+/* ====== Chat output messages ====== */
+.chat-thread { display: grid; gap: 20px; }
+.msg { display: grid; grid-template-columns: 32px 1fr; gap: 12px; }
+.msg .avatar-sm { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 600; }
+.msg.user .avatar-sm { background: #334155; color: #fff; }
+.msg.ai .avatar-sm { background: #111827; color: #fff; }
+.msg .bubble { padding-top: 4px; }
+.msg .who { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+.msg p { margin: 0 0 8px; }
+
+/* Key metric cards */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.kpi { padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); }
+.kpi .label { font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+.kpi .value { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.kpi .delta { font-size: 12px; font-weight: 500; }
+.kpi .delta.up   { color: var(--cta-hover); }
+.kpi .delta.down { color: var(--error); }
+
+/* icons (inline svg sized) */
+svg.icon { width: 18px; height: 18px; stroke-width: 1.8; fill: none; stroke: currentColor; }
+svg.icon-sm { width: 14px; height: 14px; }
+svg.icon-lg { width: 22px; height: 22px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ====== SIDEBAR ====== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">CP</div>
+      <div>
+        <div class="brand-name">ChurchPlanner Pro</div>
+        <div class="brand-sub">Grace Community Church</div>
+      </div>
+    </div>
+
+    <button class="new-chat" onclick="go('home')">
+      <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 5v14M5 12h14"/></svg>
+      New chat
+    </button>
+
+    <div class="nav-section-label">Workspace</div>
+    <div class="nav-item" data-route="home" onclick="go('home')">
+      <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>
+      <span>Home</span>
+    </div>
+    <div class="nav-item" data-route="workflows" onclick="go('workflows')">
+      <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h6v6H4zM14 6h6v6h-6zM9 18h6"/><path d="M7 12v3a2 2 0 002 2h0M17 12v3a2 2 0 01-2 2h0"/></svg>
+      <span>Workflows</span>
+      <span class="count">3</span>
+    </div>
+    <div class="nav-item" data-route="vault" onclick="go('vault')">
+      <svg class="icon" viewBox="0 0 24 24"><path stroke-linejoin="round" stroke-linecap="round" d="M4 7h16v12H4zM4 7l2-3h12l2 3M9 12h6"/></svg>
+      <span>Vault</span>
+    </div>
+    <div class="nav-item" data-route="review" onclick="go('review')">
+      <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5h18v4H3zM3 11h18v4H3zM3 17h10v4H3z"/></svg>
+      <span>Review tables</span>
+    </div>
+    <div class="nav-item" data-route="memory" onclick="go('memory')">
+      <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a5 5 0 00-5 5c0 1 .2 1.8.6 2.5C6 12 5 13 5 15a4 4 0 004 4h6a4 4 0 004-4c0-2-1-3-2.6-4.5.4-.7.6-1.5.6-2.5a5 5 0 00-5-5z"/></svg>
+      <span>Memory</span>
+    </div>
+
+    <div class="nav-section-label">Church data</div>
+    <div class="nav-item"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l8 5v11H4V8l8-5zM9 21V12h6v9"/></svg><span>Facilities</span></div>
+    <div class="nav-item"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10l9-6 9 6-9 6zM5 12v5c0 1 3 3 7 3s7-2 7-3v-5"/></svg><span>Finance &amp; budget</span></div>
+    <div class="nav-item"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11a4 4 0 10-8 0 4 4 0 008 0zM4 20c1-3 4-5 8-5s7 2 8 5"/></svg><span>People &amp; donors</span></div>
+    <div class="nav-item"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 3v4M17 3v4M4 9h16M5 7h14a1 1 0 011 1v11a1 1 0 01-1 1H5a1 1 0 01-1-1V8a1 1 0 011-1z"/></svg><span>Events</span></div>
+
+    <div class="sidebar-footer">
+      <div class="avatar">AL</div>
+      <div style="min-width:0;">
+        <div class="name" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Andrew Lee</div>
+        <div class="org">Church administrator</div>
+      </div>
+      <svg class="icon" style="color:var(--text-secondary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v.01M12 12v.01M12 18v.01"/></svg>
+    </div>
+  </aside>
+
+  <!-- ====== MAIN ====== -->
+  <main class="main">
+    <div class="topbar">
+      <div class="crumb" id="crumb"><strong>Home</strong></div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost btn-sm"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" d="M15 11a3 3 0 10-6 0 3 3 0 006 0zM12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg> Ask Harvey</button>
+      <button class="btn btn-ghost btn-sm"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 6v6l4 2M12 22a10 10 0 100-20 10 10 0 000 20z"/></svg> Help</button>
+    </div>
+
+    <!-- PAGE CONTAINER -->
+    <div id="view"></div>
+  </main>
+</div>
+
+<!-- ====== TEMPLATES ====== -->
+<template id="tpl-home">
+  <div class="page">
+    <div class="home-hero">
+      <h1>Good afternoon, Andrew.</h1>
+      <div class="sub body-lg">What would you like to get done for Grace Community today?</div>
+    </div>
+
+    <div class="ask-card">
+      <textarea id="ask-input" placeholder="Ask anything about facilities, finance, donors, or events. Upload a document to get started."></textarea>
+      <div class="source-chips">
+        <span class="source-chip">+ Finance workspace</span>
+        <span class="source-chip">+ Donor records (Planning Center)</span>
+        <span class="source-chip">+ Facility log</span>
+      </div>
+      <div class="ask-toolbar">
+        <div class="left">
+          <button class="tool-btn"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 5v14M5 12h14"/></svg> Files</button>
+          <button class="tool-btn"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h10"/></svg> Prompts</button>
+          <button class="tool-btn"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg> Customize</button>
+        </div>
+        <div class="right">
+          <button class="tool-btn"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 15a3 3 0 003-3V6a3 3 0 10-6 0v6a3 3 0 003 3zM5 12a7 7 0 0014 0M12 19v3"/></svg></button>
+          <button class="btn btn-primary btn-sm" onclick="runAsk()">Ask</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="suggestions-label">Recommended workflows</div>
+    <div class="workflow-grid">
+      <div class="card hover wf-card" onclick="go('wf-workorder')">
+        <div class="wf-icon"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.1-2.1 2.5-2.4z"/></svg></div>
+        <h3>Submit work order</h3>
+        <p>Log a facilities request, route to the right manager, approve and schedule with a vendor.</p>
+        <div class="meta"><span>7 steps · facilities</span><span>→</span></div>
+      </div>
+      <div class="card hover wf-card" onclick="go('wf-expense')">
+        <div class="wf-icon green"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 15l4-4 3 3 6-7"/></svg></div>
+        <h3>Unplanned expense</h3>
+        <p>Classify, run impact against cash on hand, pick a funding strategy, and update the forecast.</p>
+        <div class="meta"><span>7 steps · finance</span><span>→</span></div>
+      </div>
+      <div class="card hover wf-card" onclick="go('wf-donors')">
+        <div class="wf-icon amber"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 10-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg></div>
+        <h3>Re-engage lapsed donors</h3>
+        <p>Identify donors inactive 90+ days, draft personalized emails, send and track engagement.</p>
+        <div class="meta"><span>11 steps · giving</span><span>→</span></div>
+      </div>
+    </div>
+
+    <div class="suggestions-label">Recent work</div>
+    <div class="recent-list">
+      <div class="recent-row" onclick="go('wf-workorder-resume')">
+        <svg class="icon" style="color:var(--text-secondary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.1-2.1 2.5-2.4z"/></svg>
+        <div>
+          <div class="title">Sanctuary HVAC — unresponsive compressor</div>
+          <div class="caption">Work order · step 5 of 7 · waiting on vendor quote</div>
+        </div>
+        <span class="chip amber dot">In progress</span>
+        <span class="time">2h ago</span>
+      </div>
+      <div class="recent-row">
+        <svg class="icon" style="color:var(--text-secondary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 15l4-4 3 3 6-7"/></svg>
+        <div>
+          <div class="title">Q2 forecast update — roof repair</div>
+          <div class="caption">Unplanned expense · forecast exported to finance committee</div>
+        </div>
+        <span class="chip green dot">Complete</span>
+        <span class="time">Yesterday</span>
+      </div>
+      <div class="recent-row">
+        <svg class="icon" style="color:var(--text-secondary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 10-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg>
+        <div>
+          <div class="title">Easter giving campaign — warm check-ins</div>
+          <div class="caption">Lapsed donors · 142 emails sent · 38% open, 11 replies</div>
+        </div>
+        <span class="chip blue dot">Tracking</span>
+        <span class="time">3d ago</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- WORKFLOWS LIST -->
+<template id="tpl-workflows">
+  <div class="page">
+    <div class="home-hero">
+      <h1>Workflows</h1>
+      <div class="sub body-lg">Reusable, multi-step processes for church operations. Customize any workflow with your own golden documents and policies.</div>
+    </div>
+
+    <div class="row gap-sm mb-lg" style="justify-content:flex-end;">
+      <button class="btn btn-secondary btn-sm"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg> Filter</button>
+      <button class="btn btn-primary btn-sm"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 5v14M5 12h14"/></svg> New workflow</button>
+    </div>
+
+    <div class="workflow-grid">
+      <div class="card hover wf-card" onclick="go('wf-workorder')">
+        <div class="wf-icon"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.1-2.1 2.5-2.4z"/></svg></div>
+        <h3>Submit work order</h3>
+        <p>Facilities request → approval → vendor quotes → schedule → close.</p>
+        <div class="meta"><span>7 steps</span><span>Used 34×</span></div>
+      </div>
+      <div class="card hover wf-card" onclick="go('wf-expense')">
+        <div class="wf-icon green"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 15l4-4 3 3 6-7"/></svg></div>
+        <h3>Unplanned expense</h3>
+        <p>Identify, classify, run impact, pick funding strategy, approve, re-forecast.</p>
+        <div class="meta"><span>7 steps</span><span>Used 12×</span></div>
+      </div>
+      <div class="card hover wf-card" onclick="go('wf-donors')">
+        <div class="wf-icon amber"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 10-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg></div>
+        <h3>Re-engage lapsed donors</h3>
+        <p>Define, pull, segment, strategize, draft, approve, send, track engagement.</p>
+        <div class="meta"><span>11 steps</span><span>Used 4×</span></div>
+      </div>
+    </div>
+
+    <div class="suggestions-label">Templates</div>
+    <div class="workflow-grid">
+      <div class="card wf-card"><div class="badge">Coming soon</div><h3>Volunteer scheduling</h3><p>Match volunteers to service roles based on availability and skills.</p></div>
+      <div class="card wf-card"><div class="badge">Coming soon</div><h3>Annual giving statement</h3><p>Generate and distribute year-end tax statements to every household.</p></div>
+      <div class="card wf-card"><div class="badge">Coming soon</div><h3>Sermon series planning</h3><p>Turn a series brief into outlines, bulletins, graphics briefs and social copy.</p></div>
+    </div>
+  </div>
+</template>
+
+<!-- WORK ORDER -->
+<template id="tpl-wf-workorder">
+  <div class="page">
+    <div class="run-header mb-lg">
+      <span class="wf-icon" style="width:40px;height:40px;"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.1-2.1 2.5-2.4z"/></svg></span>
+      <div style="flex:1">
+        <h2>Submit work order</h2>
+        <div class="status">Sanctuary HVAC · unresponsive compressor · opened 2 hours ago</div>
+      </div>
+      <span class="chip amber dot">In progress</span>
+      <button class="btn btn-ghost btn-sm">Share</button>
+    </div>
+
+    <div class="run-layout">
+      <nav class="stepper">
+        <div class="step done"><div class="step-dot">✓</div><div><div class="step-title">Submit request</div><div class="step-sub">Requester · location · issue</div></div></div>
+        <div class="step done"><div class="step-dot">✓</div><div><div class="step-title">Route to facilities</div><div class="step-sub">Notified Pastor Mike</div></div></div>
+        <div class="step done"><div class="step-dot">✓</div><div><div class="step-title">Triage fix type</div><div class="step-sub">External vendor needed</div></div></div>
+        <div class="step done"><div class="step-dot">✓</div><div><div class="step-title">Approval</div><div class="step-sub">Approved by Admin</div></div></div>
+        <div class="step active"><div class="step-dot">5</div><div><div class="step-title">Review quotes</div><div class="step-sub">3 vendor quotes received</div></div></div>
+        <div class="step"><div class="step-dot">6</div><div><div class="step-title">Schedule work</div><div class="step-sub">Coordinate with vendor</div></div></div>
+        <div class="step"><div class="step-dot">7</div><div><div class="step-title">Close work order</div><div class="step-sub">Sign-off &amp; invoice</div></div></div>
+      </nav>
+
+      <div class="run-panel">
+        <div class="card">
+          <div class="section-title">Request summary</div>
+          <div class="form-grid">
+            <div><label class="field">Requester</label><div class="body" style="color:var(--text)">Pastor Mike Johnson</div></div>
+            <div><label class="field">Location</label><div class="body">Main sanctuary — east wall unit</div></div>
+            <div class="full"><label class="field">Issue</label><div class="body">Compressor unresponsive during Sunday service; unit blowing ambient air only. Needs diagnosis &amp; likely compressor replacement.</div></div>
+            <div><label class="field">Priority</label><div><span class="chip red dot">High</span></div></div>
+            <div><label class="field">Preferred completion</label><div class="body">Before Sunday, Apr 19</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">AI recommendation</div>
+          <div class="callout info">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-top:2px"><path stroke-linecap="round" d="M12 16v-5M12 8v.01M12 22a10 10 0 100-20 10 10 0 000 20z"/></svg>
+            <div>Based on 4 prior HVAC work orders for the sanctuary unit, this is almost certainly compressor failure on the 2018 Trane rooftop unit. External vendor is required. I've pulled quotes from your 3 connected HVAC vendors below.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row" style="justify-content:space-between" ><div class="section-title" style="margin-bottom:0">Vendor quotes</div><button class="btn-text">Request more quotes</button></div>
+          <div class="stack-sm" style="margin-top:12px">
+            <div class="quote-card selected">
+              <div>
+                <div class="vendor">Cornerstone HVAC <span class="chip green" style="margin-left:6px">Preferred</span></div>
+                <div class="detail">Thu Apr 17 · 8am–12pm · 12-month parts &amp; labor warranty · 4.9/5 on 8 prior jobs</div>
+              </div>
+              <div style="text-align:right">
+                <div class="price">$4,280</div>
+                <button class="btn btn-primary btn-sm" style="margin-top:6px">Selected ✓</button>
+              </div>
+            </div>
+            <div class="quote-card">
+              <div>
+                <div class="vendor">Valley Climate Solutions</div>
+                <div class="detail">Fri Apr 18 · all-day · 6-month warranty · first-time vendor</div>
+              </div>
+              <div style="text-align:right">
+                <div class="price">$3,950</div>
+                <button class="btn btn-secondary btn-sm" style="margin-top:6px">Select</button>
+              </div>
+            </div>
+            <div class="quote-card">
+              <div>
+                <div class="vendor">AirMax Mechanical</div>
+                <div class="detail">Sat Apr 19 · afternoon · 12-month warranty · 4.5/5 on 3 prior jobs</div>
+              </div>
+              <div style="text-align:right">
+                <div class="price">$4,620</div>
+                <button class="btn btn-secondary btn-sm" style="margin-top:6px">Select</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions-row">
+          <button class="btn btn-ghost">Hold for review</button>
+          <button class="btn btn-secondary">Send to admin for re-approval</button>
+          <button class="btn btn-primary">Confirm &amp; schedule →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- UNPLANNED EXPENSE -->
+<template id="tpl-wf-expense">
+  <div class="page">
+    <div class="run-header mb-lg">
+      <span class="wf-icon green" style="width:40px;height:40px;"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 15l4-4 3 3 6-7"/></svg></span>
+      <div style="flex:1">
+        <h2>Unplanned expense · Sanctuary HVAC compressor</h2>
+        <div class="status">$4,280 · Facilities · unbudgeted · April 2026</div>
+      </div>
+      <span class="chip blue dot">Running impact</span>
+      <button class="btn btn-ghost btn-sm">Share</button>
+    </div>
+
+    <div class="run-layout">
+      <nav class="stepper">
+        <div class="step done"><div class="step-dot">✓</div><div><div class="step-title">Identify expense</div><div class="step-sub">From work order</div></div></div>
+        <div class="step done"><div class="step-dot">✓</div><div><div class="step-title">Classify</div><div class="step-sub">Category · amount · timing</div></div></div>
+        <div class="step active"><div class="step-dot">3</div><div><div class="step-title">Impact analysis</div><div class="step-sub">Cash on hand &amp; reserves</div></div></div>
+        <div class="step"><div class="step-dot">4</div><div><div class="step-title">Funding strategy</div><div class="step-sub">Reserves · reallocate · campaign</div></div></div>
+        <div class="step"><div class="step-dot">5</div><div><div class="step-title">Leadership approval</div><div class="step-sub">Finance committee</div></div></div>
+        <div class="step"><div class="step-dot">6</div><div><div class="step-title">Update forecast</div><div class="step-sub">Rebuild 12-month view</div></div></div>
+        <div class="step"><div class="step-dot">7</div><div><div class="step-title">Export to share</div><div class="step-sub">PDF · spreadsheet</div></div></div>
+      </nav>
+
+      <div class="run-panel">
+        <div class="card">
+          <div class="section-title">Classification</div>
+          <div class="form-grid">
+            <div><label class="field">Category</label><div><span class="chip blue">Facilities &amp; maintenance</span> <span class="chip">HVAC</span></div></div>
+            <div><label class="field">Amount</label><div class="body" style="font-size:20px; font-weight:600;">$4,280</div></div>
+            <div><label class="field">Timing</label><div class="body">One-time · payable on completion (Apr 17)</div></div>
+            <div><label class="field">Tag</label><div><span class="chip amber">Unbudgeted</span></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Impact analysis</div>
+          <div class="kpi-grid mb-md">
+            <div class="kpi"><div class="label">Operating cash</div><div class="value">$182,450</div><div class="delta down">−$4,280 after</div></div>
+            <div class="kpi"><div class="label">Facilities reserve</div><div class="value">$41,200</div><div class="delta">Target $45,000</div></div>
+            <div class="kpi"><div class="label">April operating budget</div><div class="value">$96,000</div><div class="delta up">$3,500 surplus</div></div>
+            <div class="kpi"><div class="label">Months of runway</div><div class="value">6.2</div><div class="delta">No material change</div></div>
+          </div>
+          <div class="callout success">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-top:2px"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5 9-10"/></svg>
+            <div><strong>Cash is available.</strong> This expense is 1.04% of monthly operating cash and does not push the facilities reserve below its floor ($30,000).</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Funding strategy — AI recommendation</div>
+          <div class="option-grid">
+            <div class="option-tile selected">
+              <div class="option-radio"></div>
+              <div>
+                <div class="t">Use facilities reserve</div>
+                <div class="d">Lowest friction · reserve remains above floor · no budget reallocation needed. <strong>Recommended.</strong></div>
+              </div>
+            </div>
+            <div class="option-tile">
+              <div class="option-radio"></div>
+              <div>
+                <div class="t">Reallocate from Q2 budget</div>
+                <div class="d">Pull from general facilities line · preserves reserve · requires line-item approval.</div>
+              </div>
+            </div>
+            <div class="option-tile">
+              <div class="option-radio"></div>
+              <div>
+                <div class="t">Targeted giving appeal</div>
+                <div class="d">Sunday appeal + email · replenishes reserve · 2–3 week timeline.</div>
+              </div>
+            </div>
+            <div class="option-tile">
+              <div class="option-radio"></div>
+              <div>
+                <div class="t">Hybrid — 50/50</div>
+                <div class="d">Half from reserve, half from an appeal · fastest with replenishment.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Forecast delta — facilities line</div>
+          <div class="bar-chart">
+            <div class="bar-row"><span>Mar (actual)</span><div class="bar-track"><div class="bar-fill" style="width:42%;"></div></div><span class="bar-val">$8,420</span></div>
+            <div class="bar-row"><span>Apr (revised)</span><div class="bar-track"><div class="bar-fill amber" style="width:78%;"></div></div><span class="bar-val">$15,680</span></div>
+            <div class="bar-row"><span>May (forecast)</span><div class="bar-track"><div class="bar-fill" style="width:45%;"></div></div><span class="bar-val">$9,000</span></div>
+            <div class="bar-row"><span>Jun (forecast)</span><div class="bar-track"><div class="bar-fill" style="width:46%;"></div></div><span class="bar-val">$9,200</span></div>
+            <div class="bar-row"><span>Jul (forecast)</span><div class="bar-track"><div class="bar-fill" style="width:48%;"></div></div><span class="bar-val">$9,600</span></div>
+          </div>
+        </div>
+
+        <div class="actions-row">
+          <button class="btn btn-ghost">Save draft</button>
+          <button class="btn btn-secondary">Share with finance committee</button>
+          <button class="btn btn-primary">Approve &amp; update forecast →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- LAPSED DONORS -->
+<template id="tpl-wf-donors">
+  <div class="page">
+    <div class="run-header mb-lg">
+      <span class="wf-icon amber" style="width:40px;height:40px;"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 10-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg></span>
+      <div style="flex:1">
+        <h2>Re-engage lapsed donors</h2>
+        <div class="status">142 donors with no gift in last 90 days · segmented and ready to draft</div>
+      </div>
+      <span class="chip blue dot">Drafting</span>
+      <button class="btn btn-ghost btn-sm">Share</button>
+    </div>
+
+    <div class="run-layout">
+      <nav class="stepper">
+        <div class="step done"><div class="step-dot">✓</div><div><div class="step-title">Define "lapsed"</div><div class="step-sub">No gift in 90 days</div></div></div>
+        <div class="step done"><div class="step-dot">✓</div><div><div class="step-title">Pull donor system</div><div class="step-sub">Planning Center · 1,842 records</div></div></div>
+        <div class="step done"><div class="step-dot">✓</div><div><div class="step-title">Identify lapsed</div><div class="step-sub">142 donors · $62,840 prior 12mo</div></div></div>
+        <div class="step done"><div class="step-dot">✓</div><div><div class="step-title">Choose strategy</div><div class="step-sub">Warm check-in + campaign</div></div></div>
+        <div class="step active"><div class="step-dot">5</div><div><div class="step-title">Draft emails</div><div class="step-sub">Personalized per donor</div></div></div>
+        <div class="step"><div class="step-dot">6</div><div><div class="step-title">Review &amp; approve</div></div></div>
+        <div class="step"><div class="step-dot">7</div><div><div class="step-title">Send</div></div></div>
+        <div class="step"><div class="step-dot">8</div><div><div class="step-title">Track engagement</div></div></div>
+        <div class="step"><div class="step-dot">9</div><div><div class="step-title">Follow-up actions</div></div></div>
+        <div class="step"><div class="step-dot">10</div><div><div class="step-title">Report results</div></div></div>
+        <div class="step"><div class="step-dot">11</div><div><div class="step-title">Export</div></div></div>
+      </nav>
+
+      <div class="run-panel">
+        <div class="card">
+          <div class="section-title">Lapsed donor definition</div>
+          <div class="form-grid">
+            <div><label class="field">Inactivity window</label><div><span class="chip blue">No gift in last 90 days</span></div></div>
+            <div><label class="field">Minimum lifetime giving</label><div class="body">$100</div></div>
+            <div><label class="field">Source system</label><div class="body">Planning Center Giving</div></div>
+            <div><label class="field">Excluded</label><div class="body">Staff households, memorial-only donors</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Segments identified</div>
+          <table class="table">
+            <thead><tr><th>Segment</th><th>Donors</th><th>Last gift</th><th>Avg gift</th><th>Prior 12mo total</th><th>Strategy</th></tr></thead>
+            <tbody>
+              <tr class="row-hover"><td><strong>Recurring lapsed</strong></td><td>38</td><td>90–120 days ago</td><td class="mono">$185</td><td class="mono">$28,410</td><td><span class="chip blue">Recurring reactivation</span></td></tr>
+              <tr class="row-hover"><td><strong>Warm first-time givers</strong></td><td>47</td><td>90–180 days ago</td><td class="mono">$75</td><td class="mono">$9,420</td><td><span class="chip blue">Warm check-in</span></td></tr>
+              <tr class="row-hover"><td><strong>Major gift lapsed</strong></td><td>12</td><td>100–200 days ago</td><td class="mono">$1,250</td><td class="mono">$18,200</td><td><span class="chip amber">Personal outreach</span></td></tr>
+              <tr class="row-hover"><td><strong>Designated-fund lapsed</strong></td><td>45</td><td>90–240 days ago</td><td class="mono">$140</td><td class="mono">$6,810</td><td><span class="chip blue">Impact update</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Email strategy chosen</div>
+          <div class="option-grid">
+            <div class="option-tile selected"><div class="option-radio"></div><div><div class="t">Warm check-in</div><div class="d">"We missed you and wanted to say thank you." No ask — relationship first.</div></div></div>
+            <div class="option-tile"><div class="option-radio"></div><div><div class="t">Impact update</div><div class="d">Show concrete ministry impact from the fund they supported.</div></div></div>
+            <div class="option-tile"><div class="option-radio"></div><div><div class="t">Recurring reactivation</div><div class="d">Invite them to restart monthly giving with one click.</div></div></div>
+            <div class="option-tile selected"><div class="option-radio"></div><div><div class="t">Campaign-based ask</div><div class="d">Tie to Easter, missions, youth camp, or a capital need.</div></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Draft · Sample email (Sarah Chen)</div>
+          <div class="email-draft">
+            <div class="email-header">
+              <div class="row"><span>From</span><span>andrew@gracecommunity.org</span></div>
+              <div class="row"><span>To</span><span>sarah.chen@email.com · <span class="muted">warm check-in segment</span></span></div>
+              <div class="row"><span>Subject</span><span><strong>Thinking of you, Sarah — and a quick thank-you</strong></span></div>
+            </div>
+            <div class="email-body">
+              <p>Hi Sarah,</p>
+              <p>I was reviewing our giving records this week and realized it's been a few months since we saw you give to Grace Community. No worries at all — I just wanted to reach out personally to say <strong>thank you</strong>. Your consistent support of our <strong>Youth Ministry fund</strong> through last fall made this year's winter retreat possible for 28 students.</p>
+              <p>We're in the middle of our Easter season, and I wanted you to know we're praying for you and your family. If there's anything going on we can come alongside you in, I'd love to hear.</p>
+              <p>If you ever want to give again, <a href="#" style="color:var(--primary)">here's a one-click link</a> — no pressure, and thank you for being part of our church family.</p>
+              <p>Grateful,<br/>Andrew Lee<br/>Church Administrator, Grace Community</p>
+            </div>
+          </div>
+          <div class="row gap-sm mt-md" style="justify-content:space-between;">
+            <div class="caption">Personalized from: First name · last giving season (Fall) · fund (Youth Ministry) · one-click give link</div>
+            <div class="row gap-sm">
+              <button class="btn btn-ghost btn-sm">Regenerate</button>
+              <button class="btn btn-secondary btn-sm">Edit draft</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions-row">
+          <button class="btn btn-ghost">Save draft</button>
+          <button class="btn btn-secondary">Preview next donor</button>
+          <button class="btn btn-primary">Approve all 142 &amp; queue to send →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- SIMPLE STUB PAGES -->
+<template id="tpl-vault">
+  <div class="page"><h1>Vault</h1><p class="body-lg muted mt-sm mb-lg">Unify your church's internal knowledge — bylaws, policies, sermon series, staff handbooks, board minutes — in one secure workspace.</p><div class="card" style="text-align:center; padding:48px"><p class="muted">Drop a folder or connect to Google Drive, SharePoint, or Dropbox to get started.</p><button class="btn btn-primary mt-md">Connect a source</button></div></div>
+</template>
+<template id="tpl-review">
+  <div class="page"><h1>Review tables</h1><p class="body-lg muted mt-sm mb-lg">Analyze hundreds or thousands of documents at once — e.g., every background check, every board minutes document, every vendor contract. Harvey builds the columns and extracts the answers.</p><div class="card" style="text-align:center; padding:48px"><p class="muted">Select a folder in Vault to begin.</p><button class="btn btn-primary mt-md">Start a review</button></div></div>
+</template>
+<template id="tpl-memory">
+  <div class="page"><h1>Memory</h1><p class="body-lg muted mt-sm mb-lg">ChurchPlanner remembers the context of your church so every answer gets better. Review and edit what it's learned.</p>
+    <div class="stack-sm">
+      <div class="card"><strong>Your church</strong><p class="muted">Grace Community Church · ~650 weekly attenders · Planning Center for giving &amp; people · QuickBooks for accounting · lead pastor Mike Johnson.</p></div>
+      <div class="card"><strong>Facilities</strong><p class="muted">2018 Trane HVAC on sanctuary roof · preferred vendor Cornerstone HVAC · $30k facilities reserve floor.</p></div>
+      <div class="card"><strong>Financial policy</strong><p class="muted">Unbudgeted spend above $2,500 requires finance-committee approval; above $10,000 requires board approval.</p></div>
+      <div class="card"><strong>Donor tone</strong><p class="muted">Warm, personal, never transactional. Always thank before asking. Sign emails from Andrew Lee.</p></div>
+    </div>
+  </div>
+</template>
+
+<script>
+/* Simple SPA router */
+const routes = {
+  'home':              { tpl: 'tpl-home',        crumb: ['Home'] },
+  'workflows':         { tpl: 'tpl-workflows',   crumb: ['Workflows'] },
+  'wf-workorder':      { tpl: 'tpl-wf-workorder',crumb: ['Workflows', 'Submit work order'] },
+  'wf-workorder-resume':{tpl: 'tpl-wf-workorder',crumb: ['Home', 'Sanctuary HVAC'] },
+  'wf-expense':        { tpl: 'tpl-wf-expense',  crumb: ['Workflows', 'Unplanned expense'] },
+  'wf-donors':         { tpl: 'tpl-wf-donors',   crumb: ['Workflows', 'Re-engage lapsed donors'] },
+  'vault':             { tpl: 'tpl-vault',       crumb: ['Vault'] },
+  'review':            { tpl: 'tpl-review',      crumb: ['Review tables'] },
+  'memory':            { tpl: 'tpl-memory',      crumb: ['Memory'] }
+};
+function go(route) {
+  const r = routes[route] || routes.home;
+  const tpl = document.getElementById(r.tpl);
+  const view = document.getElementById('view');
+  view.innerHTML = '';
+  view.appendChild(tpl.content.cloneNode(true));
+  // breadcrumb
+  const crumb = document.getElementById('crumb');
+  crumb.innerHTML = r.crumb.map((c, i) => i === r.crumb.length - 1 ? `<strong>${c}</strong>` : `${c} <span>/</span>`).join(' ');
+  // active nav
+  document.querySelectorAll('.nav-item[data-route]').forEach(n => n.classList.toggle('active', n.dataset.route === route || (route.startsWith('wf-') && n.dataset.route === 'workflows')));
+  window.scrollTo({top: 0, behavior: 'instant'});
+}
+function runAsk() {
+  const v = (document.getElementById('ask-input').value || '').toLowerCase();
+  if (v.includes('donor') || v.includes('lapsed') || v.includes('giving')) return go('wf-donors');
+  if (v.includes('expense') || v.includes('budget') || v.includes('forecast')) return go('wf-expense');
+  if (v.includes('work') || v.includes('hvac') || v.includes('repair') || v.includes('fix')) return go('wf-workorder');
+  go('wf-workorder');
+}
+/* init */
+go('home');
+</script>
+</body>
+</html>
