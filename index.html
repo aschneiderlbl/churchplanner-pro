@@ -605,9 +605,9 @@ svg.icon-lg { width: 22px; height: 22px; }
     <div class="ask-card">
       <textarea id="ask-input" placeholder="Ask anything about facilities, finance, donors, or events. Upload a document to get started."></textarea>
       <div class="source-chips">
-        <span class="source-chip">+ Finance workspace</span>
-        <span class="source-chip">+ Donor records (Planning Center)</span>
-        <span class="source-chip">+ Facility log</span>
+        <span class="source-chip" onclick="startChat('workorder', 'Submit work order')" style="cursor:pointer">+ Submit work order</span>
+        <span class="source-chip" onclick="startChat('donors', 'Re-engage lapsed donors')" style="cursor:pointer">+ Re-engage lapsed donors</span>
+        <span class="source-chip" onclick="startChat('expense', 'Update budget with unplanned expense')" style="cursor:pointer">+ Update budget with unplanned expense</span>
       </div>
       <div class="ask-toolbar">
         <div class="left">
