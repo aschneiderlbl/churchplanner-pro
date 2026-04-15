@@ -414,6 +414,114 @@ label.field { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 
 .kpi .delta.up   { color: var(--cta-hover); }
 .kpi .delta.down { color: var(--error); }
 
+/* ====== Live chat workflow ====== */
+.chat-page { display: flex; flex-direction: column; height: calc(100vh - 56px); max-width: 880px; margin: 0 auto; width: 100%; padding: 0 32px; }
+.chat-head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 20px 0 16px; border-bottom: 1px solid var(--border);
+}
+.chat-head .wf-icon { width: 36px; height: 36px; }
+.chat-head h2 { font-size: 18px; font-weight: 600; }
+.chat-head .sub { font-size: 12.5px; color: var(--text-secondary); margin-top: 2px; }
+
+.chat-scroll { flex: 1; overflow-y: auto; padding: 24px 4px 16px; }
+.chat-thread-live { display: flex; flex-direction: column; gap: 20px; }
+.chat-msg { display: grid; grid-template-columns: 32px 1fr; gap: 12px; max-width: 100%; }
+.chat-msg.user { grid-template-columns: 1fr 32px; }
+.chat-msg .avatar-chat { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 600; flex: none; }
+.chat-msg.ai .avatar-chat  { background: #111827; color: #fff; }
+.chat-msg.user .avatar-chat { background: #334155; color: #fff; }
+.chat-msg .bubble-chat {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 16px; font-size: 14.5px; line-height: 1.55;
+  max-width: 100%;
+}
+.chat-msg.user .bubble-chat { background: var(--primary-light); border-color: transparent; color: var(--text); justify-self: end; }
+.chat-msg .bubble-chat p { margin: 0 0 8px; }
+.chat-msg .bubble-chat p:last-child { margin-bottom: 0; }
+.chat-msg .panel { margin-top: 10px; }
+
+/* inline data panels inside a chat bubble */
+.chat-mini-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; margin-top: 4px; }
+.chat-mini-table th, .chat-mini-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+.chat-mini-table th { font-weight: 600; color: var(--text-secondary); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+.chat-mini-table tr:last-child td { border-bottom: none; }
+
+.chat-metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 4px; }
+.chat-metric { background: var(--bg); border-radius: 8px; padding: 10px 12px; }
+.chat-metric .k { font-size: 11px; color: var(--text-secondary); }
+.chat-metric .v { font-size: 16px; font-weight: 600; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+.chat-quote-list { display: grid; gap: 8px; margin-top: 4px; }
+.chat-quote { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; }
+.chat-quote.best { border-color: var(--cta); background: var(--cta-light); }
+.chat-quote .v { font-weight: 600; font-size: 13.5px; }
+.chat-quote .d { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.chat-quote .p { font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.chat-email { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-top: 4px; }
+.chat-email-head { padding: 10px 14px; background: var(--bg); border-bottom: 1px solid var(--border); font-size: 12.5px; display: grid; gap: 3px; }
+.chat-email-head span.k { color: var(--text-secondary); margin-right: 8px; }
+.chat-email-body { padding: 12px 14px; font-size: 13.5px; line-height: 1.6; }
+.chat-email-body p { margin: 0 0 8px; }
+
+.chat-typing { display: inline-flex; gap: 4px; padding: 12px 16px; }
+.chat-typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--text-disabled); animation: blink 1.2s infinite both; }
+.chat-typing span:nth-child(2) { animation-delay: .2s; }
+.chat-typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%, 80%, 100% { opacity: .3; } 40% { opacity: 1; } }
+
+.chat-suggestions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border); }
+.sug-chip {
+  padding: 8px 14px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--border);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  transition: background 150ms, border-color 150ms, color 150ms;
+}
+.sug-chip:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+.sug-chip.primary { background: var(--cta); color: #fff; border-color: var(--cta); }
+.sug-chip.primary:hover { background: var(--cta-hover); border-color: var(--cta-hover); color: #fff; }
+
+.chat-composer {
+  border-top: 1px solid var(--border);
+  padding: 12px 0 20px;
+  background: var(--bg);
+  position: sticky; bottom: 0;
+}
+.chat-composer-inner {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 8px 8px 8px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.chat-composer input {
+  flex: 1; border: none; outline: none;
+  font: inherit; font-size: 14.5px; background: transparent;
+  padding: 6px 0;
+}
+.chat-composer .send-btn {
+  width: 34px; height: 34px; border-radius: 8px;
+  background: var(--cta); color: #fff; border: none; cursor: pointer;
+  display: grid; place-items: center;
+}
+.chat-composer .send-btn:hover { background: var(--cta-hover); }
+.chat-composer .send-btn[disabled] { background: var(--text-disabled); cursor: not-allowed; }
+
+/* ====== Vendor modal ====== */
+.vmodal-bg {
+  position: fixed; inset: 0; background: rgba(17, 24, 39, 0.4);
+  display: grid; place-items: center; z-index: 50;
+}
+.vmodal {
+  background: var(--surface); border-radius: 12px; width: 560px; max-width: 94vw;
+  box-shadow: 0 20px 40px rgba(17,24,39,.2); overflow: hidden;
+  display: flex; flex-direction: column; max-height: 90vh;
+}
+.vmodal-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.vmodal-head h3 { font-size: 16px; font-weight: 600; }
+.vmodal-body { padding: 20px; overflow-y: auto; }
+.vmodal-foot { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
 /* icons (inline svg sized) */
 svg.icon { width: 18px; height: 18px; stroke-width: 1.8; fill: none; stroke: currentColor; }
 svg.icon-sm { width: 14px; height: 14px; }
@@ -428,11 +536,11 @@ svg.icon-lg { width: 22px; height: 22px; }
       <div class="brand-mark">CP</div>
       <div>
         <div class="brand-name">ChurchPlanner Pro</div>
-        <div class="brand-sub">Grace Community Church</div>
+        <div class="brand-sub">Christ Lutheran</div>
       </div>
     </div>
 
-    <button class="new-chat" onclick="go('home')">
+    <button class="new-chat" onclick="newChat()">
       <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 5v14M5 12h14"/></svg>
       New chat
     </button>
@@ -441,6 +549,10 @@ svg.icon-lg { width: 22px; height: 22px; }
     <div class="nav-item" data-route="home" onclick="go('home')">
       <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>
       <span>Home</span>
+    </div>
+    <div class="nav-item" data-route="history" onclick="go('history')">
+      <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 2M21 12a9 9 0 11-9-9 9 9 0 019 9zM3 4v5h5"/></svg>
+      <span>Chat history</span>
     </div>
     <div class="nav-item" data-route="workflows" onclick="go('workflows')">
       <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h6v6H4zM14 6h6v6h-6zM9 18h6"/><path d="M7 12v3a2 2 0 002 2h0M17 12v3a2 2 0 01-2 2h0"/></svg>
@@ -451,25 +563,18 @@ svg.icon-lg { width: 22px; height: 22px; }
       <svg class="icon" viewBox="0 0 24 24"><path stroke-linejoin="round" stroke-linecap="round" d="M4 7h16v12H4zM4 7l2-3h12l2 3M9 12h6"/></svg>
       <span>Vault</span>
     </div>
-    <div class="nav-item" data-route="review" onclick="go('review')">
-      <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5h18v4H3zM3 11h18v4H3zM3 17h10v4H3z"/></svg>
-      <span>Review tables</span>
-    </div>
-    <div class="nav-item" data-route="memory" onclick="go('memory')">
-      <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a5 5 0 00-5 5c0 1 .2 1.8.6 2.5C6 12 5 13 5 15a4 4 0 004 4h6a4 4 0 004-4c0-2-1-3-2.6-4.5.4-.7.6-1.5.6-2.5a5 5 0 00-5-5z"/></svg>
-      <span>Memory</span>
-    </div>
 
     <div class="nav-section-label">Church data</div>
-    <div class="nav-item"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l8 5v11H4V8l8-5zM9 21V12h6v9"/></svg><span>Facilities</span></div>
-    <div class="nav-item"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10l9-6 9 6-9 6zM5 12v5c0 1 3 3 7 3s7-2 7-3v-5"/></svg><span>Finance &amp; budget</span></div>
-    <div class="nav-item"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11a4 4 0 10-8 0 4 4 0 008 0zM4 20c1-3 4-5 8-5s7 2 8 5"/></svg><span>People &amp; donors</span></div>
-    <div class="nav-item"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 3v4M17 3v4M4 9h16M5 7h14a1 1 0 011 1v11a1 1 0 01-1 1H5a1 1 0 01-1-1V8a1 1 0 011-1z"/></svg><span>Events</span></div>
+    <div class="nav-item" data-route="facilities" onclick="go('facilities')"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l8 5v11H4V8l8-5zM9 21V12h6v9"/></svg><span>Facilities</span></div>
+    <div class="nav-item" data-route="finance" onclick="go('finance')"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10l9-6 9 6-9 6zM5 12v5c0 1 3 3 7 3s7-2 7-3v-5"/></svg><span>Finance &amp; budget</span></div>
+    <div class="nav-item" data-route="people" onclick="go('people')"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11a4 4 0 10-8 0 4 4 0 008 0zM4 20c1-3 4-5 8-5s7 2 8 5"/></svg><span>People &amp; donations</span></div>
+    <div class="nav-item" data-route="events" onclick="go('events')"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 3v4M17 3v4M4 9h16M5 7h14a1 1 0 011 1v11a1 1 0 01-1 1H5a1 1 0 01-1-1V8a1 1 0 011-1z"/></svg><span>Events</span></div>
+    <div class="nav-item" data-route="vendors" onclick="go('vendors')"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7l9-4 9 4-9 4zM3 7v10l9 4 9-4V7M12 11v10"/></svg><span>Vendors</span></div>
 
     <div class="sidebar-footer">
-      <div class="avatar">AL</div>
+      <div class="avatar">TM</div>
       <div style="min-width:0;">
-        <div class="name" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Andrew Lee</div>
+        <div class="name" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Tracy McKee</div>
         <div class="org">Church administrator</div>
       </div>
       <svg class="icon" style="color:var(--text-secondary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v.01M12 12v.01M12 18v.01"/></svg>
@@ -481,7 +586,6 @@ svg.icon-lg { width: 22px; height: 22px; }
     <div class="topbar">
       <div class="crumb" id="crumb"><strong>Home</strong></div>
       <div class="spacer"></div>
-      <button class="btn btn-ghost btn-sm"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" d="M15 11a3 3 0 10-6 0 3 3 0 006 0zM12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg> Ask Harvey</button>
       <button class="btn btn-ghost btn-sm"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 6v6l4 2M12 22a10 10 0 100-20 10 10 0 000 20z"/></svg> Help</button>
     </div>
 
@@ -494,8 +598,8 @@ svg.icon-lg { width: 22px; height: 22px; }
 <template id="tpl-home">
   <div class="page">
     <div class="home-hero">
-      <h1>Good afternoon, Andrew.</h1>
-      <div class="sub body-lg">What would you like to get done for Grace Community today?</div>
+      <h1>Good afternoon, Tracy.</h1>
+      <div class="sub body-lg">What would you like to get done for Christ Lutheran today?</div>
     </div>
 
     <div class="ask-card">
@@ -876,16 +980,16 @@ svg.icon-lg { width: 22px; height: 22px; }
           <div class="section-title">Draft · Sample email (Sarah Chen)</div>
           <div class="email-draft">
             <div class="email-header">
-              <div class="row"><span>From</span><span>andrew@gracecommunity.org</span></div>
+              <div class="row"><span>From</span><span>tracy@christlutheran.org</span></div>
               <div class="row"><span>To</span><span>sarah.chen@email.com · <span class="muted">warm check-in segment</span></span></div>
               <div class="row"><span>Subject</span><span><strong>Thinking of you, Sarah — and a quick thank-you</strong></span></div>
             </div>
             <div class="email-body">
               <p>Hi Sarah,</p>
-              <p>I was reviewing our giving records this week and realized it's been a few months since we saw you give to Grace Community. No worries at all — I just wanted to reach out personally to say <strong>thank you</strong>. Your consistent support of our <strong>Youth Ministry fund</strong> through last fall made this year's winter retreat possible for 28 students.</p>
+              <p>I was reviewing our giving records this week and realized it's been a few months since we saw you give to Christ Lutheran. No worries at all — I just wanted to reach out personally to say <strong>thank you</strong>. Your consistent support of our <strong>Youth Ministry fund</strong> through last fall made this year's winter retreat possible for 28 students.</p>
               <p>We're in the middle of our Easter season, and I wanted you to know we're praying for you and your family. If there's anything going on we can come alongside you in, I'd love to hear.</p>
               <p>If you ever want to give again, <a href="#" style="color:var(--primary)">here's a one-click link</a> — no pressure, and thank you for being part of our church family.</p>
-              <p>Grateful,<br/>Andrew Lee<br/>Church Administrator, Grace Community</p>
+              <p>Grateful,<br/>Tracy McKee<br/>Church Administrator, Christ Lutheran</p>
             </div>
           </div>
           <div class="row gap-sm mt-md" style="justify-content:space-between;">
@@ -907,23 +1011,272 @@ svg.icon-lg { width: 22px; height: 22px; }
   </div>
 </template>
 
+<!-- LIVE CHAT WORKFLOW -->
+<template id="tpl-chat">
+  <div class="chat-page">
+    <div class="chat-head">
+      <span class="wf-icon" id="chat-icon"><svg class="icon" viewBox="0 0 24 24"></svg></span>
+      <div style="flex:1">
+        <h2 id="chat-title">Workflow</h2>
+        <div class="sub" id="chat-sub">Chatting with ChurchPlanner · pulling from your connected sources</div>
+      </div>
+      <span class="chip blue dot" id="chat-status">Running</span>
+    </div>
+    <div class="chat-scroll" id="chat-scroll">
+      <div class="chat-thread-live" id="chat-thread"></div>
+    </div>
+    <div class="chat-composer">
+      <div class="chat-suggestions" id="chat-sugs"></div>
+      <div class="chat-composer-inner">
+        <input type="text" id="chat-input" placeholder="Type a reply, or pick a suggestion above…" autocomplete="off" />
+        <button class="send-btn" id="chat-send" onclick="chatSubmit()" title="Send">
+          <svg class="icon icon-sm" viewBox="0 0 24 24" style="stroke:#fff"><path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16M14 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
 <!-- SIMPLE STUB PAGES -->
 <template id="tpl-vault">
   <div class="page"><h1>Vault</h1><p class="body-lg muted mt-sm mb-lg">Unify your church's internal knowledge — bylaws, policies, sermon series, staff handbooks, board minutes — in one secure workspace.</p><div class="card" style="text-align:center; padding:48px"><p class="muted">Drop a folder or connect to Google Drive, SharePoint, or Dropbox to get started.</p><button class="btn btn-primary mt-md">Connect a source</button></div></div>
 </template>
-<template id="tpl-review">
-  <div class="page"><h1>Review tables</h1><p class="body-lg muted mt-sm mb-lg">Analyze hundreds or thousands of documents at once — e.g., every background check, every board minutes document, every vendor contract. Harvey builds the columns and extracts the answers.</p><div class="card" style="text-align:center; padding:48px"><p class="muted">Select a folder in Vault to begin.</p><button class="btn btn-primary mt-md">Start a review</button></div></div>
-</template>
-<template id="tpl-memory">
-  <div class="page"><h1>Memory</h1><p class="body-lg muted mt-sm mb-lg">ChurchPlanner remembers the context of your church so every answer gets better. Review and edit what it's learned.</p>
-    <div class="stack-sm">
-      <div class="card"><strong>Your church</strong><p class="muted">Grace Community Church · ~650 weekly attenders · Planning Center for giving &amp; people · QuickBooks for accounting · lead pastor Mike Johnson.</p></div>
-      <div class="card"><strong>Facilities</strong><p class="muted">2018 Trane HVAC on sanctuary roof · preferred vendor Cornerstone HVAC · $30k facilities reserve floor.</p></div>
-      <div class="card"><strong>Financial policy</strong><p class="muted">Unbudgeted spend above $2,500 requires finance-committee approval; above $10,000 requires board approval.</p></div>
-      <div class="card"><strong>Donor tone</strong><p class="muted">Warm, personal, never transactional. Always thank before asking. Sign emails from Andrew Lee.</p></div>
+
+<!-- CHAT HISTORY -->
+<template id="tpl-history">
+  <div class="page">
+    <div class="home-hero">
+      <h1>Chat history</h1>
+      <div class="sub body-lg">Everything you've worked on with ChurchPlanner. Resume a conversation or start a new one.</div>
+    </div>
+    <div class="row gap-sm mb-lg" style="justify-content:flex-end;">
+      <button class="btn btn-primary btn-sm" onclick="newChat()"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 5v14M5 12h14"/></svg> New chat</button>
+    </div>
+    <div class="recent-list" id="history-list">
+      <div class="recent-row" onclick="startChat('workorder')">
+        <svg class="icon" style="color:var(--text-secondary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.1-2.1 2.5-2.4z"/></svg>
+        <div><div class="title">Sanctuary HVAC — unresponsive compressor</div><div class="caption">Work order · step 5 of 7 · waiting on vendor quote</div></div>
+        <span class="chip amber dot">In progress</span><span class="time">2h ago</span>
+      </div>
+      <div class="recent-row" onclick="startChat('expense')">
+        <svg class="icon" style="color:var(--text-secondary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 15l4-4 3 3 6-7"/></svg>
+        <div><div class="title">Q2 forecast update — roof repair</div><div class="caption">Unplanned expense · forecast exported to finance committee</div></div>
+        <span class="chip green dot">Complete</span><span class="time">Yesterday</span>
+      </div>
+      <div class="recent-row" onclick="startChat('donors')">
+        <svg class="icon" style="color:var(--text-secondary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 10-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg>
+        <div><div class="title">Easter giving campaign — warm check-ins</div><div class="caption">Lapsed donors · 142 emails sent · 38% open, 11 replies</div></div>
+        <span class="chip blue dot">Tracking</span><span class="time">3d ago</span>
+      </div>
+      <div class="recent-row" onclick="startChat('workorder')">
+        <svg class="icon" style="color:var(--text-secondary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.1-2.1 2.5-2.4z"/></svg>
+        <div><div class="title">Parking lot lights out — 2 fixtures</div><div class="caption">Work order · closed</div></div>
+        <span class="chip green dot">Complete</span><span class="time">Last week</span>
+      </div>
+      <div class="recent-row" onclick="startChat('expense')">
+        <svg class="icon" style="color:var(--text-secondary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 15l4-4 3 3 6-7"/></svg>
+        <div><div class="title">Children's wing computer refresh — $4,800</div><div class="caption">Unplanned expense · approved &amp; purchased</div></div>
+        <span class="chip green dot">Complete</span><span class="time">2 weeks ago</span>
+      </div>
     </div>
   </div>
 </template>
+
+<!-- FACILITIES -->
+<template id="tpl-facilities">
+  <div class="page">
+    <div class="home-hero"><h1>Facilities</h1><div class="sub body-lg">Christ Lutheran · 3 buildings · 42,000 sqft</div></div>
+    <div class="kpi-grid mb-lg">
+      <div class="kpi"><div class="label">Open work orders</div><div class="value">3</div><div class="delta up">1 awaiting approval</div></div>
+      <div class="kpi"><div class="label">Completed YTD</div><div class="value">24</div><div class="delta up">+8 vs prior year</div></div>
+      <div class="kpi"><div class="label">Maintenance spend YTD</div><div class="value">$31.4k</div><div class="delta down">62% of annual budget</div></div>
+      <div class="kpi"><div class="label">Facilities reserve</div><div class="value">$48.2k</div><div class="delta up">floor $30k</div></div>
+    </div>
+    <div class="section-title">Open work orders</div>
+    <table class="table mb-lg">
+      <thead><tr><th>ID</th><th>Issue</th><th>Building</th><th>Status</th><th>Vendor</th><th></th></tr></thead>
+      <tbody>
+        <tr class="row-hover"><td class="mono">WO-184</td><td><strong>Sanctuary HVAC — unresponsive compressor</strong></td><td>Sanctuary</td><td><span class="chip amber dot">In progress</span></td><td>Cornerstone</td><td><button class="btn btn-ghost btn-sm" onclick="startChat('workorder')">Open chat</button></td></tr>
+        <tr class="row-hover"><td class="mono">WO-182</td><td>Leaking fellowship hall sink</td><td>Fellowship hall</td><td><span class="chip blue dot">Scheduled</span></td><td>ProPlumb</td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+        <tr class="row-hover"><td class="mono">WO-181</td><td>Nursery carpet stain removal</td><td>Children's wing</td><td><span class="chip">Approval pending</span></td><td>—</td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+      </tbody>
+    </table>
+    <div class="section-title">Buildings</div>
+    <div class="workflow-grid">
+      <div class="card wf-card"><div class="wf-icon"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l8 5v11H4V8l8-5z"/></svg></div><h3>Sanctuary</h3><p>Built 1998 · 18,500 sqft · seats 450. 2018 Trane HVAC on roof.</p><div class="meta"><span>8 open items</span><span>→</span></div></div>
+      <div class="card wf-card"><div class="wf-icon green"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 11l9-8 9 8"/></svg></div><h3>Fellowship hall</h3><p>Added 2012 · 12,000 sqft · event capacity 220.</p><div class="meta"><span>3 open items</span><span>→</span></div></div>
+      <div class="card wf-card"><div class="wf-icon amber"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16v12H4zM4 8l2-4h12l2 4"/></svg></div><h3>Children's wing</h3><p>Remodeled 2021 · 11,500 sqft · 6 classrooms + nursery.</p><div class="meta"><span>1 open item</span><span>→</span></div></div>
+    </div>
+  </div>
+</template>
+
+<!-- FINANCE & BUDGET -->
+<template id="tpl-finance">
+  <div class="page">
+    <div class="home-hero"><h1>Finance &amp; budget</h1><div class="sub body-lg">Live from QuickBooks · Christ Lutheran · fiscal year Jul–Jun</div></div>
+    <div class="kpi-grid mb-lg">
+      <div class="kpi"><div class="label">Operating reserve</div><div class="value">$82.4k</div><div class="delta up">+$4.1k MoM</div></div>
+      <div class="kpi"><div class="label">YTD giving</div><div class="value">$1.04M</div><div class="delta up">103% of plan</div></div>
+      <div class="kpi"><div class="label">YTD expense</div><div class="value">$912k</div><div class="delta">98% of plan</div></div>
+      <div class="kpi"><div class="label">Budget variance</div><div class="value">+$128k</div><div class="delta up">favorable</div></div>
+    </div>
+    <div class="section-title">Budget vs actual (YTD)</div>
+    <div class="card mb-lg">
+      <div class="bar-chart">
+        <div class="bar-row"><span>Staff</span><span class="bar-track"><span class="bar-fill" style="width:72%"></span></span><span class="bar-val mono">$548k / $760k</span></div>
+        <div class="bar-row"><span>Facilities</span><span class="bar-track"><span class="bar-fill amber" style="width:62%"></span></span><span class="bar-val mono">$31k / $50k</span></div>
+        <div class="bar-row"><span>Programs</span><span class="bar-track"><span class="bar-fill green" style="width:58%"></span></span><span class="bar-val mono">$94k / $162k</span></div>
+        <div class="bar-row"><span>Missions</span><span class="bar-track"><span class="bar-fill green" style="width:66%"></span></span><span class="bar-val mono">$82k / $124k</span></div>
+        <div class="bar-row"><span>Admin &amp; tech</span><span class="bar-track"><span class="bar-fill" style="width:70%"></span></span><span class="bar-val mono">$45k / $64k</span></div>
+      </div>
+    </div>
+    <div class="section-title">Recent &amp; pending</div>
+    <table class="table">
+      <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr class="row-hover"><td>Apr 12</td><td>Roof repair — Summit Roofing</td><td>Facilities</td><td class="mono">$18,000</td><td><span class="chip amber dot">Awaiting approval</span></td></tr>
+        <tr class="row-hover"><td>Apr 10</td><td>Easter outreach mailer</td><td>Programs</td><td class="mono">$1,240</td><td><span class="chip green dot">Paid</span></td></tr>
+        <tr class="row-hover"><td>Apr 8</td><td>Worship AV cable kit</td><td>Admin &amp; tech</td><td class="mono">$418</td><td><span class="chip green dot">Paid</span></td></tr>
+        <tr class="row-hover"><td>Apr 5</td><td>Children's wing computer refresh</td><td>Admin &amp; tech</td><td class="mono">$4,800</td><td><span class="chip green dot">Paid</span></td></tr>
+      </tbody>
+    </table>
+    <div class="row gap-sm mt-lg" style="justify-content:flex-end"><button class="btn btn-secondary btn-sm" onclick="startChat('expense')">Log an unplanned expense</button></div>
+  </div>
+</template>
+
+<!-- PEOPLE & DONATIONS -->
+<template id="tpl-people">
+  <div class="page">
+    <div class="home-hero"><h1>People &amp; donations</h1><div class="sub body-lg">Live from Planning Center · 650 weekly attenders · 412 giving households</div></div>
+    <div class="kpi-grid mb-lg">
+      <div class="kpi"><div class="label">Active donors (YTD)</div><div class="value">412</div><div class="delta up">+14 MoM</div></div>
+      <div class="kpi"><div class="label">Lapsed (90+ days)</div><div class="value">142</div><div class="delta down">needs outreach</div></div>
+      <div class="kpi"><div class="label">Recurring giving</div><div class="value">$38.4k/mo</div><div class="delta up">+$2.1k MoM</div></div>
+      <div class="kpi"><div class="label">Avg gift</div><div class="value">$248</div><div class="delta up">+$12 MoM</div></div>
+    </div>
+    <div class="section-title">Giving trend (last 12 mo)</div>
+    <div class="card mb-lg">
+      <div class="bar-chart">
+        <div class="bar-row"><span>May '25</span><span class="bar-track"><span class="bar-fill green" style="width:62%"></span></span><span class="bar-val mono">$78k</span></div>
+        <div class="bar-row"><span>Jul</span><span class="bar-track"><span class="bar-fill green" style="width:54%"></span></span><span class="bar-val mono">$68k</span></div>
+        <div class="bar-row"><span>Sep</span><span class="bar-track"><span class="bar-fill green" style="width:70%"></span></span><span class="bar-val mono">$88k</span></div>
+        <div class="bar-row"><span>Nov</span><span class="bar-track"><span class="bar-fill green" style="width:82%"></span></span><span class="bar-val mono">$104k</span></div>
+        <div class="bar-row"><span>Dec</span><span class="bar-track"><span class="bar-fill green" style="width:100%"></span></span><span class="bar-val mono">$168k</span></div>
+        <div class="bar-row"><span>Feb '26</span><span class="bar-track"><span class="bar-fill green" style="width:60%"></span></span><span class="bar-val mono">$75k</span></div>
+        <div class="bar-row"><span>Apr (MTD)</span><span class="bar-track"><span class="bar-fill" style="width:52%"></span></span><span class="bar-val mono">$66k</span></div>
+      </div>
+    </div>
+    <div class="section-title">Recent donations</div>
+    <table class="table">
+      <thead><tr><th>Date</th><th>Donor</th><th>Fund</th><th>Amount</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr class="row-hover"><td>Apr 14</td><td>Thompson family</td><td>General</td><td class="mono">$500</td><td><span class="chip blue">Recurring</span></td></tr>
+        <tr class="row-hover"><td>Apr 14</td><td>David Rodriguez</td><td>Missions</td><td class="mono">$250</td><td><span class="chip">One-time</span></td></tr>
+        <tr class="row-hover"><td>Apr 13</td><td>Park household</td><td>General</td><td class="mono">$1,200</td><td><span class="chip blue">Recurring</span></td></tr>
+        <tr class="row-hover"><td>Apr 13</td><td>Linda Chang</td><td>Youth ministry</td><td class="mono">$75</td><td><span class="chip green">First-time</span></td></tr>
+        <tr class="row-hover"><td>Apr 12</td><td>The Adlers</td><td>General</td><td class="mono">$320</td><td><span class="chip blue">Recurring</span></td></tr>
+      </tbody>
+    </table>
+    <div class="row gap-sm mt-lg" style="justify-content:flex-end"><button class="btn btn-secondary btn-sm" onclick="startChat('donors')">Re-engage lapsed donors</button></div>
+  </div>
+</template>
+
+<!-- EVENTS -->
+<template id="tpl-events">
+  <div class="page">
+    <div class="home-hero"><h1>Events</h1><div class="sub body-lg">Upcoming services, programs, and special events at Christ Lutheran.</div></div>
+    <div class="row gap-sm mb-lg" style="justify-content:flex-end">
+      <button class="btn btn-secondary btn-sm">Filter</button>
+      <button class="btn btn-primary btn-sm"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 5v14M5 12h14"/></svg> New event</button>
+    </div>
+    <div class="stack">
+      <div class="card">
+        <div class="row gap-md" style="align-items:flex-start">
+          <div style="text-align:center;min-width:52px"><div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.04em">Apr</div><div style="font-size:28px;font-weight:700;line-height:1">19</div></div>
+          <div style="flex:1"><h3>Easter Sunday — sunrise &amp; main service</h3><p class="muted" style="margin-top:4px">Sanctuary · 6:30am sunrise, 9:00 &amp; 11:00 main · 840 RSVPs · AV &amp; hospitality teams prepped</p></div>
+          <span class="chip blue dot">Planned</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row gap-md" style="align-items:flex-start">
+          <div style="text-align:center;min-width:52px"><div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.04em">Apr</div><div style="font-size:28px;font-weight:700;line-height:1">26</div></div>
+          <div style="flex:1"><h3>Youth spring retreat kickoff</h3><p class="muted" style="margin-top:4px">Fellowship hall · 6:30pm dinner &amp; briefing · 42 students signed up</p></div>
+          <span class="chip green dot">Confirmed</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row gap-md" style="align-items:flex-start">
+          <div style="text-align:center;min-width:52px"><div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.04em">May</div><div style="font-size:28px;font-weight:700;line-height:1">03</div></div>
+          <div style="flex:1"><h3>Membership class (spring cohort)</h3><p class="muted" style="margin-top:4px">Children's wing room 201 · 4-week series begins · 18 registered</p></div>
+          <span class="chip">Open</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row gap-md" style="align-items:flex-start">
+          <div style="text-align:center;min-width:52px"><div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.04em">May</div><div style="font-size:28px;font-weight:700;line-height:1">17</div></div>
+          <div style="flex:1"><h3>Volunteer appreciation dinner</h3><p class="muted" style="margin-top:4px">Fellowship hall · 6pm · ~180 volunteers invited · catering TBD</p></div>
+          <span class="chip amber dot">Needs caterer</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row gap-md" style="align-items:flex-start">
+          <div style="text-align:center;min-width:52px"><div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.04em">Jun</div><div style="font-size:28px;font-weight:700;line-height:1">08</div></div>
+          <div style="flex:1"><h3>VBS — Vacation Bible School</h3><p class="muted" style="margin-top:4px">Children's wing · 5-day program · curriculum chosen · volunteer recruitment open</p></div>
+          <span class="chip">Planning</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- VENDORS -->
+<template id="tpl-vendors">
+  <div class="page">
+    <div class="home-hero"><h1>Vendors</h1><div class="sub body-lg">Approved and preferred vendors for work orders and purchasing. ChurchPlanner uses this list when routing quotes.</div></div>
+    <div class="row gap-sm mb-lg" style="justify-content:flex-end">
+      <button class="btn btn-secondary btn-sm">Import from QuickBooks</button>
+      <button class="btn btn-primary btn-sm" onclick="showVendorForm()"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" d="M12 5v14M5 12h14"/></svg> Add vendor</button>
+    </div>
+    <table class="table" id="vendors-table">
+      <thead><tr><th>Name</th><th>Category</th><th>Contact</th><th>Jobs</th><th>Avg rating</th><th>Status</th></tr></thead>
+      <tbody id="vendors-tbody"></tbody>
+    </table>
+  </div>
+</template>
+
+<!-- ADD VENDOR MODAL -->
+<div id="vendor-modal" class="vmodal-bg hidden">
+  <div class="vmodal">
+    <div class="vmodal-head">
+      <h3>Add vendor</h3>
+      <button class="btn btn-ghost btn-sm" onclick="hideVendorForm()" aria-label="Close">✕</button>
+    </div>
+    <div class="vmodal-body">
+      <div class="form-grid">
+        <div class="full"><label class="field">Vendor name</label><input class="input" id="v-name" placeholder="e.g. Cornerstone HVAC" /></div>
+        <div><label class="field">Category</label>
+          <select class="select" id="v-cat">
+            <option>HVAC</option><option>Plumbing</option><option>Electrical</option><option>Roofing</option>
+            <option>General maintenance</option><option>Landscaping</option><option>Catering</option>
+            <option>Printing &amp; mailers</option><option>AV / tech</option><option>Other</option>
+          </select>
+        </div>
+        <div><label class="field">Status</label>
+          <select class="select" id="v-status">
+            <option>Preferred</option><option>Approved</option><option>On probation</option>
+          </select>
+        </div>
+        <div><label class="field">Contact name</label><input class="input" id="v-contact" placeholder="Jane Doe" /></div>
+        <div><label class="field">Phone or email</label><input class="input" id="v-reach" placeholder="(555) 123-4567 or jane@example.com" /></div>
+        <div class="full"><label class="field">Notes</label><textarea class="textarea" id="v-notes" placeholder="Anything relevant — typical turnaround, pricing, who referred them."></textarea></div>
+      </div>
+    </div>
+    <div class="vmodal-foot">
+      <button class="btn btn-ghost" onclick="hideVendorForm()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveVendor()">Save vendor</button>
+    </div>
+  </div>
+</div>
 
 <script>
 /* Simple SPA router */
@@ -934,9 +1287,14 @@ const routes = {
   'wf-workorder-resume':{tpl: 'tpl-wf-workorder',crumb: ['Home', 'Sanctuary HVAC'] },
   'wf-expense':        { tpl: 'tpl-wf-expense',  crumb: ['Workflows', 'Unplanned expense'] },
   'wf-donors':         { tpl: 'tpl-wf-donors',   crumb: ['Workflows', 'Re-engage lapsed donors'] },
+  'chat':              { tpl: 'tpl-chat',        crumb: ['Chat'] },
+  'history':           { tpl: 'tpl-history',     crumb: ['Chat history'] },
   'vault':             { tpl: 'tpl-vault',       crumb: ['Vault'] },
-  'review':            { tpl: 'tpl-review',      crumb: ['Review tables'] },
-  'memory':            { tpl: 'tpl-memory',      crumb: ['Memory'] }
+  'facilities':        { tpl: 'tpl-facilities',  crumb: ['Facilities'] },
+  'finance':           { tpl: 'tpl-finance',     crumb: ['Finance & budget'] },
+  'people':            { tpl: 'tpl-people',      crumb: ['People & donations'] },
+  'events':            { tpl: 'tpl-events',      crumb: ['Events'] },
+  'vendors':           { tpl: 'tpl-vendors',     crumb: ['Vendors'], onMount: renderVendors }
 };
 function go(route) {
   const r = routes[route] || routes.home;
@@ -944,20 +1302,483 @@ function go(route) {
   const view = document.getElementById('view');
   view.innerHTML = '';
   view.appendChild(tpl.content.cloneNode(true));
-  // breadcrumb
   const crumb = document.getElementById('crumb');
   crumb.innerHTML = r.crumb.map((c, i) => i === r.crumb.length - 1 ? `<strong>${c}</strong>` : `${c} <span>/</span>`).join(' ');
-  // active nav
   document.querySelectorAll('.nav-item[data-route]').forEach(n => n.classList.toggle('active', n.dataset.route === route || (route.startsWith('wf-') && n.dataset.route === 'workflows')));
   window.scrollTo({top: 0, behavior: 'instant'});
+  if (typeof r.onMount === 'function') r.onMount();
 }
+
+/* ====== New chat ====== */
+function newChat() {
+  go('home');
+  setTimeout(() => {
+    const input = document.getElementById('ask-input');
+    if (input) input.focus();
+  }, 50);
+}
+
+/* ====== Chat workflow engine ====== */
+/* Each flow is a sequence of "turns". The engine shows flow.opening (AI msg + suggestion chips).
+   When the user submits (chip click OR Enter with text), we append their message, show a typing
+   indicator, then append the next AI turn (which includes its own next set of suggestion chips).
+   The last turn has chips: [] which ends the flow. */
+
+const FLOWS = {
+  workorder: {
+    title: 'Submit work order',
+    sub: 'Facilities · pulling from facility log + vendor history',
+    icon: '<svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.1-2.1 2.5-2.4z"/></svg>',
+    iconClass: '',
+    opening: {
+      ai: "<p>Hi Tracy — I can help you log a facilities work order. <strong>What's broken, and where in the building?</strong></p><p class=\"muted\" style=\"font-size:13px;margin-top:6px\">I'll pull request history, check policy, and get vendor quotes as we go.</p>",
+      chips: ['Sanctuary HVAC not working', 'Fellowship hall water heater leaking', 'Parking lot light out', 'Describe it myself']
+    },
+    turns: [
+      {
+        ai: `<p>Got it. I checked the facilities log — the sanctuary has a <strong>2018 Trane rooftop unit</strong> that's had 2 prior issues (last one Dec 2024). Sounds like the compressor again.</p>
+             <p>Per church policy, Pastor Mike can approve facilities spend up to $5k. Anything above needs board approval.</p>
+             <p><strong>How urgent is this?</strong></p>`,
+        chips: ['Urgent — service is Sunday', 'This week is fine', 'Not urgent']
+      },
+      {
+        ai: `<p>Understood — I'll mark this urgent and loop in Pastor Mike now.</p>
+             <p>Pulling vendor history… <strong>Cornerstone HVAC</strong> is your preferred vendor (14 prior jobs, 2-day avg turnaround). Want me to request 3 competitive quotes, or go straight to Cornerstone?</p>`,
+        chips: ['Get 3 quotes', 'Straight to Cornerstone', 'Show vendor history first']
+      },
+      {
+        ai: `<p>Sent RFQs. Three quotes back within the hour:</p>
+             <div class="panel">
+               <div class="chat-quote-list">
+                 <div class="chat-quote best">
+                   <div><div class="v">Cornerstone HVAC <span class="chip green" style="margin-left:6px">Recommended</span></div><div class="d">Saturday 8am · same-day compressor swap · 2yr warranty</div></div>
+                   <div class="p">$3,850</div>
+                 </div>
+                 <div class="chat-quote">
+                   <div><div class="v">Summit HVAC</div><div class="d">Monday AM · lower cost but slower</div></div>
+                   <div class="p">$3,200</div>
+                 </div>
+                 <div class="chat-quote">
+                   <div><div class="v">Acme Mechanical</div><div class="d">Next Thursday · new to us</div></div>
+                   <div class="p">$4,100</div>
+                 </div>
+               </div>
+             </div>
+             <p style="margin-top:10px">All three are under the $5k approval threshold. <strong>Cornerstone</strong> gets it fixed before Sunday. Which should I book?</p>`,
+        chips: ['Approve Cornerstone — $3,850', 'Approve Summit — $3,200', 'I need more detail']
+      },
+      {
+        ai: `<p><strong>✓ Approved.</strong> Cornerstone booked for <strong>Saturday 8am</strong>. Pastor Mike was auto-notified; he approved the spend.</p>
+             <p>Should I also notify the worship team so they can plan around a potentially warm sanctuary?</p>`,
+        chips: ['Yes — notify worship team', 'I\'ll tell them myself', 'Skip']
+      },
+      {
+        ai: `<p>Done. Message sent to the worship team Slack channel. Work order <strong>WO-184</strong> is active.</p>
+             <div class="panel">
+               <div class="chat-metric-row">
+                 <div class="chat-metric"><div class="k">Work order</div><div class="v">WO-184</div></div>
+                 <div class="chat-metric"><div class="k">Vendor</div><div class="v">Cornerstone</div></div>
+                 <div class="chat-metric"><div class="k">Scheduled</div><div class="v">Sat 8am</div></div>
+               </div>
+             </div>
+             <p style="margin-top:10px">I'll ping you after the vendor signs off Saturday so you can close the work order. Anything else on this?</p>`,
+        chips: ['That\'s it — thanks', 'Add a note to the file', 'Start another workflow']
+      },
+      {
+        ai: `<p>You're all set. I've saved the work order and a note in the <strong>sanctuary HVAC</strong> file in Memory. Talk soon. 👋</p>`,
+        chips: []
+      }
+    ]
+  },
+
+  expense: {
+    title: 'Unplanned expense',
+    sub: 'Finance · running impact against cash on hand',
+    icon: '<svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 15l4-4 3 3 6-7"/></svg>',
+    iconClass: 'green',
+    opening: {
+      ai: `<p>Hi Tracy — let's work through an unplanned expense. <strong>What is it, and roughly how much?</strong></p><p class="muted" style="font-size:13px;margin-top:6px">I'll check approval policy, run it against cash on hand, and help you pick a funding strategy.</p>`,
+      chips: ['$18k roof repair', '$4,200 plumbing emergency', '$2,800 computer replacement', 'Type it out']
+    },
+    turns: [
+      {
+        ai: `<p>Got it — <strong>$18,000 roof repair</strong>. That's above the $2,500 finance-committee threshold, so we'll need Rachel's approval.</p>
+             <p>Pulling live numbers from QuickBooks…</p>
+             <div class="panel">
+               <div class="chat-metric-row">
+                 <div class="chat-metric"><div class="k">Operating reserve</div><div class="v">$82,430</div></div>
+                 <div class="chat-metric"><div class="k">After this expense</div><div class="v">$64,430</div></div>
+                 <div class="chat-metric"><div class="k">Policy floor</div><div class="v">$30,000</div></div>
+               </div>
+             </div>
+             <p style="margin-top:10px">Good news: even after the repair you'd stay <strong>$34k above</strong> your reserve floor. Ready to look at funding strategies?</p>`,
+        chips: ['Show funding strategies', 'Run a deeper impact analysis first']
+      },
+      {
+        ai: `<p>Here are three options, ranked by impact on Q2:</p>
+             <div class="panel">
+               <table class="chat-mini-table">
+                 <thead><tr><th>Strategy</th><th>Q2 impact</th><th>Trade-off</th></tr></thead>
+                 <tbody>
+                   <tr><td><strong>Use operating reserve</strong></td><td>Reserve → $64k</td><td>No program cuts. Recommended.</td></tr>
+                   <tr><td>Defer AV upgrade</td><td>Reserve untouched</td><td>Worship tech waits until Q4</td></tr>
+                   <tr><td>Special appeal</td><td>Depends on response</td><td>Takes 3–4 weeks; may fall short</td></tr>
+                 </tbody>
+               </table>
+             </div>
+             <p style="margin-top:10px">Which do you want to go with?</p>`,
+        chips: ['Use operating reserve (recommended)', 'Defer AV upgrade', 'Special appeal']
+      },
+      {
+        ai: `<p>Good call. Drafting the committee memo now…</p>
+             <div class="panel">
+               <div class="chat-email">
+                 <div class="chat-email-head">
+                   <div><span class="k">To</span>Rachel Park · Finance committee chair</div>
+                   <div><span class="k">Subject</span><strong>Approval request — $18k roof repair, fund from reserve</strong></div>
+                 </div>
+                 <div class="chat-email-body">
+                   <p>Rachel — requesting committee approval for an $18,000 sanctuary roof repair. Quote from Summit Roofing attached.</p>
+                   <p>Funding: operating reserve. Post-expense reserve at $64,430, still $34k above the policy floor. No impact to program spend.</p>
+                   <p>Tracy</p>
+                 </div>
+               </div>
+             </div>
+             <p style="margin-top:10px">Send it now, or edit first?</p>`,
+        chips: ['Send to Rachel', 'Edit the memo', 'CC Pastor Mike too']
+      },
+      {
+        ai: `<p><strong>✓ Memo sent</strong> to Rachel (CC: Pastor Mike). She usually responds within a day.</p>
+             <p>While we wait, I can update the Q2 forecast and flag this line item in the next board packet. Want me to?</p>`,
+        chips: ['Yes — update forecast', 'Just export an updated cash chart', 'Wait for approval first']
+      },
+      {
+        ai: `<p>Done. Q2 forecast updated. Here's the cash-on-hand trajectory:</p>
+             <div class="panel">
+               <div class="bar-chart" style="margin-top:6px">
+                 <div class="bar-row"><span>Apr (actual)</span><span class="bar-track"><span class="bar-fill" style="width:88%"></span></span><span class="bar-val mono">$82.4k</span></div>
+                 <div class="bar-row"><span>May (proj)</span><span class="bar-track"><span class="bar-fill amber" style="width:68%"></span></span><span class="bar-val mono">$64.4k</span></div>
+                 <div class="bar-row"><span>Jun (proj)</span><span class="bar-track"><span class="bar-fill green" style="width:74%"></span></span><span class="bar-val mono">$69.8k</span></div>
+                 <div class="bar-row"><span>Jul (proj)</span><span class="bar-track"><span class="bar-fill green" style="width:82%"></span></span><span class="bar-val mono">$77.2k</span></div>
+               </div>
+             </div>
+             <p style="margin-top:10px">Anything else, or should I wrap up?</p>`,
+        chips: ['Wrap up', 'Export PDF for the board', 'Start another workflow']
+      },
+      {
+        ai: `<p>All set. Expense <strong>EX-042</strong> is logged, memo is out to Rachel, and the updated forecast is in the board packet for next Thursday. I'll ping you when Rachel responds.</p>`,
+        chips: []
+      }
+    ]
+  },
+
+  donors: {
+    title: 'Re-engage lapsed donors',
+    sub: 'Giving · pulling from Planning Center',
+    icon: '<svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 10-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg>',
+    iconClass: 'amber',
+    opening: {
+      ai: `<p>Hi Tracy — let's re-engage some lapsed donors. <strong>How far back counts as "lapsed"</strong> for this outreach?</p><p class="muted" style="font-size:13px;margin-top:6px">I'll pull from Planning Center, segment, draft personalized emails, and track engagement.</p>`,
+      chips: ['90+ days', '180+ days', '365+ days']
+    },
+    turns: [
+      {
+        ai: `<p>Using <strong>90+ days</strong>. Pulling from Planning Center…</p>
+             <div class="panel">
+               <div class="chat-metric-row">
+                 <div class="chat-metric"><div class="k">Lapsed donors</div><div class="v">142</div></div>
+                 <div class="chat-metric"><div class="k">Prior 12mo giving</div><div class="v">$62.8k</div></div>
+                 <div class="chat-metric"><div class="k">Avg gift</div><div class="v">$248</div></div>
+               </div>
+             </div>
+             <p style="margin-top:10px">Here's the breakdown by segment:</p>
+             <div class="panel">
+               <table class="chat-mini-table">
+                 <thead><tr><th>Segment</th><th>Donors</th><th>Strategy fit</th></tr></thead>
+                 <tbody>
+                   <tr><td><strong>Recurring lapsed</strong></td><td>38</td><td>Recurring reactivation</td></tr>
+                   <tr><td><strong>Warm first-time givers</strong></td><td>47</td><td>Warm check-in</td></tr>
+                   <tr><td><strong>Major gift lapsed</strong></td><td>12</td><td>Personal outreach</td></tr>
+                   <tr><td><strong>Designated-fund lapsed</strong></td><td>45</td><td>Impact update</td></tr>
+                 </tbody>
+               </table>
+             </div>
+             <p style="margin-top:10px"><strong>Which segments do you want to email?</strong></p>`,
+        chips: ['All 4 segments', 'Warm check-in only (47)', 'Recurring + warm (85)', 'Skip major gifts — I\'ll do those personally']
+      },
+      {
+        ai: `<p>Sounds good — I'll exclude major gifts for you to handle personally.</p>
+             <p>For the <strong>132 remaining donors</strong>, what's the tone?</p>`,
+        chips: ['Warm check-in — no ask', 'Impact update', 'Easter campaign tie-in', 'Mix by segment']
+      },
+      {
+        ai: `<p>Using your Memory note ("warm, personal, never transactional — always thank before asking"), I'll draft a warm check-in. Here's a sample for <strong>Sarah Chen</strong>:</p>
+             <div class="panel">
+               <div class="chat-email">
+                 <div class="chat-email-head">
+                   <div><span class="k">From</span>tracy@christlutheran.org</div>
+                   <div><span class="k">To</span>sarah.chen@email.com</div>
+                   <div><span class="k">Subject</span><strong>Thinking of you, Sarah — and a quick thank-you</strong></div>
+                 </div>
+                 <div class="chat-email-body">
+                   <p>Hi Sarah,</p>
+                   <p>It's been a few months since we saw you give to Christ Lutheran — no worries at all. I just wanted to reach out personally to say <strong>thank you</strong>. Your support of our <strong>Youth Ministry fund</strong> last fall made the winter retreat possible for 28 students.</p>
+                   <p>We're praying for you and your family this Easter season.</p>
+                   <p>Grateful,<br/>Tracy</p>
+                 </div>
+               </div>
+             </div>
+             <p style="margin-top:10px">Tone feel right?</p>`,
+        chips: ['Looks great', 'A little more personal', 'Shorter please', 'Add a soft "one-click give" link']
+      },
+      {
+        ai: `<p>Got it — I'll add a soft one-click give link at the end: <em>"If you ever want to give again, here's a one-click link — no pressure, and thank you for being part of our family."</em></p>
+             <p>Generating <strong>132 personalized versions</strong> now — each pulls first name, last-given fund, and last giving season from Planning Center…</p>
+             <p>✓ Done. Want to preview a few random ones before sending?</p>`,
+        chips: ['Preview 3 random', 'Send them all now', 'Hold — I want to eyeball each one']
+      },
+      {
+        ai: `<p>Here's a quick sample across segments:</p>
+             <div class="panel">
+               <table class="chat-mini-table">
+                 <thead><tr><th>Recipient</th><th>Segment</th><th>Personalized detail</th></tr></thead>
+                 <tbody>
+                   <tr><td>Sarah Chen</td><td>Warm first-time</td><td>"Youth Ministry fund · last gift fall 2024"</td></tr>
+                   <tr><td>David Rodriguez</td><td>Recurring lapsed</td><td>"Monthly giving · paused in January"</td></tr>
+                   <tr><td>Linda Park</td><td>Designated-fund</td><td>"Missions · Guatemala trip supported"</td></tr>
+                 </tbody>
+               </table>
+             </div>
+             <p style="margin-top:10px">All looking personal. Should I queue them to send?</p>`,
+        chips: ['Send all 132', 'Change the subject line first', 'Cancel']
+      },
+      {
+        ai: `<p><strong>✓ 132 emails queued.</strong> They'll send in batches of 40 over the next 2 hours to stay under Gmail's rate limit.</p>
+             <p>I'll post a tracking dashboard in your inbox and ping you when:</p>
+             <ul style="margin:6px 0 0 18px;padding:0;font-size:13.5px"><li>Open rate passes 30%</li><li>Anyone replies</li><li>Anyone clicks the give link</li></ul>
+             <p style="margin-top:10px">Want to see the live tracking now?</p>`,
+        chips: ['Show tracking', 'I\'m good — just ping me', 'Start another workflow']
+      },
+      {
+        ai: `<p>Live tracking — 14 minutes in:</p>
+             <div class="panel">
+               <div class="chat-metric-row">
+                 <div class="chat-metric"><div class="k">Sent</div><div class="v">48</div></div>
+                 <div class="chat-metric"><div class="k">Opened</div><div class="v">17 (35%)</div></div>
+                 <div class="chat-metric"><div class="k">Replies</div><div class="v">3</div></div>
+               </div>
+             </div>
+             <p style="margin-top:10px">Off to a great start — opens above your historical 28%. I'll keep watching.</p>`,
+        chips: ['Thanks — wrap up', 'Draft replies to the 3 responders', 'Start another workflow']
+      },
+      {
+        ai: `<p>All set. I've saved this campaign as <strong>"Easter warm check-ins"</strong> in your Recent Work. I'll ping you when anyone replies. 💌</p>`,
+        chips: []
+      }
+    ]
+  }
+};
+
+/* Chat state */
+let chatState = null; // { flowKey, flow, turnIndex }
+
+function startChat(flowKey, seedText) {
+  const flow = FLOWS[flowKey];
+  if (!flow) return go('home');
+  chatState = { flowKey, flow, turnIndex: 0 };
+  go('chat');
+  // Populate header
+  const iconEl = document.getElementById('chat-icon');
+  iconEl.innerHTML = flow.icon;
+  if (flow.iconClass) iconEl.classList.add(flow.iconClass);
+  document.getElementById('chat-title').textContent = flow.title;
+  document.getElementById('chat-sub').textContent = flow.sub;
+  const thread = document.getElementById('chat-thread');
+  thread.innerHTML = '';
+  // If the user typed something in the Ask box, show it as the first user message
+  if (seedText && seedText.trim()) {
+    appendUserMsg(seedText.trim());
+  }
+  // Show opening AI message after short delay
+  showTyping();
+  setTimeout(() => {
+    removeTyping();
+    appendAiMsg(flow.opening.ai);
+    renderChips(flow.opening.chips);
+    focusInput();
+  }, 600);
+  // Wire input Enter
+  document.getElementById('chat-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chatSubmit(); }
+  });
+  // Breadcrumb
+  document.getElementById('crumb').innerHTML = `Workflows <span>/</span> <strong>${flow.title}</strong>`;
+}
+
+function appendAiMsg(html) {
+  const thread = document.getElementById('chat-thread');
+  const node = document.createElement('div');
+  node.className = 'chat-msg ai';
+  node.innerHTML = `<div class="avatar-chat">AI</div><div class="bubble-chat">${html}</div>`;
+  thread.appendChild(node);
+  scrollChat();
+}
+function appendUserMsg(text) {
+  const thread = document.getElementById('chat-thread');
+  const node = document.createElement('div');
+  node.className = 'chat-msg user';
+  const safe = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  node.innerHTML = `<div class="bubble-chat">${safe}</div><div class="avatar-chat">TM</div>`;
+  thread.appendChild(node);
+  scrollChat();
+}
+function showTyping() {
+  const thread = document.getElementById('chat-thread');
+  const node = document.createElement('div');
+  node.className = 'chat-msg ai';
+  node.id = 'chat-typing-row';
+  node.innerHTML = `<div class="avatar-chat">AI</div><div class="bubble-chat" style="padding:0"><div class="chat-typing"><span></span><span></span><span></span></div></div>`;
+  thread.appendChild(node);
+  scrollChat();
+}
+function removeTyping() {
+  const t = document.getElementById('chat-typing-row');
+  if (t) t.remove();
+}
+function renderChips(chips) {
+  const box = document.getElementById('chat-sugs');
+  box.innerHTML = '';
+  if (!chips || chips.length === 0) {
+    // End of flow — offer restart chips
+    const endBox = document.createElement('div');
+    endBox.style.cssText = 'font-size:12.5px;color:var(--text-secondary);';
+    endBox.textContent = 'This workflow is complete.';
+    box.appendChild(endBox);
+    const back = document.createElement('button');
+    back.className = 'sug-chip';
+    back.textContent = '← Back to home';
+    back.onclick = () => go('home');
+    box.appendChild(back);
+    document.getElementById('chat-input').disabled = true;
+    document.getElementById('chat-send').disabled = true;
+    document.getElementById('chat-status').textContent = 'Complete';
+    document.getElementById('chat-status').className = 'chip green dot';
+    return;
+  }
+  chips.forEach((chipText, i) => {
+    const el = document.createElement('button');
+    el.className = 'sug-chip' + (i === 0 ? ' primary' : '');
+    el.textContent = chipText;
+    el.onclick = () => submitUserTurn(chipText);
+    box.appendChild(el);
+  });
+}
+function chatSubmit() {
+  const input = document.getElementById('chat-input');
+  const val = (input.value || '').trim();
+  if (!val) return;
+  submitUserTurn(val);
+  input.value = '';
+}
+function submitUserTurn(text) {
+  if (!chatState) return;
+  appendUserMsg(text);
+  // Clear chips while AI "thinks"
+  document.getElementById('chat-sugs').innerHTML = '';
+  showTyping();
+  const nextTurn = chatState.flow.turns[chatState.turnIndex];
+  const delay = 700 + Math.random() * 500;
+  setTimeout(() => {
+    removeTyping();
+    if (!nextTurn) {
+      appendAiMsg(`<p class="muted">(End of scripted flow — thanks for exploring the prototype!)</p>`);
+      renderChips([]);
+      return;
+    }
+    appendAiMsg(nextTurn.ai);
+    chatState.turnIndex += 1;
+    renderChips(nextTurn.chips);
+    focusInput();
+  }, delay);
+}
+function scrollChat() {
+  const sc = document.getElementById('chat-scroll');
+  if (sc) sc.scrollTop = sc.scrollHeight;
+}
+function focusInput() {
+  const i = document.getElementById('chat-input');
+  if (i && !i.disabled) i.focus();
+}
+
+/* ====== Ask-box routing ====== */
 function runAsk() {
-  const v = (document.getElementById('ask-input').value || '').toLowerCase();
-  if (v.includes('donor') || v.includes('lapsed') || v.includes('giving')) return go('wf-donors');
-  if (v.includes('expense') || v.includes('budget') || v.includes('forecast')) return go('wf-expense');
-  if (v.includes('work') || v.includes('hvac') || v.includes('repair') || v.includes('fix')) return go('wf-workorder');
-  go('wf-workorder');
+  const raw = (document.getElementById('ask-input').value || '').trim();
+  const v = raw.toLowerCase();
+  let flowKey = 'workorder'; // default
+  if (v.includes('donor') || v.includes('lapsed') || v.includes('giving') || v.includes('tithe')) flowKey = 'donors';
+  else if (v.includes('expense') || v.includes('budget') || v.includes('forecast') || v.includes('roof') || v.includes('cash') || v.includes('unplanned')) flowKey = 'expense';
+  else if (v.includes('hvac') || v.includes('broken') || v.includes('repair') || v.includes('fix') || v.includes('work order') || v.includes('facilit') || v.includes('leak') || v.includes('light')) flowKey = 'workorder';
+  // If no text, just default to work order
+  startChat(flowKey, raw);
 }
+
+/* ====== Vendors ====== */
+const vendors = [
+  { name: 'Cornerstone HVAC', category: 'HVAC', contact: 'Ray Cornerstone · (555) 812-4119', jobs: 14, rating: 4.9, status: 'Preferred' },
+  { name: 'Summit Roofing', category: 'Roofing', contact: 'Jean Huang · jean@summitroof.com', jobs: 3, rating: 4.7, status: 'Approved' },
+  { name: 'ProPlumb Services', category: 'Plumbing', contact: 'Dan Ortega · (555) 339-0821', jobs: 9, rating: 4.6, status: 'Preferred' },
+  { name: 'BrightWay Electric', category: 'Electrical', contact: 'Mira Patel · mira@brightwayelec.com', jobs: 6, rating: 4.8, status: 'Approved' },
+  { name: 'Evergreen Grounds', category: 'Landscaping', contact: '(555) 701-2214', jobs: 22, rating: 4.5, status: 'Preferred' },
+  { name: 'Hometown Printing', category: 'Printing & mailers', contact: 'hello@hometownprint.co', jobs: 11, rating: 4.4, status: 'Approved' },
+  { name: 'Summit HVAC', category: 'HVAC', contact: 'sales@summithvac.com', jobs: 1, rating: 4.2, status: 'On probation' }
+];
+
+function statusChipClass(s) {
+  if (s === 'Preferred') return 'green';
+  if (s === 'Approved') return 'blue';
+  return 'amber';
+}
+
+function renderVendors() {
+  const tbody = document.getElementById('vendors-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = vendors.map(v => `
+    <tr class="row-hover">
+      <td><strong>${escapeHtml(v.name)}</strong></td>
+      <td>${escapeHtml(v.category)}</td>
+      <td>${escapeHtml(v.contact || '—')}</td>
+      <td class="mono">${v.jobs}</td>
+      <td class="mono">${v.rating ? v.rating.toFixed(1) + ' ★' : '—'}</td>
+      <td><span class="chip ${statusChipClass(v.status)} dot">${escapeHtml(v.status)}</span></td>
+    </tr>
+  `).join('');
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function showVendorForm() {
+  document.getElementById('vendor-modal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('v-name')?.focus(), 50);
+}
+function hideVendorForm() {
+  document.getElementById('vendor-modal').classList.add('hidden');
+  ['v-name', 'v-contact', 'v-reach', 'v-notes'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+}
+function saveVendor() {
+  const name = document.getElementById('v-name').value.trim();
+  if (!name) { document.getElementById('v-name').focus(); return; }
+  const category = document.getElementById('v-cat').value;
+  const status = document.getElementById('v-status').value;
+  const contactName = document.getElementById('v-contact').value.trim();
+  const reach = document.getElementById('v-reach').value.trim();
+  const contact = [contactName, reach].filter(Boolean).join(' · ') || '—';
+  vendors.unshift({ name, category, contact, jobs: 0, rating: null, status });
+  hideVendorForm();
+  renderVendors();
+}
+
 /* init */
 go('home');
 </script>
