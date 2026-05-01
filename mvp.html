@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ChurchPlannerPro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  /* ===== Design tokens (per design-guidelines) ===== */
+  :root {
+    --primary: #2563EB;
+    --primary-hover: #1D4ED8;
+    --primary-light: #DBEAFE;
+    --bg: #F5F7FA;
+    --surface: #FFFFFF;
+    --border: #E5E7EB;
+    --text: #111827;
+    --text-secondary: #6B7280;
+    --text-disabled: #9CA3AF;
+    --cta: #22C55E;
+    --cta-hover: #16A34A;
+    --cta-light: #DCFCE7;
+    --warning: #F59E0B;
+    --error: #EF4444;
+    --xs: 4px; --sm: 8px; --md: 16px; --lg: 24px; --xl: 32px; --xxl: 48px;
+    --radius: 8px; --radius-lg: 12px;
+    --shadow-sm: 0 1px 2px rgba(17,24,39,0.04);
+    --shadow: 0 1px 3px rgba(17,24,39,0.06), 0 1px 2px rgba(17,24,39,0.04);
+    --shadow-lg: 0 10px 25px rgba(17,24,39,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  input, textarea, select { font-family: inherit; font-size: inherit; color: inherit; }
+  a { color: var(--primary); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  h1 { font-size: 24px; font-weight: 600; }
+  h2 { font-size: 20px; font-weight: 600; }
+  h3 { font-size: 16px; font-weight: 600; }
+
+  /* ===== Layout ===== */
+  .app { display: grid; grid-template-columns: 240px 1fr; height: 100vh; }
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    padding: var(--lg) var(--md);
+  }
+  .sidebar-brand {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 var(--sm) var(--lg);
+  }
+  .sidebar-brand-mark {
+    width: 32px; height: 32px;
+    background: var(--primary);
+    color: white;
+    border-radius: var(--radius);
+    display: grid; place-items: center;
+    font-weight: 600; font-size: 14px;
+  }
+  .sidebar-brand-name { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
+  .sidebar-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px var(--sm);
+    border-radius: var(--radius);
+    color: var(--text-secondary);
+    font-size: 14px; font-weight: 500;
+    transition: background 150ms ease-out, color 150ms ease-out;
+    width: 100%; text-align: left;
+  }
+  .nav-item:hover { background: var(--bg); color: var(--text); }
+  .nav-item.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+  .nav-item .lucide { width: 18px; height: 18px; }
+  .nav-section-label {
+    font-size: 11px; font-weight: 600; color: var(--text-disabled);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: var(--md) var(--sm) var(--xs);
+  }
+  .sidebar-foot {
+    border-top: 1px solid var(--border);
+    padding-top: var(--md);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: grid; place-items: center;
+    font-weight: 600; font-size: 12px;
+    flex-shrink: 0;
+  }
+  .avatar-lg { width: 40px; height: 40px; font-size: 14px; }
+  .user-name { font-weight: 500; font-size: 13px; }
+  .user-org { color: var(--text-secondary); font-size: 12px; }
+
+  /* ===== Main area ===== */
+  .main { display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+  .topbar {
+    padding: var(--lg) var(--xl);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+    min-height: 78px;
+  }
+  .topbar h1 { font-size: 22px; }
+  .topbar-sub { color: var(--text-secondary); font-size: 13px; margin-top: 2px; }
+  .topbar-actions { display: flex; gap: var(--sm); }
+  .content { flex: 1; overflow-y: auto; padding: var(--lg) var(--xl); }
+  .content-narrow { max-width: 960px; }
+
+  /* ===== Buttons ===== */
+  .btn {
+    display: inline-flex; align-items: center; gap: var(--sm);
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    font-weight: 500; font-size: 14px;
+    transition: background 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out, opacity 150ms ease-out;
+    min-height: 36px;
+    white-space: nowrap;
+  }
+  .btn .lucide { width: 16px; height: 16px; }
+  .btn-primary { background: var(--cta); color: white; }
+  .btn-primary:hover { background: var(--cta-hover); }
+  .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--bg); }
+  .btn-text { color: var(--primary); padding: 8px 12px; }
+  .btn-text:hover { background: var(--primary-light); }
+  .btn-blue { background: var(--primary); color: white; }
+  .btn-blue:hover { background: var(--primary-hover); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-sm { min-height: 30px; padding: 6px 12px; font-size: 13px; }
+
+  /* ===== Cards ===== */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--lg);
+  }
+  .card-hover { transition: box-shadow 150ms ease-out, border-color 150ms ease-out; cursor: pointer; }
+  .card-hover:hover { box-shadow: var(--shadow); border-color: #D1D5DB; }
+
+  /* ===== Inputs ===== */
+  .input, .textarea, select.input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 14px;
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+  }
+  .input:focus, .textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+  }
+  .textarea { resize: vertical; min-height: 88px; line-height: 1.5; }
+  label.field-label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+
+  /* ===== Badges ===== */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px; font-weight: 500;
+    line-height: 18px;
+  }
+  .badge-blue { background: var(--primary-light); color: var(--primary); }
+  .badge-green { background: var(--cta-light); color: var(--cta-hover); }
+  .badge-grey { background: var(--bg); color: var(--text-secondary); }
+  .badge-amber { background: #FEF3C7; color: #B45309; }
+  .badge-soft { background: #F3F4F6; color: var(--text); }
+
+  /* ===== Tab panels ===== */
+  .tab-panel { display: none; flex-direction: column; flex: 1; overflow: hidden; min-height: 0; }
+  .tab-panel.active { display: flex; }
+
+  /* ===== Ask Alvin ===== */
+  .alvin-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--lg) var(--xl);
+  }
+  .alvin-thread {
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex; flex-direction: column;
+    gap: var(--lg);
+    padding-bottom: var(--lg);
+  }
+  .alvin-empty {
+    max-width: 720px;
+    margin: 56px auto 0;
+    text-align: center;
+  }
+  .alvin-empty-mark {
+    width: 56px; height: 56px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    margin: 0 auto var(--md);
+    font-weight: 600; font-size: 18px;
+  }
+  .alvin-empty h2 { font-size: 24px; font-weight: 600; margin-bottom: var(--sm); }
+  .alvin-empty p { color: var(--text-secondary); margin-bottom: var(--lg); }
+  .suggestion-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sm);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .suggestion {
+    padding: var(--md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    text-align: left;
+    transition: border-color 150ms ease-out, background 150ms ease-out;
+  }
+  .suggestion:hover { border-color: var(--primary); background: var(--primary-light); }
+  .suggestion-title { font-weight: 500; font-size: 14px; margin-bottom: 2px; }
+  .suggestion-desc { color: var(--text-secondary); font-size: 12px; }
+
+  .msg { display: flex; gap: 12px; }
+  .msg-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: grid; place-items: center;
+    font-weight: 600; font-size: 12px;
+  }
+  .msg-avatar.user { background: #F3F4F6; color: var(--text); }
+  .msg-avatar.alvin { background: var(--primary); color: white; }
+  .msg-body { flex: 1; min-width: 0; padding-top: 4px; }
+  .msg-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+  .msg-content { line-height: 1.6; font-size: 14px; }
+  .msg-content p + p { margin-top: var(--sm); }
+  .msg-content code.inline { background: var(--bg); padding: 1px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', monospace; }
+
+  .msg-card {
+    margin-top: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .msg-card-head {
+    padding: 12px var(--md);
+    display: flex; align-items: center; gap: var(--sm);
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(0deg, transparent, rgba(37, 99, 235, 0.02));
+  }
+  .msg-card-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: grid; place-items: center;
+  }
+  .msg-card-icon .lucide { width: 16px; height: 16px; }
+  .msg-card-title { font-weight: 600; font-size: 13px; }
+  .msg-card-meta { color: var(--text-secondary); font-size: 12px; margin-top: 2px; }
+  .msg-card-body { padding: 12px var(--md); font-size: 13px; }
+  .msg-card-body .field-preview { padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+  .msg-card-body .field-preview:last-child { border-bottom: none; }
+  .msg-card-body .field-preview-name { font-weight: 500; }
+  .msg-card-body .field-preview-type { color: var(--text-secondary); font-size: 12px; }
+  .msg-card-body .email-line + .email-line { margin-top: 4px; }
+  .msg-card-body .email-subject { font-weight: 600; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .msg-card-body .email-body { color: var(--text); white-space: pre-wrap; line-height: 1.6; }
+  .msg-card-actions {
+    padding: 12px var(--md);
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+    display: flex; gap: var(--sm); flex-wrap: wrap;
+  }
+  .msg-card-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--primary); font-weight: 500; font-size: 13px;
+  }
+  .msg-card-link:hover { text-decoration: underline; }
+  .msg-card-link .lucide { width: 14px; height: 14px; }
+
+  .member-mini-list { display: flex; flex-direction: column; }
+  .member-mini {
+    display: flex; align-items: center; gap: var(--sm);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .member-mini:last-child { border-bottom: none; }
+  .member-mini-name { font-weight: 500; flex: 1; }
+  .member-mini-skills { color: var(--text-secondary); font-size: 12px; }
+
+  .typing { display: inline-flex; gap: 4px; align-items: center; padding: 6px 0; }
+  .typing span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--text-disabled);
+    animation: blink 1.2s infinite ease-in-out;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
+
+  .alvin-input-region {
+    padding: var(--md) var(--xl) var(--lg);
+    flex-shrink: 0;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+  }
+  .alvin-input-shell { max-width: 760px; margin: 0 auto; }
+  .quick-chips {
+    display: flex;
+    gap: var(--sm);
+    margin-bottom: var(--sm);
+    flex-wrap: wrap;
+  }
+  .chip {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    font-size: 12px;
+    color: var(--text-secondary);
+    transition: border-color 150ms ease-out, color 150ms ease-out, background 150ms ease-out;
+  }
+  .chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+
+  .alvin-input-box {
+    display: flex; gap: var(--sm); align-items: flex-end;
+    padding: var(--sm);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+  }
+  .alvin-input-box:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+  }
+  .alvin-input {
+    flex: 1;
+    border: none; outline: none; background: transparent;
+    padding: 8px var(--sm);
+    resize: none;
+    max-height: 160px;
+    font-size: 14px; line-height: 1.5;
+  }
+  .alvin-send {
+    width: 36px; height: 36px;
+    border-radius: var(--radius);
+    background: var(--primary);
+    color: white;
+    display: grid; place-items: center;
+    transition: background 150ms ease-out, opacity 150ms ease-out;
+    flex-shrink: 0;
+  }
+  .alvin-send:hover { background: var(--primary-hover); }
+  .alvin-send:disabled { background: var(--text-disabled); cursor: not-allowed; }
+  .alvin-send .lucide { width: 16px; height: 16px; }
+
+  /* ===== Tables ===== */
+  .toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: var(--md);
+    margin-bottom: var(--lg);
+  }
+  .search-input { position: relative; }
+  .search-input .lucide {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    width: 16px; height: 16px; color: var(--text-secondary);
+  }
+  .search-input input {
+    padding: 10px 14px 10px 38px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    width: 320px;
+  }
+  .search-input input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+  }
+
+  .table-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .table-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 1.4fr 1.2fr 60px;
+    align-items: center;
+    padding: 14px var(--lg);
+    border-bottom: 1px solid var(--border);
+    transition: background 150ms ease-out;
+    gap: var(--md);
+  }
+  .table-head {
+    background: var(--bg);
+    font-size: 11px; font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .table-row:not(.table-head) { cursor: pointer; }
+  .table-row:not(.table-head):hover { background: var(--bg); }
+  .table-row:last-child { border-bottom: none; }
+  .person-name { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+  .skill-list, .interest-list { display: flex; gap: 4px; flex-wrap: wrap; min-height: 22px; }
+  .empty-dash { color: var(--text-disabled); font-size: 13px; }
+
+  /* ===== Drawer ===== */
+  .drawer-bg {
+    position: fixed; inset: 0;
+    background: rgba(17, 24, 39, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease-out;
+    z-index: 50;
+  }
+  .drawer-bg.open { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed; right: 0; top: 0; bottom: 0;
+    width: 480px; max-width: 92vw;
+    background: var(--surface);
+    box-shadow: -8px 0 24px rgba(0,0,0,0.08);
+    z-index: 51;
+    display: flex; flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 220ms ease-out;
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer-head {
+    padding: var(--lg);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: var(--md);
+    flex-shrink: 0;
+  }
+  .drawer-body { flex: 1; overflow-y: auto; padding: var(--lg); }
+  .drawer-foot { padding: var(--md) var(--lg); border-top: 1px solid var(--border); display: flex; gap: var(--sm); justify-content: flex-end; flex-shrink: 0; }
+  .icon-btn {
+    width: 32px; height: 32px;
+    border-radius: var(--radius);
+    display: grid; place-items: center;
+    color: var(--text-secondary);
+    transition: background 150ms ease-out, color 150ms ease-out;
+  }
+  .icon-btn:hover { background: var(--bg); color: var(--text); }
+  .icon-btn .lucide { width: 18px; height: 18px; }
+
+  .section { margin-bottom: var(--lg); }
+  .section-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--sm); }
+  .meta-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .meta-row:last-child { border-bottom: none; }
+  .meta-label { color: var(--text-secondary); }
+  .meta-value { font-weight: 500; }
+
+  /* ===== Grid cards ===== */
+  .grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--md);
+  }
+  .form-card-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .form-card-meta { color: var(--text-secondary); font-size: 12px; margin-bottom: var(--md); }
+  .form-card-stats { display: flex; gap: var(--md); padding-top: var(--md); border-top: 1px solid var(--border); }
+  .form-card-stat-num { font-weight: 600; font-size: 18px; }
+  .form-card-stat-label { color: var(--text-secondary); font-size: 12px; }
+
+  /* Forms detail */
+  .field-row {
+    padding: 12px var(--md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: var(--sm);
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--surface);
+  }
+  .field-name { font-weight: 500; }
+  .field-type { color: var(--text-secondary); font-size: 12px; }
+
+  .resp-table { width: 100%; border-collapse: collapse; }
+  .resp-table th { text-align: left; padding: 10px var(--md); font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .resp-table td { padding: 12px var(--md); border-bottom: 1px solid var(--border); font-size: 13px; }
+  .resp-table tr:last-child td { border-bottom: none; }
+  .resp-table tr:hover td { background: var(--bg); }
+
+  /* Settings */
+  .settings-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--lg);
+    margin-bottom: var(--md);
+    max-width: 720px;
+  }
+  .settings-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--sm) 0;
+    border-bottom: 1px solid var(--border);
+    gap: var(--md);
+  }
+  .settings-row:last-child { border-bottom: none; }
+  .settings-row-info h4 { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .settings-row-info p { color: var(--text-secondary); font-size: 13px; }
+
+  .switch {
+    display: inline-block; position: relative;
+    width: 36px; height: 20px;
+    background: var(--border);
+    border-radius: 10px;
+    transition: background 150ms ease-out;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .switch::after {
+    content: ''; position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 150ms ease-out;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  .switch.on { background: var(--cta); }
+  .switch.on::after { transform: translateX(16px); }
+
+  .connect-card {
+    display: flex; align-items: center; gap: var(--md);
+    padding: var(--md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .connect-mark {
+    width: 40px; height: 40px;
+    border-radius: var(--radius);
+    display: grid; place-items: center;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .connect-mark.gmail { background: #FFEBEE; color: #C62828; }
+  .connect-mark.outlook { background: #E3F2FD; color: #1565C0; }
+  .connect-info { flex: 1; }
+  .connect-name { font-weight: 500; }
+  .connect-status { color: var(--text-secondary); font-size: 12px; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: var(--lg); left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    padding: 10px var(--md);
+    background: var(--text);
+    color: white;
+    border-radius: var(--radius);
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 200ms ease-out, transform 200ms ease-out;
+    z-index: 100;
+    pointer-events: none;
+    box-shadow: var(--shadow-lg);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Empty states */
+  .empty-state {
+    text-align: center;
+    padding: var(--xxl) var(--lg);
+    color: var(--text-secondary);
+  }
+  .empty-state .lucide { width: 32px; height: 32px; color: var(--text-disabled); margin-bottom: var(--sm); }
+  .empty-state h3 { color: var(--text); font-weight: 600; font-size: 16px; margin-bottom: 4px; }
+
+  /* Modal */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(17, 24, 39, 0.4);
+    display: none; align-items: center; justify-content: center;
+    z-index: 60;
+    padding: var(--lg);
+  }
+  .modal-bg.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 480px;
+    overflow: hidden;
+  }
+  .modal-head { padding: var(--lg); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .modal-body { padding: var(--lg); }
+  .modal-foot { padding: var(--md) var(--lg); border-top: 1px solid var(--border); display: flex; gap: var(--sm); justify-content: flex-end; }
+
+  .row-gap { display: flex; flex-direction: column; gap: var(--md); }
+  .scroll-fade-bottom { mask-image: linear-gradient(to bottom, black 90%, transparent); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-mark">CP</div>
+      <div class="sidebar-brand-name">ChurchPlannerPro</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-tab="alvin">
+        <i data-lucide="sparkles"></i>
+        Ask Alvin
+      </button>
+      <button class="nav-item" data-tab="people">
+        <i data-lucide="users"></i>
+        People
+      </button>
+      <button class="nav-item" data-tab="forms">
+        <i data-lucide="clipboard-list"></i>
+        Forms
+      </button>
+      <button class="nav-item" data-tab="events">
+        <i data-lucide="calendar"></i>
+        Events
+      </button>
+
+      <div style="flex:1"></div>
+
+      <button class="nav-item" data-tab="settings">
+        <i data-lucide="settings"></i>
+        Settings
+      </button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="avatar">AS</div>
+      <div style="min-width:0">
+        <div class="user-name">Andrew Schneider</div>
+        <div class="user-org">Grace Community Church</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== Main ===== -->
+  <main class="main">
+
+    <!-- ===== Ask Alvin ===== -->
+    <div class="tab-panel active" data-panel="alvin">
+      <div class="topbar">
+        <div>
+          <h1>Ask Alvin</h1>
+          <div class="topbar-sub">Your AI assistant for church administration.</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-secondary" id="alvin-new-chat">
+            <i data-lucide="plus"></i>
+            New chat
+          </button>
+        </div>
+      </div>
+
+      <div class="alvin-content" id="alvin-content">
+        <div id="alvin-empty" class="alvin-empty">
+          <div class="alvin-empty-mark">A</div>
+          <h2>How can I help you today?</h2>
+          <p>I can create forms, identify members by skills, draft emails, and set up events.</p>
+          <div class="suggestion-grid">
+            <button class="suggestion" data-prompt="Create a talent, interest and skills form">
+              <div class="suggestion-title">Create a talent, interest and skills form</div>
+              <div class="suggestion-desc">Survey members to learn what they bring</div>
+            </button>
+            <button class="suggestion" data-prompt="Find members interested in painting for an upcoming project">
+              <div class="suggestion-title">Find members interested in painting</div>
+              <div class="suggestion-desc">For an upcoming volunteer project</div>
+            </button>
+            <button class="suggestion" data-prompt="Draft an email to invite members to fill out our skills survey">
+              <div class="suggestion-title">Draft a member invite email</div>
+              <div class="suggestion-desc">Invite members to a survey or event</div>
+            </button>
+            <button class="suggestion" data-prompt="Create an event and a registration link">
+              <div class="suggestion-title">Schedule an event</div>
+              <div class="suggestion-desc">With a registration link to share</div>
+            </button>
+          </div>
+        </div>
+
+        <div class="alvin-thread" id="alvin-thread"></div>
+      </div>
+
+      <div class="alvin-input-region">
+        <div class="alvin-input-shell">
+          <div class="quick-chips" id="quick-chips">
+            <button class="chip" data-prompt="Create a talent, interest and skills form">+ Create a form</button>
+            <button class="chip" data-prompt="Find members interested in painting">Find members by skill</button>
+            <button class="chip" data-prompt="Draft an email">Draft an email</button>
+            <button class="chip" data-prompt="Create an event">Create an event</button>
+          </div>
+          <div class="alvin-input-box">
+            <textarea
+              id="alvin-input"
+              class="alvin-input"
+              rows="1"
+              placeholder="Ask Alvin to create a form, find members, draft an email…"
+            ></textarea>
+            <button class="alvin-send" id="alvin-send" disabled>
+              <i data-lucide="arrow-up"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== People ===== -->
+    <div class="tab-panel" data-panel="people">
+      <div class="topbar">
+        <div>
+          <h1>People</h1>
+          <div class="topbar-sub" id="people-count">Loading members…</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-secondary"><i data-lucide="upload"></i>Import</button>
+          <button class="btn btn-primary"><i data-lucide="user-plus"></i>Add member</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="toolbar">
+          <div class="search-input">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Search by name, email, or skill" id="people-search" />
+          </div>
+          <div style="display:flex; gap: var(--sm)">
+            <button class="btn btn-secondary btn-sm"><i data-lucide="filter"></i>Filter</button>
+            <button class="btn btn-secondary btn-sm"><i data-lucide="arrow-up-down"></i>Sort</button>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-row table-head">
+            <div>Name</div>
+            <div>Email</div>
+            <div>Skills</div>
+            <div>Interests</div>
+            <div></div>
+          </div>
+          <div id="people-rows"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Forms ===== -->
+    <div class="tab-panel" data-panel="forms">
+      <div class="topbar">
+        <div>
+          <h1>Forms</h1>
+          <div class="topbar-sub" id="forms-count">Loading forms…</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-primary"><i data-lucide="plus"></i>Create form</button>
+        </div>
+      </div>
+      <div class="content">
+        <div id="forms-grid" class="grid-cards"></div>
+      </div>
+    </div>
+
+    <!-- ===== Events ===== -->
+    <div class="tab-panel" data-panel="events">
+      <div class="topbar">
+        <div>
+          <h1>Events</h1>
+          <div class="topbar-sub" id="events-count">Loading events…</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-primary"><i data-lucide="calendar-plus"></i>Create event</button>
+        </div>
+      </div>
+      <div class="content">
+        <div id="events-grid" class="grid-cards"></div>
+      </div>
+    </div>
+
+    <!-- ===== Settings ===== -->
+    <div class="tab-panel" data-panel="settings">
+      <div class="topbar">
+        <div>
+          <h1>Settings</h1>
+          <div class="topbar-sub">Connections, profile, and notifications.</div>
+        </div>
+      </div>
+      <div class="content content-narrow">
+
+        <div class="settings-section">
+          <h3 style="margin-bottom: var(--md)">Connect email</h3>
+          <p style="color: var(--text-secondary); margin-bottom: var(--md); font-size: 13px;">Alvin sends emails on your behalf. Connect a mailbox so messages come from your church domain.</p>
+
+          <div class="row-gap">
+            <div class="connect-card">
+              <div class="connect-mark gmail">G</div>
+              <div class="connect-info">
+                <div class="connect-name">Gmail</div>
+                <div class="connect-status" id="gmail-status">Not connected</div>
+              </div>
+              <button class="btn btn-secondary btn-sm" id="gmail-connect-btn">Connect</button>
+            </div>
+            <div class="connect-card">
+              <div class="connect-mark outlook">O</div>
+              <div class="connect-info">
+                <div class="connect-name">Microsoft Outlook</div>
+                <div class="connect-status">Not connected</div>
+              </div>
+              <button class="btn btn-secondary btn-sm">Connect</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 style="margin-bottom: var(--md)">Profile</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--md);">
+            <div>
+              <label class="field-label">Full name</label>
+              <input class="input" value="Andrew Schneider" />
+            </div>
+            <div>
+              <label class="field-label">Title</label>
+              <input class="input" value="Administrator" />
+            </div>
+            <div>
+              <label class="field-label">Email</label>
+              <input class="input" value="andrew@leftbowerlabs.com" />
+            </div>
+            <div>
+              <label class="field-label">Church</label>
+              <input class="input" value="Grace Community Church" />
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 style="margin-bottom: var(--md)">Notifications</h3>
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <h4>Form responses</h4>
+              <p>Email me a summary when a member submits a form.</p>
+            </div>
+            <div class="switch on" data-toggle></div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <h4>Event registrations</h4>
+              <p>Notify me when someone registers for an event.</p>
+            </div>
+            <div class="switch on" data-toggle></div>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <h4>Weekly digest</h4>
+              <p>A summary of activity each Monday morning.</p>
+            </div>
+            <div class="switch" data-toggle></div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3 style="margin-bottom: var(--md)">About Alvin</h3>
+          <p style="color: var(--text-secondary); font-size: 13px;">Alvin is your AI assistant for church administration. It can create forms, identify members by skills, draft emails, and create events. Alvin runs in this prototype with mocked responses.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ===== Drawer ===== -->
+<div class="drawer-bg" id="drawer-bg"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div id="drawer-title-area"></div>
+    <button class="icon-btn" id="drawer-close"><i data-lucide="x"></i></button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+  <div class="drawer-foot" id="drawer-foot"></div>
+</div>
+
+<!-- ===== Modal (generic) ===== -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal" id="modal">
+    <div class="modal-head" id="modal-head"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot" id="modal-foot"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================
+   ChurchPlannerPro — single-file prototype
+   ===================================================== */
+
+// ---------- Mock data ----------
+const seedMembers = [
+  { id: 'm1', name: 'Sarah Mitchell',  email: 'sarah.mitchell@gracechurch.org',  skills: ['Painting', 'Gardening'],            interests: ['Outreach', 'Beautification'] },
+  { id: 'm2', name: 'James Carter',    email: 'james.carter@gracechurch.org',    skills: ['Carpentry', 'Guitar'],               interests: ['Worship team'] },
+  { id: 'm3', name: 'Maria Rodriguez', email: 'maria.r@gracechurch.org',         skills: ['Painting', 'Teaching', 'Baking'],    interests: ['Children’s ministry', 'Hospitality'] },
+  { id: 'm4', name: 'David Park',      email: 'david.park@gracechurch.org',      skills: ['Graphic design', 'Photography'],     interests: ['Communications'] },
+  { id: 'm5', name: 'Emily Chen',      email: 'emily.chen@gracechurch.org',      skills: [],                                    interests: [] },
+  { id: 'm6', name: 'Michael O’Brien', email: 'michael.obrien@gracechurch.org', skills: ['Cooking', 'Painting'],            interests: ['Hospitality'] },
+  { id: 'm7', name: 'Rebecca Foster',  email: 'rebecca.foster@gracechurch.org',  skills: ['Accounting', 'Event planning'],      interests: ['Finance committee'] },
+  { id: 'm8', name: 'Thomas Wright',   email: 'thomas.wright@gracechurch.org',   skills: ['IT', 'Sound system'],                interests: ['Tech team'] },
+  { id: 'm9', name: 'Hannah Kim',      email: 'hannah.kim@gracechurch.org',      skills: [],                                    interests: [] },
+  { id: 'm10', name: 'Jonathan Lee',   email: 'jonathan.lee@gracechurch.org',    skills: ['Handyman', 'Painting'],              interests: ['Building maintenance'] },
+  { id: 'm11', name: 'Olivia Martinez', email: 'olivia.martinez@gracechurch.org', skills: [],                                   interests: [] },
+  { id: 'm12', name: 'Daniel Singh',   email: 'daniel.singh@gracechurch.org',    skills: ['Youth ministry', 'Sports'],          interests: ['Youth group'] },
+];
+
+const state = {
+  activeTab: 'alvin',
+  members: JSON.parse(JSON.stringify(seedMembers)),
+  forms: [
+    {
+      id: 'f1',
+      title: 'Easter Volunteer Sign-Up',
+      description: 'Volunteers needed for the Easter weekend services.',
+      created: 'Mar 14, 2026',
+      fields: [
+        { name: 'Full name', type: 'Short text' },
+        { name: 'Service slot', type: 'Single select' },
+        { name: 'T-shirt size', type: 'Single select' },
+      ],
+      responses: [
+        { member: 'James Carter', submittedAt: 'Mar 18', values: { 'Full name': 'James Carter', 'Service slot': 'Saturday evening', 'T-shirt size': 'L' } },
+        { member: 'Maria Rodriguez', submittedAt: 'Mar 18', values: { 'Full name': 'Maria Rodriguez', 'Service slot': 'Sunday morning', 'T-shirt size': 'M' } },
+        { member: 'Rebecca Foster', submittedAt: 'Mar 19', values: { 'Full name': 'Rebecca Foster', 'Service slot': 'Sunday morning', 'T-shirt size': 'S' } },
+      ],
+    },
+  ],
+  events: [
+    {
+      id: 'e1',
+      title: 'Easter Brunch',
+      date: 'April 5, 2026',
+      time: '11:00 AM',
+      location: 'Fellowship Hall',
+      description: 'Easter brunch following the morning service. Open to all members and visitors.',
+      registrants: ['m2', 'm3', 'm7', 'm8', 'm12'],
+      status: 'past',
+    },
+  ],
+  alvin: {
+    history: [],            // { role: 'user' | 'alvin', html: ... }
+    expecting: null,        // 'fields' | 'send_form_email' | 'identify_after_update' | 'send_painters_email' | 'add_event_to_email' | 'send_painters_email_with_event'
+    workingForm: null,      // { title, fields }
+    workingEmail: null,     // { subject, body, recipients }
+    workingPainters: null,  // [member ids]
+    workingEvent: null,     // event reference
+    gmailConnected: false,
+  },
+};
+
+// ---------- Utilities ----------
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const escape = (s) => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+const initials = (name) => name.split(/\s+/).map(p => p[0]).slice(0,2).join('').toUpperCase();
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+const renderIcons = () => { try { lucide.createIcons(); } catch(e) {} };
+
+const showToast = (msg) => {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove('show'), 2400);
+};
+
+// ---------- Tab navigation ----------
+const switchTab = (tab) => {
+  state.activeTab = tab;
+  $$('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  $$('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === tab));
+  // Close drawer on tab switch
+  closeDrawer();
+};
+
+$$('.nav-item').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// ---------- People tab ----------
+function renderPeople(filter = '') {
+  const rows = $('#people-rows');
+  const f = filter.trim().toLowerCase();
+  const filtered = state.members.filter(m => {
+    if (!f) return true;
+    return [m.name, m.email, ...m.skills, ...m.interests].some(v => v.toLowerCase().includes(f));
+  });
+  rows.innerHTML = filtered.map(m => `
+    <div class="table-row" data-member-id="${m.id}">
+      <div class="person-name">
+        <div class="avatar">${initials(m.name)}</div>
+        <span>${escape(m.name)}</span>
+      </div>
+      <div style="color: var(--text-secondary)">${escape(m.email)}</div>
+      <div class="skill-list">
+        ${m.skills.length === 0 ? '<span class="empty-dash">—</span>' : m.skills.map(s => `<span class="badge badge-blue">${escape(s)}</span>`).join('')}
+      </div>
+      <div class="interest-list">
+        ${m.interests.length === 0 ? '<span class="empty-dash">—</span>' : m.interests.map(s => `<span class="badge badge-soft">${escape(s)}</span>`).join('')}
+      </div>
+      <div style="display:flex;justify-content:flex-end;color:var(--text-disabled)"><i data-lucide="chevron-right"></i></div>
+    </div>
+  `).join('');
+  $('#people-count').textContent = `${state.members.length} members in your church`;
+  rows.querySelectorAll('.table-row').forEach(r => {
+    r.addEventListener('click', () => openMemberDrawer(r.dataset.memberId));
+  });
+  renderIcons();
+}
+
+$('#people-search').addEventListener('input', e => renderPeople(e.target.value));
+
+function openMemberDrawer(id) {
+  const m = state.members.find(x => x.id === id);
+  if (!m) return;
+  $('#drawer-title-area').innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="avatar avatar-lg">${initials(m.name)}</div>
+      <div>
+        <div style="font-weight:600;font-size:16px">${escape(m.name)}</div>
+        <div style="color:var(--text-secondary);font-size:13px">${escape(m.email)}</div>
+      </div>
+    </div>`;
+  $('#drawer-body').innerHTML = `
+    <div class="section">
+      <div class="section-label">Contact</div>
+      <div class="meta-row"><span class="meta-label">Email</span><span class="meta-value">${escape(m.email)}</span></div>
+      <div class="meta-row"><span class="meta-label">Phone</span><span class="meta-value">—</span></div>
+      <div class="meta-row"><span class="meta-label">Member since</span><span class="meta-value">2023</span></div>
+    </div>
+    <div class="section">
+      <div class="section-label">Skills</div>
+      <div class="skill-list">${m.skills.length === 0 ? '<span class="empty-dash">No skills recorded yet.</span>' : m.skills.map(s => `<span class="badge badge-blue">${escape(s)}</span>`).join('')}</div>
+    </div>
+    <div class="section">
+      <div class="section-label">Interests</div>
+      <div class="interest-list">${m.interests.length === 0 ? '<span class="empty-dash">No interests recorded yet.</span>' : m.interests.map(s => `<span class="badge badge-soft">${escape(s)}</span>`).join('')}</div>
+    </div>
+    <div class="section">
+      <div class="section-label">Recent activity</div>
+      <div style="color: var(--text-secondary); font-size: 13px;">No recent form responses.</div>
+    </div>
+  `;
+  $('#drawer-foot').innerHTML = `
+    <button class="btn btn-secondary"><i data-lucide="mail"></i>Email</button>
+    <button class="btn btn-blue"><i data-lucide="pencil"></i>Edit</button>
+  `;
+  openDrawer();
+}
+
+function openDrawer() {
+  $('#drawer-bg').classList.add('open');
+  $('#drawer').classList.add('open');
+  renderIcons();
+}
+function closeDrawer() {
+  $('#drawer-bg').classList.remove('open');
+  $('#drawer').classList.remove('open');
+}
+$('#drawer-bg').addEventListener('click', closeDrawer);
+$('#drawer-close').addEventListener('click', closeDrawer);
+
+// ---------- Forms tab ----------
+function renderForms() {
+  const grid = $('#forms-grid');
+  grid.innerHTML = state.forms.map(f => `
+    <div class="card card-hover" data-form-id="${f.id}">
+      <div class="form-card-title">${escape(f.title)}</div>
+      <div class="form-card-meta">Created ${escape(f.created)}</div>
+      <div style="color:var(--text-secondary);font-size:13px;line-height:1.5;min-height:42px">${escape(f.description || '')}</div>
+      <div class="form-card-stats">
+        <div>
+          <div class="form-card-stat-num">${f.responses.length}</div>
+          <div class="form-card-stat-label">Responses</div>
+        </div>
+        <div>
+          <div class="form-card-stat-num">${f.fields.length}</div>
+          <div class="form-card-stat-label">Fields</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  $('#forms-count').textContent = `${state.forms.length} ${state.forms.length === 1 ? 'form' : 'forms'} • ${state.forms.reduce((s,f) => s+f.responses.length, 0)} total responses`;
+  grid.querySelectorAll('[data-form-id]').forEach(card => {
+    card.addEventListener('click', () => openFormDrawer(card.dataset.formId));
+  });
+  renderIcons();
+}
+
+function openFormDrawer(id) {
+  const f = state.forms.find(x => x.id === id);
+  if (!f) return;
+  $('#drawer-title-area').innerHTML = `
+    <div>
+      <div style="font-weight:600;font-size:16px">${escape(f.title)}</div>
+      <div style="color:var(--text-secondary);font-size:13px">${escape(f.created)} • ${f.responses.length} responses</div>
+    </div>`;
+  $('#drawer-body').innerHTML = `
+    <div class="section">
+      <div class="section-label">Description</div>
+      <div style="font-size: 13px;">${escape(f.description || 'No description.')}</div>
+    </div>
+    <div class="section">
+      <div class="section-label">Fields</div>
+      ${f.fields.map(fl => `
+        <div class="field-row">
+          <div class="field-name">${escape(fl.name)}</div>
+          <span class="badge badge-grey field-type">${escape(fl.type)}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div class="section">
+      <div class="section-label">Responses (${f.responses.length})</div>
+      ${f.responses.length === 0 ? '<div style="color: var(--text-secondary); font-size: 13px;">No responses yet.</div>' : `
+        <div style="border:1px solid var(--border); border-radius: var(--radius); overflow:hidden">
+          <table class="resp-table">
+            <thead>
+              <tr>
+                <th>Member</th>
+                ${f.fields.slice(0, 2).map(fl => `<th>${escape(fl.name)}</th>`).join('')}
+                <th>Submitted</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${f.responses.map(r => `
+                <tr>
+                  <td>${escape(r.member)}</td>
+                  ${f.fields.slice(0, 2).map(fl => `<td>${escape(r.values[fl.name] || '—')}</td>`).join('')}
+                  <td style="color: var(--text-secondary)">${escape(r.submittedAt)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>`}
+    </div>
+  `;
+  $('#drawer-foot').innerHTML = `
+    <button class="btn btn-secondary"><i data-lucide="link"></i>Copy link</button>
+    <button class="btn btn-secondary"><i data-lucide="download"></i>Export CSV</button>
+  `;
+  openDrawer();
+}
+
+// ---------- Events tab ----------
+function renderEvents() {
+  const grid = $('#events-grid');
+  grid.innerHTML = state.events.map(e => `
+    <div class="card card-hover" data-event-id="${e.id}">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sm); margin-bottom: 4px;">
+        <div class="form-card-title">${escape(e.title)}</div>
+        <span class="badge ${e.status === 'past' ? 'badge-grey' : 'badge-green'}">${e.status === 'past' ? 'Past' : 'Upcoming'}</span>
+      </div>
+      <div class="form-card-meta">${escape(e.date)} • ${escape(e.time)}</div>
+      <div style="color:var(--text-secondary);font-size:13px;line-height:1.5;min-height:42px">${escape(e.description || '')}</div>
+      <div class="form-card-stats">
+        <div>
+          <div class="form-card-stat-num">${e.registrants.length}</div>
+          <div class="form-card-stat-label">Registered</div>
+        </div>
+        <div>
+          <div class="form-card-stat-num" style="font-size:14px;font-weight:500;color:var(--text-secondary);padding-top:5px">${escape(e.location)}</div>
+          <div class="form-card-stat-label">Location</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  const upcoming = state.events.filter(e => e.status !== 'past').length;
+  $('#events-count').textContent = `${state.events.length} total events • ${upcoming} upcoming`;
+  grid.querySelectorAll('[data-event-id]').forEach(card => {
+    card.addEventListener('click', () => openEventDrawer(card.dataset.eventId));
+  });
+  renderIcons();
+}
+
+function openEventDrawer(id) {
+  const e = state.events.find(x => x.id === id);
+  if (!e) return;
+  const registrants = e.registrants.map(rid => state.members.find(m => m.id === rid)).filter(Boolean);
+  $('#drawer-title-area').innerHTML = `
+    <div>
+      <div style="font-weight:600;font-size:16px">${escape(e.title)}</div>
+      <div style="color:var(--text-secondary);font-size:13px">${escape(e.date)} • ${escape(e.time)} • ${escape(e.location)}</div>
+    </div>`;
+  $('#drawer-body').innerHTML = `
+    <div class="section">
+      <div class="section-label">About</div>
+      <div style="font-size: 13px;">${escape(e.description || 'No description.')}</div>
+    </div>
+    <div class="section">
+      <div class="section-label">Details</div>
+      <div class="meta-row"><span class="meta-label">Date</span><span class="meta-value">${escape(e.date)}</span></div>
+      <div class="meta-row"><span class="meta-label">Time</span><span class="meta-value">${escape(e.time)}</span></div>
+      <div class="meta-row"><span class="meta-label">Location</span><span class="meta-value">${escape(e.location)}</span></div>
+      <div class="meta-row"><span class="meta-label">Status</span><span class="meta-value">${e.status === 'past' ? 'Past' : 'Upcoming'}</span></div>
+    </div>
+    <div class="section">
+      <div class="section-label">Registered (${registrants.length})</div>
+      ${registrants.length === 0
+        ? '<div style="color: var(--text-secondary); font-size: 13px;">No one has registered yet.</div>'
+        : `<div class="member-mini-list">${registrants.map(m => `
+            <div class="member-mini">
+              <div class="avatar">${initials(m.name)}</div>
+              <div class="member-mini-name">${escape(m.name)}</div>
+              <div class="member-mini-skills">${escape(m.email)}</div>
+            </div>`).join('')}</div>`}
+    </div>
+  `;
+  $('#drawer-foot').innerHTML = `
+    <button class="btn btn-secondary"><i data-lucide="link"></i>Copy registration link</button>
+    <button class="btn btn-secondary"><i data-lucide="mail"></i>Email registrants</button>
+  `;
+  openDrawer();
+}
+
+// ---------- Settings ----------
+$$('[data-toggle]').forEach(s => {
+  s.addEventListener('click', () => {
+    s.classList.toggle('on');
+  });
+});
+$('#gmail-connect-btn').addEventListener('click', () => {
+  if (state.alvin.gmailConnected) return;
+  state.alvin.gmailConnected = true;
+  $('#gmail-status').innerHTML = '<span style="color: var(--cta-hover)">Connected</span> · andrew@gracechurch.org';
+  $('#gmail-connect-btn').textContent = 'Disconnect';
+  showToast('Gmail connected');
+});
+
+// ===================================================================
+//                         ASK ALVIN — chat engine
+// ===================================================================
+const inputEl = $('#alvin-input');
+const sendBtn = $('#alvin-send');
+const threadEl = $('#alvin-thread');
+const emptyEl = $('#alvin-empty');
+
+function autoSize() {
+  inputEl.style.height = 'auto';
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 160) + 'px';
+}
+inputEl.addEventListener('input', () => {
+  sendBtn.disabled = inputEl.value.trim().length === 0;
+  autoSize();
+});
+inputEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    submitMessage();
+  }
+});
+sendBtn.addEventListener('click', submitMessage);
+$('#alvin-new-chat').addEventListener('click', () => {
+  state.alvin.history = [];
+  state.alvin.expecting = null;
+  state.alvin.workingForm = null;
+  state.alvin.workingEmail = null;
+  state.alvin.workingPainters = null;
+  state.alvin.workingEvent = null;
+  threadEl.innerHTML = '';
+  emptyEl.style.display = '';
+});
+
+// Suggestion buttons + quick chips
+$$('.suggestion').forEach(b => {
+  b.addEventListener('click', () => sendUserMessage(b.dataset.prompt));
+});
+$$('#quick-chips .chip').forEach(b => {
+  b.addEventListener('click', () => {
+    inputEl.value = b.dataset.prompt;
+    autoSize();
+    sendBtn.disabled = false;
+    inputEl.focus();
+  });
+});
+
+function submitMessage() {
+  const text = inputEl.value.trim();
+  if (!text) return;
+  inputEl.value = '';
+  autoSize();
+  sendBtn.disabled = true;
+  sendUserMessage(text);
+}
+
+function sendUserMessage(text) {
+  emptyEl.style.display = 'none';
+  appendMessage('user', `<p>${escape(text)}</p>`);
+  scrollThread();
+  setTimeout(() => respondToUser(text), 400);
+}
+
+function appendMessage(role, contentHTML) {
+  const wrap = document.createElement('div');
+  wrap.className = 'msg';
+  wrap.innerHTML = `
+    <div class="msg-avatar ${role}">${role === 'alvin' ? 'A' : 'AS'}</div>
+    <div class="msg-body">
+      <div class="msg-name">${role === 'alvin' ? 'Alvin' : 'You'}</div>
+      <div class="msg-content">${contentHTML}</div>
+    </div>
+  `;
+  threadEl.appendChild(wrap);
+  state.alvin.history.push({ role, html: contentHTML });
+  renderIcons();
+  return wrap;
+}
+
+function appendTyping() {
+  const wrap = document.createElement('div');
+  wrap.className = 'msg';
+  wrap.id = '__typing';
+  wrap.innerHTML = `
+    <div class="msg-avatar alvin">A</div>
+    <div class="msg-body">
+      <div class="msg-name">Alvin</div>
+      <div class="msg-content"><div class="typing"><span></span><span></span><span></span></div></div>
+    </div>
+  `;
+  threadEl.appendChild(wrap);
+  scrollThread();
+}
+function removeTyping() {
+  const t = document.getElementById('__typing');
+  if (t) t.remove();
+}
+
+function scrollThread() {
+  const c = $('#alvin-content');
+  setTimeout(() => { c.scrollTop = c.scrollHeight; }, 30);
+}
+
+async function alvinSay(html, delay = 700) {
+  appendTyping();
+  await sleep(delay);
+  removeTyping();
+  appendMessage('alvin', html);
+  scrollThread();
+}
+
+// ---------- Intent detection ----------
+function detectIntent(text) {
+  const t = text.toLowerCase().trim();
+
+  // Affirmative / negative — checked AFTER more-specific intents
+  const isAffirmative = /^(yes|yeah|yep|sure|ok|okay|sounds good|please do|do it|go ahead|send it|that works|looks good|perfect|let'?s do it|y|yup|of course|absolutely)\b/i.test(t)
+                        || /(go ahead|send it|that's good|looks good|do it)/i.test(t);
+  const isNegative = /^(no|nope|nah|cancel|stop|don'?t|not now|n)\b/i.test(t);
+
+  // Specific intents (more specific first)
+  if (/(create|make|build|start|set up|new|draft).{0,40}(form|survey|questionnaire|sign[- ]?up)/.test(t) ||
+      /(form|survey).{0,40}(talent|skill|interest|gift|volunteer|sign[- ]?up)/.test(t) ||
+      /(skill|talent|interest).{0,40}(form|survey)/.test(t)) {
+    return { intent: 'create_form', isAffirmative, raw: t };
+  }
+
+  if (/(identify|find|who|list|show|search).{0,40}(interested|skilled|good at|painter|painting|paint|cook|cooking|music|carpentry|gardening|teaching|design)/.test(t) ||
+      /(painter|painting|paint).{0,40}(member|people|volunteer)/.test(t) ||
+      /members?.{0,15}(interested in|good at|with skill)/.test(t)) {
+    return { intent: 'identify_members', isAffirmative, skill: extractSkill(t), raw: t };
+  }
+
+  if (/(create|make|new|schedule|set up).{0,40}(event|gathering|meetup|day)/.test(t) ||
+      /event.{0,40}(register|registration|sign[- ]?up)/.test(t)) {
+    return { intent: 'create_event', isAffirmative, raw: t };
+  }
+
+  if (/(draft|write|compose|prepare|create).{0,30}(email|message|invite|note)/.test(t) ||
+      /^email/.test(t)) {
+    return { intent: 'draft_email', isAffirmative, raw: t };
+  }
+
+  if (/(send|deliver|fire off|shoot)\b.{0,30}(email|message|it|out)?/.test(t) && !/(don'?t|do not|no)/.test(t)) {
+    return { intent: 'send_email', isAffirmative, raw: t };
+  }
+
+  if (/(update|sync|refresh|apply).{0,20}(profile|member|response)/.test(t)) {
+    return { intent: 'update_profiles', isAffirmative, raw: t };
+  }
+
+  if (/(register|registration).{0,20}(link|page)/.test(t) || /\binclude.{0,15}(register|registration|link)/.test(t)) {
+    return { intent: 'add_event_to_email', isAffirmative, raw: t };
+  }
+
+  // Fields description (numbered or commas + "name", etc.)
+  if (/(first name|last name|name|email|skill|interest|talent|gift|phone|address)/.test(t) && (t.includes(',') || t.includes(' and '))) {
+    return { intent: 'specify_fields', fields: extractFields(t), isAffirmative, raw: t };
+  }
+
+  if (isAffirmative) return { intent: 'affirmative', raw: t };
+  if (isNegative) return { intent: 'negative', raw: t };
+
+  return { intent: 'unknown', raw: t };
+}
+
+function extractSkill(text) {
+  const skills = ['painting', 'paint', 'gardening', 'carpentry', 'guitar', 'music', 'teaching', 'baking', 'graphic design', 'photography', 'cooking', 'accounting', 'event planning', 'IT', 'sound system', 'vocals', 'piano', 'handyman', 'nursery', 'crafts', 'youth ministry', 'sports', 'childcare'];
+  for (const s of skills) {
+    if (text.includes(s)) return s;
+  }
+  // crude fallback: word after "interested in"
+  const m = text.match(/interested in (\w+)/);
+  if (m) return m[1];
+  return 'painting';
+}
+
+function extractFields(text) {
+  // split on commas, "and"
+  const parts = text.replace(/^.*?(:|—)/,'').split(/,| and /i).map(s => s.trim()).filter(Boolean);
+  const out = [];
+  for (let p of parts) {
+    if (!p) continue;
+    p = p.replace(/^(a |the |maybe |also |plus )/i, '').trim();
+    p = p.replace(/[?.!]$/,'').trim();
+    if (!p) continue;
+    // capitalise first letter of each word loosely
+    p = p.replace(/\bfree\s*text\b/i, '').trim() || 'Skills';
+    let type = 'Short text';
+    if (/skill|interest|talent|note|comment|free|description|long/i.test(p)) type = 'Long text';
+    if (/email/i.test(p)) type = 'Email';
+    if (/phone/i.test(p)) type = 'Phone';
+    if (/date/i.test(p)) type = 'Date';
+    out.push({ name: titleCase(p), type });
+  }
+  // ensure at least 2 fields, dedupe
+  const seen = new Set();
+  const dedup = out.filter(f => {
+    const k = f.name.toLowerCase();
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+  return dedup.length ? dedup : [
+    { name: 'First name', type: 'Short text' },
+    { name: 'Last name', type: 'Short text' },
+    { name: 'Skills', type: 'Long text' },
+  ];
+}
+
+function titleCase(s) {
+  return s.split(/\s+/).map(w => w[0] ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w).join(' ');
+}
+
+// ---------- Card builders (for rich Alvin replies) ----------
+function formPreviewCard(form) {
+  return `
+    <div class="msg-card">
+      <div class="msg-card-head">
+        <div class="msg-card-icon"><i data-lucide="clipboard-list"></i></div>
+        <div>
+          <div class="msg-card-title">${escape(form.title)}</div>
+          <div class="msg-card-meta">${form.fields.length} fields • Created just now</div>
+        </div>
+      </div>
+      <div class="msg-card-body">
+        ${form.fields.map(f => `
+          <div class="field-preview">
+            <span class="field-preview-name">${escape(f.name)}</span>
+            <span class="field-preview-type">${escape(f.type)}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="msg-card-actions">
+        <a href="#" class="msg-card-link" data-link-form="${escape(form.id)}"><i data-lucide="external-link"></i>Open in Forms</a>
+      </div>
+    </div>
+  `;
+}
+
+function emailDraftCard(email) {
+  return `
+    <div class="msg-card">
+      <div class="msg-card-head">
+        <div class="msg-card-icon"><i data-lucide="mail"></i></div>
+        <div>
+          <div class="msg-card-title">Email draft</div>
+          <div class="msg-card-meta">To ${email.recipientsLabel}</div>
+        </div>
+      </div>
+      <div class="msg-card-body">
+        <div class="email-subject">${escape(email.subject)}</div>
+        <div class="email-body">${escape(email.body)}</div>
+      </div>
+    </div>
+  `;
+}
+
+function memberListCard(members, skillLabel) {
+  return `
+    <div class="msg-card">
+      <div class="msg-card-head">
+        <div class="msg-card-icon"><i data-lucide="users"></i></div>
+        <div>
+          <div class="msg-card-title">${members.length} members interested in ${escape(skillLabel)}</div>
+          <div class="msg-card-meta">Identified from form responses</div>
+        </div>
+      </div>
+      <div class="msg-card-body">
+        <div class="member-mini-list">
+          ${members.map(m => `
+            <div class="member-mini">
+              <div class="avatar">${initials(m.name)}</div>
+              <div class="member-mini-name">${escape(m.name)}</div>
+              <div class="member-mini-skills">${escape(m.skills.join(', '))}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="msg-card-actions">
+        <a href="#" class="msg-card-link" data-link-tab="people"><i data-lucide="external-link"></i>Open in People</a>
+      </div>
+    </div>
+  `;
+}
+
+function eventCard(ev) {
+  return `
+    <div class="msg-card">
+      <div class="msg-card-head">
+        <div class="msg-card-icon"><i data-lucide="calendar"></i></div>
+        <div>
+          <div class="msg-card-title">${escape(ev.title)}</div>
+          <div class="msg-card-meta">${escape(ev.date)} • ${escape(ev.time)} • ${escape(ev.location)}</div>
+        </div>
+      </div>
+      <div class="msg-card-body">
+        <div style="color: var(--text-secondary); margin-bottom: 8px;">${escape(ev.description)}</div>
+        <div style="display: flex; align-items: center; gap: var(--sm); padding: 8px 10px; background: var(--bg); border-radius: var(--radius); font-family: 'SF Mono', monospace; font-size: 12px; color: var(--primary);">
+          <i data-lucide="link" style="width:14px;height:14px"></i>
+          <span>https://gracechurch.org/events/${ev.id}/register</span>
+        </div>
+      </div>
+      <div class="msg-card-actions">
+        <a href="#" class="msg-card-link" data-link-event="${escape(ev.id)}"><i data-lucide="external-link"></i>Open in Events</a>
+      </div>
+    </div>
+  `;
+}
+
+// ---------- Templates: emails ----------
+function makeFormInviteEmail(formTitle) {
+  return {
+    subject: `Help us get to know you better — please fill out our ${formTitle.toLowerCase()}`,
+    body: `Hi friends,
+
+We're putting together a clearer picture of the talents and interests in our church family. Could you take 2 minutes to fill out this short form? It will help us connect you with ministries and projects that match what you love to do.
+
+Fill out the form here: https://gracechurch.org/forms/{{formId}}
+
+Thanks so much,
+Andrew
+Grace Community Church`,
+    recipientsLabel: 'all members',
+  };
+}
+
+function makePainterInviteEmail(skillLabel, eventLinked = false) {
+  const body = eventLinked
+    ? `Hi friends,
+
+We saw on your survey that you're interested in ${skillLabel}, and we've got a project coming up where we could really use your hands.
+
+We're refreshing the sanctuary walls and would love to have you join. Details and registration here:
+https://gracechurch.org/events/{{eventId}}/register
+
+Hope you can make it!
+Andrew
+Grace Community Church`
+    : `Hi friends,
+
+We saw on your survey that you're interested in ${skillLabel}. We have an upcoming project where we could really use your help. I'll send full details soon — for now, can you reply if you're potentially available?
+
+Thanks!
+Andrew
+Grace Community Church`;
+  return {
+    subject: `Quick ask — help with our upcoming ${skillLabel} project`,
+    body,
+    recipientsLabel: '12 painters',
+  };
+}
+
+// ---------- Conversation engine ----------
+async function respondToUser(text) {
+  const intent = detectIntent(text);
+  const expecting = state.alvin.expecting;
+
+  // ===== Stateful: handling the multi-step flow =====
+
+  // 1) Awaiting fields after Alvin asked "what fields?"
+  if (expecting === 'fields') {
+    const fields = intent.fields || extractFields(text);
+    const form = {
+      id: 'f' + (state.forms.length + 1),
+      title: state.alvin.workingForm?.title || 'Talent, Skills & Interests',
+      description: 'A short survey to capture what each member loves to do.',
+      created: 'Just now',
+      fields,
+      responses: [],
+    };
+    state.alvin.workingForm = form;
+    state.forms.push(form);
+    renderForms();
+
+    state.alvin.expecting = 'send_form_email';
+
+    await alvinSay(`
+      <p>Done — I created your form with ${fields.length} fields.</p>
+      ${formPreviewCard(form)}
+      <p style="margin-top:12px">Want me to draft an email inviting members to fill it out?</p>
+    `, 800);
+    return;
+  }
+
+  // 2) Awaiting "send email about the form?"
+  if (expecting === 'send_form_email') {
+    if (intent.intent === 'draft_email' || intent.intent === 'affirmative') {
+      const email = makeFormInviteEmail(state.alvin.workingForm.title);
+      email.body = email.body.replace('{{formId}}', state.alvin.workingForm.id);
+      email.recipientsLabel = `${state.members.length} members`;
+      state.alvin.workingEmail = email;
+      state.alvin.expecting = 'confirm_send_form_email';
+
+      await alvinSay(`
+        <p>Here's a draft. To: ${state.members.length} members.</p>
+        ${emailDraftCard(email)}
+        <p style="margin-top:12px">Want me to send it?</p>
+      `, 800);
+      return;
+    }
+    if (intent.intent === 'negative') {
+      state.alvin.expecting = null;
+      await alvinSay(`<p>Got it — I'll hold off on the email. Just let me know when you're ready.</p>`, 500);
+      return;
+    }
+  }
+
+  // 3) Confirm sending the form-invite email
+  if (expecting === 'confirm_send_form_email') {
+    if (intent.intent === 'send_email' || intent.intent === 'affirmative') {
+      await alvinSay(`<p>Sent. The email is on its way to ${state.members.length} members.</p>`, 700);
+      // Simulate responses arriving
+      await sleep(900);
+      // Backfill responses + update profiles in state
+      simulateFormResponses(state.alvin.workingForm);
+      state.alvin.expecting = 'after_responses';
+      await alvinSay(`
+        <p>Updates rolling in — I just saw <b>12 members</b> have filled out your form.</p>
+        <p>Do you want me to update their profiles with their responses?</p>
+      `, 1100);
+      return;
+    }
+    if (intent.intent === 'negative') {
+      state.alvin.expecting = null;
+      await alvinSay(`<p>No problem — I'll keep the draft handy. You can ask me to send it anytime.</p>`, 500);
+      return;
+    }
+  }
+
+  // 4) After responses come in
+  if (expecting === 'after_responses') {
+    if (intent.intent === 'identify_members') {
+      // Apply profile updates AND identify members
+      applyProfileUpdates();
+      const skill = intent.skill || 'painting';
+      return respondAboutPainters(skill);
+    }
+    if (intent.intent === 'update_profiles' || intent.intent === 'affirmative') {
+      applyProfileUpdates();
+      state.alvin.expecting = 'after_profile_update';
+      await alvinSay(`
+        <p>Updated <b>${state.members.length} member profiles</b> with their form responses. Skills and interests are now reflected on each profile.</p>
+        <p>Anything else? For example, I can identify members by skill, draft outreach emails, or schedule events.</p>
+      `, 900);
+      return;
+    }
+    if (intent.intent === 'negative') {
+      state.alvin.expecting = null;
+      await alvinSay(`<p>Okay — profiles will stay as-is. The raw responses are saved on the form.</p>`, 500);
+      return;
+    }
+  }
+
+  // 4b) After profile update, awaiting next instruction
+  if (expecting === 'after_profile_update') {
+    if (intent.intent === 'identify_members') {
+      return respondAboutPainters(intent.skill || 'painting');
+    }
+  }
+
+  // 5) After painters identified — draft email?
+  if (expecting === 'after_painters_identified') {
+    if (intent.intent === 'draft_email' || intent.intent === 'affirmative') {
+      return draftPainterEmail();
+    }
+    if (intent.intent === 'negative') {
+      state.alvin.expecting = null;
+      await alvinSay(`<p>No problem. The list is saved — you can come back to it anytime.</p>`, 500);
+      return;
+    }
+  }
+
+  // 6) After painter email drafted — create event + include link?
+  if (expecting === 'after_painter_email_drafted') {
+    if (intent.intent === 'create_event' || intent.intent === 'add_event_to_email' || intent.intent === 'affirmative') {
+      return createPaintingEvent();
+    }
+    if (intent.intent === 'send_email') {
+      return sendPainterEmail(false);
+    }
+    if (intent.intent === 'negative') {
+      state.alvin.expecting = null;
+      await alvinSay(`<p>Got it — the draft is saved. Let me know when you're ready to send.</p>`, 500);
+      return;
+    }
+  }
+
+  // 7) After painting event created — send email?
+  if (expecting === 'after_painting_event_created') {
+    if (intent.intent === 'send_email' || intent.intent === 'affirmative') {
+      return sendPainterEmail(true);
+    }
+    if (intent.intent === 'negative') {
+      state.alvin.expecting = null;
+      await alvinSay(`<p>Got it — your draft and event are both saved. Send whenever you're ready.</p>`, 500);
+      return;
+    }
+  }
+
+  // ===== Stateless intent dispatch =====
+  if (intent.intent === 'create_form') {
+    state.alvin.workingForm = { title: 'Talent, Skills & Interests' };
+    state.alvin.expecting = 'fields';
+    await alvinSay(`
+      <p>Happy to help — what fields do you want to add?</p>
+      <p style="color: var(--text-secondary); font-size: 13px;">For example: <code class="inline">First name, last name, and a free text list of skills</code></p>
+    `, 700);
+    return;
+  }
+
+  if (intent.intent === 'identify_members') {
+    return respondAboutPainters(intent.skill || 'painting');
+  }
+
+  if (intent.intent === 'create_event') {
+    return createPaintingEvent(true);
+  }
+
+  if (intent.intent === 'draft_email') {
+    // Generic email draft if no context
+    const email = {
+      subject: 'A note from Grace Community Church',
+      body: `Hi friends,\n\nWanted to reach out about an upcoming opportunity to serve. More details coming soon — let me know if you'd like to be involved.\n\nThanks,\nAndrew`,
+      recipientsLabel: 'all members',
+    };
+    state.alvin.workingEmail = email;
+    state.alvin.expecting = 'confirm_send_form_email'; // reuse send flow
+    await alvinSay(`
+      <p>Here's a draft you can edit.</p>
+      ${emailDraftCard(email)}
+      <p style="margin-top:12px">Want me to send it?</p>
+    `, 700);
+    return;
+  }
+
+  if (intent.intent === 'send_email') {
+    if (state.alvin.workingEmail) {
+      return sendPainterEmail(!!state.alvin.workingEvent);
+    }
+    await alvinSay(`<p>I don't have a draft ready yet — want me to draft one first?</p>`, 500);
+    return;
+  }
+
+  if (intent.intent === 'affirmative') {
+    await alvinSay(`<p>Got it. What would you like me to do? I can create a form, identify members by skill, draft an email, or set up an event.</p>`, 500);
+    return;
+  }
+
+  if (intent.intent === 'negative') {
+    state.alvin.expecting = null;
+    await alvinSay(`<p>No problem — let me know if you change your mind.</p>`, 400);
+    return;
+  }
+
+  // Unknown — graceful fallback
+  await alvinSay(`
+    <p>I can help with a few things — try one of these:</p>
+    <p style="color: var(--text-secondary); font-size: 13px;">• "Create a talent, interest and skills form"<br/>• "Find members interested in painting"<br/>• "Draft an email about the painting project"<br/>• "Create an event with a registration link"</p>
+  `, 600);
+}
+
+// ---------- Painters flow ----------
+async function respondAboutPainters(skill) {
+  const skillLower = skill.toLowerCase();
+  // Match members where skill or interest matches
+  const matches = state.members.filter(m =>
+    m.skills.some(s => s.toLowerCase().includes(skillLower)) ||
+    m.interests.some(i => i.toLowerCase().includes(skillLower))
+  );
+  // If we have very few, ensure profile updates have been applied (idempotent)
+  if (matches.length < 3) {
+    applyProfileUpdates();
+  }
+  const finalMatches = state.members.filter(m =>
+    m.skills.some(s => s.toLowerCase().includes(skillLower)) ||
+    m.interests.some(i => i.toLowerCase().includes(skillLower))
+  );
+
+  state.alvin.workingPainters = finalMatches.map(m => m.id);
+  state.alvin.expecting = 'after_painters_identified';
+
+  if (finalMatches.length === 0) {
+    await alvinSay(`<p>I couldn't find any members with that skill yet. Want me to send the talent survey to capture more info?</p>`, 700);
+    return;
+  }
+
+  await alvinSay(`
+    <p>I found <b>${finalMatches.length} members</b> who would be a good fit. Here they are:</p>
+    ${memberListCard(finalMatches, skill)}
+    <p style="margin-top:12px">Want me to draft an email to these members?</p>
+  `, 900);
+}
+
+async function draftPainterEmail() {
+  const email = makePainterInviteEmail('painting', false);
+  email.recipientsLabel = `${state.alvin.workingPainters.length} members`;
+  state.alvin.workingEmail = email;
+  state.alvin.expecting = 'after_painter_email_drafted';
+  await alvinSay(`
+    <p>Here's your draft.</p>
+    ${emailDraftCard(email)}
+    <p style="margin-top:12px">Want me to create an event and include a registration link?</p>
+  `, 900);
+}
+
+async function createPaintingEvent(skipDraftStep = false) {
+  const ev = {
+    id: 'e' + (state.events.length + 1),
+    title: 'Sanctuary Painting Day',
+    date: 'Saturday, May 23, 2026',
+    time: '9:00 AM',
+    location: 'Main sanctuary',
+    description: 'Volunteer day to repaint the sanctuary walls. Lunch provided.',
+    registrants: [],
+    status: 'upcoming',
+  };
+  state.events.push(ev);
+  state.alvin.workingEvent = ev;
+  renderEvents();
+
+  // Update the email draft with event link
+  if (state.alvin.workingEmail) {
+    const updated = makePainterInviteEmail('painting', true);
+    updated.body = updated.body.replace('{{eventId}}', ev.id);
+    updated.recipientsLabel = state.alvin.workingEmail.recipientsLabel;
+    state.alvin.workingEmail = updated;
+  }
+
+  state.alvin.expecting = 'after_painting_event_created';
+
+  await alvinSay(`
+    <p>Created the event with a registration link.</p>
+    ${eventCard(ev)}
+    ${state.alvin.workingEmail ? `<p style="margin-top:12px">I've updated your email draft to include the registration link:</p>${emailDraftCard(state.alvin.workingEmail)}<p style="margin-top:12px">Want me to send the email?</p>` : ''}
+  `, 1000);
+}
+
+async function sendPainterEmail(eventLinked) {
+  const recipients = state.alvin.workingPainters?.length || state.members.length;
+  state.alvin.expecting = null;
+  await alvinSay(`
+    <p>Sent. The email is on its way to <b>${recipients} members</b>${eventLinked ? ' with a registration link to the event' : ''}.</p>
+    <p style="color: var(--text-secondary); font-size: 13px;">I'll let you know as people register.</p>
+  `, 800);
+  // Simulate a couple of registrations after a delay
+  setTimeout(() => simulateRegistrations(), 2400);
+}
+
+// ---------- Simulated data updates ----------
+function simulateFormResponses(form) {
+  // Add 12 mock responses (one per member)
+  const skillsByMember = {
+    m1: 'Painting, gardening, helping with set-up',
+    m2: 'Carpentry, guitar, handy with tools',
+    m3: 'Painting, teaching kids, baking for events',
+    m4: 'Graphic design, photography, social media',
+    m5: 'Childcare, organizing, hospitality',
+    m6: 'Cooking, painting, prepping meals',
+    m7: 'Accounting, bookkeeping, event planning',
+    m8: 'IT, sound system, livestream',
+    m9: 'Vocals, piano, choir',
+    m10: 'Handyman, painting, light electrical',
+    m11: 'Nursery volunteer, craft prep',
+    m12: 'Youth ministry, sports, mentoring',
+  };
+  state.members.forEach(m => {
+    form.responses.push({
+      member: m.name,
+      submittedAt: 'Just now',
+      values: {
+        'First Name': m.name.split(' ')[0],
+        'Last Name': m.name.split(' ').slice(1).join(' '),
+        'Skills': skillsByMember[m.id] || '',
+      },
+    });
+  });
+  renderForms();
+}
+
+function applyProfileUpdates() {
+  const skillsByMember = {
+    m1: { skills: ['Painting', 'Gardening'], interests: ['Outreach', 'Beautification'] },
+    m2: { skills: ['Carpentry', 'Guitar', 'Handyman'], interests: ['Worship team', 'Building maintenance'] },
+    m3: { skills: ['Painting', 'Teaching', 'Baking'], interests: ['Children’s ministry', 'Hospitality'] },
+    m4: { skills: ['Graphic design', 'Photography', 'Social media'], interests: ['Communications'] },
+    m5: { skills: ['Childcare', 'Organizing'], interests: ['Hospitality', 'Children’s ministry'] },
+    m6: { skills: ['Cooking', 'Painting'], interests: ['Hospitality', 'Beautification'] },
+    m7: { skills: ['Accounting', 'Bookkeeping', 'Event planning'], interests: ['Finance committee'] },
+    m8: { skills: ['IT', 'Sound system', 'Livestream'], interests: ['Tech team'] },
+    m9: { skills: ['Vocals', 'Piano'], interests: ['Worship team', 'Choir'] },
+    m10: { skills: ['Handyman', 'Painting', 'Electrical'], interests: ['Building maintenance'] },
+    m11: { skills: ['Nursery', 'Crafts'], interests: ['Children’s ministry'] },
+    m12: { skills: ['Youth ministry', 'Sports', 'Mentoring'], interests: ['Youth group'] },
+  };
+  state.members.forEach(m => {
+    const u = skillsByMember[m.id];
+    if (u) {
+      m.skills = u.skills;
+      m.interests = u.interests;
+    }
+  });
+  renderPeople();
+}
+
+function simulateRegistrations() {
+  const ev = state.alvin.workingEvent;
+  if (!ev) return;
+  const ids = (state.alvin.workingPainters || []).slice(0, 4);
+  ev.registrants = Array.from(new Set([...ev.registrants, ...ids]));
+  renderEvents();
+  showToast(`${ids.length} members registered for ${ev.title}`);
+}
+
+// ---------- Card link routing ----------
+document.addEventListener('click', (e) => {
+  const formLink = e.target.closest('[data-link-form]');
+  if (formLink) {
+    e.preventDefault();
+    switchTab('forms');
+    setTimeout(() => openFormDrawer(formLink.dataset.linkForm), 100);
+    return;
+  }
+  const eventLink = e.target.closest('[data-link-event]');
+  if (eventLink) {
+    e.preventDefault();
+    switchTab('events');
+    setTimeout(() => openEventDrawer(eventLink.dataset.linkEvent), 100);
+    return;
+  }
+  const tabLink = e.target.closest('[data-link-tab]');
+  if (tabLink) {
+    e.preventDefault();
+    switchTab(tabLink.dataset.linkTab);
+    return;
+  }
+});
+
+// ---------- Init ----------
+renderPeople();
+renderForms();
+renderEvents();
+renderIcons();
+inputEl.focus();
+</script>
+</body>
+</html>
