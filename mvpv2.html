@@ -641,6 +641,43 @@
   .bar .bar-label { position: absolute; bottom: -22px; left: 0; right: 0; text-align: center; font-size: 11px; color: var(--text-secondary); }
   .bar .bar-value { position: absolute; top: -20px; left: 0; right: 0; text-align: center; font-size: 11px; font-weight: 600; color: var(--text-secondary); }
 
+  /* Workflow templates (modal) */
+  .workflow-templates {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .workflow-template {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    text-align: left;
+    font-family: inherit;
+    transition: border-color 150ms, background 150ms, transform 150ms;
+    cursor: pointer;
+  }
+  .workflow-template:hover {
+    border-color: var(--primary);
+    background: #F8FAFF;
+    transform: translateY(-1px);
+  }
+  .template-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .template-icon svg { width: 18px; height: 18px; }
+  .template-name { font-weight: 600; font-size: 14px; color: var(--text); }
+  .template-desc { font-size: 12.5px; color: var(--text-secondary); margin-top: 2px; line-height: 1.4; }
+  @media (max-width: 600px) {
+    .workflow-templates { grid-template-columns: 1fr; }
+  }
+
   /* Workflow nodes */
   .workflow-step {
     display: flex; align-items: center; gap: 12px;
@@ -2280,9 +2317,12 @@
 
       <!-- ============ WORKFLOWS ============ -->
       <section id="tab-workflows" class="tab-content">
-        <div class="page-header">
-          <h2>Workflows</h2>
-          <p>Automated sequences Aaron runs on your behalf</p>
+        <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+          <div>
+            <h2>Workflows</h2>
+            <p>Automated sequences Aaron runs on your behalf</p>
+          </div>
+          <button class="btn btn-primary" id="add-workflow-btn"><i data-lucide="plus"></i> Add workflow</button>
         </div>
         <div class="grid-2">
           <div class="card">
@@ -2677,6 +2717,80 @@
   </div>
 </div>
 
+<!-- Add workflow modal -->
+<div class="modal-overlay" id="add-workflow-modal">
+  <div class="modal" style="max-width: 680px;">
+    <div class="modal-header">
+      <h3>Add a workflow</h3>
+      <button class="icon-btn" data-close-modal><i data-lucide="x"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="color: var(--text-secondary); margin-bottom: 16px;">Pick a starter template or build a workflow from scratch. You can edit any step after Aaron sets it up.</p>
+      <div class="workflow-templates">
+        <button class="workflow-template" data-template="blank">
+          <div class="template-icon" style="background: #F3F4F6; color: var(--text-secondary);"><i data-lucide="plus-square"></i></div>
+          <div>
+            <div class="template-name">Blank workflow</div>
+            <div class="template-desc">Start from scratch and define your own steps</div>
+          </div>
+        </button>
+        <button class="workflow-template" data-template="prayer">
+          <div class="template-icon" style="background: #FCE7F3; color: #BE185D;"><i data-lucide="hand-heart"></i></div>
+          <div>
+            <div class="template-name">Prayer request</div>
+            <div class="template-desc">Submission → assigned to prayer team → follow-up</div>
+          </div>
+        </button>
+        <button class="workflow-template" data-template="event-followup">
+          <div class="template-icon" style="background: var(--cta-light); color: var(--cta-hover);"><i data-lucide="calendar-check"></i></div>
+          <div>
+            <div class="template-name">Event follow-up</div>
+            <div class="template-desc">After event ends, send thank-you to attendees</div>
+          </div>
+        </button>
+        <button class="workflow-template" data-template="missed-attendance">
+          <div class="template-icon" style="background: #FEF3C7; color: #B45309;"><i data-lucide="user-minus"></i></div>
+          <div>
+            <div class="template-name">Missed attendance</div>
+            <div class="template-desc">Flag members away 30+ days &amp; reach out</div>
+          </div>
+        </button>
+        <button class="workflow-template" data-template="volunteer-recruit">
+          <div class="template-icon" style="background: var(--primary-light); color: var(--primary);"><i data-lucide="users"></i></div>
+          <div>
+            <div class="template-name">Volunteer recruitment</div>
+            <div class="template-desc">Match member skills to open volunteer roles</div>
+          </div>
+        </button>
+        <button class="workflow-template" data-template="birthday">
+          <div class="template-icon" style="background: #EDE9FE; color: #6D28D9;"><i data-lucide="cake"></i></div>
+          <div>
+            <div class="template-name">Birthday &amp; anniversary</div>
+            <div class="template-desc">Send congratulations &amp; milestone reminders</div>
+          </div>
+        </button>
+        <button class="workflow-template" data-template="giving-thanks">
+          <div class="template-icon" style="background: var(--cta-light); color: var(--cta-hover);"><i data-lucide="hand-coins"></i></div>
+          <div>
+            <div class="template-name">First-gift thank you</div>
+            <div class="template-desc">Personal note when a donor gives for the first time</div>
+          </div>
+        </button>
+        <button class="workflow-template" data-template="vendor-invoice">
+          <div class="template-icon" style="background: #FFEDD5; color: #C2410C;"><i data-lucide="file-text"></i></div>
+          <div>
+            <div class="template-name">Vendor invoice match</div>
+            <div class="template-desc">Match incoming invoices to work orders &amp; flag mismatches</div>
+          </div>
+        </button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close-modal>Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- Form preview modal -->
 <div class="modal-overlay" id="form-modal">
   <div class="modal">
@@ -2920,6 +3034,24 @@
   // Edit button placeholder
   document.getElementById('member-modal-edit').addEventListener('click', () => {
     showToast('Edit member coming soon');
+  });
+
+  // ----- Add workflow modal -----
+  const addWorkflowModal = document.getElementById('add-workflow-modal');
+  document.getElementById('add-workflow-btn').addEventListener('click', () => {
+    openModal(addWorkflowModal);
+  });
+  document.querySelectorAll('.workflow-template').forEach(tile => {
+    tile.addEventListener('click', () => {
+      const name = tile.querySelector('.template-name').textContent;
+      const tpl = tile.dataset.template;
+      closeModal(addWorkflowModal);
+      if (tpl === 'blank') {
+        showToast('Blank workflow created — opening editor');
+      } else {
+        showToast(`"${name}" template added — opening editor`);
+      }
+    });
   });
 
   function renderForms() {
