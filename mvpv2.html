@@ -111,6 +111,34 @@
   }
   .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
 
+  .nav-chevron {
+    margin-left: auto;
+    width: 14px !important; height: 14px !important;
+    color: var(--text-disabled);
+    transition: transform 200ms ease-out;
+  }
+  .nav-item.expanded .nav-chevron { transform: rotate(180deg); }
+  .nav-subitems {
+    display: none;
+    flex-direction: column;
+    gap: 1px;
+    margin: 2px 0 6px 32px;
+    padding-left: 10px;
+    border-left: 1px solid var(--border);
+  }
+  .nav-subitems.expanded { display: flex; }
+  .nav-subitem {
+    text-align: left;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 150ms, color 150ms;
+  }
+  .nav-subitem:hover { background: #F3F4F6; color: var(--text); }
+  .nav-subitem.active { background: var(--primary-light); color: var(--primary); }
+
   .church-card {
     margin-top: auto;
     padding: 12px;
@@ -213,6 +241,9 @@
   }
   .subtab:hover { color: var(--text); }
   .subtab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+  .subtab-content { display: none; }
+  .subtab-content.active { display: block; }
 
   /* ---------- Cards ---------- */
   .card {
@@ -748,12 +779,28 @@
       <button class="nav-item" data-tab="people">
         <i data-lucide="users"></i> People
       </button>
-      <button class="nav-item" data-tab="finances">
+      <button class="nav-item has-sub" data-tab="finances">
         <i data-lucide="wallet"></i> Finances
+        <i data-lucide="chevron-down" class="nav-chevron"></i>
       </button>
-      <button class="nav-item" data-tab="calendar">
+      <div class="nav-subitems" data-subitems-of="finances">
+        <button class="nav-subitem" data-tab="finances" data-subtab="bank">Bank</button>
+        <button class="nav-subitem" data-tab="finances" data-subtab="accounting">Accounting</button>
+        <button class="nav-subitem" data-tab="finances" data-subtab="donations">Donations</button>
+        <button class="nav-subitem" data-tab="finances" data-subtab="payroll">Payroll</button>
+        <button class="nav-subitem" data-tab="finances" data-subtab="budget">Budget</button>
+      </div>
+
+      <button class="nav-item has-sub" data-tab="calendar">
         <i data-lucide="calendar"></i> Calendar
+        <i data-lucide="chevron-down" class="nav-chevron"></i>
       </button>
+      <div class="nav-subitems" data-subitems-of="calendar">
+        <button class="nav-subitem" data-tab="calendar" data-subtab="events">Events</button>
+        <button class="nav-subitem" data-tab="calendar" data-subtab="groups">Groups</button>
+        <button class="nav-subitem" data-tab="calendar" data-subtab="attendance">Attendance</button>
+      </div>
+
       <button class="nav-item" data-tab="forms">
         <i data-lucide="clipboard-list"></i> Forms
       </button>
@@ -768,9 +815,15 @@
       <button class="nav-item" data-tab="integrations">
         <i data-lucide="plug"></i> Integrations
       </button>
-      <button class="nav-item" data-tab="facilities">
+      <button class="nav-item has-sub" data-tab="facilities">
         <i data-lucide="building-2"></i> Facilities
+        <i data-lucide="chevron-down" class="nav-chevron"></i>
       </button>
+      <div class="nav-subitems" data-subitems-of="facilities">
+        <button class="nav-subitem" data-tab="facilities" data-subtab="work-orders">Work orders</button>
+        <button class="nav-subitem" data-tab="facilities" data-subtab="vendors">Vendors</button>
+        <button class="nav-subitem" data-tab="facilities" data-subtab="assets">Assets</button>
+      </div>
       <button class="nav-item" data-tab="settings">
         <i data-lucide="settings"></i> Settings
       </button>
@@ -1472,7 +1525,20 @@
     state.currentTab = tab;
     document.querySelectorAll('.tab-content').forEach(s => s.classList.remove('active'));
     document.getElementById('tab-' + tab).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    document.querySelectorAll('.nav-item').forEach(b => {
+      b.classList.toggle('active', b.dataset.tab === tab);
+      b.classList.toggle('expanded', b.dataset.tab === tab);
+    });
+    document.querySelectorAll('.nav-subitems').forEach(s => {
+      s.classList.toggle('expanded', s.dataset.subitemsOf === tab);
+    });
+    // Sync sub-nav active state with whichever sub-tab is currently active in the section
+    const section = document.getElementById('tab-' + tab);
+    const activeSub = section ? section.querySelector('.subtab.active') : null;
+    const activeSubName = activeSub ? activeSub.dataset.subtab : null;
+    document.querySelectorAll('.nav-subitem').forEach(s => {
+      s.classList.toggle('active', s.dataset.tab === tab && s.dataset.subtab === activeSubName);
+    });
     const titles = {
       'ask-aaron': 'Ask Aaron',
       'people': 'People',
@@ -1489,19 +1555,36 @@
     window.scrollTo(0, 0);
   }
 
+  function activateSubtab(tab, subtab) {
+    const section = document.getElementById('tab-' + tab);
+    if (!section) return;
+    section.querySelectorAll('.subtab').forEach(b => b.classList.toggle('active', b.dataset.subtab === subtab));
+    section.querySelectorAll('[data-subtab-content]').forEach(c => c.classList.toggle('active', c.dataset.subtabContent === subtab));
+    document.querySelectorAll('.nav-subitem').forEach(s => {
+      s.classList.toggle('active', s.dataset.tab === tab && s.dataset.subtab === subtab);
+    });
+  }
+
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
-  // Sub-tab switching
+  // Sidebar sub-nav items
+  document.querySelectorAll('.nav-subitem').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      switchTab(btn.dataset.tab);
+      activateSubtab(btn.dataset.tab, btn.dataset.subtab);
+    });
+  });
+
+  // Sub-tab strip switching (top of section)
   document.querySelectorAll('[data-subtabs]').forEach(group => {
     const section = group.closest('.tab-content');
+    const tabName = section.id.replace('tab-', '');
     group.querySelectorAll('.subtab').forEach(btn => {
       btn.addEventListener('click', () => {
-        group.querySelectorAll('.subtab').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        section.querySelectorAll('[data-subtab-content]').forEach(c => c.classList.remove('active'));
-        section.querySelector('[data-subtab-content="' + btn.dataset.subtab + '"]').classList.add('active');
+        activateSubtab(tabName, btn.dataset.subtab);
       });
     });
   });
