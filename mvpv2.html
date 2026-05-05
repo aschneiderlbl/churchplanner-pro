@@ -111,34 +111,6 @@
   }
   .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
 
-  .nav-chevron {
-    margin-left: auto;
-    width: 14px !important; height: 14px !important;
-    color: var(--text-disabled);
-    transition: transform 200ms ease-out;
-  }
-  .nav-item.expanded .nav-chevron { transform: rotate(180deg); }
-  .nav-subitems {
-    display: none;
-    flex-direction: column;
-    gap: 1px;
-    margin: 2px 0 6px 32px;
-    padding-left: 10px;
-    border-left: 1px solid var(--border);
-  }
-  .nav-subitems.expanded { display: flex; }
-  .nav-subitem {
-    text-align: left;
-    padding: 6px 10px;
-    border-radius: 6px;
-    color: var(--text-secondary);
-    font-size: 13px;
-    font-weight: 500;
-    transition: background 150ms, color 150ms;
-  }
-  .nav-subitem:hover { background: #F3F4F6; color: var(--text); }
-  .nav-subitem.active { background: var(--primary-light); color: var(--primary); }
-
   .church-card {
     margin-top: auto;
     padding: 12px;
@@ -776,54 +748,32 @@
       <button class="nav-item active" data-tab="ask-aaron">
         <i data-lucide="sparkles"></i> Ask Aaron
       </button>
+      <button class="nav-item" data-tab="workflows">
+        <i data-lucide="workflow"></i> Workflows
+      </button>
       <button class="nav-item" data-tab="people">
         <i data-lucide="users"></i> People
       </button>
-      <button class="nav-item has-sub" data-tab="finances">
+      <button class="nav-item" data-tab="finances">
         <i data-lucide="wallet"></i> Finances
-        <i data-lucide="chevron-down" class="nav-chevron"></i>
       </button>
-      <div class="nav-subitems" data-subitems-of="finances">
-        <button class="nav-subitem" data-tab="finances" data-subtab="bank">Bank</button>
-        <button class="nav-subitem" data-tab="finances" data-subtab="accounting">Accounting</button>
-        <button class="nav-subitem" data-tab="finances" data-subtab="donations">Donations</button>
-        <button class="nav-subitem" data-tab="finances" data-subtab="payroll">Payroll</button>
-        <button class="nav-subitem" data-tab="finances" data-subtab="budget">Budget</button>
-      </div>
-
-      <button class="nav-item has-sub" data-tab="calendar">
+      <button class="nav-item" data-tab="calendar">
         <i data-lucide="calendar"></i> Calendar
-        <i data-lucide="chevron-down" class="nav-chevron"></i>
       </button>
-      <div class="nav-subitems" data-subitems-of="calendar">
-        <button class="nav-subitem" data-tab="calendar" data-subtab="events">Events</button>
-        <button class="nav-subitem" data-tab="calendar" data-subtab="groups">Groups</button>
-        <button class="nav-subitem" data-tab="calendar" data-subtab="attendance">Attendance</button>
-      </div>
-
       <button class="nav-item" data-tab="forms">
         <i data-lucide="clipboard-list"></i> Forms
       </button>
       <button class="nav-item" data-tab="reporting">
         <i data-lucide="bar-chart-3"></i> Reporting
       </button>
-      <button class="nav-item" data-tab="workflows">
-        <i data-lucide="workflow"></i> Workflows
-      </button>
 
       <div class="nav-section-label">Operations</div>
       <button class="nav-item" data-tab="integrations">
         <i data-lucide="plug"></i> Integrations
       </button>
-      <button class="nav-item has-sub" data-tab="facilities">
+      <button class="nav-item" data-tab="facilities">
         <i data-lucide="building-2"></i> Facilities
-        <i data-lucide="chevron-down" class="nav-chevron"></i>
       </button>
-      <div class="nav-subitems" data-subitems-of="facilities">
-        <button class="nav-subitem" data-tab="facilities" data-subtab="work-orders">Work orders</button>
-        <button class="nav-subitem" data-tab="facilities" data-subtab="vendors">Vendors</button>
-        <button class="nav-subitem" data-tab="facilities" data-subtab="assets">Assets</button>
-      </div>
       <button class="nav-item" data-tab="settings">
         <i data-lucide="settings"></i> Settings
       </button>
@@ -833,7 +783,7 @@
       <div class="church-avatar">CL</div>
       <div>
         <div class="church-name">Christ Lutheran</div>
-        <div class="church-sub">Tracy Bennett</div>
+        <div class="church-sub">Tracy McKee</div>
       </div>
     </div>
   </aside>
@@ -898,9 +848,9 @@
         <div class="toolbar">
           <div class="search">
             <i data-lucide="search"></i>
-            <input placeholder="Search members..." />
+            <input placeholder="Search members..." id="people-search" />
           </div>
-          <button class="btn btn-primary"><i data-lucide="user-plus"></i> Add member</button>
+          <button class="btn btn-primary" id="add-member-btn"><i data-lucide="user-plus"></i> Add member</button>
         </div>
         <div class="grid-3" style="margin-bottom: 24px;">
           <div class="card stat-card">
@@ -1033,7 +983,7 @@
               <tbody>
                 <tr><td>Pastor David Olsen</td><td>Senior Pastor</td><td>—</td><td style="text-align:right;">$3,400.00</td></tr>
                 <tr><td>Lisa Park</td><td>Worship Director</td><td>—</td><td style="text-align:right;">$2,100.00</td></tr>
-                <tr><td>Tracy Bennett</td><td>Administrator</td><td>—</td><td style="text-align:right;">$2,800.00</td></tr>
+                <tr><td>Tracy McKee</td><td>Administrator</td><td>—</td><td style="text-align:right;">$2,800.00</td></tr>
                 <tr><td>Marco Reyes</td><td>Custodian</td><td>72</td><td style="text-align:right;">$1,440.00</td></tr>
               </tbody>
             </table>
@@ -1334,6 +1284,15 @@
             <p>Northern Trust · Operating + Building Fund. Daily transaction sync.</p>
             <button class="btn btn-secondary" style="align-self: flex-start;">Manage</button>
           </div>
+          <div class="card integration-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div class="integration-logo" style="background:#FEE2E2; color:#B91C1C;"><i data-lucide="mail" style="width:22px; height:22px;"></i></div>
+              <span class="badge badge-green">Connected</span>
+            </div>
+            <h3>Email</h3>
+            <p>Gmail · tracy@christlutheran.org. Aaron sends emails to members on your behalf.</p>
+            <button class="btn btn-secondary" style="align-self: flex-start;">Manage</button>
+          </div>
         </div>
       </section>
 
@@ -1418,7 +1377,7 @@
           </div>
           <div class="form-row">
             <label>Administrator name</label>
-            <input value="Tracy Bennett" />
+            <input value="Tracy McKee" />
           </div>
           <div class="form-row">
             <label>App name</label>
@@ -1466,6 +1425,75 @@
 <!-- Toast container -->
 <div id="toast-container"></div>
 
+<!-- Member detail modal -->
+<div class="modal-overlay" id="member-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="member-modal-title">Member details</h3>
+      <button class="icon-btn" data-close-modal><i data-lucide="x"></i></button>
+    </div>
+    <div class="modal-body" id="member-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close-modal>Close</button>
+      <button class="btn btn-primary" id="member-modal-edit"><i data-lucide="pencil"></i> Edit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add member modal -->
+<div class="modal-overlay" id="add-member-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Add new member</h3>
+      <button class="icon-btn" data-close-modal><i data-lucide="x"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="add-member-form">
+        <div class="grid-2" style="gap: 12px;">
+          <div class="form-row">
+            <label>First name *</label>
+            <input name="firstName" required />
+          </div>
+          <div class="form-row">
+            <label>Last name *</label>
+            <input name="lastName" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="member@example.com" />
+        </div>
+        <div class="form-row">
+          <label>Phone</label>
+          <input name="phone" placeholder="(218) 555-0100" />
+        </div>
+        <div class="grid-2" style="gap: 12px;">
+          <div class="form-row">
+            <label>Family name</label>
+            <input name="family" />
+          </div>
+          <div class="form-row">
+            <label>Age</label>
+            <input type="number" name="age" min="0" max="120" />
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Skills, talents and interests</label>
+          <textarea name="skills" placeholder="e.g. painting, music, hospitality" rows="2"></textarea>
+        </div>
+        <div class="form-row">
+          <label>Notes</label>
+          <textarea name="notes" placeholder="Anything else worth remembering" rows="2"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close-modal>Cancel</button>
+      <button class="btn btn-primary" id="add-member-submit"><i data-lucide="user-plus"></i> Add member</button>
+    </div>
+  </div>
+</div>
+
 <!-- Form preview modal -->
 <div class="modal-overlay" id="form-modal">
   <div class="modal">
@@ -1487,18 +1515,18 @@
     aaronStep: null, // current node id in the active flow
 
     members: [
-      { name: 'Eleanor Hayes', family: 'Hayes', age: 68, skills: ['Painting', 'Sunday school'], status: 'Active' },
-      { name: 'Marcus Chen', family: 'Chen', age: 42, skills: ['Music', 'Audio/visual'], status: 'Active' },
-      { name: 'Sarah Lindgren', family: 'Lindgren', age: 35, skills: ['Hospitality', 'Event planning'], status: 'Active' },
-      { name: 'Tom Smith', family: 'Smith', age: 38, skills: ['Carpentry', 'Painting'], status: 'Active' },
-      { name: 'Maria Gutierrez', family: 'Gutierrez', age: 54, skills: ['Translation', 'Cooking'], status: 'Active' },
-      { name: 'James Park', family: 'Park', age: 29, skills: ['Tech support', 'Painting'], status: 'Active' },
-      { name: 'Linda Olsen', family: 'Olsen', age: 61, skills: ['Quilting', 'Painting'], status: 'Active' },
-      { name: 'David Brooks', family: 'Brooks', age: 47, skills: ['Bookkeeping'], status: 'Active' },
-      { name: 'Rachel Kim', family: 'Kim', age: 33, skills: ['Photography', 'Social media'], status: 'Active' },
-      { name: 'Henry Walsh', family: 'Walsh', age: 72, skills: ['Mentorship'], status: 'Active' },
-      { name: 'Anna Becker', family: 'Becker', age: 41, skills: ['Painting', 'Sewing'], status: 'Active' },
-      { name: 'Joel Robinson', family: 'Robinson', age: 56, skills: ['Painting', 'Carpentry'], status: 'Active' }
+      { name: 'Eleanor Hayes', family: 'Hayes', age: 68, email: 'eleanor.hayes@example.com', phone: '(218) 555-0142', joined: 'Mar 2009', skills: ['Painting', 'Sunday school'], status: 'Active', notes: 'Leads the Women\'s Circle. Granddaughter Olivia recently baptized.' },
+      { name: 'Marcus Chen', family: 'Chen', age: 42, email: 'marcus.chen@example.com', phone: '(218) 555-0118', joined: 'Aug 2017', skills: ['Music', 'Audio/visual'], status: 'Active', notes: 'Helps run the sound board most Sunday services.' },
+      { name: 'Sarah Lindgren', family: 'Lindgren', age: 35, email: 'sarah.l@example.com', phone: '(218) 555-0193', joined: 'Jan 2020', skills: ['Hospitality', 'Event planning'], status: 'Active', notes: 'Volunteers for fellowship hall events.' },
+      { name: 'Tom Smith', family: 'Smith', age: 38, email: 'tom.smith@example.com', phone: '(218) 555-0167', joined: 'May 2015', skills: ['Carpentry', 'Painting'], status: 'Active', notes: 'Requested a baptism form yesterday. Family record is missing a child.' },
+      { name: 'Maria Gutierrez', family: 'Gutierrez', age: 54, email: 'maria.g@example.com', phone: '(218) 555-0124', joined: 'Apr 2026', skills: ['Translation', 'Cooking'], status: 'Active', notes: 'Recently joined. Family of four.' },
+      { name: 'James Park', family: 'Park', age: 29, email: 'james.park@example.com', phone: '(218) 555-0181', joined: 'Sep 2022', skills: ['Tech support', 'Painting'], status: 'Active', notes: 'Helps with the church website and AV setup.' },
+      { name: 'Linda Olsen', family: 'Olsen', age: 61, email: 'linda.olsen@example.com', phone: '(218) 555-0115', joined: 'Jun 2002', skills: ['Quilting', 'Painting'], status: 'Active', notes: 'Pastor David\'s wife. Coordinates the prayer chain.' },
+      { name: 'David Brooks', family: 'Brooks', age: 47, email: 'd.brooks@example.com', phone: '(218) 555-0156', joined: 'Nov 2014', skills: ['Bookkeeping'], status: 'Active', notes: 'Serves on the finance committee.' },
+      { name: 'Rachel Kim', family: 'Kim', age: 33, email: 'rachel.kim@example.com', phone: '(218) 555-0173', joined: 'Feb 2025', skills: ['Photography', 'Social media'], status: 'Active', notes: 'Found us through a friend. Runs the Instagram account.' },
+      { name: 'Henry Walsh', family: 'Walsh', age: 72, email: 'henry.walsh@example.com', phone: '(218) 555-0109', joined: 'Aug 1992', skills: ['Mentorship'], status: 'Active', notes: 'Long-time member. Mentors confirmation students.' },
+      { name: 'Anna Becker', family: 'Becker', age: 41, email: 'anna.becker@example.com', phone: '(218) 555-0148', joined: 'Mar 2018', skills: ['Painting', 'Sewing'], status: 'Active', notes: 'Quilting team lead with Linda Olsen.' },
+      { name: 'Joel Robinson', family: 'Robinson', age: 56, email: 'joel.r@example.com', phone: '(218) 555-0162', joined: 'Oct 2010', skills: ['Painting', 'Carpentry'], status: 'Active', notes: 'Helps maintain the building. Lead on last summer\'s repaint.' }
     ],
     paintingMembers: [], // populated after Action 1 form sync
     formsCreated: false,  // tracks whether Aaron's Time & Talent form is created
@@ -1525,20 +1553,7 @@
     state.currentTab = tab;
     document.querySelectorAll('.tab-content').forEach(s => s.classList.remove('active'));
     document.getElementById('tab-' + tab).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(b => {
-      b.classList.toggle('active', b.dataset.tab === tab);
-      b.classList.toggle('expanded', b.dataset.tab === tab);
-    });
-    document.querySelectorAll('.nav-subitems').forEach(s => {
-      s.classList.toggle('expanded', s.dataset.subitemsOf === tab);
-    });
-    // Sync sub-nav active state with whichever sub-tab is currently active in the section
-    const section = document.getElementById('tab-' + tab);
-    const activeSub = section ? section.querySelector('.subtab.active') : null;
-    const activeSubName = activeSub ? activeSub.dataset.subtab : null;
-    document.querySelectorAll('.nav-subitem').forEach(s => {
-      s.classList.toggle('active', s.dataset.tab === tab && s.dataset.subtab === activeSubName);
-    });
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
     const titles = {
       'ask-aaron': 'Ask Aaron',
       'people': 'People',
@@ -1555,59 +1570,165 @@
     window.scrollTo(0, 0);
   }
 
-  function activateSubtab(tab, subtab) {
-    const section = document.getElementById('tab-' + tab);
-    if (!section) return;
-    section.querySelectorAll('.subtab').forEach(b => b.classList.toggle('active', b.dataset.subtab === subtab));
-    section.querySelectorAll('[data-subtab-content]').forEach(c => c.classList.toggle('active', c.dataset.subtabContent === subtab));
-    document.querySelectorAll('.nav-subitem').forEach(s => {
-      s.classList.toggle('active', s.dataset.tab === tab && s.dataset.subtab === subtab);
-    });
-  }
-
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-  });
-
-  // Sidebar sub-nav items
-  document.querySelectorAll('.nav-subitem').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      switchTab(btn.dataset.tab);
-      activateSubtab(btn.dataset.tab, btn.dataset.subtab);
-    });
   });
 
   // Sub-tab strip switching (top of section)
   document.querySelectorAll('[data-subtabs]').forEach(group => {
     const section = group.closest('.tab-content');
-    const tabName = section.id.replace('tab-', '');
     group.querySelectorAll('.subtab').forEach(btn => {
       btn.addEventListener('click', () => {
-        activateSubtab(tabName, btn.dataset.subtab);
+        group.querySelectorAll('.subtab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        section.querySelectorAll('[data-subtab-content]').forEach(c => c.classList.remove('active'));
+        section.querySelector('[data-subtab-content="' + btn.dataset.subtab + '"]').classList.add('active');
       });
     });
   });
 
   // ====================== RENDER PEOPLE / FORMS / EVENTS ======================
   const colorClasses = ['', 'green', 'amber', 'purple', 'pink', 'gray'];
-  function renderPeople() {
+  function renderPeople(filter) {
     const tbody = document.getElementById('people-tbody');
-    tbody.innerHTML = state.members.map((m, i) => {
+    const list = state.members.map((m, i) => ({ m, i }));
+    const f = (filter || '').trim().toLowerCase();
+    const filtered = f
+      ? list.filter(({ m }) => (m.name + ' ' + m.family + ' ' + (m.skills || []).join(' ')).toLowerCase().includes(f))
+      : list;
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 32px; color: var(--text-secondary);">No members match "${escapeHTML(f)}"</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = filtered.map(({ m, i }) => {
       const initials = m.name.split(' ').map(p => p[0]).join('').slice(0, 2);
       const cls = colorClasses[i % colorClasses.length];
-      const skillsTxt = m.skills.length ? m.skills.join(', ') : '—';
+      const skillsTxt = (m.skills && m.skills.length) ? m.skills.join(', ') : '—';
       return `
-        <tr>
+        <tr data-member-idx="${i}">
           <td><span class="row-avatar"><span class="mini-avatar ${cls}">${initials}</span> <strong>${m.name}</strong></span></td>
-          <td>${m.family}</td>
-          <td>${m.age}</td>
+          <td>${m.family || '—'}</td>
+          <td>${m.age != null ? m.age : '—'}</td>
           <td style="color: var(--text-secondary);">${skillsTxt}</td>
           <td><span class="badge badge-green">${m.status}</span></td>
         </tr>
       `;
     }).join('');
+    tbody.querySelectorAll('tr').forEach(tr => {
+      tr.addEventListener('click', () => openMemberModal(parseInt(tr.dataset.memberIdx, 10)));
+    });
   }
+  function escapeHTML(s) { return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+  // ----- Member modal -----
+  const memberModal = document.getElementById('member-modal');
+  const memberModalTitle = document.getElementById('member-modal-title');
+  const memberModalBody = document.getElementById('member-modal-body');
+
+  function openMemberModal(idx) {
+    const m = state.members[idx];
+    if (!m) return;
+    const initials = m.name.split(' ').map(p => p[0]).join('').slice(0, 2);
+    const cls = colorClasses[idx % colorClasses.length];
+    memberModalTitle.textContent = m.name;
+    memberModalBody.innerHTML = `
+      <div style="display:flex; align-items:center; gap:14px; margin-bottom: 20px;">
+        <div class="mini-avatar ${cls}" style="width:52px; height:52px; font-size:18px;">${initials}</div>
+        <div>
+          <div style="font-size:18px; font-weight:600;">${escapeHTML(m.name)}</div>
+          <div style="color: var(--text-secondary); font-size: 13px;">${escapeHTML(m.family)} family · age ${m.age} · member since ${escapeHTML(m.joined || '—')}</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="gap: 12px; margin-bottom: 20px;">
+        <div>
+          <div class="label" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-disabled); font-weight: 600; margin-bottom: 4px;">Email</div>
+          <div>${escapeHTML(m.email || '—')}</div>
+        </div>
+        <div>
+          <div class="label" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-disabled); font-weight: 600; margin-bottom: 4px;">Phone</div>
+          <div>${escapeHTML(m.phone || '—')}</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <div class="label" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-disabled); font-weight: 600; margin-bottom: 6px;">Skills, talents and interests</div>
+        ${(m.skills && m.skills.length ? m.skills : ['—']).map(s => `<span class="field-pill">${escapeHTML(s)}</span>`).join('')}
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <div class="label" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-disabled); font-weight: 600; margin-bottom: 6px;">Notes</div>
+        <div style="color: var(--text); padding: 10px 12px; background: #FAFBFC; border-radius: 8px;">${escapeHTML(m.notes || 'No notes yet.')}</div>
+      </div>
+
+      <div>
+        <div class="label" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-disabled); font-weight: 600; margin-bottom: 6px;">Recent activity</div>
+        <div style="display:flex; flex-direction: column; gap: 6px;">
+          <div style="padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; display:flex; justify-content:space-between;">
+            <span><i data-lucide="calendar-check" style="width:14px; height:14px; vertical-align: middle; color: var(--cta-hover);"></i> Attended Sunday service</span>
+            <span style="color: var(--text-secondary); font-size: 12px;">May 5</span>
+          </div>
+          <div style="padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; display:flex; justify-content:space-between;">
+            <span><i data-lucide="hand-coins" style="width:14px; height:14px; vertical-align: middle; color: var(--cta-hover);"></i> Donation to General fund</span>
+            <span style="color: var(--text-secondary); font-size: 12px;">May 1</span>
+          </div>
+          <div style="padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; display:flex; justify-content:space-between;">
+            <span><i data-lucide="form-input" style="width:14px; height:14px; vertical-align: middle; color: var(--primary);"></i> Filled out Time &amp; Talent Survey</span>
+            <span style="color: var(--text-secondary); font-size: 12px;">Apr 28</span>
+          </div>
+        </div>
+      </div>
+    `;
+    openModal(memberModal);
+  }
+
+  // ----- Add member modal -----
+  const addMemberModal = document.getElementById('add-member-modal');
+  const addMemberForm = document.getElementById('add-member-form');
+  document.getElementById('add-member-btn').addEventListener('click', () => {
+    addMemberForm.reset();
+    openModal(addMemberModal);
+    setTimeout(() => addMemberForm.querySelector('[name="firstName"]').focus(), 50);
+  });
+  document.getElementById('add-member-submit').addEventListener('click', e => {
+    e.preventDefault();
+    const data = new FormData(addMemberForm);
+    const firstName = (data.get('firstName') || '').toString().trim();
+    const lastName = (data.get('lastName') || '').toString().trim();
+    if (!firstName || !lastName) {
+      addMemberForm.querySelector('[name="firstName"]').focus();
+      return;
+    }
+    const skills = (data.get('skills') || '').toString().split(',').map(s => s.trim()).filter(Boolean);
+    const newMember = {
+      name: `${firstName} ${lastName}`,
+      family: (data.get('family') || lastName).toString().trim(),
+      age: data.get('age') ? parseInt(data.get('age'), 10) : null,
+      email: (data.get('email') || '').toString().trim(),
+      phone: (data.get('phone') || '').toString().trim(),
+      joined: 'Today',
+      skills,
+      status: 'Active',
+      notes: (data.get('notes') || '').toString().trim()
+    };
+    state.members.unshift(newMember);
+    renderPeople(document.getElementById('people-search').value);
+    closeModal(addMemberModal);
+    showToast(`${newMember.name} added to People`);
+  });
+  // Submit on Enter from any text input
+  addMemberForm.addEventListener('submit', e => {
+    e.preventDefault();
+    document.getElementById('add-member-submit').click();
+  });
+
+  // Search filtering
+  document.getElementById('people-search').addEventListener('input', e => renderPeople(e.target.value));
+
+  // Edit button placeholder
+  document.getElementById('member-modal-edit').addEventListener('click', () => {
+    showToast('Edit member coming soon');
+  });
 
   function renderForms() {
     const tbody = document.getElementById('forms-tbody');
@@ -1662,12 +1783,25 @@
     lucide.createIcons();
   }
 
+  // ====================== MODALS (generic) ======================
+  function closeModal(el) { el.classList.remove('open'); }
+  function openModal(el) { el.classList.add('open'); lucide.createIcons(); }
+
+  // Click on backdrop closes modal
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeModal(overlay);
+    });
+  });
+  // [data-close-modal] buttons close the closest modal
+  document.querySelectorAll('[data-close-modal]').forEach(b => {
+    b.addEventListener('click', () => closeModal(b.closest('.modal-overlay')));
+  });
+
   // ====================== FORM MODAL ======================
   const formModal = document.getElementById('form-modal');
   const formModalTitle = document.getElementById('form-modal-title');
   const formModalBody = document.getElementById('form-modal-body');
-  formModal.addEventListener('click', e => { if (e.target === formModal) formModal.classList.remove('open'); });
-  document.querySelectorAll('[data-close-modal]').forEach(b => b.addEventListener('click', () => formModal.classList.remove('open')));
 
   const formDetails = {
     'time-talent': {
