@@ -1,0 +1,2243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ChurchPlannerPro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --primary: #2563EB;
+    --primary-hover: #1D4ED8;
+    --primary-light: #DBEAFE;
+    --bg: #F5F7FA;
+    --surface: #FFFFFF;
+    --border: #E5E7EB;
+    --text: #111827;
+    --text-secondary: #6B7280;
+    --text-disabled: #9CA3AF;
+    --cta: #22C55E;
+    --cta-hover: #16A34A;
+    --cta-light: #DCFCE7;
+    --warning: #F59E0B;
+    --error: #EF4444;
+    --shadow-sm: 0 1px 2px rgba(17, 24, 39, 0.04);
+    --shadow-md: 0 4px 12px rgba(17, 24, 39, 0.06);
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  input, textarea, select { font-family: inherit; font-size: inherit; color: inherit; }
+  a { color: var(--primary); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---------- Layout ---------- */
+  .app {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    height: 100vh;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 12px;
+    overflow-y: auto;
+  }
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    padding: 8px 12px 24px 12px;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .logo .accent { color: var(--text); font-weight: 400; }
+  .logo sup {
+    font-size: 8px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-left: 2px;
+    letter-spacing: 0.05em;
+  }
+  .nav { display: flex; flex-direction: column; gap: 2px; }
+  .nav-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-disabled);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 16px 12px 6px 12px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 150ms ease-out, color 150ms ease-out;
+  }
+  .nav-item:hover { background: #F3F4F6; color: var(--text); }
+  .nav-item.active {
+    background: var(--primary-light);
+    color: var(--primary);
+  }
+  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  .church-card {
+    margin-top: auto;
+    padding: 12px;
+    background: #F9FAFB;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .church-avatar {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--primary);
+    color: white;
+    display: grid; place-items: center;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .church-card .church-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .church-card .church-sub { font-size: 12px; color: var(--text-secondary); }
+
+  /* ---------- Main area ---------- */
+  .main-area {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    height: 56px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .topbar h1 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .topbar .crumb { color: var(--text-secondary); font-weight: 500; }
+  .topbar .crumb-sep { color: var(--text-disabled); margin: 0 8px; }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .icon-btn {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-md);
+    display: grid; place-items: center;
+    color: var(--text-secondary);
+    transition: background 150ms;
+  }
+  .icon-btn:hover { background: #F3F4F6; color: var(--text); }
+  .icon-btn svg { width: 18px; height: 18px; }
+  .user-chip {
+    display: flex; align-items: center; gap: 10px;
+    padding: 4px 12px 4px 4px;
+    border-radius: 999px;
+    background: #F9FAFB;
+    border: 1px solid var(--border);
+  }
+  .user-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366F1, #2563EB);
+    color: white;
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 600;
+  }
+  .user-chip span { font-size: 13px; font-weight: 500; }
+
+  /* ---------- Content ---------- */
+  main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 32px 48px 32px;
+  }
+  .tab-content { display: none; max-width: 1100px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+
+  .page-header { margin-bottom: 24px; }
+  .page-header h2 { font-size: 24px; font-weight: 600; color: var(--text); }
+  .page-header p { color: var(--text-secondary); margin-top: 4px; }
+
+  /* ---------- Sub-tabs ---------- */
+  .subtabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .subtab {
+    padding: 10px 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 14px;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 150ms;
+  }
+  .subtab:hover { color: var(--text); }
+  .subtab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+  /* ---------- Cards ---------- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+  }
+  .card + .card { margin-top: 16px; }
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .card-sub { color: var(--text-secondary); font-size: 13px; }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 150ms, color 150ms, border-color 150ms;
+    min-height: 36px;
+  }
+  .btn svg { width: 16px; height: 16px; }
+  .btn-primary {
+    background: var(--cta);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--cta-hover); }
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--primary);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--primary); background: #F8FAFF; }
+  .btn-text {
+    color: var(--primary);
+    padding: 6px 8px;
+  }
+  .btn-text:hover { background: var(--primary-light); }
+
+  /* ---------- Tables ---------- */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--text-disabled);
+    letter-spacing: 0.04em;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: #FAFBFC;
+  }
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tbody tr { transition: background 150ms; }
+  tbody tr:hover { background: #FAFBFC; cursor: pointer; }
+  .table-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .row-avatar {
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .mini-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #E0E7FF;
+    color: var(--primary);
+    display: grid; place-items: center;
+    font-size: 11px; font-weight: 600;
+  }
+  .mini-avatar.green { background: var(--cta-light); color: var(--cta-hover); }
+  .mini-avatar.amber { background: #FEF3C7; color: #B45309; }
+  .mini-avatar.purple { background: #EDE9FE; color: #6D28D9; }
+  .mini-avatar.pink { background: #FCE7F3; color: #BE185D; }
+  .mini-avatar.gray { background: #F3F4F6; color: var(--text-secondary); }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #F3F4F6;
+    color: var(--text-secondary);
+  }
+  .badge-green { background: var(--cta-light); color: var(--cta-hover); }
+  .badge-blue { background: var(--primary-light); color: var(--primary); }
+  .badge-amber { background: #FEF3C7; color: #B45309; }
+  .badge-gray { background: #F3F4F6; color: var(--text-secondary); }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+  .search {
+    flex: 1;
+    max-width: 360px;
+    position: relative;
+  }
+  .search svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px; height: 16px;
+    color: var(--text-disabled);
+  }
+  .search input {
+    width: 100%;
+    padding: 10px 12px 10px 36px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 150ms;
+  }
+  .search input:focus { border-color: var(--primary); }
+
+  /* ---------- Ask Aaron (chat) ---------- */
+  .aaron-page {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 56px - 80px);
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  .aaron-welcome {
+    text-align: center;
+    padding: 48px 0 32px 0;
+  }
+  .aaron-welcome h1 {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .aaron-welcome p {
+    color: var(--text-secondary);
+    margin-top: 8px;
+    font-size: 16px;
+  }
+  .aaron-welcome.compact { padding: 16px 0 8px 0; }
+  .aaron-welcome.compact h1 { font-size: 18px; font-weight: 600; }
+  .aaron-welcome.compact p { display: none; }
+
+  .conversation {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px 0 24px 0;
+  }
+  .msg {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    animation: fadeIn 200ms ease-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .msg-avatar {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    font-weight: 600; font-size: 12px;
+  }
+  .msg-avatar.aaron {
+    background: linear-gradient(135deg, #2563EB, #6366F1);
+    color: white;
+  }
+  .msg-avatar.user {
+    background: #F3F4F6;
+    color: var(--text);
+  }
+  .msg-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .msg-body .msg-name {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .msg-body .msg-text {
+    color: var(--text);
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  .msg-body .msg-text p + p { margin-top: 8px; }
+
+  .inline-card {
+    margin-top: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .inline-card-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .inline-card-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .inline-card-icon.green { background: var(--cta-light); color: var(--cta-hover); }
+  .inline-card-icon.amber { background: #FEF3C7; color: #B45309; }
+  .inline-card-icon svg { width: 18px; height: 18px; }
+  .inline-card-title { font-size: 14px; font-weight: 600; }
+  .inline-card-sub { font-size: 12px; color: var(--text-secondary); }
+  .inline-card-body { padding: 14px 16px; font-size: 13.5px; }
+  .inline-card-body .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-disabled); font-weight: 600; margin-bottom: 4px; }
+  .inline-card-body .row { display: flex; gap: 16px; padding: 6px 0; }
+  .inline-card-body .row + .row { border-top: 1px dashed var(--border); }
+  .inline-card-body .row .col { flex: 1; }
+  .inline-card-footer {
+    padding: 10px 16px;
+    border-top: 1px solid var(--border);
+    background: #FAFBFC;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .field-pill {
+    display: inline-block;
+    background: #F3F4F6;
+    color: var(--text);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    margin-right: 6px;
+    margin-top: 4px;
+  }
+  .member-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 4px;
+    background: #F3F4F6;
+    border-radius: 999px;
+    font-size: 12px;
+    margin: 4px 6px 0 0;
+  }
+  .member-pill .mini-avatar { width: 22px; height: 22px; font-size: 10px; }
+
+  .inline-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .option-btn {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 150ms;
+  }
+  .option-btn:hover { border-color: var(--primary); color: var(--primary); background: #F8FAFF; }
+  .option-btn.primary {
+    background: var(--cta);
+    border-color: var(--cta);
+    color: white;
+  }
+  .option-btn.primary:hover { background: var(--cta-hover); border-color: var(--cta-hover); }
+
+  .composer-wrap {
+    margin-top: auto;
+    position: sticky;
+    bottom: 0;
+    background: linear-gradient(to top, var(--bg) 70%, rgba(245, 247, 250, 0));
+    padding: 24px 0 8px 0;
+  }
+  .suggested-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+    justify-content: center;
+  }
+  .chip {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-secondary);
+    transition: all 150ms;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .chip svg { width: 14px; height: 14px; }
+  .chip:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: #F8FAFF;
+  }
+  .composer {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 8px 8px 8px 16px;
+    box-shadow: var(--shadow-md);
+    transition: border-color 150ms;
+  }
+  .composer:focus-within { border-color: var(--primary); }
+  .composer textarea {
+    flex: 1;
+    border: none;
+    outline: none;
+    resize: none;
+    padding: 10px 0;
+    background: transparent;
+    font-size: 14.5px;
+    line-height: 1.5;
+    max-height: 160px;
+  }
+  .send-btn {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: var(--cta);
+    color: white;
+    display: grid; place-items: center;
+    transition: background 150ms;
+    flex-shrink: 0;
+  }
+  .send-btn:hover { background: var(--cta-hover); }
+  .send-btn:disabled { background: var(--text-disabled); cursor: not-allowed; }
+  .send-btn svg { width: 16px; height: 16px; }
+
+  .typing {
+    display: inline-flex;
+    gap: 4px;
+    padding: 8px 12px;
+    background: #F3F4F6;
+    border-radius: 12px;
+  }
+  .typing span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-disabled);
+    animation: bounce 1.2s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--text);
+    color: white;
+    padding: 12px 18px;
+    border-radius: var(--radius-md);
+    font-size: 13.5px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 100;
+    animation: slideUp 250ms ease-out;
+  }
+  .toast svg { width: 16px; height: 16px; color: var(--cta); }
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* ---------- Forms (form list & detail) ---------- */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 900px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  .stat-card { padding: 18px 20px; }
+  .stat-label { color: var(--text-secondary); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+  .stat-value { font-size: 26px; font-weight: 600; margin-top: 6px; color: var(--text); }
+  .stat-delta { font-size: 12px; margin-top: 6px; color: var(--cta-hover); font-weight: 500; }
+  .stat-delta.down { color: var(--error); }
+
+  /* Reporting bars */
+  .bar-chart { display: flex; align-items: flex-end; gap: 12px; height: 200px; padding-top: 24px; }
+  .bar { flex: 1; background: var(--primary-light); border-radius: 6px 6px 0 0; position: relative; transition: background 200ms; }
+  .bar:hover { background: var(--primary); }
+  .bar .bar-label { position: absolute; bottom: -22px; left: 0; right: 0; text-align: center; font-size: 11px; color: var(--text-secondary); }
+  .bar .bar-value { position: absolute; top: -20px; left: 0; right: 0; text-align: center; font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+
+  /* Workflow nodes */
+  .workflow-step {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    background: #FAFBFC;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  .workflow-arrow { color: var(--text-disabled); display: grid; place-items: center; }
+
+  /* Integrations */
+  .integration-card {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .integration-logo {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: grid; place-items: center;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .integration-card h3 { font-size: 15px; font-weight: 600; }
+  .integration-card p { color: var(--text-secondary); font-size: 13px; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(17, 24, 39, 0.4);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+  }
+  .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-header h3 { font-size: 18px; font-weight: 600; }
+  .modal-body { padding: 20px 24px; }
+  .modal-footer {
+    padding: 14px 24px;
+    border-top: 1px solid var(--border);
+    background: #FAFBFC;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .form-row { margin-bottom: 14px; }
+  .form-row label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+  .form-row input, .form-row textarea, .form-row select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    outline: none;
+    transition: border-color 150ms;
+    background: var(--surface);
+  }
+  .form-row input:focus, .form-row textarea:focus { border-color: var(--primary); }
+  .form-row textarea { min-height: 100px; resize: vertical; }
+
+  .empty-state {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--text-secondary);
+  }
+  .empty-state svg { width: 32px; height: 32px; color: var(--text-disabled); margin-bottom: 8px; }
+
+  /* responsive */
+  @media (max-width: 768px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    main { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="logo">
+      <span>Church<span class="accent">Planner</span></span><sup>PRO</sup>
+    </div>
+
+    <nav class="nav" id="primary-nav">
+      <button class="nav-item active" data-tab="ask-aaron">
+        <i data-lucide="sparkles"></i> Ask Aaron
+      </button>
+      <button class="nav-item" data-tab="people">
+        <i data-lucide="users"></i> People
+      </button>
+      <button class="nav-item" data-tab="finances">
+        <i data-lucide="wallet"></i> Finances
+      </button>
+      <button class="nav-item" data-tab="calendar">
+        <i data-lucide="calendar"></i> Calendar
+      </button>
+      <button class="nav-item" data-tab="forms">
+        <i data-lucide="clipboard-list"></i> Forms
+      </button>
+      <button class="nav-item" data-tab="reporting">
+        <i data-lucide="bar-chart-3"></i> Reporting
+      </button>
+      <button class="nav-item" data-tab="workflows">
+        <i data-lucide="workflow"></i> Workflows
+      </button>
+
+      <div class="nav-section-label">Operations</div>
+      <button class="nav-item" data-tab="integrations">
+        <i data-lucide="plug"></i> Integrations
+      </button>
+      <button class="nav-item" data-tab="facilities">
+        <i data-lucide="building-2"></i> Facilities
+      </button>
+      <button class="nav-item" data-tab="settings">
+        <i data-lucide="settings"></i> Settings
+      </button>
+    </nav>
+
+    <div class="church-card">
+      <div class="church-avatar">CL</div>
+      <div>
+        <div class="church-name">Christ Lutheran</div>
+        <div class="church-sub">Tracy Bennett</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN AREA ============ -->
+  <div class="main-area">
+    <header class="topbar">
+      <div>
+        <h1 id="page-title">Ask Aaron</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" title="Notifications"><i data-lucide="bell"></i></button>
+        <button class="icon-btn" title="Help"><i data-lucide="circle-help"></i></button>
+        <div class="user-chip">
+          <div class="user-avatar">T</div>
+          <span>Tracy</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <!-- ============ ASK AARON ============ -->
+      <section id="tab-ask-aaron" class="tab-content active">
+        <div class="aaron-page">
+          <div class="aaron-welcome" id="aaron-welcome">
+            <h1>Hi Tracy, what would you like to do today?</h1>
+            <p>Aaron can create forms, draft emails, schedule events, and update member records.</p>
+          </div>
+
+          <div class="conversation" id="conversation"></div>
+
+          <div class="composer-wrap">
+            <div class="suggested-actions" id="suggested-actions">
+              <button class="chip" data-action="action1">
+                <i data-lucide="clipboard-plus"></i>
+                Create a talent, interest and skills form
+              </button>
+              <button class="chip" data-action="action2">
+                <i data-lucide="mail"></i>
+                Create giving email
+              </button>
+              <button class="chip" data-action="action3">
+                <i data-lucide="droplets"></i>
+                Send baptism form
+              </button>
+            </div>
+            <div class="composer">
+              <textarea id="composer-input" rows="1" placeholder="Ask Aaron anything about your church..."></textarea>
+              <button class="send-btn" id="send-btn"><i data-lucide="arrow-up"></i></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PEOPLE ============ -->
+      <section id="tab-people" class="tab-content">
+        <div class="page-header">
+          <h2>People</h2>
+          <p>Members of Christ Lutheran</p>
+        </div>
+        <div class="toolbar">
+          <div class="search">
+            <i data-lucide="search"></i>
+            <input placeholder="Search members..." />
+          </div>
+          <button class="btn btn-primary"><i data-lucide="user-plus"></i> Add member</button>
+        </div>
+        <div class="grid-3" style="margin-bottom: 24px;">
+          <div class="card stat-card">
+            <div class="stat-label">Total members</div>
+            <div class="stat-value">312</div>
+            <div class="stat-delta">+8 this month</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Active families</div>
+            <div class="stat-value">128</div>
+            <div class="stat-delta">+3 this month</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Avg attendance</div>
+            <div class="stat-value">184</div>
+            <div class="stat-delta">+6% vs. last quarter</div>
+          </div>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Family</th>
+                <th>Age</th>
+                <th>Skills & interests</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="people-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ FINANCES ============ -->
+      <section id="tab-finances" class="tab-content">
+        <div class="page-header">
+          <h2>Finances</h2>
+          <p>Bank, accounting, donations, payroll and budget</p>
+        </div>
+        <div class="subtabs" data-subtabs="finances">
+          <button class="subtab active" data-subtab="bank">Bank</button>
+          <button class="subtab" data-subtab="accounting">Accounting</button>
+          <button class="subtab" data-subtab="donations">Donations</button>
+          <button class="subtab" data-subtab="payroll">Payroll</button>
+          <button class="subtab" data-subtab="budget">Budget</button>
+        </div>
+
+        <div class="subtab-content active" data-subtab-content="bank">
+          <div class="grid-3" style="margin-bottom: 16px;">
+            <div class="card stat-card">
+              <div class="stat-label">Operating account</div>
+              <div class="stat-value">$84,212</div>
+              <div class="stat-delta">+$2,140 this week</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Building fund</div>
+              <div class="stat-value">$312,884</div>
+              <div class="stat-delta">+$1,250 this week</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Reserves</div>
+              <div class="stat-value">$58,400</div>
+              <div class="stat-delta">No change</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Recent transactions</div>
+            <div class="card-sub" style="margin-bottom: 12px;">Synced from connected bank account</div>
+            <table>
+              <thead><tr><th>Date</th><th>Description</th><th>Category</th><th style="text-align:right;">Amount</th></tr></thead>
+              <tbody>
+                <tr><td>May 4</td><td>Sunday offering deposit</td><td><span class="badge badge-green">Income</span></td><td style="text-align:right; color: var(--cta-hover); font-weight:600;">+$4,820.00</td></tr>
+                <tr><td>May 3</td><td>Heating bill — Northern Energy</td><td><span class="badge">Utilities</span></td><td style="text-align:right;">−$612.40</td></tr>
+                <tr><td>May 2</td><td>Office supplies — Staples</td><td><span class="badge">Office</span></td><td style="text-align:right;">−$84.12</td></tr>
+                <tr><td>May 1</td><td>Online giving — Vanco transfer</td><td><span class="badge badge-green">Income</span></td><td style="text-align:right; color: var(--cta-hover); font-weight:600;">+$2,340.00</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="subtab-content" data-subtab-content="accounting">
+          <div class="card">
+            <div class="card-title">Chart of accounts</div>
+            <div class="card-sub" style="margin-bottom: 12px;">Synced from Icon</div>
+            <table>
+              <thead><tr><th>Account</th><th>Type</th><th style="text-align:right;">Balance</th></tr></thead>
+              <tbody>
+                <tr><td>1000 — Cash</td><td>Asset</td><td style="text-align:right;">$84,212.00</td></tr>
+                <tr><td>1100 — Building Fund</td><td>Asset</td><td style="text-align:right;">$312,884.00</td></tr>
+                <tr><td>4000 — Tithes & Offerings</td><td>Income</td><td style="text-align:right;">$184,210.00</td></tr>
+                <tr><td>5100 — Salaries</td><td>Expense</td><td style="text-align:right;">$96,400.00</td></tr>
+                <tr><td>5400 — Utilities</td><td>Expense</td><td style="text-align:right;">$8,612.40</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="subtab-content" data-subtab-content="donations">
+          <div class="grid-2" style="margin-bottom: 16px;">
+            <div class="card stat-card">
+              <div class="stat-label">YTD giving</div>
+              <div class="stat-value">$184,210</div>
+              <div class="stat-delta">+12% vs. last year</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Active givers</div>
+              <div class="stat-value">186</div>
+              <div class="stat-delta">+9 this quarter</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Recent donations</div>
+            <div class="card-sub" style="margin-bottom: 12px;">From Vanco</div>
+            <table>
+              <thead><tr><th>Donor</th><th>Fund</th><th>Date</th><th style="text-align:right;">Amount</th></tr></thead>
+              <tbody>
+                <tr><td>Eleanor Hayes</td><td>General</td><td>May 4</td><td style="text-align:right;">$250.00</td></tr>
+                <tr><td>Marcus Chen</td><td>Building</td><td>May 4</td><td style="text-align:right;">$1,000.00</td></tr>
+                <tr><td>Sarah Lindgren</td><td>Missions</td><td>May 3</td><td style="text-align:right;">$75.00</td></tr>
+                <tr><td>Tom Smith</td><td>General</td><td>May 1</td><td style="text-align:right;">$120.00</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="subtab-content" data-subtab-content="payroll">
+          <div class="card">
+            <div class="card-title">Payroll — May 15 cycle</div>
+            <div class="card-sub" style="margin-bottom: 12px;">Synced from Icon · Next run May 15</div>
+            <table>
+              <thead><tr><th>Employee</th><th>Role</th><th>Hours</th><th style="text-align:right;">Gross</th></tr></thead>
+              <tbody>
+                <tr><td>Pastor David Olsen</td><td>Senior Pastor</td><td>—</td><td style="text-align:right;">$3,400.00</td></tr>
+                <tr><td>Lisa Park</td><td>Worship Director</td><td>—</td><td style="text-align:right;">$2,100.00</td></tr>
+                <tr><td>Tracy Bennett</td><td>Administrator</td><td>—</td><td style="text-align:right;">$2,800.00</td></tr>
+                <tr><td>Marco Reyes</td><td>Custodian</td><td>72</td><td style="text-align:right;">$1,440.00</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="subtab-content" data-subtab-content="budget">
+          <div class="card">
+            <div class="card-title">2026 operating budget</div>
+            <div class="card-sub" style="margin-bottom: 12px;">42% of year elapsed</div>
+            <table>
+              <thead><tr><th>Category</th><th style="text-align:right;">Budgeted</th><th style="text-align:right;">Actual</th><th style="text-align:right;">% used</th></tr></thead>
+              <tbody>
+                <tr><td>Tithes & offerings</td><td style="text-align:right;">$420,000</td><td style="text-align:right;">$184,210</td><td style="text-align:right;"><span class="badge badge-green">44%</span></td></tr>
+                <tr><td>Salaries</td><td style="text-align:right;">$240,000</td><td style="text-align:right;">$96,400</td><td style="text-align:right;"><span class="badge badge-green">40%</span></td></tr>
+                <tr><td>Facilities</td><td style="text-align:right;">$48,000</td><td style="text-align:right;">$22,140</td><td style="text-align:right;"><span class="badge badge-green">46%</span></td></tr>
+                <tr><td>Programs</td><td style="text-align:right;">$32,000</td><td style="text-align:right;">$18,800</td><td style="text-align:right;"><span class="badge badge-amber">59%</span></td></tr>
+                <tr><td>Missions</td><td style="text-align:right;">$24,000</td><td style="text-align:right;">$10,400</td><td style="text-align:right;"><span class="badge badge-green">43%</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ CALENDAR ============ -->
+      <section id="tab-calendar" class="tab-content">
+        <div class="page-header">
+          <h2>Calendar</h2>
+          <p>Events, groups, and attendance</p>
+        </div>
+        <div class="subtabs" data-subtabs="calendar">
+          <button class="subtab active" data-subtab="events">Events</button>
+          <button class="subtab" data-subtab="groups">Groups</button>
+          <button class="subtab" data-subtab="attendance">Attendance</button>
+        </div>
+
+        <div class="subtab-content active" data-subtab-content="events">
+          <div class="toolbar">
+            <div class="search">
+              <i data-lucide="search"></i>
+              <input placeholder="Search events..." />
+            </div>
+            <button class="btn btn-primary"><i data-lucide="plus"></i> New event</button>
+          </div>
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>Event</th>
+                  <th>Date</th>
+                  <th>Location</th>
+                  <th>Registered</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="events-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="subtab-content" data-subtab-content="groups">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title">Tuesday Bible Study</div>
+              <div class="card-sub">12 members · Pastor David</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Youth Group</div>
+              <div class="card-sub">18 members · Lisa Park</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Women's Circle</div>
+              <div class="card-sub">22 members · Eleanor Hayes</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Choir</div>
+              <div class="card-sub">14 members · Lisa Park</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subtab-content" data-subtab-content="attendance">
+          <div class="card">
+            <div class="card-title">Sunday attendance — last 8 weeks</div>
+            <div class="bar-chart" style="margin-top: 24px;">
+              <div class="bar" style="height: 65%;"><div class="bar-value">172</div><div class="bar-label">Mar 17</div></div>
+              <div class="bar" style="height: 70%;"><div class="bar-value">181</div><div class="bar-label">Mar 24</div></div>
+              <div class="bar" style="height: 80%;"><div class="bar-value">204</div><div class="bar-label">Mar 31</div></div>
+              <div class="bar" style="height: 95%;"><div class="bar-value">238</div><div class="bar-label">Apr 7</div></div>
+              <div class="bar" style="height: 78%;"><div class="bar-value">196</div><div class="bar-label">Apr 14</div></div>
+              <div class="bar" style="height: 72%;"><div class="bar-value">183</div><div class="bar-label">Apr 21</div></div>
+              <div class="bar" style="height: 75%;"><div class="bar-value">189</div><div class="bar-label">Apr 28</div></div>
+              <div class="bar" style="height: 82%;"><div class="bar-value">208</div><div class="bar-label">May 5</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ FORMS ============ -->
+      <section id="tab-forms" class="tab-content">
+        <div class="page-header">
+          <h2>Forms</h2>
+          <p>Member-facing forms and their responses</p>
+        </div>
+        <div class="toolbar">
+          <div class="search">
+            <i data-lucide="search"></i>
+            <input placeholder="Search forms..." />
+          </div>
+          <button class="btn btn-primary"><i data-lucide="plus"></i> New form</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Form</th>
+                <th>Created</th>
+                <th>Responses</th>
+                <th>Last response</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="forms-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ REPORTING ============ -->
+      <section id="tab-reporting" class="tab-content">
+        <div class="page-header">
+          <h2>Reporting</h2>
+          <p>At-a-glance health of the church</p>
+        </div>
+        <div class="grid-3" style="margin-bottom: 16px;">
+          <div class="card stat-card">
+            <div class="stat-label">YTD giving</div>
+            <div class="stat-value">$184,210</div>
+            <div class="stat-delta">+12% vs. last year</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Avg Sunday attendance</div>
+            <div class="stat-value">196</div>
+            <div class="stat-delta">+6% this quarter</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">New members YTD</div>
+            <div class="stat-value">22</div>
+            <div class="stat-delta">+4 vs. last year</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Giving by month</div>
+          <div class="bar-chart" style="margin-top: 24px;">
+            <div class="bar" style="height: 70%;"><div class="bar-value">$31k</div><div class="bar-label">Jan</div></div>
+            <div class="bar" style="height: 78%;"><div class="bar-value">$36k</div><div class="bar-label">Feb</div></div>
+            <div class="bar" style="height: 86%;"><div class="bar-value">$41k</div><div class="bar-label">Mar</div></div>
+            <div class="bar" style="height: 92%;"><div class="bar-value">$44k</div><div class="bar-label">Apr</div></div>
+            <div class="bar" style="height: 65%;"><div class="bar-value">$32k</div><div class="bar-label">May</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ WORKFLOWS ============ -->
+      <section id="tab-workflows" class="tab-content">
+        <div class="page-header">
+          <h2>Workflows</h2>
+          <p>Automated sequences Aaron runs on your behalf</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+              <div>
+                <div class="card-title">Sunday school registration</div>
+                <div class="card-sub">3 steps · Active</div>
+              </div>
+              <span class="badge badge-green">On</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="workflow-step"><i data-lucide="form-input" style="color:var(--primary);"></i> Member fills Sunday school form</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="user-check" style="color:var(--primary);"></i> Add child to roster</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="mail" style="color:var(--primary);"></i> Confirmation email to parents</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+              <div>
+                <div class="card-title">New member registration</div>
+                <div class="card-sub">4 steps · Active</div>
+              </div>
+              <span class="badge badge-green">On</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="workflow-step"><i data-lucide="form-input" style="color:var(--primary);"></i> New member fills form</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="user-plus" style="color:var(--primary);"></i> Create member profile</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="users" style="color:var(--primary);"></i> Assign to welcome team</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="mail" style="color:var(--primary);"></i> Welcome email + new-member packet</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+              <div>
+                <div class="card-title">Baptism registration</div>
+                <div class="card-sub">3 steps · Active</div>
+              </div>
+              <span class="badge badge-green">On</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="workflow-step"><i data-lucide="form-input" style="color:var(--primary);"></i> Family fills baptism form</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="refresh-cw" style="color:var(--primary);"></i> Update member family record</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="calendar-plus" style="color:var(--primary);"></i> Add baptism to pastor's calendar</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+              <div>
+                <div class="card-title">Confirmation registration</div>
+                <div class="card-sub">3 steps · Active</div>
+              </div>
+              <span class="badge badge-green">On</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="workflow-step"><i data-lucide="form-input" style="color:var(--primary);"></i> Student fills confirmation form</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="users" style="color:var(--primary);"></i> Assign mentor</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="calendar" style="color:var(--primary);"></i> Schedule class series</div>
+            </div>
+          </div>
+
+          <div class="card" style="grid-column: 1 / -1;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+              <div>
+                <div class="card-title">Giving email — segmented by age</div>
+                <div class="card-sub">3 steps · Active</div>
+              </div>
+              <span class="badge badge-green">On</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="workflow-step"><i data-lucide="users" style="color:var(--primary);"></i> Segment members by age (30–49 · 50+)</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="pen-line" style="color:var(--primary);"></i> Draft email tailored to each segment</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="send" style="color:var(--primary);"></i> Send on admin approval</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ INTEGRATIONS ============ -->
+      <section id="tab-integrations" class="tab-content">
+        <div class="page-header">
+          <h2>Integrations</h2>
+          <p>Connected services that sync data into ChurchPlannerPro</p>
+        </div>
+        <div class="grid-2">
+          <div class="card integration-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div class="integration-logo" style="background:#FEF3C7; color:#B45309;">I</div>
+              <span class="badge badge-green">Connected</span>
+            </div>
+            <h3>Icon</h3>
+            <p>Financial &amp; payroll system. Syncs chart of accounts, transactions, and payroll runs.</p>
+            <button class="btn btn-secondary" style="align-self: flex-start;">Manage</button>
+          </div>
+          <div class="card integration-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div class="integration-logo" style="background:var(--primary-light); color:var(--primary);">PC</div>
+              <span class="badge badge-green">Connected</span>
+            </div>
+            <h3>Planning Center</h3>
+            <p>Church management. Syncs people, groups, and check-ins.</p>
+            <button class="btn btn-secondary" style="align-self: flex-start;">Manage</button>
+          </div>
+          <div class="card integration-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div class="integration-logo" style="background:var(--cta-light); color:var(--cta-hover);">V</div>
+              <span class="badge badge-green">Connected</span>
+            </div>
+            <h3>Vanco</h3>
+            <p>Online giving and donations. Syncs donor records and contributions.</p>
+            <button class="btn btn-secondary" style="align-self: flex-start;">Manage</button>
+          </div>
+          <div class="card integration-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div class="integration-logo" style="background:#EDE9FE; color:#6D28D9;"><i data-lucide="banknote" style="width:22px; height:22px;"></i></div>
+              <span class="badge badge-green">Connected</span>
+            </div>
+            <h3>Bank account</h3>
+            <p>Northern Trust · Operating + Building Fund. Daily transaction sync.</p>
+            <button class="btn btn-secondary" style="align-self: flex-start;">Manage</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ FACILITIES ============ -->
+      <section id="tab-facilities" class="tab-content">
+        <div class="page-header">
+          <h2>Facilities</h2>
+          <p>Asset management, work orders, and vendors</p>
+        </div>
+        <div class="subtabs" data-subtabs="facilities">
+          <button class="subtab active" data-subtab="work-orders">Work orders</button>
+          <button class="subtab" data-subtab="vendors">Vendors</button>
+          <button class="subtab" data-subtab="assets">Assets</button>
+        </div>
+        <div class="subtab-content active" data-subtab-content="work-orders">
+          <div class="toolbar">
+            <div class="search">
+              <i data-lucide="search"></i>
+              <input placeholder="Search work orders..." />
+            </div>
+            <button class="btn btn-primary"><i data-lucide="plus"></i> Create work order</button>
+          </div>
+          <div class="table-card">
+            <table>
+              <thead><tr><th>Title</th><th>Assignee</th><th>Vendor</th><th>Due</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Repair sanctuary HVAC unit</td><td>Marco Reyes</td><td>Cooling Co.</td><td>May 12</td><td><span class="badge badge-amber">In progress</span></td></tr>
+                <tr><td>Repaint youth room</td><td>Volunteer team</td><td>—</td><td>May 18</td><td><span class="badge badge-blue">Scheduled</span></td></tr>
+                <tr><td>Replace exterior lighting</td><td>Marco Reyes</td><td>Bright Electric</td><td>May 22</td><td><span class="badge badge-gray">Pending</span></td></tr>
+                <tr><td>Power-wash sidewalks</td><td>Marco Reyes</td><td>—</td><td>May 28</td><td><span class="badge badge-gray">Pending</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="subtab-content" data-subtab-content="vendors">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title">Cooling Co.</div>
+              <div class="card-sub">HVAC service · contact@coolingco.com · 2 active orders</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Bright Electric</div>
+              <div class="card-sub">Electrical · service@brightelectric.com · 1 active order</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Northland Lawn Care</div>
+              <div class="card-sub">Grounds · billing@northlandlawn.com · Recurring weekly</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Spotless Cleaning</div>
+              <div class="card-sub">Janitorial · hello@spotlessclean.com · Recurring weekly</div>
+            </div>
+          </div>
+        </div>
+        <div class="subtab-content" data-subtab-content="assets">
+          <div class="table-card">
+            <table>
+              <thead><tr><th>Asset</th><th>Location</th><th>Last serviced</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>HVAC Unit A</td><td>Sanctuary</td><td>Jan 14</td><td><span class="badge badge-amber">Service due</span></td></tr>
+                <tr><td>Boiler</td><td>Basement</td><td>Mar 2</td><td><span class="badge badge-green">OK</span></td></tr>
+                <tr><td>Sound system</td><td>Sanctuary</td><td>Apr 18</td><td><span class="badge badge-green">OK</span></td></tr>
+                <tr><td>Projector</td><td>Fellowship hall</td><td>Feb 9</td><td><span class="badge badge-green">OK</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SETTINGS ============ -->
+      <section id="tab-settings" class="tab-content">
+        <div class="page-header">
+          <h2>Settings</h2>
+          <p>Personalize ChurchPlannerPro for Christ Lutheran</p>
+        </div>
+        <div class="card" style="margin-bottom: 16px;">
+          <div class="card-title">Church profile</div>
+          <div class="card-sub" style="margin-bottom: 16px;">Used across the app, in emails, and on member-facing forms</div>
+          <div class="form-row">
+            <label>Church name</label>
+            <input value="Christ Lutheran" />
+          </div>
+          <div class="form-row">
+            <label>Administrator name</label>
+            <input value="Tracy Bennett" />
+          </div>
+          <div class="form-row">
+            <label>App name</label>
+            <input value="ChurchPlannerPro" />
+          </div>
+        </div>
+        <div class="card" style="margin-bottom: 16px;">
+          <div class="card-title">Email</div>
+          <div class="card-sub" style="margin-bottom: 16px;">Aaron sends emails on your behalf using the connected mailbox</div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding: 12px; background:#FAFBFC; border-radius: var(--radius-md);">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div class="integration-logo" style="background:#FEE2E2; color:#B91C1C;">G</div>
+              <div>
+                <div style="font-weight:600;">Gmail — tracy@christlutheran.org</div>
+                <div class="card-sub">Connected · last sync 2 minutes ago</div>
+              </div>
+            </div>
+            <button class="btn btn-secondary">Disconnect</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Aaron preferences</div>
+          <div class="card-sub" style="margin-bottom: 16px;">How Aaron behaves on your behalf</div>
+          <div class="form-row" style="display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <label style="margin-bottom:0;">Always ask before sending emails</label>
+              <div class="card-sub">Aaron will draft and wait for approval</div>
+            </div>
+            <span class="badge badge-green">On</span>
+          </div>
+          <div class="form-row" style="display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <label style="margin-bottom:0;">Auto-update member profiles from form responses</label>
+              <div class="card-sub">Aaron will ask before each update</div>
+            </div>
+            <span class="badge badge-green">On</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<!-- Form preview modal -->
+<div class="modal-overlay" id="form-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="form-modal-title">Form details</h3>
+      <button class="icon-btn" data-close-modal><i data-lucide="x"></i></button>
+    </div>
+    <div class="modal-body" id="form-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close-modal>Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ====================== STATE ======================
+  const state = {
+    currentTab: 'ask-aaron',
+    aaronStep: null, // current node id in the active flow
+
+    members: [
+      { name: 'Eleanor Hayes', family: 'Hayes', age: 68, skills: ['Painting', 'Sunday school'], status: 'Active' },
+      { name: 'Marcus Chen', family: 'Chen', age: 42, skills: ['Music', 'Audio/visual'], status: 'Active' },
+      { name: 'Sarah Lindgren', family: 'Lindgren', age: 35, skills: ['Hospitality', 'Event planning'], status: 'Active' },
+      { name: 'Tom Smith', family: 'Smith', age: 38, skills: ['Carpentry', 'Painting'], status: 'Active' },
+      { name: 'Maria Gutierrez', family: 'Gutierrez', age: 54, skills: ['Translation', 'Cooking'], status: 'Active' },
+      { name: 'James Park', family: 'Park', age: 29, skills: ['Tech support', 'Painting'], status: 'Active' },
+      { name: 'Linda Olsen', family: 'Olsen', age: 61, skills: ['Quilting', 'Painting'], status: 'Active' },
+      { name: 'David Brooks', family: 'Brooks', age: 47, skills: ['Bookkeeping'], status: 'Active' },
+      { name: 'Rachel Kim', family: 'Kim', age: 33, skills: ['Photography', 'Social media'], status: 'Active' },
+      { name: 'Henry Walsh', family: 'Walsh', age: 72, skills: ['Mentorship'], status: 'Active' },
+      { name: 'Anna Becker', family: 'Becker', age: 41, skills: ['Painting', 'Sewing'], status: 'Active' },
+      { name: 'Joel Robinson', family: 'Robinson', age: 56, skills: ['Painting', 'Carpentry'], status: 'Active' }
+    ],
+    paintingMembers: [], // populated after Action 1 form sync
+    formsCreated: false,  // tracks whether Aaron's Time & Talent form is created
+    paintingEventCreated: false,
+    tomSmithChildAdded: false,
+
+    // Forms registry — Time & Talent only added when Aaron creates it via Action 1
+    forms: [
+      { id: 'baptism', name: 'Baptism registration', created: 'Jan 12', responses: 4, last: 'Apr 28', status: 'Active' },
+      { id: 'confirmation', name: 'Confirmation registration', created: 'Feb 4', responses: 9, last: 'May 1', status: 'Active' },
+      { id: 'newmember', name: 'New member registration', created: 'Sep 3, 2025', responses: 22, last: 'Apr 30', status: 'Active' },
+      { id: 'sunday-school', name: 'Sunday school', created: 'Aug 20, 2025', responses: 31, last: 'May 4', status: 'Active' }
+    ],
+
+    events: [
+      { id: 'mothers-day', name: 'Mother\'s Day brunch', date: 'May 11, 11:30 AM', location: 'Fellowship hall', registered: 64, status: 'Open' },
+      { id: 'youth-retreat', name: 'Youth retreat', date: 'May 24–26', location: 'Camp Northwoods', registered: 18, status: 'Open' },
+      { id: 'baptism-svc', name: 'Baptism service', date: 'May 31, 10:00 AM', location: 'Sanctuary', registered: 12, status: 'Scheduled' }
+    ]
+  };
+
+  // ====================== TAB SWITCHING ======================
+  function switchTab(tab) {
+    state.currentTab = tab;
+    document.querySelectorAll('.tab-content').forEach(s => s.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    const titles = {
+      'ask-aaron': 'Ask Aaron',
+      'people': 'People',
+      'finances': 'Finances',
+      'calendar': 'Calendar',
+      'forms': 'Forms',
+      'reporting': 'Reporting',
+      'workflows': 'Workflows',
+      'integrations': 'Integrations',
+      'facilities': 'Facilities',
+      'settings': 'Settings'
+    };
+    document.getElementById('page-title').textContent = titles[tab];
+    window.scrollTo(0, 0);
+  }
+
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+
+  // Sub-tab switching
+  document.querySelectorAll('[data-subtabs]').forEach(group => {
+    const section = group.closest('.tab-content');
+    group.querySelectorAll('.subtab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('.subtab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        section.querySelectorAll('[data-subtab-content]').forEach(c => c.classList.remove('active'));
+        section.querySelector('[data-subtab-content="' + btn.dataset.subtab + '"]').classList.add('active');
+      });
+    });
+  });
+
+  // ====================== RENDER PEOPLE / FORMS / EVENTS ======================
+  const colorClasses = ['', 'green', 'amber', 'purple', 'pink', 'gray'];
+  function renderPeople() {
+    const tbody = document.getElementById('people-tbody');
+    tbody.innerHTML = state.members.map((m, i) => {
+      const initials = m.name.split(' ').map(p => p[0]).join('').slice(0, 2);
+      const cls = colorClasses[i % colorClasses.length];
+      const skillsTxt = m.skills.length ? m.skills.join(', ') : '—';
+      return `
+        <tr>
+          <td><span class="row-avatar"><span class="mini-avatar ${cls}">${initials}</span> <strong>${m.name}</strong></span></td>
+          <td>${m.family}</td>
+          <td>${m.age}</td>
+          <td style="color: var(--text-secondary);">${skillsTxt}</td>
+          <td><span class="badge badge-green">${m.status}</span></td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function renderForms() {
+    const tbody = document.getElementById('forms-tbody');
+    tbody.innerHTML = state.forms.map(f => {
+      const isNew = f.id === 'time-talent';
+      return `
+        <tr data-form-id="${f.id}">
+          <td>
+            <div style="display:flex; align-items:center; gap: 10px;">
+              <span class="mini-avatar ${isNew ? 'green' : ''}"><i data-lucide="clipboard-list" style="width:14px; height:14px;"></i></span>
+              <div>
+                <div style="font-weight:600;">${f.name}</div>
+                ${isNew ? '<div class="card-sub" style="font-size:12px;">Created by Aaron</div>' : ''}
+              </div>
+            </div>
+          </td>
+          <td>${f.created}</td>
+          <td>${f.responses}</td>
+          <td>${f.last}</td>
+          <td><span class="badge badge-green">${f.status}</span></td>
+        </tr>
+      `;
+    }).join('');
+    lucide.createIcons();
+    tbody.querySelectorAll('tr').forEach(tr => {
+      tr.addEventListener('click', () => openFormModal(tr.dataset.formId));
+    });
+  }
+
+  function renderEvents() {
+    const tbody = document.getElementById('events-tbody');
+    tbody.innerHTML = state.events.map(e => {
+      const isNew = e.id === 'painting-project';
+      return `
+        <tr>
+          <td>
+            <div style="display:flex; align-items:center; gap: 10px;">
+              <span class="mini-avatar ${isNew ? 'green' : ''}"><i data-lucide="calendar" style="width:14px; height:14px;"></i></span>
+              <div>
+                <div style="font-weight:600;">${e.name}</div>
+                ${isNew ? '<div class="card-sub" style="font-size:12px;">Created by Aaron</div>' : ''}
+              </div>
+            </div>
+          </td>
+          <td>${e.date}</td>
+          <td>${e.location}</td>
+          <td>${e.registered}</td>
+          <td><span class="badge ${e.status === 'Open' ? 'badge-green' : 'badge-blue'}">${e.status}</span></td>
+        </tr>
+      `;
+    }).join('');
+    lucide.createIcons();
+  }
+
+  // ====================== FORM MODAL ======================
+  const formModal = document.getElementById('form-modal');
+  const formModalTitle = document.getElementById('form-modal-title');
+  const formModalBody = document.getElementById('form-modal-body');
+  formModal.addEventListener('click', e => { if (e.target === formModal) formModal.classList.remove('open'); });
+  document.querySelectorAll('[data-close-modal]').forEach(b => b.addEventListener('click', () => formModal.classList.remove('open')));
+
+  const formDetails = {
+    'time-talent': {
+      title: 'Time & Talent Survey',
+      fields: [
+        { label: 'First name', type: 'Short text' },
+        { label: 'Last name', type: 'Short text' },
+        { label: 'Skills, talents and interests', type: 'Long text' }
+      ],
+      responses: [
+        { who: 'Eleanor Hayes', value: 'Painting, Sunday school' },
+        { who: 'James Park', value: 'Painting, tech support' },
+        { who: 'Anna Becker', value: 'Painting, sewing' },
+        { who: 'Joel Robinson', value: 'Painting, carpentry' },
+        { who: 'Linda Olsen', value: 'Quilting, painting' },
+        { who: 'Tom Smith', value: 'Carpentry, painting' }
+      ]
+    },
+    'baptism': {
+      title: 'Baptism registration',
+      fields: [
+        { label: 'Family name', type: 'Short text' },
+        { label: 'Person being baptized', type: 'Short text' },
+        { label: 'Date of birth', type: 'Date' },
+        { label: 'Preferred date', type: 'Date' },
+        { label: 'Notes for the pastor', type: 'Long text' }
+      ],
+      responses: [
+        { who: 'Hayes family', value: 'Olivia Hayes — Apr 28' },
+        { who: 'Chen family', value: 'Liam Chen — Apr 14' }
+      ]
+    },
+    'confirmation': {
+      title: 'Confirmation registration',
+      fields: [
+        { label: 'Student name', type: 'Short text' },
+        { label: 'Date of birth', type: 'Date' },
+        { label: 'Parent contact', type: 'Email' },
+        { label: 'Mentor preference', type: 'Short text' }
+      ],
+      responses: [
+        { who: 'Sarah Park', value: 'Mentor: Lisa Park' },
+        { who: 'Henry Walsh II', value: 'Mentor: Pastor David' }
+      ]
+    },
+    'newmember': {
+      title: 'New member registration',
+      fields: [
+        { label: 'First name', type: 'Short text' },
+        { label: 'Last name', type: 'Short text' },
+        { label: 'Family members', type: 'Long text' },
+        { label: 'How did you find us?', type: 'Long text' }
+      ],
+      responses: [
+        { who: 'Maria Gutierrez', value: 'Family of 4' },
+        { who: 'Rachel Kim', value: 'Found us through a friend' }
+      ]
+    },
+    'sunday-school': {
+      title: 'Sunday school',
+      fields: [
+        { label: 'Parent name', type: 'Short text' },
+        { label: 'Child name', type: 'Short text' },
+        { label: 'Age group', type: 'Select' },
+        { label: 'Allergies', type: 'Short text' }
+      ],
+      responses: [
+        { who: 'Smith family', value: 'Jacob, age 7' },
+        { who: 'Park family', value: 'Hannah, age 5' }
+      ]
+    }
+  };
+
+  function openFormModal(id) {
+    const f = formDetails[id];
+    if (!f) return;
+    formModalTitle.textContent = f.title;
+    const responses = (id === 'time-talent' && state.formsCreated) ? f.responses : f.responses;
+    formModalBody.innerHTML = `
+      <div style="margin-bottom: 20px;">
+        <div class="label" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-disabled); font-weight: 600; margin-bottom: 8px;">Fields</div>
+        ${f.fields.map(field => `
+          <div style="padding: 10px 12px; background: #FAFBFC; border-radius: 8px; margin-bottom: 6px; display:flex; justify-content:space-between;">
+            <span style="font-weight: 500;">${field.label}</span>
+            <span style="color: var(--text-secondary); font-size: 12.5px;">${field.type}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div>
+        <div class="label" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-disabled); font-weight: 600; margin-bottom: 8px;">Responses (${responses.length})</div>
+        ${responses.map(r => `
+          <div style="padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px;">
+            <div style="font-weight: 500;">${r.who}</div>
+            <div style="color: var(--text-secondary); font-size: 13px;">${r.value}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    formModal.classList.add('open');
+    lucide.createIcons();
+  }
+
+  // ====================== TOAST ======================
+  function showToast(msg) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<i data-lucide="check-circle-2"></i> ${msg}`;
+    container.appendChild(toast);
+    lucide.createIcons();
+    setTimeout(() => {
+      toast.style.transition = 'all 200ms';
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(10px)';
+      setTimeout(() => toast.remove(), 200);
+    }, 2400);
+  }
+
+  // ====================== ASK AARON FLOW ======================
+  const conversationEl = document.getElementById('conversation');
+  const welcomeEl = document.getElementById('aaron-welcome');
+  const composerInput = document.getElementById('composer-input');
+  const sendBtn = document.getElementById('send-btn');
+
+  function compactWelcome() { welcomeEl.classList.add('compact'); }
+
+  function addMessage(role, html) {
+    const msg = document.createElement('div');
+    msg.className = 'msg';
+    const isUser = role === 'user';
+    const avatar = isUser
+      ? '<div class="msg-avatar user">T</div>'
+      : '<div class="msg-avatar aaron"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.7 4.6L18 9.3l-4.3 1.7L12 15l-1.7-4L6 9.3l4.3-1.7L12 3z"/></svg></div>';
+    const name = isUser ? 'Tracy' : 'Aaron';
+    msg.innerHTML = `${avatar}<div class="msg-body"><div class="msg-name">${name}</div><div class="msg-text">${html}</div></div>`;
+    conversationEl.appendChild(msg);
+    lucide.createIcons();
+    requestAnimationFrame(() => msg.scrollIntoView({ behavior: 'smooth', block: 'end' }));
+  }
+
+  function addTyping() {
+    const msg = document.createElement('div');
+    msg.className = 'msg typing-msg';
+    msg.innerHTML = `
+      <div class="msg-avatar aaron"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.7 4.6L18 9.3l-4.3 1.7L12 15l-1.7-4L6 9.3l4.3-1.7L12 3z"/></svg></div>
+      <div class="msg-body"><div class="msg-name">Aaron</div><div class="typing"><span></span><span></span><span></span></div></div>
+    `;
+    conversationEl.appendChild(msg);
+    requestAnimationFrame(() => msg.scrollIntoView({ behavior: 'smooth', block: 'end' }));
+    return msg;
+  }
+
+  function aaronReply(html, delay = 700) {
+    return new Promise(resolve => {
+      const t = addTyping();
+      setTimeout(() => {
+        t.remove();
+        addMessage('aaron', html);
+        resolve();
+      }, delay);
+    });
+  }
+
+  // Render utility — build option buttons
+  function optionsHTML(options) {
+    return `<div class="inline-options">${options.map((o, i) =>
+      `<button class="option-btn ${o.primary ? 'primary' : ''}" data-step="${o.next}" data-label="${escapeAttr(o.label)}">${o.label}</button>`
+    ).join('')}</div>`;
+  }
+  function escapeAttr(s) { return String(s).replace(/"/g, '&quot;'); }
+
+  // Open-link helper for inline cards
+  function tabLink(tab, label) {
+    return `<a href="#" data-jump-tab="${tab}" style="display:inline-flex; align-items:center; gap:4px;">${label} <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg></a>`;
+  }
+
+  // Card renderers
+  function formCreatedCard() {
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon"><i data-lucide="clipboard-check"></i></div>
+          <div>
+            <div class="inline-card-title">Time &amp; Talent Survey</div>
+            <div class="inline-card-sub">Form created · 3 fields</div>
+          </div>
+        </div>
+        <div class="inline-card-body">
+          <div class="label">Fields</div>
+          <span class="field-pill">First name</span>
+          <span class="field-pill">Last name</span>
+          <span class="field-pill">Skills, talents and interests</span>
+        </div>
+        <div class="inline-card-footer">
+          ${tabLink('forms', 'Open in Forms')}
+        </div>
+      </div>
+    `;
+  }
+
+  function emailDraftCard({ subject, to, body }) {
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon"><i data-lucide="mail"></i></div>
+          <div>
+            <div class="inline-card-title">Email draft</div>
+            <div class="inline-card-sub">Ready to send · from tracy@christlutheran.org</div>
+          </div>
+        </div>
+        <div class="inline-card-body">
+          <div class="row"><div class="col"><div class="label">To</div><div>${to}</div></div></div>
+          <div class="row"><div class="col"><div class="label">Subject</div><div>${subject}</div></div></div>
+          <div class="row"><div class="col"><div class="label">Body</div><div style="white-space: pre-line; color: var(--text);">${body}</div></div></div>
+        </div>
+      </div>
+    `;
+  }
+
+  function memberListCard(title, members) {
+    const pills = members.map(m => {
+      const initials = m.split(' ').map(p => p[0]).join('').slice(0, 2);
+      return `<span class="member-pill"><span class="mini-avatar">${initials}</span>${m}</span>`;
+    }).join('');
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon"><i data-lucide="users"></i></div>
+          <div>
+            <div class="inline-card-title">${title}</div>
+            <div class="inline-card-sub">${members.length} members</div>
+          </div>
+        </div>
+        <div class="inline-card-body">
+          ${pills}
+        </div>
+        <div class="inline-card-footer">
+          ${tabLink('people', 'Open in People')}
+        </div>
+      </div>
+    `;
+  }
+
+  function eventCreatedCard() {
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon green"><i data-lucide="calendar-plus"></i></div>
+          <div>
+            <div class="inline-card-title">Painting project — fellowship hall</div>
+            <div class="inline-card-sub">Saturday May 23, 9:00 AM – 1:00 PM</div>
+          </div>
+        </div>
+        <div class="inline-card-body">
+          <div class="row">
+            <div class="col"><div class="label">Location</div><div>Fellowship hall</div></div>
+            <div class="col"><div class="label">Capacity</div><div>20 volunteers</div></div>
+          </div>
+          <div class="row">
+            <div class="col"><div class="label">Registration link</div><div><a href="#" data-jump-tab="calendar">christlutheran.org/events/painting-project</a></div></div>
+          </div>
+        </div>
+        <div class="inline-card-footer">
+          ${tabLink('calendar', 'Open in Calendar')}
+        </div>
+      </div>
+    `;
+  }
+
+  function ageSegmentsCard() {
+    const seg30 = ['Sarah Lindgren', 'Marcus Chen', 'Rachel Kim', 'Anna Becker', 'David Brooks', 'Tom Smith'];
+    const seg50 = ['Eleanor Hayes', 'Maria Gutierrez', 'Linda Olsen', 'Henry Walsh', 'Joel Robinson'];
+    const renderSeg = (label, count, members) => `
+      <div style="margin-bottom: 8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+          <strong style="font-size: 13px;">${label}</strong>
+          <span class="badge badge-blue">${count} members</span>
+        </div>
+        ${members.map(m => {
+          const initials = m.split(' ').map(p => p[0]).join('').slice(0, 2);
+          return `<span class="member-pill"><span class="mini-avatar">${initials}</span>${m}</span>`;
+        }).join('')}
+      </div>
+    `;
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon"><i data-lucide="users"></i></div>
+          <div>
+            <div class="inline-card-title">Members by age segment</div>
+            <div class="inline-card-sub">For tailored giving outreach</div>
+          </div>
+        </div>
+        <div class="inline-card-body">
+          ${renderSeg('30 – 49', seg30.length, seg30)}
+          <div style="height: 1px; background: var(--border); margin: 12px 0;"></div>
+          ${renderSeg('50+', seg50.length, seg50)}
+        </div>
+        <div class="inline-card-footer">
+          ${tabLink('people', 'Open in People')}
+        </div>
+      </div>
+    `;
+  }
+
+  function tomSmithProfileCard() {
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon amber"><i data-lucide="user-cog"></i></div>
+          <div>
+            <div class="inline-card-title">Tom Smith — family record</div>
+            <div class="inline-card-sub">Family of 2 · no children on file</div>
+          </div>
+        </div>
+        <div class="inline-card-body">
+          <div class="row">
+            <div class="col"><div class="label">Spouse</div><div>Jessica Smith</div></div>
+            <div class="col"><div class="label">Children on record</div><div style="color: var(--text-secondary);">None</div></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ====================== FLOW ENGINE ======================
+  // Each node: { user (optional message text auto-added before aaron speaks), aaron: html, options: [{ label, next, primary }] }
+  // If `aaron` is a function, it can run side effects (return html).
+  const flow = {
+    // ----- ACTION 1 -----
+    'a1-1': {
+      user: 'Create a talent, interest and skills form.',
+      aaron: () => 'What fields would you like to include?',
+      options: [
+        { label: 'First name, last name and a free-text list of skills', next: 'a1-2', primary: true },
+        { label: 'Add an email field too', next: 'a1-2-alt' }
+      ]
+    },
+    'a1-2': {
+      user: 'First name, last name, and a free-text list of skills.',
+      aaron: () => {
+        // create the form in state
+        if (!state.formsCreated) {
+          state.formsCreated = true;
+          state.forms.unshift({ id: 'time-talent', name: 'Time & Talent Survey', created: 'Today', responses: 0, last: '—', status: 'Active' });
+          renderForms();
+        }
+        return `Got it — I've created the <strong>Time &amp; Talent Survey</strong>. ${formCreatedCard()}<p style="margin-top:12px;">Want me to draft an email to send it to all members?</p>`;
+      },
+      options: [
+        { label: 'Yes, draft the email', next: 'a1-3', primary: true },
+        { label: 'Not right now', next: 'idle' }
+      ]
+    },
+    'a1-2-alt': {
+      user: 'Add an email field too.',
+      aaron: () => {
+        if (!state.formsCreated) {
+          state.formsCreated = true;
+          state.forms.unshift({ id: 'time-talent', name: 'Time & Talent Survey', created: 'Today', responses: 0, last: '—', status: 'Active' });
+          renderForms();
+        }
+        return `Done — added an email field. ${formCreatedCard()}<p style="margin-top:12px;">Ready to draft an email to members?</p>`;
+      },
+      options: [
+        { label: 'Yes, draft the email', next: 'a1-3', primary: true }
+      ]
+    },
+    'a1-3': {
+      user: 'Yes, please draft it.',
+      aaron: () => `Here's a draft. Want me to send it to all 312 members?
+        ${emailDraftCard({
+          to: 'All members (312)',
+          subject: 'Help us serve better — share your time &amp; talents',
+          body: 'Hi friends,\n\nWe\'re putting together a directory of skills, talents, and interests so we can match volunteers to the work God is calling us into. It only takes 2 minutes — would you fill out our short survey?\n\nFill out the survey: christlutheran.org/forms/time-talent\n\nGrace and peace,\nTracy\nChrist Lutheran'
+        })}`,
+      options: [
+        { label: 'Yes, send it', next: 'a1-4', primary: true },
+        { label: 'Edit first', next: 'idle' }
+      ]
+    },
+    'a1-4': {
+      user: 'Yes, send it.',
+      aaron: () => {
+        showToast('Email sent to 312 members');
+        setTimeout(() => addAaronFollowupAfterResponses(), 1800);
+        return `Sent ✓ The email is on its way to 312 members.`;
+      },
+      options: []
+    },
+    'a1-5': { // followup after responses come in
+      // triggered programmatically
+      aaron: () => `Update — <strong>23 members</strong> have already filled out the form. Want me to update their profiles with the new skill tags?`,
+      options: [
+        { label: 'Yes, update profiles', next: 'a1-6', primary: true }
+      ]
+    },
+    'a1-6': {
+      user: 'Yes, update profiles.',
+      aaron: () => {
+        // mark members
+        showToast('23 member profiles updated');
+        return `Done ✓ I've updated 23 profiles with their new skill tags. Anything else you'd like to do with this data?`;
+      },
+      options: [
+        { label: 'Identify members interested in painting for an upcoming project', next: 'a1-7', primary: true },
+        { label: 'Not now', next: 'idle' }
+      ]
+    },
+    'a1-7': {
+      user: 'Identify members interested in painting for an upcoming painting project.',
+      aaron: () => {
+        const list = ['Eleanor Hayes', 'James Park', 'Anna Becker', 'Joel Robinson', 'Linda Olsen', 'Tom Smith'];
+        state.paintingMembers = list;
+        return `I found <strong>6 members</strong> who listed painting as a skill or interest:
+          ${memberListCard('Members interested in painting', list)}
+          <p style="margin-top:12px;">Want me to draft an email inviting them to a painting project?</p>`;
+      },
+      options: [
+        { label: 'Yes, draft the email', next: 'a1-8', primary: true }
+      ]
+    },
+    'a1-8': {
+      user: 'Yes, draft the email.',
+      aaron: () => `Here's the draft:
+        ${emailDraftCard({
+          to: 'Eleanor Hayes, James Park, Anna Becker, Joel Robinson, Linda Olsen, Tom Smith',
+          subject: 'Bring your brush — painting project May 23',
+          body: 'Hi,\n\nThanks for sharing that painting is one of your gifts! We\'re putting fresh paint on the fellowship hall on Saturday May 23, and we\'d love to have you join us. Coffee and lunch are on us.\n\nSign up here: christlutheran.org/events/painting-project\n\nWith gratitude,\nTracy'
+        })}
+        <p style="margin-top:12px;">Want me to create a calendar event for this with a registration link before sending?</p>`,
+      options: [
+        { label: 'Yes, create the event', next: 'a1-9', primary: true },
+        { label: 'Just send the email', next: 'a1-10' }
+      ]
+    },
+    'a1-9': {
+      user: 'Yes, create the event.',
+      aaron: () => {
+        if (!state.paintingEventCreated) {
+          state.paintingEventCreated = true;
+          state.events.unshift({ id: 'painting-project', name: 'Painting project — fellowship hall', date: 'May 23, 9:00 AM', location: 'Fellowship hall', registered: 0, status: 'Open' });
+          renderEvents();
+        }
+        return `Event created ✓
+          ${eventCreatedCard()}
+          <p style="margin-top:12px;">Ready to send the email with the registration link?</p>`;
+      },
+      options: [
+        { label: 'Yes, send the email', next: 'a1-10', primary: true }
+      ]
+    },
+    'a1-10': {
+      user: 'Yes, send the email.',
+      aaron: () => {
+        showToast('Email sent to 6 members');
+        return `Sent ✓ Painting volunteers have been invited. I'll let you know as they register.`;
+      },
+      options: []
+    },
+
+    // ----- ACTION 2 -----
+    'a2-1': {
+      user: 'Create a giving email.',
+      aaron: () => `Sure. A common approach is to segment by age. Want me to group members into <strong>30 – 49</strong> and <strong>50+</strong>?`,
+      options: [
+        { label: 'Yes, those segments', next: 'a2-2', primary: true },
+        { label: 'Use different segments', next: 'idle' }
+      ]
+    },
+    'a2-2': {
+      user: 'Yes, those segments.',
+      aaron: () => `Here are the lists:
+        ${ageSegmentsCard()}
+        <p style="margin-top:12px;">Want me to draft an email tailored to each age group?</p>`,
+      options: [
+        { label: 'Yes, draft tailored emails', next: 'a2-3', primary: true }
+      ]
+    },
+    'a2-3': {
+      user: 'Yes, draft tailored emails.',
+      aaron: () => `Here are both drafts:
+        ${emailDraftCard({
+          to: '30 – 49 segment (6 members)',
+          subject: 'Help shape the church our kids will inherit',
+          body: 'Hi,\n\nWe\'re heads-down on building a vibrant church for the next generation — children\'s programming, youth ministry, and mentorship. Recurring monthly gifts make this work possible.\n\nSet up giving: christlutheran.org/give\n\nThank you,\nTracy'
+        })}
+        ${emailDraftCard({
+          to: '50+ segment (5 members)',
+          subject: 'A note of thanks — and how you can help us go further',
+          body: 'Hi,\n\nYou\'ve helped sustain this church for years, and we\'re so grateful. As we look at what God is calling us into next, your continued partnership matters more than ever.\n\nGive today: christlutheran.org/give\n\nWith deep thanks,\nTracy'
+        })}
+        <p style="margin-top:12px;">Send both emails?</p>`,
+      options: [
+        { label: 'Yes, send both', next: 'a2-4', primary: true }
+      ]
+    },
+    'a2-4': {
+      user: 'Yes, send both.',
+      aaron: () => {
+        showToast('11 emails sent across 2 segments');
+        return `Sent ✓ Both emails have gone out — 6 to the 30 – 49 segment and 5 to the 50+ segment.`;
+      },
+      options: []
+    },
+
+    // ----- ACTION 3 -----
+    'a3-1': {
+      user: 'Send a baptism form.',
+      aaron: () => `Sure — Tom Smith requested one yesterday. I'll send him an email with the link. One thing I noticed:
+        ${tomSmithProfileCard()}
+        <p style="margin-top:12px;">Tom's record doesn't have a child listed. Want me to update his family record when he submits the form?</p>`,
+      options: [
+        { label: 'Yes, update the record from his answers', next: 'a3-2', primary: true },
+        { label: 'No, leave the record as-is', next: 'a3-2-alt' }
+      ]
+    },
+    'a3-2': {
+      user: 'Yes, update the record from his answers.',
+      aaron: () => {
+        state.tomSmithChildAdded = true;
+        showToast('Baptism form sent to Tom Smith');
+        return `Will do ✓ I've sent Tom the baptism form, and I'll update his family record with the child's name and date of birth as soon as he submits it. I'll also add the baptism to Pastor David's calendar once a date is selected.`;
+      },
+      options: []
+    },
+    'a3-2-alt': {
+      user: 'No, leave the record as-is.',
+      aaron: () => {
+        showToast('Baptism form sent to Tom Smith');
+        return `Understood ✓ I've sent Tom the baptism form. His family record will stay unchanged.`;
+      },
+      options: []
+    },
+
+    'idle': { aaron: () => `OK — I'll be here when you need me.`, options: [] }
+  };
+
+  function addAaronFollowupAfterResponses() {
+    aaronReply(`Update — <strong>23 members</strong> have already filled out the form. Want me to update their profiles with the new skill tags?`).then(() => {
+      renderInlineOptions([
+        { label: 'Yes, update profiles', next: 'a1-6', primary: true }
+      ]);
+    });
+  }
+
+  function renderInlineOptions(options) {
+    if (!options || options.length === 0) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'inline-options';
+    wrap.style.padding = '0 0 0 44px';
+    options.forEach(o => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn' + (o.primary ? ' primary' : '');
+      btn.textContent = o.label;
+      btn.addEventListener('click', () => {
+        wrap.remove();
+        runStep(o.next, o.label);
+      });
+      wrap.appendChild(btn);
+    });
+    conversationEl.appendChild(wrap);
+    requestAnimationFrame(() => wrap.scrollIntoView({ behavior: 'smooth', block: 'end' }));
+  }
+
+  async function runStep(stepId, userOverride) {
+    const node = flow[stepId];
+    if (!node) return;
+    compactWelcome();
+
+    // user message
+    if (userOverride) {
+      addMessage('user', userOverride);
+    } else if (node.user) {
+      addMessage('user', node.user);
+    }
+
+    // aaron reply
+    const reply = (typeof node.aaron === 'function') ? node.aaron() : node.aaron;
+    if (reply) await aaronReply(reply, 800);
+
+    // options
+    if (node.options && node.options.length) {
+      renderInlineOptions(node.options);
+    }
+
+    // wire jump-tab links inside the latest aaron message
+    document.querySelectorAll('[data-jump-tab]').forEach(a => {
+      if (a.dataset.bound) return;
+      a.dataset.bound = '1';
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        switchTab(a.dataset.jumpTab);
+      });
+    });
+
+    state.aaronStep = stepId;
+  }
+
+  // Suggested action chips
+  document.querySelectorAll('.suggested-actions .chip').forEach(c => {
+    c.addEventListener('click', () => {
+      const action = c.dataset.action;
+      if (action === 'action1') runStep('a1-1');
+      if (action === 'action2') runStep('a2-1');
+      if (action === 'action3') runStep('a3-1');
+    });
+  });
+
+  // Free-text composer (does keyword matching to scripted flows)
+  function autosizeTextarea() {
+    composerInput.style.height = 'auto';
+    composerInput.style.height = Math.min(composerInput.scrollHeight, 160) + 'px';
+  }
+  composerInput.addEventListener('input', autosizeTextarea);
+  composerInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  });
+  sendBtn.addEventListener('click', handleSend);
+
+  function handleSend() {
+    const txt = composerInput.value.trim();
+    if (!txt) return;
+    composerInput.value = '';
+    autosizeTextarea();
+    compactWelcome();
+    addMessage('user', txt);
+
+    const lower = txt.toLowerCase();
+    let next = null;
+    if (/(skill|talent|interest)/.test(lower) && /form/.test(lower)) next = 'a1-1';
+    else if (/age/.test(lower) && /(giving|donat|email|list)/.test(lower)) next = 'a2-1';
+    else if (/baptism/.test(lower) && /(tom|smith|form|send)/.test(lower)) next = 'a3-1';
+
+    if (next) {
+      // skip the user-message inside that step (we already added one)
+      const node = { ...flow[next], user: null };
+      const tempId = '__custom__';
+      flow[tempId] = node;
+      runStep(tempId);
+    } else {
+      aaronReply(`Happy to help with that. I can create forms, draft emails, build events, segment members, and update profiles. Try one of the suggested actions above to see me in action — or rephrase and I'll match it to a workflow.`);
+    }
+  }
+
+  // ====================== INIT ======================
+  renderPeople();
+  renderForms();
+  renderEvents();
+  lucide.createIcons();
+</script>
+</body>
+</html>
