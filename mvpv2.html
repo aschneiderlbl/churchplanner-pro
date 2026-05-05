@@ -727,6 +727,340 @@
   }
   .empty-state svg { width: 32px; height: 32px; color: var(--text-disabled); margin-bottom: 8px; }
 
+  /* ---------- Finances: account selector ---------- */
+  .account-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .account-card {
+    text-align: left;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: border-color 200ms, box-shadow 200ms, transform 200ms;
+    font-family: inherit;
+    width: 100%;
+  }
+  .account-card:hover { border-color: var(--primary); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .account-card.selected { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+  .account-card-top {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .account-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: grid; place-items: center;
+  }
+  .account-icon svg { width: 18px; height: 18px; }
+  .account-name {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .account-balance {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .account-balance .cents {
+    font-size: 16px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-left: 2px;
+  }
+  .account-sub {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Section toolbar w/ selects ---------- */
+  .section-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .mini-select {
+    padding: 7px 30px 7px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+    font-family: inherit;
+  }
+  .mini-select:hover { border-color: var(--primary); }
+  .mini-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+
+  /* ---------- KPI strip card ---------- */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    padding: 18px 22px;
+  }
+  .kpi-strip > div { padding: 0 4px; }
+  .kpi-strip > div + div { border-left: 1px solid var(--border); padding-left: 24px; }
+  .money-in { color: var(--cta-hover); }
+  .money-out { color: var(--text); }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* ---------- Profit & Loss ---------- */
+  .pl-section { border-bottom: 1px solid var(--border); }
+  .pl-section:last-of-type { border-bottom: none; }
+  .pl-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .pl-section-header .pl-amount { margin-left: auto; font-variant-numeric: tabular-nums; }
+  .pl-section-header svg { width: 14px; height: 14px; }
+  .pl-section-body { padding: 4px 0 8px 0; }
+  .pl-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 20px 9px 48px;
+    font-size: 14px;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    transition: background 150ms;
+  }
+  .pl-row:hover { background: #FAFBFC; cursor: pointer; }
+  .pl-net {
+    padding: 16px 20px;
+    background: #FAFBFC;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 16px;
+    border-top: 1px solid var(--border);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Payroll hero card ---------- */
+  .payroll-hero {
+    background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+    color: white;
+    border-radius: var(--radius-lg);
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .payroll-hero .label-up { text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em; opacity: 0.8; font-weight: 600; margin-bottom: 8px; }
+  .payroll-hero .big-number { font-size: 32px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .payroll-hero .sub { opacity: 0.9; margin-top: 4px; font-size: 14px; }
+  .payroll-hero .meta { display: flex; gap: 20px; margin-top: 12px; font-size: 13px; opacity: 0.9; flex-wrap: wrap; }
+  .payroll-hero .meta svg { width: 14px; height: 14px; vertical-align: -2px; }
+  .payroll-hero .btn-white {
+    background: white;
+    color: var(--primary);
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    transition: transform 150ms;
+  }
+  .payroll-hero .btn-white:hover { transform: translateY(-1px); }
+  .payroll-hero .btn-white svg { width: 16px; height: 16px; }
+
+  /* ---------- Budget ---------- */
+  .progress-track {
+    height: 8px;
+    background: #F3F4F6;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 999px;
+    transition: width 400ms ease-out;
+  }
+  .budget-group-header {
+    padding: 10px 20px;
+    background: #FAFBFC;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-disabled);
+    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+  }
+  .budget-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 160px;
+    gap: 24px;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .budget-row:last-child { border-bottom: none; }
+  .budget-row-name { display: flex; flex-direction: column; gap: 2px; font-size: 14px; font-variant-numeric: tabular-nums; }
+  .budget-row-name strong { font-weight: 600; color: var(--text); }
+  .budget-bar {
+    height: 8px;
+    background: #F3F4F6;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .budget-bar-fill {
+    height: 100%;
+    background: var(--cta);
+    border-radius: 999px;
+    transition: width 400ms ease-out;
+  }
+  .budget-bar-fill.green { background: var(--cta); }
+  .budget-bar-fill.amber { background: var(--warning); }
+  .budget-bar-fill.red { background: var(--error); }
+  .budget-row-meta {
+    text-align: right;
+    display: flex; flex-direction: column; gap: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .budget-row-meta strong { font-size: 14px; }
+
+  /* ---------- Donations: Planning Center–style ---------- */
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  .stacked-bar {
+    height: 14px;
+    border-radius: 999px;
+    overflow: hidden;
+    display: flex;
+    margin-bottom: 18px;
+    background: #F3F4F6;
+  }
+  .stacked-bar > div { height: 100%; transition: opacity 200ms; }
+  .stacked-bar > div:hover { opacity: 0.8; cursor: pointer; }
+
+  .fund-list { display: flex; flex-direction: column; gap: 4px; }
+  .fund-row {
+    display: grid;
+    grid-template-columns: 14px 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 4px;
+    border-radius: 6px;
+    transition: background 150ms;
+  }
+  .fund-row:hover { background: #FAFBFC; cursor: pointer; }
+  .fund-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .fund-row .fund-name { font-weight: 500; font-size: 14px; color: var(--text); }
+  .fund-row .fund-pct { color: var(--text-secondary); font-size: 13px; font-variant-numeric: tabular-nums; min-width: 36px; text-align: right; }
+  .fund-row .fund-amt { font-weight: 600; font-size: 14px; font-variant-numeric: tabular-nums; min-width: 80px; text-align: right; }
+
+  .donor-row {
+    display: grid;
+    grid-template-columns: 24px 32px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .donor-row:last-child { border-bottom: none; }
+  .donor-row .donor-rank {
+    color: var(--text-disabled);
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+  .donor-row .donor-name { font-weight: 500; font-size: 14px; }
+  .donor-row .donor-meta { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .donor-row .donor-total { font-weight: 600; font-size: 14px; font-variant-numeric: tabular-nums; }
+
+  .alert-card {
+    background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+    border: 1px solid #FDE68A;
+    border-radius: var(--radius-lg);
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .alert-card .alert-icon {
+    width: 40px; height: 40px;
+    background: #F59E0B;
+    color: white;
+    border-radius: 10px;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .alert-card .alert-icon svg { width: 20px; height: 20px; }
+  .alert-card .alert-content { flex: 1; min-width: 240px; }
+  .alert-card .alert-title { font-weight: 600; font-size: 15px; color: #78350F; }
+  .alert-card .alert-sub { color: #92400E; font-size: 13px; margin-top: 2px; }
+  .alert-card .alert-actions { display: flex; gap: 8px; }
+
+  .recurring-stat {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .recurring-stat:last-child { border-bottom: none; }
+  .recurring-stat .label { flex: 1; color: var(--text-secondary); font-size: 13px; }
+  .recurring-stat .val { font-weight: 600; font-size: 15px; font-variant-numeric: tabular-nums; }
+  .recurring-stat .delta { font-size: 12px; color: var(--cta-hover); font-weight: 500; }
+
+  .donor-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #F3F4F6;
+    color: var(--text-secondary);
+    margin-left: 6px;
+  }
+  .donor-tag.recurring { background: var(--primary-light); color: var(--primary); }
+  .donor-tag.first { background: var(--cta-light); color: var(--cta-hover); }
+
+  @media (max-width: 900px) {
+    .account-grid { grid-template-columns: 1fr; }
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    .kpi-strip > div + div { border-left: none; padding-left: 4px; }
+    .budget-row { grid-template-columns: 1fr; gap: 8px; }
+    .budget-row-meta { text-align: left; flex-direction: row; gap: 12px; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+
   /* responsive */
   @media (max-width: 768px) {
     .app { grid-template-columns: 1fr; }
@@ -900,109 +1234,900 @@
         </div>
 
         <div class="subtab-content active" data-subtab-content="bank">
-          <div class="grid-3" style="margin-bottom: 16px;">
-            <div class="card stat-card">
-              <div class="stat-label">Operating account</div>
-              <div class="stat-value">$84,212</div>
-              <div class="stat-delta">+$2,140 this week</div>
+          <!-- Account selector cards -->
+          <div class="account-grid" id="bank-accounts">
+            <button class="account-card selected" data-account="operating">
+              <div class="account-card-top">
+                <div class="account-icon" style="background: var(--primary-light); color: var(--primary);"><i data-lucide="landmark"></i></div>
+                <span class="badge badge-green">Active</span>
+              </div>
+              <div class="account-name">Operating</div>
+              <div class="account-balance">$84,212<span class="cents">.40</span></div>
+              <div class="account-sub">Checking · ••3421 · Northern Trust</div>
+            </button>
+            <button class="account-card" data-account="building">
+              <div class="account-card-top">
+                <div class="account-icon" style="background: #EDE9FE; color: #6D28D9;"><i data-lucide="building"></i></div>
+                <span class="badge badge-green">Active</span>
+              </div>
+              <div class="account-name">Building Fund</div>
+              <div class="account-balance">$312,884<span class="cents">.00</span></div>
+              <div class="account-sub">Savings · ••8810 · Northern Trust</div>
+            </button>
+            <button class="account-card" data-account="reserves">
+              <div class="account-card-top">
+                <div class="account-icon" style="background: #FEF3C7; color: #B45309;"><i data-lucide="piggy-bank"></i></div>
+                <span class="badge badge-green">Active</span>
+              </div>
+              <div class="account-name">Reserves</div>
+              <div class="account-balance">$58,400<span class="cents">.00</span></div>
+              <div class="account-sub">Money market · ••5502 · Northern Trust</div>
+            </button>
+          </div>
+
+          <!-- Quick actions -->
+          <div class="section-toolbar">
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-primary"><i data-lucide="arrow-down-to-line"></i> Record deposit</button>
+              <button class="btn btn-secondary"><i data-lucide="arrow-left-right"></i> Transfer</button>
+              <button class="btn btn-secondary"><i data-lucide="check-square"></i> Reconcile</button>
             </div>
-            <div class="card stat-card">
-              <div class="stat-label">Building fund</div>
-              <div class="stat-value">$312,884</div>
-              <div class="stat-delta">+$1,250 this week</div>
-            </div>
-            <div class="card stat-card">
-              <div class="stat-label">Reserves</div>
-              <div class="stat-value">$58,400</div>
-              <div class="stat-delta">No change</div>
+            <button class="btn btn-secondary"><i data-lucide="download"></i> Export</button>
+          </div>
+
+          <!-- Money in/out summary -->
+          <div class="card" style="margin-bottom: 16px; padding: 0;">
+            <div class="kpi-strip">
+              <div>
+                <div class="stat-label">Money in (MTD)</div>
+                <div class="stat-value money-in num">+$7,160.00</div>
+                <div class="stat-delta">12 deposits</div>
+              </div>
+              <div>
+                <div class="stat-label">Money out (MTD)</div>
+                <div class="stat-value money-out num">−$696.52</div>
+                <div class="stat-delta down">2 expenses</div>
+              </div>
+              <div>
+                <div class="stat-label">Net change</div>
+                <div class="stat-value money-in num">+$6,463.48</div>
+                <div class="stat-delta">vs. April +$3,210</div>
+              </div>
+              <div>
+                <div class="stat-label">Pending</div>
+                <div class="stat-value num">2</div>
+                <div class="stat-delta">$1,840.00 unmatched</div>
+              </div>
             </div>
           </div>
-          <div class="card">
-            <div class="card-title">Recent transactions</div>
-            <div class="card-sub" style="margin-bottom: 12px;">Synced from connected bank account</div>
+
+          <!-- Transactions -->
+          <div class="table-card">
+            <div style="padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <strong>Transactions</strong>
+                <span class="badge">Operating · ••3421</span>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <select class="mini-select"><option>This month</option><option>Last month</option><option>Last 90 days</option><option>Year to date</option></select>
+                <select class="mini-select"><option>All categories</option><option>Income</option><option>Utilities</option><option>Office</option><option>Salaries</option></select>
+                <select class="mini-select"><option>All statuses</option><option>Cleared</option><option>Pending</option><option>Unmatched</option></select>
+              </div>
+            </div>
             <table>
-              <thead><tr><th>Date</th><th>Description</th><th>Category</th><th style="text-align:right;">Amount</th></tr></thead>
+              <thead>
+                <tr>
+                  <th style="width: 36px;"><input type="checkbox" /></th>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Category</th>
+                  <th>Status</th>
+                  <th style="text-align:right;">Amount</th>
+                </tr>
+              </thead>
               <tbody>
-                <tr><td>May 4</td><td>Sunday offering deposit</td><td><span class="badge badge-green">Income</span></td><td style="text-align:right; color: var(--cta-hover); font-weight:600;">+$4,820.00</td></tr>
-                <tr><td>May 3</td><td>Heating bill — Northern Energy</td><td><span class="badge">Utilities</span></td><td style="text-align:right;">−$612.40</td></tr>
-                <tr><td>May 2</td><td>Office supplies — Staples</td><td><span class="badge">Office</span></td><td style="text-align:right;">−$84.12</td></tr>
-                <tr><td>May 1</td><td>Online giving — Vanco transfer</td><td><span class="badge badge-green">Income</span></td><td style="text-align:right; color: var(--cta-hover); font-weight:600;">+$2,340.00</td></tr>
+                <tr>
+                  <td><input type="checkbox" /></td>
+                  <td class="num">May 4</td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <span class="mini-avatar green"><i data-lucide="arrow-down-to-line" style="width:12px; height:12px;"></i></span>
+                      <div>
+                        <div style="font-weight: 500;">Sunday offering deposit</div>
+                        <div class="card-sub" style="font-size: 12px;">Cash + checks · counted by Eleanor Hayes</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-green">Income</span></td>
+                  <td><span class="badge badge-amber">Pending</span></td>
+                  <td style="text-align:right; font-weight:600; color: var(--cta-hover);" class="num">+$4,820.00</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" /></td>
+                  <td class="num">May 3</td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <span class="mini-avatar"><i data-lucide="zap" style="width:12px; height:12px;"></i></span>
+                      <div>
+                        <div style="font-weight: 500;">Northern Energy</div>
+                        <div class="card-sub" style="font-size: 12px;">Heating bill · auto-pay</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge">Utilities</span></td>
+                  <td><span class="badge badge-green">Cleared</span></td>
+                  <td style="text-align:right;" class="num">−$612.40</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" /></td>
+                  <td class="num">May 2</td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <span class="mini-avatar"><i data-lucide="package" style="width:12px; height:12px;"></i></span>
+                      <div>
+                        <div style="font-weight: 500;">Staples</div>
+                        <div class="card-sub" style="font-size: 12px;">Printer ink · debit card</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge">Office</span></td>
+                  <td><span class="badge badge-green">Cleared</span></td>
+                  <td style="text-align:right;" class="num">−$84.12</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" /></td>
+                  <td class="num">May 1</td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <span class="mini-avatar green"><i data-lucide="arrow-down-to-line" style="width:12px; height:12px;"></i></span>
+                      <div>
+                        <div style="font-weight: 500;">Vanco online giving</div>
+                        <div class="card-sub" style="font-size: 12px;">Weekly transfer · 18 donors</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-green">Income</span></td>
+                  <td><span class="badge badge-green">Cleared</span></td>
+                  <td style="text-align:right; font-weight:600; color: var(--cta-hover);" class="num">+$2,340.00</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" /></td>
+                  <td class="num">Apr 30</td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <span class="mini-avatar amber"><i data-lucide="users" style="width:12px; height:12px;"></i></span>
+                      <div>
+                        <div style="font-weight: 500;">Payroll — Apr 16–30</div>
+                        <div class="card-sub" style="font-size: 12px;">4 employees · processed by Icon</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge">Salaries</span></td>
+                  <td><span class="badge badge-green">Cleared</span></td>
+                  <td style="text-align:right;" class="num">−$9,740.00</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" /></td>
+                  <td class="num">Apr 29</td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <span class="mini-avatar green"><i data-lucide="arrow-down-to-line" style="width:12px; height:12px;"></i></span>
+                      <div>
+                        <div style="font-weight: 500;">Building fund — Marcus Chen</div>
+                        <div class="card-sub" style="font-size: 12px;">Recurring monthly</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-green">Income</span></td>
+                  <td><span class="badge badge-green">Cleared</span></td>
+                  <td style="text-align:right; font-weight:600; color: var(--cta-hover);" class="num">+$1,000.00</td>
+                </tr>
               </tbody>
             </table>
           </div>
         </div>
         <div class="subtab-content" data-subtab-content="accounting">
-          <div class="card">
-            <div class="card-title">Chart of accounts</div>
-            <div class="card-sub" style="margin-bottom: 12px;">Synced from Icon</div>
+          <div class="section-toolbar">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <select class="mini-select" style="font-weight: 600;"><option>This year (Jan 1 – May 5, 2026)</option><option>This quarter</option><option>Last quarter</option><option>Last year</option></select>
+              <span class="card-sub">Compared to prior year</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-secondary"><i data-lucide="file-text"></i> Run full report</button>
+              <button class="btn btn-secondary"><i data-lucide="download"></i> Export</button>
+            </div>
+          </div>
+
+          <!-- KPI row -->
+          <div class="grid-3" style="margin-bottom: 16px;">
+            <div class="card stat-card">
+              <div class="stat-label">Total income</div>
+              <div class="stat-value money-in num">$184,210</div>
+              <div class="stat-delta">+12% vs. last year</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Total expenses</div>
+              <div class="stat-value num">$145,612</div>
+              <div class="stat-delta down">+8% vs. last year</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Net income</div>
+              <div class="stat-value money-in num">$38,598</div>
+              <div class="stat-delta">+24% vs. last year</div>
+            </div>
+          </div>
+
+          <!-- P&L breakdown -->
+          <div class="card" style="padding: 0; margin-bottom: 16px;">
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+              <strong>Profit &amp; Loss</strong>
+              <a href="#" class="btn-text">View report <i data-lucide="external-link" style="width:12px; height:12px;"></i></a>
+            </div>
+
+            <div class="pl-section">
+              <div class="pl-section-header" style="background: var(--cta-light); color: var(--cta-hover);">
+                <i data-lucide="chevron-down"></i>
+                <span>Income</span>
+                <span class="pl-amount">$184,210.00</span>
+              </div>
+              <div class="pl-section-body">
+                <div class="pl-row"><span>Tithes &amp; offerings</span><span>$148,820.00</span></div>
+                <div class="pl-row"><span>Online giving (Vanco)</span><span>$28,400.00</span></div>
+                <div class="pl-row"><span>Building fund donations</span><span>$5,990.00</span></div>
+                <div class="pl-row"><span>Other income</span><span>$1,000.00</span></div>
+              </div>
+            </div>
+
+            <div class="pl-section">
+              <div class="pl-section-header" style="background: #FEF3C7; color: #B45309;">
+                <i data-lucide="chevron-down"></i>
+                <span>Expenses</span>
+                <span class="pl-amount">$145,612.00</span>
+              </div>
+              <div class="pl-section-body">
+                <div class="pl-row"><span>Salaries &amp; benefits</span><span>$96,400.00</span></div>
+                <div class="pl-row"><span>Facilities (utilities, mortgage)</span><span>$22,140.40</span></div>
+                <div class="pl-row"><span>Programs &amp; ministry</span><span>$18,800.00</span></div>
+                <div class="pl-row"><span>Missions</span><span>$10,400.00</span></div>
+                <div class="pl-row"><span>Office &amp; admin</span><span>$8,612.00</span></div>
+                <div class="pl-row" style="color: var(--text-secondary); font-style: italic;"><span>Uncategorized</span><span>−$10,740.40</span></div>
+              </div>
+            </div>
+
+            <div class="pl-net">
+              <span>Net income</span>
+              <span class="money-in">$38,598.00</span>
+            </div>
+          </div>
+
+          <!-- Chart of accounts -->
+          <div class="table-card">
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-weight: 600;">Chart of accounts</div>
+                <div class="card-sub" style="margin-top: 2px;">Synced from Icon · 12 accounts</div>
+              </div>
+              <button class="btn btn-secondary"><i data-lucide="plus"></i> New account</button>
+            </div>
             <table>
-              <thead><tr><th>Account</th><th>Type</th><th style="text-align:right;">Balance</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Account</th>
+                  <th>Code</th>
+                  <th>Type</th>
+                  <th>Detail type</th>
+                  <th style="text-align:right;">Balance</th>
+                </tr>
+              </thead>
               <tbody>
-                <tr><td>1000 — Cash</td><td>Asset</td><td style="text-align:right;">$84,212.00</td></tr>
-                <tr><td>1100 — Building Fund</td><td>Asset</td><td style="text-align:right;">$312,884.00</td></tr>
-                <tr><td>4000 — Tithes & Offerings</td><td>Income</td><td style="text-align:right;">$184,210.00</td></tr>
-                <tr><td>5100 — Salaries</td><td>Expense</td><td style="text-align:right;">$96,400.00</td></tr>
-                <tr><td>5400 — Utilities</td><td>Expense</td><td style="text-align:right;">$8,612.40</td></tr>
+                <tr><td><strong>Cash</strong></td><td class="num">1000</td><td><span class="badge badge-blue">Asset</span></td><td>Bank · checking</td><td style="text-align:right; font-weight:500;" class="num">$84,212.40</td></tr>
+                <tr><td><strong>Building Fund</strong></td><td class="num">1100</td><td><span class="badge badge-blue">Asset</span></td><td>Bank · savings</td><td style="text-align:right; font-weight:500;" class="num">$312,884.00</td></tr>
+                <tr><td><strong>Reserves</strong></td><td class="num">1200</td><td><span class="badge badge-blue">Asset</span></td><td>Money market</td><td style="text-align:right; font-weight:500;" class="num">$58,400.00</td></tr>
+                <tr><td><strong>Mortgage payable</strong></td><td class="num">2000</td><td><span class="badge">Liability</span></td><td>Long-term loan</td><td style="text-align:right; font-weight:500;" class="num">$248,200.00</td></tr>
+                <tr><td><strong>Tithes &amp; Offerings</strong></td><td class="num">4000</td><td><span class="badge badge-green">Income</span></td><td>Donations</td><td style="text-align:right; font-weight:500;" class="num">$148,820.00</td></tr>
+                <tr><td><strong>Online giving</strong></td><td class="num">4100</td><td><span class="badge badge-green">Income</span></td><td>Donations</td><td style="text-align:right; font-weight:500;" class="num">$28,400.00</td></tr>
+                <tr><td><strong>Building fund</strong></td><td class="num">4200</td><td><span class="badge badge-green">Income</span></td><td>Restricted</td><td style="text-align:right; font-weight:500;" class="num">$5,990.00</td></tr>
+                <tr><td><strong>Salaries &amp; wages</strong></td><td class="num">5100</td><td><span class="badge badge-amber">Expense</span></td><td>Payroll</td><td style="text-align:right; font-weight:500;" class="num">$96,400.00</td></tr>
+                <tr><td><strong>Utilities</strong></td><td class="num">5400</td><td><span class="badge badge-amber">Expense</span></td><td>Facilities</td><td style="text-align:right; font-weight:500;" class="num">$8,612.40</td></tr>
+                <tr><td><strong>Mortgage interest</strong></td><td class="num">5500</td><td><span class="badge badge-amber">Expense</span></td><td>Facilities</td><td style="text-align:right; font-weight:500;" class="num">$13,528.00</td></tr>
+                <tr><td><strong>Programs</strong></td><td class="num">5700</td><td><span class="badge badge-amber">Expense</span></td><td>Ministry</td><td style="text-align:right; font-weight:500;" class="num">$18,800.00</td></tr>
+                <tr><td><strong>Missions</strong></td><td class="num">5800</td><td><span class="badge badge-amber">Expense</span></td><td>Outreach</td><td style="text-align:right; font-weight:500;" class="num">$10,400.00</td></tr>
               </tbody>
             </table>
           </div>
         </div>
         <div class="subtab-content" data-subtab-content="donations">
-          <div class="grid-2" style="margin-bottom: 16px;">
-            <div class="card stat-card">
-              <div class="stat-label">YTD giving</div>
-              <div class="stat-value">$184,210</div>
-              <div class="stat-delta">+12% vs. last year</div>
+          <!-- Toolbar: period + actions -->
+          <div class="section-toolbar">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <select class="mini-select" style="font-weight: 600;"><option>This month (May 2026)</option><option>This quarter</option><option>Year to date</option><option>Last 12 months</option><option>Last year</option></select>
+              <span class="card-sub">vs. same period last year</span>
             </div>
-            <div class="card stat-card">
-              <div class="stat-label">Active givers</div>
-              <div class="stat-value">186</div>
-              <div class="stat-delta">+9 this quarter</div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-secondary"><i data-lucide="file-text"></i> Statements</button>
+              <button class="btn btn-secondary"><i data-lucide="layers"></i> New batch</button>
+              <button class="btn btn-primary"><i data-lucide="hand-coins"></i> Record gift</button>
             </div>
           </div>
-          <div class="card">
-            <div class="card-title">Recent donations</div>
-            <div class="card-sub" style="margin-bottom: 12px;">From Vanco</div>
+
+          <!-- KPI strip -->
+          <div class="grid-4" style="margin-bottom: 16px;">
+            <div class="card stat-card">
+              <div class="stat-label">Received this month</div>
+              <div class="stat-value money-in num">$12,840</div>
+              <div class="stat-delta">+18% vs. April</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Donors this month</div>
+              <div class="stat-value num">62</div>
+              <div class="stat-delta">8 first-time</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Recurring · monthly</div>
+              <div class="stat-value num">$8,420</div>
+              <div class="stat-delta">42 active schedules</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Average gift</div>
+              <div class="stat-value num">$132</div>
+              <div class="stat-delta">+$8 vs. April</div>
+            </div>
+          </div>
+
+          <!-- Pending batch alert -->
+          <div class="alert-card">
+            <div class="alert-icon"><i data-lucide="layers"></i></div>
+            <div class="alert-content">
+              <div class="alert-title">2 batches awaiting deposit</div>
+              <div class="alert-sub">$1,840.00 in cash and checks from Sunday May 4 · counted by Eleanor Hayes</div>
+            </div>
+            <div class="alert-actions">
+              <button class="btn btn-secondary">Review batches</button>
+              <button class="btn btn-primary"><i data-lucide="arrow-down-to-line"></i> Deposit now</button>
+            </div>
+          </div>
+
+          <!-- Trends + funds -->
+          <div class="grid-2" style="margin-bottom: 16px;">
+            <div class="card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <strong>Giving trend</strong>
+                <span class="card-sub">Last 6 months · monthly</span>
+              </div>
+              <div class="bar-chart" style="margin-top: 24px;">
+                <div class="bar" style="height: 60%;"><div class="bar-value">$28k</div><div class="bar-label">Dec</div></div>
+                <div class="bar" style="height: 70%;"><div class="bar-value">$31k</div><div class="bar-label">Jan</div></div>
+                <div class="bar" style="height: 78%;"><div class="bar-value">$36k</div><div class="bar-label">Feb</div></div>
+                <div class="bar" style="height: 86%;"><div class="bar-value">$41k</div><div class="bar-label">Mar</div></div>
+                <div class="bar" style="height: 92%;"><div class="bar-value">$44k</div><div class="bar-label">Apr</div></div>
+                <div class="bar" style="height: 50%; background: var(--cta-light);"><div class="bar-value">$13k</div><div class="bar-label">May (MTD)</div></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <strong>Giving by fund</strong>
+                <span class="card-sub">Year to date · $184,210</span>
+              </div>
+              <div class="stacked-bar">
+                <div style="width: 61%; background: #2563EB;" title="General"></div>
+                <div style="width: 18%; background: #6366F1;" title="Building"></div>
+                <div style="width: 12%; background: #22C55E;" title="Missions"></div>
+                <div style="width: 5%; background: #F59E0B;" title="Youth"></div>
+                <div style="width: 4%; background: #EC4899;" title="Music"></div>
+              </div>
+              <div class="fund-list">
+                <div class="fund-row">
+                  <span class="fund-dot" style="background: #2563EB;"></span>
+                  <span class="fund-name">General</span>
+                  <span class="fund-pct">61%</span>
+                  <span class="fund-amt">$112,640</span>
+                </div>
+                <div class="fund-row">
+                  <span class="fund-dot" style="background: #6366F1;"></span>
+                  <span class="fund-name">Building</span>
+                  <span class="fund-pct">18%</span>
+                  <span class="fund-amt">$33,200</span>
+                </div>
+                <div class="fund-row">
+                  <span class="fund-dot" style="background: #22C55E;"></span>
+                  <span class="fund-name">Missions</span>
+                  <span class="fund-pct">12%</span>
+                  <span class="fund-amt">$22,150</span>
+                </div>
+                <div class="fund-row">
+                  <span class="fund-dot" style="background: #F59E0B;"></span>
+                  <span class="fund-name">Youth</span>
+                  <span class="fund-pct">5%</span>
+                  <span class="fund-amt">$9,800</span>
+                </div>
+                <div class="fund-row">
+                  <span class="fund-dot" style="background: #EC4899;"></span>
+                  <span class="fund-name">Music</span>
+                  <span class="fund-pct">4%</span>
+                  <span class="fund-amt">$6,420</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top donors + recurring -->
+          <div class="grid-2" style="margin-bottom: 16px;">
+            <div class="card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong>Top donors this month</strong>
+                <a href="#" class="btn-text">View all donors <i data-lucide="external-link" style="width:12px; height:12px;"></i></a>
+              </div>
+              <div class="donor-row">
+                <span class="donor-rank">1</span>
+                <span class="mini-avatar amber">MC</span>
+                <div>
+                  <div class="donor-name">Marcus Chen <span class="donor-tag recurring">Recurring</span></div>
+                  <div class="donor-meta">4 gifts · last on May 4</div>
+                </div>
+                <div class="donor-total">$1,250</div>
+              </div>
+              <div class="donor-row">
+                <span class="donor-rank">2</span>
+                <span class="mini-avatar">EH</span>
+                <div>
+                  <div class="donor-name">Eleanor Hayes</div>
+                  <div class="donor-meta">3 gifts · last on May 4</div>
+                </div>
+                <div class="donor-total">$750</div>
+              </div>
+              <div class="donor-row">
+                <span class="donor-rank">3</span>
+                <span class="mini-avatar pink">TS</span>
+                <div>
+                  <div class="donor-name">Tom Smith <span class="donor-tag recurring">Recurring</span></div>
+                  <div class="donor-meta">2 gifts · last on May 1</div>
+                </div>
+                <div class="donor-total">$620</div>
+              </div>
+              <div class="donor-row">
+                <span class="donor-rank">4</span>
+                <span class="mini-avatar green">DB</span>
+                <div>
+                  <div class="donor-name">David Brooks</div>
+                  <div class="donor-meta">1 gift · May 2</div>
+                </div>
+                <div class="donor-total">$500</div>
+              </div>
+              <div class="donor-row">
+                <span class="donor-rank">5</span>
+                <span class="mini-avatar purple">SL</span>
+                <div>
+                  <div class="donor-name">Sarah Lindgren <span class="donor-tag recurring">Recurring</span></div>
+                  <div class="donor-meta">4 gifts · last on May 3</div>
+                </div>
+                <div class="donor-total">$480</div>
+              </div>
+              <div class="donor-row">
+                <span class="donor-rank">6</span>
+                <span class="mini-avatar gray">RK</span>
+                <div>
+                  <div class="donor-name">Rachel Kim <span class="donor-tag first">First-time</span></div>
+                  <div class="donor-meta">1 gift · May 5</div>
+                </div>
+                <div class="donor-total">$200</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong>Recurring giving</strong>
+                <a href="#" class="btn-text">Manage schedules <i data-lucide="external-link" style="width:12px; height:12px;"></i></a>
+              </div>
+              <div class="recurring-stat">
+                <span class="label">Active schedules</span>
+                <span class="val">42</span>
+                <span class="delta">+4 this month</span>
+              </div>
+              <div class="recurring-stat">
+                <span class="label">Total monthly value</span>
+                <span class="val">$8,420</span>
+                <span class="delta">+$680 vs. April</span>
+              </div>
+              <div class="recurring-stat">
+                <span class="label">Avg gift size</span>
+                <span class="val">$200</span>
+              </div>
+              <div class="recurring-stat">
+                <span class="label">Paused</span>
+                <span class="val">2</span>
+                <span class="delta" style="color: var(--text-secondary);">expires May 31</span>
+              </div>
+              <div class="recurring-stat">
+                <span class="label">Failed payments (30d)</span>
+                <span class="val">1</span>
+                <span class="delta" style="color: var(--error);">needs attention</span>
+              </div>
+              <div style="margin-top: 14px; padding: 12px 14px; background: #F8FAFF; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+                <i data-lucide="user-x" style="width:16px; height:16px; color: var(--warning);"></i>
+                <div style="flex: 1; font-size: 13px;">
+                  <strong>Anna Becker</strong>'s recurring gift failed yesterday — card expired.
+                </div>
+                <button class="btn-text" style="padding: 4px 8px;">Email donor</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- All donations table -->
+          <div class="table-card">
+            <div style="padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <div>
+                <div style="font-weight: 600;">All donations</div>
+                <div class="card-sub" style="margin-top: 2px;">Synced from Vanco · 1,284 gifts year to date</div>
+              </div>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <div class="search" style="max-width: 220px;">
+                  <i data-lucide="search"></i>
+                  <input placeholder="Search donor or note..." />
+                </div>
+                <select class="mini-select"><option>All funds</option><option>General</option><option>Building</option><option>Missions</option><option>Youth</option><option>Music</option></select>
+                <select class="mini-select"><option>All sources</option><option>Online (Vanco)</option><option>Cash</option><option>Check</option><option>Stock</option></select>
+              </div>
+            </div>
             <table>
-              <thead><tr><th>Donor</th><th>Fund</th><th>Date</th><th style="text-align:right;">Amount</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Donor</th>
+                  <th>Fund</th>
+                  <th>Source</th>
+                  <th>Date</th>
+                  <th>Batch</th>
+                  <th style="text-align:right;">Amount</th>
+                </tr>
+              </thead>
               <tbody>
-                <tr><td>Eleanor Hayes</td><td>General</td><td>May 4</td><td style="text-align:right;">$250.00</td></tr>
-                <tr><td>Marcus Chen</td><td>Building</td><td>May 4</td><td style="text-align:right;">$1,000.00</td></tr>
-                <tr><td>Sarah Lindgren</td><td>Missions</td><td>May 3</td><td style="text-align:right;">$75.00</td></tr>
-                <tr><td>Tom Smith</td><td>General</td><td>May 1</td><td style="text-align:right;">$120.00</td></tr>
+                <tr>
+                  <td><span class="row-avatar"><span class="mini-avatar amber">MC</span> <strong>Marcus Chen</strong></span></td>
+                  <td><span class="badge"><span class="fund-dot" style="display:inline-block; background:#6366F1; margin-right:6px;"></span>Building</span></td>
+                  <td>Online · Vanco</td>
+                  <td class="num">May 4, 2026</td>
+                  <td class="num">B-0142</td>
+                  <td style="text-align:right; font-weight:600; color: var(--cta-hover);" class="num">+$1,000.00</td>
+                </tr>
+                <tr>
+                  <td><span class="row-avatar"><span class="mini-avatar">EH</span> <strong>Eleanor Hayes</strong></span></td>
+                  <td><span class="badge"><span class="fund-dot" style="display:inline-block; background:#2563EB; margin-right:6px;"></span>General</span></td>
+                  <td>Check #4128</td>
+                  <td class="num">May 4, 2026</td>
+                  <td class="num">B-0142</td>
+                  <td style="text-align:right; font-weight:600; color: var(--cta-hover);" class="num">+$250.00</td>
+                </tr>
+                <tr>
+                  <td><span class="row-avatar"><span class="mini-avatar purple">SL</span> <strong>Sarah Lindgren</strong></span></td>
+                  <td><span class="badge"><span class="fund-dot" style="display:inline-block; background:#22C55E; margin-right:6px;"></span>Missions</span></td>
+                  <td>Online · Vanco</td>
+                  <td class="num">May 3, 2026</td>
+                  <td class="num">—</td>
+                  <td style="text-align:right; font-weight:600; color: var(--cta-hover);" class="num">+$75.00</td>
+                </tr>
+                <tr>
+                  <td><span class="row-avatar"><span class="mini-avatar pink">TS</span> <strong>Tom Smith</strong></span></td>
+                  <td><span class="badge"><span class="fund-dot" style="display:inline-block; background:#2563EB; margin-right:6px;"></span>General</span></td>
+                  <td>Online · Vanco</td>
+                  <td class="num">May 1, 2026</td>
+                  <td class="num">—</td>
+                  <td style="text-align:right; font-weight:600; color: var(--cta-hover);" class="num">+$120.00</td>
+                </tr>
+                <tr>
+                  <td><span class="row-avatar"><span class="mini-avatar green">DB</span> <strong>David Brooks</strong></span></td>
+                  <td><span class="badge"><span class="fund-dot" style="display:inline-block; background:#2563EB; margin-right:6px;"></span>General</span></td>
+                  <td>Check #2941</td>
+                  <td class="num">May 2, 2026</td>
+                  <td class="num">B-0141</td>
+                  <td style="text-align:right; font-weight:600; color: var(--cta-hover);" class="num">+$500.00</td>
+                </tr>
+                <tr>
+                  <td><span class="row-avatar"><span class="mini-avatar gray">RK</span> <strong>Rachel Kim</strong> <span class="donor-tag first">First</span></span></td>
+                  <td><span class="badge"><span class="fund-dot" style="display:inline-block; background:#F59E0B; margin-right:6px;"></span>Youth</span></td>
+                  <td>Online · Vanco</td>
+                  <td class="num">May 5, 2026</td>
+                  <td class="num">—</td>
+                  <td style="text-align:right; font-weight:600; color: var(--cta-hover);" class="num">+$200.00</td>
+                </tr>
+                <tr>
+                  <td><span class="row-avatar"><span class="mini-avatar">LO</span> <strong>Linda Olsen</strong></span></td>
+                  <td><span class="badge"><span class="fund-dot" style="display:inline-block; background:#EC4899; margin-right:6px;"></span>Music</span></td>
+                  <td>Cash</td>
+                  <td class="num">May 4, 2026</td>
+                  <td class="num">B-0142</td>
+                  <td style="text-align:right; font-weight:600; color: var(--cta-hover);" class="num">+$80.00</td>
+                </tr>
+                <tr>
+                  <td><span class="row-avatar"><span class="mini-avatar amber">JR</span> <strong>Joel Robinson</strong></span></td>
+                  <td><span class="badge"><span class="fund-dot" style="display:inline-block; background:#6366F1; margin-right:6px;"></span>Building</span></td>
+                  <td>Stock transfer</td>
+                  <td class="num">Apr 30, 2026</td>
+                  <td class="num">B-0140</td>
+                  <td style="text-align:right; font-weight:600; color: var(--cta-hover);" class="num">+$2,400.00</td>
+                </tr>
               </tbody>
             </table>
           </div>
         </div>
         <div class="subtab-content" data-subtab-content="payroll">
-          <div class="card">
-            <div class="card-title">Payroll — May 15 cycle</div>
-            <div class="card-sub" style="margin-bottom: 12px;">Synced from Icon · Next run May 15</div>
+          <!-- Next pay run hero -->
+          <div class="payroll-hero">
+            <div>
+              <div class="label-up">Next pay run</div>
+              <div class="big-number">$9,740.00</div>
+              <div class="sub">4 employees · pay date <strong>May 15, 2026</strong></div>
+              <div class="meta">
+                <span><i data-lucide="alarm-clock"></i> Approve by May 13</span>
+                <span><i data-lucide="banknote"></i> Funded from Operating · ••3421</span>
+                <span><i data-lucide="shield-check"></i> Taxes calculated by Icon</span>
+              </div>
+            </div>
+            <button class="btn-white"><i data-lucide="play"></i> Run payroll</button>
+          </div>
+
+          <!-- KPI row -->
+          <div class="grid-3" style="margin-bottom: 16px;">
+            <div class="card stat-card">
+              <div class="stat-label">YTD payroll</div>
+              <div class="stat-value num">$96,400</div>
+              <div class="stat-delta">9 pay runs completed</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">YTD taxes withheld</div>
+              <div class="stat-value num">$22,140</div>
+              <div class="stat-delta">Filed through Q1</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Active employees</div>
+              <div class="stat-value num">4</div>
+              <div class="stat-delta">3 salaried · 1 hourly</div>
+            </div>
+          </div>
+
+          <!-- Employees table -->
+          <div class="table-card" style="margin-bottom: 16px;">
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-weight: 600;">Employees</div>
+                <div class="card-sub" style="margin-top: 2px;">On the May 15 pay run</div>
+              </div>
+              <button class="btn btn-secondary"><i data-lucide="user-plus"></i> Add employee</button>
+            </div>
             <table>
-              <thead><tr><th>Employee</th><th>Role</th><th>Hours</th><th style="text-align:right;">Gross</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Role</th>
+                  <th>Pay type</th>
+                  <th>Last paid</th>
+                  <th style="text-align:right;">This run (gross)</th>
+                  <th style="width: 40px;"></th>
+                </tr>
+              </thead>
               <tbody>
-                <tr><td>Pastor David Olsen</td><td>Senior Pastor</td><td>—</td><td style="text-align:right;">$3,400.00</td></tr>
-                <tr><td>Lisa Park</td><td>Worship Director</td><td>—</td><td style="text-align:right;">$2,100.00</td></tr>
-                <tr><td>Tracy McKee</td><td>Administrator</td><td>—</td><td style="text-align:right;">$2,800.00</td></tr>
-                <tr><td>Marco Reyes</td><td>Custodian</td><td>72</td><td style="text-align:right;">$1,440.00</td></tr>
+                <tr>
+                  <td><span class="row-avatar"><span class="mini-avatar amber">DO</span> <strong>Pastor David Olsen</strong></span></td>
+                  <td>Senior Pastor</td>
+                  <td><span class="badge">Salary</span></td>
+                  <td class="num">Apr 30</td>
+                  <td style="text-align:right; font-weight:500;" class="num">$3,400.00</td>
+                  <td><button class="icon-btn"><i data-lucide="more-horizontal"></i></button></td>
+                </tr>
+                <tr>
+                  <td><span class="row-avatar"><span class="mini-avatar pink">LP</span> <strong>Lisa Park</strong></span></td>
+                  <td>Worship Director</td>
+                  <td><span class="badge">Salary</span></td>
+                  <td class="num">Apr 30</td>
+                  <td style="text-align:right; font-weight:500;" class="num">$2,100.00</td>
+                  <td><button class="icon-btn"><i data-lucide="more-horizontal"></i></button></td>
+                </tr>
+                <tr>
+                  <td><span class="row-avatar"><span class="mini-avatar purple">TM</span> <strong>Tracy McKee</strong></span></td>
+                  <td>Administrator</td>
+                  <td><span class="badge">Salary</span></td>
+                  <td class="num">Apr 30</td>
+                  <td style="text-align:right; font-weight:500;" class="num">$2,800.00</td>
+                  <td><button class="icon-btn"><i data-lucide="more-horizontal"></i></button></td>
+                </tr>
+                <tr>
+                  <td><span class="row-avatar"><span class="mini-avatar green">MR</span> <strong>Marco Reyes</strong></span></td>
+                  <td>Custodian</td>
+                  <td><span class="badge">Hourly · 72 h</span></td>
+                  <td class="num">Apr 30</td>
+                  <td style="text-align:right; font-weight:500;" class="num">$1,440.00</td>
+                  <td><button class="icon-btn"><i data-lucide="more-horizontal"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pay run history -->
+          <div class="table-card">
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-weight: 600;">Recent pay runs</div>
+                <div class="card-sub" style="margin-top: 2px;">Bi-weekly · Last 6 cycles</div>
+              </div>
+              <a href="#" class="btn-text">View all <i data-lucide="external-link" style="width:12px; height:12px;"></i></a>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Pay date</th>
+                  <th>Period</th>
+                  <th>Employees</th>
+                  <th style="text-align:right;">Gross</th>
+                  <th style="text-align:right;">Net</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="num">Apr 30, 2026</td><td class="num">Apr 16 – Apr 30</td><td>4</td><td style="text-align:right;" class="num">$9,740.00</td><td style="text-align:right;" class="num">$7,210.30</td><td><span class="badge badge-green">Paid</span></td></tr>
+                <tr><td class="num">Apr 15, 2026</td><td class="num">Apr 1 – Apr 15</td><td>4</td><td style="text-align:right;" class="num">$9,580.00</td><td style="text-align:right;" class="num">$7,092.40</td><td><span class="badge badge-green">Paid</span></td></tr>
+                <tr><td class="num">Mar 31, 2026</td><td class="num">Mar 16 – Mar 31</td><td>4</td><td style="text-align:right;" class="num">$9,580.00</td><td style="text-align:right;" class="num">$7,092.40</td><td><span class="badge badge-green">Paid</span></td></tr>
+                <tr><td class="num">Mar 15, 2026</td><td class="num">Mar 1 – Mar 15</td><td>4</td><td style="text-align:right;" class="num">$9,420.00</td><td style="text-align:right;" class="num">$6,974.50</td><td><span class="badge badge-green">Paid</span></td></tr>
+                <tr><td class="num">Feb 28, 2026</td><td class="num">Feb 16 – Feb 28</td><td>4</td><td style="text-align:right;" class="num">$9,420.00</td><td style="text-align:right;" class="num">$6,974.50</td><td><span class="badge badge-green">Paid</span></td></tr>
+                <tr><td class="num">Feb 15, 2026</td><td class="num">Feb 1 – Feb 15</td><td>4</td><td style="text-align:right;" class="num">$9,260.00</td><td style="text-align:right;" class="num">$6,856.60</td><td><span class="badge badge-green">Paid</span></td></tr>
               </tbody>
             </table>
           </div>
         </div>
         <div class="subtab-content" data-subtab-content="budget">
-          <div class="card">
-            <div class="card-title">2026 operating budget</div>
-            <div class="card-sub" style="margin-bottom: 12px;">42% of year elapsed</div>
-            <table>
-              <thead><tr><th>Category</th><th style="text-align:right;">Budgeted</th><th style="text-align:right;">Actual</th><th style="text-align:right;">% used</th></tr></thead>
-              <tbody>
-                <tr><td>Tithes & offerings</td><td style="text-align:right;">$420,000</td><td style="text-align:right;">$184,210</td><td style="text-align:right;"><span class="badge badge-green">44%</span></td></tr>
-                <tr><td>Salaries</td><td style="text-align:right;">$240,000</td><td style="text-align:right;">$96,400</td><td style="text-align:right;"><span class="badge badge-green">40%</span></td></tr>
-                <tr><td>Facilities</td><td style="text-align:right;">$48,000</td><td style="text-align:right;">$22,140</td><td style="text-align:right;"><span class="badge badge-green">46%</span></td></tr>
-                <tr><td>Programs</td><td style="text-align:right;">$32,000</td><td style="text-align:right;">$18,800</td><td style="text-align:right;"><span class="badge badge-amber">59%</span></td></tr>
-                <tr><td>Missions</td><td style="text-align:right;">$24,000</td><td style="text-align:right;">$10,400</td><td style="text-align:right;"><span class="badge badge-green">43%</span></td></tr>
-              </tbody>
-            </table>
+          <!-- Header w/ year selector -->
+          <div class="section-toolbar">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <select class="mini-select" style="font-weight: 600;"><option>2026 Operating Budget</option><option>2025 Operating Budget</option><option>2024 Operating Budget</option></select>
+              <span class="card-sub">Jan 1 – Dec 31, 2026</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-secondary"><i data-lucide="copy"></i> Duplicate</button>
+              <button class="btn btn-primary"><i data-lucide="plus"></i> Add line item</button>
+            </div>
+          </div>
+
+          <!-- Year progress -->
+          <div class="card" style="margin-bottom: 16px; padding: 18px 22px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <div>
+                <strong>Year progress</strong>
+                <span class="card-sub" style="margin-left: 10px;">124 of 365 days</span>
+              </div>
+              <strong class="num">34%</strong>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="width: 34%;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+              <span class="card-sub">Jan 1</span>
+              <span class="card-sub">Today · May 5</span>
+              <span class="card-sub">Dec 31</span>
+            </div>
+          </div>
+
+          <!-- KPI row -->
+          <div class="grid-3" style="margin-bottom: 16px;">
+            <div class="card stat-card">
+              <div class="stat-label">Income to date</div>
+              <div class="stat-value money-in num">$184,210</div>
+              <div class="stat-delta">44% of $420,000 budgeted</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Spent to date</div>
+              <div class="stat-value num">$145,612</div>
+              <div class="stat-delta">42% of $344,000 budgeted</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Net to date</div>
+              <div class="stat-value money-in num">+$38,598</div>
+              <div class="stat-delta">target by year-end +$76,000</div>
+            </div>
+          </div>
+
+          <!-- Budget breakdown -->
+          <div class="card" style="padding: 0;">
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-weight: 600;">Budget by category</div>
+                <div class="card-sub" style="margin-top: 2px;">Compared against pace (34% of year)</div>
+              </div>
+              <div style="display: flex; gap: 12px; font-size: 12px; color: var(--text-secondary);">
+                <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: var(--cta);"></span> On track</span>
+                <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: var(--warning);"></span> Approaching</span>
+                <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: var(--error);"></span> Over pace</span>
+              </div>
+            </div>
+
+            <div class="budget-group-header">Income</div>
+            <div class="budget-row">
+              <div class="budget-row-name">
+                <strong>Tithes &amp; offerings</strong>
+                <span class="card-sub">$148,820 of $340,000</span>
+              </div>
+              <div><div class="budget-bar"><div class="budget-bar-fill green" style="width: 44%;"></div></div></div>
+              <div class="budget-row-meta">
+                <strong>44%</strong>
+                <span class="card-sub">$191,180 to go</span>
+              </div>
+            </div>
+            <div class="budget-row">
+              <div class="budget-row-name">
+                <strong>Online giving</strong>
+                <span class="card-sub">$28,400 of $60,000</span>
+              </div>
+              <div><div class="budget-bar"><div class="budget-bar-fill green" style="width: 47%;"></div></div></div>
+              <div class="budget-row-meta">
+                <strong>47%</strong>
+                <span class="card-sub">$31,600 to go</span>
+              </div>
+            </div>
+            <div class="budget-row">
+              <div class="budget-row-name">
+                <strong>Building fund</strong>
+                <span class="card-sub">$5,990 of $20,000</span>
+              </div>
+              <div><div class="budget-bar"><div class="budget-bar-fill amber" style="width: 30%;"></div></div></div>
+              <div class="budget-row-meta">
+                <strong>30%</strong>
+                <span class="card-sub">behind pace</span>
+              </div>
+            </div>
+
+            <div class="budget-group-header">Expenses</div>
+            <div class="budget-row">
+              <div class="budget-row-name">
+                <strong>Salaries &amp; benefits</strong>
+                <span class="card-sub">$96,400 of $240,000</span>
+              </div>
+              <div><div class="budget-bar"><div class="budget-bar-fill green" style="width: 40%;"></div></div></div>
+              <div class="budget-row-meta">
+                <strong>40%</strong>
+                <span class="card-sub">on track</span>
+              </div>
+            </div>
+            <div class="budget-row">
+              <div class="budget-row-name">
+                <strong>Facilities</strong>
+                <span class="card-sub">$22,140 of $48,000</span>
+              </div>
+              <div><div class="budget-bar"><div class="budget-bar-fill amber" style="width: 46%;"></div></div></div>
+              <div class="budget-row-meta">
+                <strong>46%</strong>
+                <span class="card-sub">approaching</span>
+              </div>
+            </div>
+            <div class="budget-row">
+              <div class="budget-row-name">
+                <strong>Programs &amp; ministry</strong>
+                <span class="card-sub">$18,800 of $32,000</span>
+              </div>
+              <div><div class="budget-bar"><div class="budget-bar-fill red" style="width: 59%;"></div></div></div>
+              <div class="budget-row-meta">
+                <strong style="color: var(--error);">59%</strong>
+                <span class="card-sub">over pace</span>
+              </div>
+            </div>
+            <div class="budget-row">
+              <div class="budget-row-name">
+                <strong>Missions</strong>
+                <span class="card-sub">$10,400 of $24,000</span>
+              </div>
+              <div><div class="budget-bar"><div class="budget-bar-fill green" style="width: 43%;"></div></div></div>
+              <div class="budget-row-meta">
+                <strong>43%</strong>
+                <span class="card-sub">on track</span>
+              </div>
+            </div>
+            <div class="budget-row">
+              <div class="budget-row-name">
+                <strong>Office &amp; admin</strong>
+                <span class="card-sub">$8,612 of $12,000</span>
+              </div>
+              <div><div class="budget-bar"><div class="budget-bar-fill red" style="width: 72%;"></div></div></div>
+              <div class="budget-row-meta">
+                <strong style="color: var(--error);">72%</strong>
+                <span class="card-sub">over pace</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -1572,6 +2697,14 @@
 
   document.querySelectorAll('.nav-item').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+
+  // Bank account selector cards
+  document.querySelectorAll('#bank-accounts .account-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('#bank-accounts .account-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    });
   });
 
   // Sub-tab strip switching (top of section)
