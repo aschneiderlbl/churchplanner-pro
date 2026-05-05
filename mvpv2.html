@@ -1164,6 +1164,14 @@
                 <i data-lucide="droplets"></i>
                 Send baptism form
               </button>
+              <button class="chip" data-action="action4">
+                <i data-lucide="wrench"></i>
+                Submit work order
+              </button>
+              <button class="chip" data-action="action5">
+                <i data-lucide="alert-triangle"></i>
+                Add unplanned expense
+              </button>
             </div>
             <div class="composer">
               <textarea id="composer-input" rows="1" placeholder="Ask Aaron anything about your church..."></textarea>
@@ -2363,6 +2371,56 @@
               <div class="workflow-step"><i data-lucide="send" style="color:var(--primary);"></i> Send on admin approval</div>
             </div>
           </div>
+
+          <div class="card" style="grid-column: 1 / -1;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+              <div>
+                <div class="card-title">Work order request</div>
+                <div class="card-sub">7 steps · Active · Branches on in-house vs. external vendor</div>
+              </div>
+              <span class="badge badge-green">On</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="workflow-step"><i data-lucide="clipboard-plus" style="color:var(--primary);"></i> Submit work order request <span style="color: var(--text-secondary); margin-left: 6px;">— requester · location · issue · photos · priority · preferred date</span></div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="bell" style="color:var(--primary);"></i> Notify facilities manager &amp; maintenance team</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="git-branch" style="color:var(--primary);"></i> Manager assesses: in-house fix or external vendor?</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="check-circle-2" style="color:var(--primary);"></i> Admin approves external vendor (if needed)</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="file-text" style="color:var(--primary);"></i> Request quotes from connected vendors &amp; review</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="calendar-plus" style="color:var(--primary);"></i> Schedule work with selected vendor</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="check-check" style="color:var(--primary);"></i> Close work order on completion &amp; match invoice</div>
+            </div>
+          </div>
+
+          <div class="card" style="grid-column: 1 / -1;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+              <div>
+                <div class="card-title">Unplanned expense — update budget &amp; forecast</div>
+                <div class="card-sub">7 steps · Active · Branches on funding strategy</div>
+              </div>
+              <span class="badge badge-green">On</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="workflow-step"><i data-lucide="alert-circle" style="color:var(--primary);"></i> Identify the unplanned expense</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="tag" style="color:var(--primary);"></i> Classify expense <span style="color: var(--text-secondary); margin-left: 6px;">— category · amount · timing</span></div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="line-chart" style="color:var(--primary);"></i> Run impact analysis <span style="color: var(--text-secondary); margin-left: 6px;">— cash on hand, reserve ratio, monthly cashflow</span></div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="git-branch" style="color:var(--primary);"></i> Choose funding strategy <span style="color: var(--text-secondary); margin-left: 6px;">— reserves · reallocate · giving campaign · hybrid</span></div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="user-check" style="color:var(--primary);"></i> Draft and send leadership approval to council</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="bar-chart-3" style="color:var(--primary);"></i> Update forecast with approved funding plan</div>
+              <div class="workflow-arrow"><i data-lucide="arrow-down"></i></div>
+              <div class="workflow-step"><i data-lucide="download" style="color:var(--primary);"></i> Export forecast and share with leadership</div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -2443,7 +2501,7 @@
           <div class="table-card">
             <table>
               <thead><tr><th>Title</th><th>Assignee</th><th>Vendor</th><th>Due</th><th>Status</th></tr></thead>
-              <tbody>
+              <tbody id="work-orders-tbody">
                 <tr><td>Repair sanctuary HVAC unit</td><td>Marco Reyes</td><td>Cooling Co.</td><td>May 12</td><td><span class="badge badge-amber">In progress</span></td></tr>
                 <tr><td>Repaint youth room</td><td>Volunteer team</td><td>—</td><td>May 18</td><td><span class="badge badge-blue">Scheduled</span></td></tr>
                 <tr><td>Replace exterior lighting</td><td>Marco Reyes</td><td>Bright Electric</td><td>May 22</td><td><span class="badge badge-gray">Pending</span></td></tr>
@@ -2657,6 +2715,7 @@
     formsCreated: false,  // tracks whether Aaron's Time & Talent form is created
     paintingEventCreated: false,
     tomSmithChildAdded: false,
+    workOrderCreated: false,
 
     // Forms registry — Time & Talent only added when Aaron creates it via Action 1
     forms: [
@@ -3240,6 +3299,342 @@
     `;
   }
 
+  function workOrderCard({ id, title, location, requester, priority, due, photos }) {
+    const priorityColor = priority === 'Urgent' ? 'var(--error)' : (priority === 'High' ? '#B45309' : 'var(--text-secondary)');
+    const photoBlock = photos
+      ? `<div class="row"><div class="col"><div class="label">Photos</div><div style="display:flex; gap:6px; margin-top:4px;"><div style="width:48px; height:48px; background: linear-gradient(135deg, #1F2937, #4B5563); border-radius:6px; display:grid; place-items:center; color:white;"><i data-lucide="image" style="width:18px; height:18px;"></i></div><span style="align-self:center; color: var(--text-secondary); font-size:12.5px;">hvac-unit.jpg</span></div></div></div>`
+      : '';
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon"><i data-lucide="clipboard-plus"></i></div>
+          <div>
+            <div class="inline-card-title">${title}</div>
+            <div class="inline-card-sub">Work order · ${id}</div>
+          </div>
+        </div>
+        <div class="inline-card-body">
+          <div class="row">
+            <div class="col"><div class="label">Location</div><div>${location}</div></div>
+            <div class="col"><div class="label">Requester</div><div>${requester}</div></div>
+          </div>
+          <div class="row">
+            <div class="col"><div class="label">Priority</div><div style="color: ${priorityColor}; font-weight: 600;">${priority}</div></div>
+            <div class="col"><div class="label">Preferred completion</div><div>${due}</div></div>
+          </div>
+          ${photoBlock}
+        </div>
+      </div>
+    `;
+  }
+
+  function assessmentCard({ assessor, finding, recommendation, notes }) {
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon amber"><i data-lucide="git-branch"></i></div>
+          <div>
+            <div class="inline-card-title">Assessment from ${assessor}</div>
+            <div class="inline-card-sub">Facilities manager · 18 minutes ago</div>
+          </div>
+        </div>
+        <div class="inline-card-body">
+          <div class="row"><div class="col"><div class="label">Finding</div><div>${finding}</div></div></div>
+          <div class="row"><div class="col"><div class="label">Recommendation</div><div style="color: #B45309; font-weight: 600;">${recommendation}</div></div></div>
+          <div class="row"><div class="col"><div class="label">Notes</div><div style="color: var(--text-secondary); font-style: italic;">${notes}</div></div></div>
+        </div>
+      </div>
+    `;
+  }
+
+  function quotesCard() {
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon"><i data-lucide="file-text"></i></div>
+          <div>
+            <div class="inline-card-title">2 quotes received</div>
+            <div class="inline-card-sub">From your connected HVAC vendors</div>
+          </div>
+        </div>
+        <div class="inline-card-body" style="padding: 0;">
+          <div style="padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px;">
+            <div class="mini-avatar" style="background: var(--primary-light); color: var(--primary);">CC</div>
+            <div style="flex: 1;">
+              <div style="font-weight: 600;">Cooling Co.</div>
+              <div class="card-sub" style="font-size: 12.5px;">Available May 12 · 5-day ETA · Recommended (longstanding vendor)</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-weight: 600; font-size: 16px;" class="num">$1,840</div>
+              <div class="card-sub" style="font-size: 12px;">parts + labor</div>
+            </div>
+          </div>
+          <div style="padding: 14px 16px; display: flex; align-items: center; gap: 12px;">
+            <div class="mini-avatar" style="background: #FEF3C7; color: #B45309;">NM</div>
+            <div style="flex: 1;">
+              <div style="font-weight: 600;">Northland Mechanical</div>
+              <div class="card-sub" style="font-size: 12.5px;">Available May 9 · 2-day ETA · faster turnaround</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-weight: 600; font-size: 16px;" class="num">$2,150</div>
+              <div class="card-sub" style="font-size: 12px;">parts + labor</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function scheduledCard({ vendor, date, amount }) {
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon green"><i data-lucide="calendar-check"></i></div>
+          <div>
+            <div class="inline-card-title">Scheduled with ${vendor}</div>
+            <div class="inline-card-sub">${date}</div>
+          </div>
+        </div>
+        <div class="inline-card-body">
+          <div class="row">
+            <div class="col"><div class="label">Vendor</div><div>${vendor}</div></div>
+            <div class="col"><div class="label">Approved amount</div><div class="num">${amount}</div></div>
+          </div>
+        </div>
+        <div class="inline-card-footer">
+          ${tabLink('facilities', 'Open in Facilities')}
+        </div>
+      </div>
+    `;
+  }
+
+  function prependWorkOrder({ title, assignee, vendor, due, statusBadge }) {
+    const tbody = document.getElementById('work-orders-tbody');
+    if (!tbody) return;
+    const tr = document.createElement('tr');
+    tr.dataset.workOrderTitle = title;
+    tr.innerHTML = `<td><strong>${title}</strong> <span class="badge badge-blue" style="margin-left:6px;">New</span></td><td>${assignee}</td><td>${vendor}</td><td>${due}</td><td>${statusBadge}</td>`;
+    tbody.insertBefore(tr, tbody.firstChild);
+  }
+
+  function updateWorkOrder(title, { vendor, due, statusBadge }) {
+    const tbody = document.getElementById('work-orders-tbody');
+    if (!tbody) return;
+    const row = tbody.querySelector(`tr[data-work-order-title="${title}"]`);
+    if (!row) return;
+    const cells = row.querySelectorAll('td');
+    if (vendor) cells[2].textContent = vendor;
+    if (due) cells[3].textContent = due;
+    if (statusBadge) cells[4].innerHTML = statusBadge;
+  }
+
+  function expenseClassificationCard({ desc, category, amount, timing }) {
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon amber"><i data-lucide="tag"></i></div>
+          <div>
+            <div class="inline-card-title">${desc}</div>
+            <div class="inline-card-sub">Unplanned expense · classified</div>
+          </div>
+        </div>
+        <div class="inline-card-body">
+          <div class="row">
+            <div class="col"><div class="label">Category</div><div>${category}</div></div>
+            <div class="col"><div class="label">Amount</div><div class="num" style="font-weight:600;">${amount}</div></div>
+          </div>
+          <div class="row">
+            <div class="col"><div class="label">Timing</div><div>${timing}</div></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function impactAnalysisCard() {
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon"><i data-lucide="line-chart"></i></div>
+          <div>
+            <div class="inline-card-title">Impact analysis</div>
+            <div class="inline-card-sub">Based on current cash &amp; budget</div>
+          </div>
+        </div>
+        <div class="inline-card-body">
+          <div class="row">
+            <div class="col"><div class="label">Cash on hand</div><div class="num" style="font-weight:600;">$84,212</div></div>
+            <div class="col"><div class="label">Reserves</div><div class="num" style="font-weight:600;">$58,400</div></div>
+          </div>
+          <div class="row">
+            <div class="col"><div class="label">Avg monthly expenses</div><div class="num">$24,268</div></div>
+            <div class="col"><div class="label">Reserve ratio</div><div>2.4 months → <strong style="color: var(--warning);">1.7 months</strong></div></div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="label">Verdict</div>
+              <div style="display:flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+                <div style="display:flex; align-items: center; gap: 6px;"><i data-lucide="check-circle-2" style="width:14px; height:14px; color: var(--cta-hover);"></i><span>Cash is available to cover this</span></div>
+                <div style="display:flex; align-items: center; gap: 6px;"><i data-lucide="alert-triangle" style="width:14px; height:14px; color: var(--warning);"></i><span>Pulling fully from reserves drops you below the 2-month minimum</span></div>
+                <div style="display:flex; align-items: center; gap: 6px;"><i data-lucide="trending-down" style="width:14px; height:14px; color: var(--text-secondary);"></i><span>Net 2026 income would drop from <strong>+$76k</strong> to <strong>+$57.5k</strong></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function fundingStrategyCard(kind) {
+    const variants = {
+      reserves: {
+        title: 'Funding strategy: Use reserves',
+        rows: [
+          { label: 'From reserves', value: '$18,500', strong: true },
+          { label: 'Reserves after', value: '$39,900 (1.7 months)', warn: true }
+        ],
+        note: 'Fastest option. No impact on the 2026 operating budget, but reserves drop below the 2-month target.'
+      },
+      reallocate: {
+        title: 'Funding strategy: Reallocate budget',
+        rows: [
+          { label: 'From Programs', value: '$10,000' },
+          { label: 'From Missions', value: '$5,000' },
+          { label: 'From Office &amp; admin', value: '$3,500' }
+        ],
+        note: 'Preserves reserves but reduces ministry budgets. Programs would drop from $32k to $22k.'
+      },
+      campaign: {
+        title: 'Funding strategy: Giving campaign',
+        rows: [
+          { label: 'Campaign target', value: '$20,000', strong: true },
+          { label: 'Duration', value: '30 days' },
+          { label: 'Average gift required', value: '~$108 from 186 active givers' }
+        ],
+        note: 'Preserves reserves and budget. Risk: campaign may not hit target by deadline. Recommend bridging from reserves until funds raised.'
+      },
+      hybrid: {
+        title: 'Funding strategy: Hybrid (recommended)',
+        rows: [
+          { label: 'From reserves', value: '$8,500' },
+          { label: 'From Programs reallocation', value: '$5,000' },
+          { label: 'Giving campaign', value: '$5,000 (10-day appeal)' }
+        ],
+        note: 'Spreads the impact: reserves stay above 2-month target, Programs takes a $5k cut instead of $10k, and a small campaign closes the gap.'
+      }
+    };
+    const v = variants[kind];
+    const rowsHtml = v.rows.map(r => `
+      <div class="row">
+        <div class="col"><div class="label">${r.label}</div></div>
+        <div class="col" style="text-align: right;"><div class="num" style="font-weight: ${r.strong ? '600' : '500'}; color: ${r.warn ? 'var(--warning)' : 'var(--text)'};">${r.value}</div></div>
+      </div>
+    `).join('');
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon green"><i data-lucide="git-branch"></i></div>
+          <div>
+            <div class="inline-card-title">${v.title}</div>
+            <div class="inline-card-sub">Total to fund: $18,500</div>
+          </div>
+        </div>
+        <div class="inline-card-body">
+          ${rowsHtml}
+          <div class="row">
+            <div class="col"><div class="label">Trade-offs</div><div style="color: var(--text-secondary);">${v.note}</div></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function approvalReceivedCard() {
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon green"><i data-lucide="user-check"></i></div>
+          <div>
+            <div class="inline-card-title">Approved by leadership</div>
+            <div class="inline-card-sub">4 of 5 council members · responses in 2h 14m</div>
+          </div>
+        </div>
+        <div class="inline-card-body">
+          <div style="display:flex; flex-wrap: wrap; gap: 6px;">
+            <span class="member-pill"><span class="mini-avatar amber">DO</span>Pastor David ✓</span>
+            <span class="member-pill"><span class="mini-avatar">EH</span>Eleanor Hayes ✓</span>
+            <span class="member-pill"><span class="mini-avatar green">DB</span>David Brooks ✓</span>
+            <span class="member-pill"><span class="mini-avatar gray">HW</span>Henry Walsh ✓</span>
+            <span class="member-pill" style="opacity: 0.6;"><span class="mini-avatar">JR</span>Joel Robinson — pending</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function updatedForecastCard() {
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon"><i data-lucide="bar-chart-3"></i></div>
+          <div>
+            <div class="inline-card-title">Updated 2026 forecast</div>
+            <div class="inline-card-sub">After approved hybrid funding plan</div>
+          </div>
+        </div>
+        <div class="inline-card-body" style="padding: 0;">
+          <div style="display:grid; grid-template-columns: 1fr auto auto; padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-disabled); font-weight: 600; gap: 16px;">
+            <div>Line</div><div style="text-align:right;">Before</div><div style="text-align:right;">After</div>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr auto auto; padding: 10px 16px; border-bottom: 1px solid var(--border); gap: 16px; font-size: 13.5px; align-items: center;">
+            <div>Reserves</div><div class="num" style="text-align:right; color: var(--text-secondary);">$58,400</div><div class="num" style="text-align:right; font-weight: 600;">$49,900</div>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr auto auto; padding: 10px 16px; border-bottom: 1px solid var(--border); gap: 16px; font-size: 13.5px; align-items: center;">
+            <div>Programs &amp; ministry budget</div><div class="num" style="text-align:right; color: var(--text-secondary);">$32,000</div><div class="num" style="text-align:right; font-weight: 600;">$27,000</div>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr auto auto; padding: 10px 16px; border-bottom: 1px solid var(--border); gap: 16px; font-size: 13.5px; align-items: center;">
+            <div>Building maintenance (new line)</div><div class="num" style="text-align:right; color: var(--text-disabled);">—</div><div class="num" style="text-align:right; font-weight: 600;">+$18,500</div>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr auto auto; padding: 10px 16px; border-bottom: 1px solid var(--border); gap: 16px; font-size: 13.5px; align-items: center;">
+            <div>Building campaign income</div><div class="num" style="text-align:right; color: var(--text-disabled);">—</div><div class="num" style="text-align:right; font-weight: 600; color: var(--cta-hover);">+$5,000</div>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr auto auto; padding: 14px 16px; gap: 16px; font-size: 14px; align-items: center; background: #FAFBFC; font-weight: 600;">
+            <div>Net 2026 income (projected)</div><div class="num" style="text-align:right; color: var(--text-secondary);">+$76,000</div><div class="num" style="text-align:right; color: var(--cta-hover);">+$62,500</div>
+          </div>
+        </div>
+        <div class="inline-card-footer">
+          ${tabLink('finances', 'Open in Finances → Budget')}
+        </div>
+      </div>
+    `;
+  }
+
+  function exportedForecastCard(format) {
+    const files = format === 'pdf'
+      ? ['2026-forecast-may-update.pdf']
+      : (format === 'xlsx' ? ['2026-forecast-may-update.xlsx'] : ['2026-forecast-may-update.pdf', '2026-forecast-may-update.xlsx']);
+    return `
+      <div class="inline-card">
+        <div class="inline-card-header">
+          <div class="inline-card-icon green"><i data-lucide="download"></i></div>
+          <div>
+            <div class="inline-card-title">Forecast exported</div>
+            <div class="inline-card-sub">Shared with the council</div>
+          </div>
+        </div>
+        <div class="inline-card-body" style="padding: 12px 16px;">
+          ${files.map(f => `
+            <div style="display:flex; align-items:center; gap:10px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; margin-top: 6px;">
+              <i data-lucide="file-text" style="width:16px; height:16px; color: var(--primary);"></i>
+              <span style="flex:1; font-size: 13.5px;">${f}</span>
+              <button class="btn-text" style="padding: 4px 8px;">Download</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
   function tomSmithProfileCard() {
     return `
       <div class="inline-card">
@@ -3470,6 +3865,311 @@
       options: []
     },
 
+    // ----- ACTION 4: Submit work order -----
+    'a4-1': {
+      user: 'Submit a work order.',
+      aaron: () => `Sure — let's get the details. Who's the requester?`,
+      options: [
+        { label: 'Tracy McKee (me)', next: 'a4-2', primary: true },
+        { label: 'Pastor David Olsen', next: 'a4-2' },
+        { label: 'Marco Reyes', next: 'a4-2' },
+        { label: 'Someone else', next: 'a4-2' }
+      ]
+    },
+    'a4-2': {
+      // user msg supplied by option label
+      aaron: () => `Where's the issue located?`,
+      options: [
+        { label: 'Sanctuary', next: 'a4-3', primary: true },
+        { label: 'Fellowship hall', next: 'a4-3' },
+        { label: 'Basement', next: 'a4-3' },
+        { label: 'Youth room', next: 'a4-3' }
+      ]
+    },
+    'a4-3': {
+      aaron: () => `What's the issue?`,
+      options: [
+        { label: 'HVAC unit making a grinding noise', next: 'a4-4', primary: true },
+        { label: 'Light fixture out', next: 'a4-4' },
+        { label: 'Door not locking', next: 'a4-4' },
+        { label: 'Other', next: 'a4-4' }
+      ]
+    },
+    'a4-4': {
+      aaron: () => `Got it. Any photos to attach?`,
+      options: [
+        { label: 'Attach 1 photo of the unit', next: 'a4-5', primary: true },
+        { label: 'Skip — no photos', next: 'a4-5' }
+      ]
+    },
+    'a4-5': {
+      aaron: () => `Priority level?`,
+      options: [
+        { label: 'Low', next: 'a4-6' },
+        { label: 'Medium', next: 'a4-6' },
+        { label: 'High', next: 'a4-6', primary: true },
+        { label: 'Urgent', next: 'a4-6' }
+      ]
+    },
+    'a4-6': {
+      aaron: () => `Preferred completion date?`,
+      options: [
+        { label: 'This week (by May 9)', next: 'a4-7', primary: true },
+        { label: 'Next week (by May 16)', next: 'a4-7' },
+        { label: 'This month (by May 31)', next: 'a4-7' },
+        { label: 'Specific date', next: 'a4-7' }
+      ]
+    },
+    'a4-7': {
+      aaron: () => `Here's the work order draft:
+        ${workOrderCard({
+          id: 'WO-0142',
+          title: 'HVAC unit making a grinding noise',
+          location: 'Sanctuary',
+          requester: 'Tracy McKee',
+          priority: 'High',
+          due: 'May 9, 2026',
+          photos: 1
+        })}
+        <p style="margin-top:12px;">Submit and notify Marco Reyes (facilities manager) plus the maintenance team?</p>`,
+      options: [
+        { label: 'Submit & notify team', next: 'a4-8', primary: true },
+        { label: 'Edit details first', next: 'idle' }
+      ]
+    },
+    'a4-8': {
+      user: 'Submit & notify team.',
+      aaron: () => {
+        if (!state.workOrderCreated) {
+          state.workOrderCreated = true;
+          prependWorkOrder({
+            title: 'Repair sanctuary HVAC compressor',
+            assignee: 'Marco Reyes',
+            vendor: '—',
+            due: 'May 9',
+            statusBadge: '<span class="badge badge-blue">Submitted</span>'
+          });
+          showToast('Work order submitted · Marco notified');
+        }
+        setTimeout(() => runStep('a4-9'), 2200);
+        return `Done ✓ Work order <strong>WO-0142</strong> created and added to the Facilities board. Marco and the maintenance team have been notified by email. I'll let you know once Marco assesses it.`;
+      },
+      options: []
+    },
+    'a4-9': {
+      // auto-followup — Marco's assessment
+      aaron: () => `Update — Marco assessed the issue. He thinks it's the <strong>compressor</strong>, which is beyond an in-house fix and needs an HVAC vendor. He's recommending external service and needs your approval to request quotes.
+        ${assessmentCard({
+          assessor: 'Marco Reyes',
+          finding: 'Compressor issue · beyond in-house repair',
+          recommendation: 'External vendor — HVAC specialist',
+          notes: '"I checked the belts and electrical first. Sounds like the compressor bearings. We don\'t have the parts or the lift to do this safely."'
+        })}`,
+      options: [
+        { label: 'Approve external vendor', next: 'a4-10', primary: true },
+        { label: 'Ask Marco for more info', next: 'idle' }
+      ]
+    },
+    'a4-10': {
+      user: 'Approve external vendor.',
+      aaron: () => {
+        showToast('Quotes requested from 2 vendors');
+        setTimeout(() => runStep('a4-11'), 2400);
+        return `Approved ✓ I've requested quotes from your 2 connected HVAC vendors: <strong>Cooling Co.</strong> and <strong>Northland Mechanical</strong>. Both have been sent the work order details and photo. I'll let you know when quotes come in.`;
+      },
+      options: []
+    },
+    'a4-11': {
+      // auto-followup — quotes back
+      aaron: () => `Both vendors have responded:
+        ${quotesCard()}
+        <p style="margin-top:12px;">Which quote would you like to approve?</p>`,
+      options: [
+        { label: 'Approve Cooling Co. ($1,840)', next: 'a4-12', primary: true },
+        { label: 'Approve Northland ($2,150 · faster)', next: 'a4-12-alt' },
+        { label: 'Negotiate', next: 'idle' }
+      ]
+    },
+    'a4-12': {
+      user: 'Approve Cooling Co. ($1,840).',
+      aaron: () => `Approved ✓ I've scheduled the work with <strong>Cooling Co.</strong> for <strong>May 12, 9:00 AM</strong>.
+        ${scheduledCard({ vendor: 'Cooling Co.', date: 'May 12, 9:00 AM', amount: '$1,840' })}
+        <p style="margin-top:12px;">Add this to the maintenance calendar and send Marco the details?</p>`,
+      options: [
+        { label: 'Yes, schedule and notify Marco', next: 'a4-13', primary: true },
+        { label: 'Just close for now', next: 'a4-13-alt' }
+      ]
+    },
+    'a4-12-alt': {
+      user: 'Approve Northland ($2,150 · faster).',
+      aaron: () => `Approved ✓ I've scheduled the work with <strong>Northland Mechanical</strong> for <strong>May 9, 8:00 AM</strong>.
+        ${scheduledCard({ vendor: 'Northland Mechanical', date: 'May 9, 8:00 AM', amount: '$2,150' })}
+        <p style="margin-top:12px;">Add this to the maintenance calendar and send Marco the details?</p>`,
+      options: [
+        { label: 'Yes, schedule and notify Marco', next: 'a4-13', primary: true }
+      ]
+    },
+    'a4-13': {
+      user: 'Yes, schedule and notify Marco.',
+      aaron: () => {
+        updateWorkOrder('Repair sanctuary HVAC compressor', { vendor: 'Cooling Co.', due: 'May 12', statusBadge: '<span class="badge badge-amber">Scheduled</span>' });
+        showToast('Added to maintenance calendar');
+        return `Done ✓ Work order <strong>WO-0142</strong> is now active and scheduled. I'll auto-close it once the work is marked complete and the invoice matches the quote. You'll see it in Facilities under In progress.`;
+      },
+      options: []
+    },
+    'a4-13-alt': {
+      user: 'Just close for now.',
+      aaron: () => {
+        updateWorkOrder('Repair sanctuary HVAC compressor', { vendor: 'Cooling Co.', due: 'May 12', statusBadge: '<span class="badge badge-amber">Scheduled</span>' });
+        return `Closed for now. The work order is in Facilities — you can re-open it any time. I'll still match the invoice when it comes in.`;
+      },
+      options: []
+    },
+
+    // ----- ACTION 5: Unplanned expense — update budget & forecast -----
+    'a5-1': {
+      user: 'Add an unplanned expense to the budget.',
+      aaron: () => `Sorry to hear it. What's the unplanned expense?`,
+      options: [
+        { label: 'Boiler replacement (basement)', next: 'a5-2', primary: true },
+        { label: 'Storm damage — roof', next: 'a5-2' },
+        { label: 'Insurance premium increase', next: 'a5-2' },
+        { label: 'Other', next: 'a5-2' }
+      ]
+    },
+    'a5-2': {
+      aaron: () => `Estimated amount?`,
+      options: [
+        { label: 'Under $5,000', next: 'a5-3' },
+        { label: '$5,000 – $10,000', next: 'a5-3' },
+        { label: '$10,000 – $25,000', next: 'a5-3', primary: true },
+        { label: 'More than $25,000', next: 'a5-3' }
+      ]
+    },
+    'a5-3': {
+      aaron: () => `When does this need to be paid?`,
+      options: [
+        { label: 'Within 7 days', next: 'a5-4', primary: true },
+        { label: 'Within 30 days', next: 'a5-4' },
+        { label: 'This quarter', next: 'a5-4' },
+        { label: 'Flexible', next: 'a5-4' }
+      ]
+    },
+    'a5-4': {
+      aaron: () => `Got it. Here's the classification, and I've already run an impact analysis on your finances:
+        ${expenseClassificationCard({
+          desc: 'Boiler replacement — basement',
+          category: 'Facilities · Capital expense',
+          amount: '$18,500',
+          timing: 'Within 7 days'
+        })}
+        ${impactAnalysisCard()}
+        <p style="margin-top:12px;">Cash is available, but pulling the full amount from reserves would push you below the 2-month minimum. Which funding strategy do you want to use?</p>`,
+      options: [
+        { label: 'Use reserves', next: 'a5-5-reserves' },
+        { label: 'Reallocate from budget', next: 'a5-5-reallocate' },
+        { label: 'Run a giving campaign', next: 'a5-5-campaign' },
+        { label: 'Hybrid (recommended)', next: 'a5-5-hybrid', primary: true }
+      ]
+    },
+    'a5-5-reserves': {
+      user: 'Use reserves.',
+      aaron: () => `Here's how that looks:
+        ${fundingStrategyCard('reserves')}
+        <p style="margin-top:12px;">This needs council approval before I update the forecast. Want me to draft the request?</p>`,
+      options: [
+        { label: 'Yes, draft for council', next: 'a5-6', primary: true },
+        { label: 'Pick a different strategy', next: 'a5-4' }
+      ]
+    },
+    'a5-5-reallocate': {
+      user: 'Reallocate from budget.',
+      aaron: () => `Here's the reallocation plan:
+        ${fundingStrategyCard('reallocate')}
+        <p style="margin-top:12px;">This needs council approval before I update the forecast. Want me to draft the request?</p>`,
+      options: [
+        { label: 'Yes, draft for council', next: 'a5-6', primary: true },
+        { label: 'Pick a different strategy', next: 'a5-4' }
+      ]
+    },
+    'a5-5-campaign': {
+      user: 'Run a giving campaign.',
+      aaron: () => `Here's a campaign plan:
+        ${fundingStrategyCard('campaign')}
+        <p style="margin-top:12px;">This needs council approval before I update the forecast. Want me to draft the request?</p>`,
+      options: [
+        { label: 'Yes, draft for council', next: 'a5-6', primary: true },
+        { label: 'Pick a different strategy', next: 'a5-4' }
+      ]
+    },
+    'a5-5-hybrid': {
+      user: 'Hybrid plan.',
+      aaron: () => `Here's the hybrid plan:
+        ${fundingStrategyCard('hybrid')}
+        <p style="margin-top:12px;">This needs council approval before I update the forecast. Want me to draft the request?</p>`,
+      options: [
+        { label: 'Yes, draft for council', next: 'a5-6', primary: true },
+        { label: 'Pick a different strategy', next: 'a5-4' }
+      ]
+    },
+    'a5-6': {
+      user: 'Yes, draft for council.',
+      aaron: () => `Here's the draft to the council:
+        ${emailDraftCard({
+          to: 'Church Council (5 members)',
+          subject: 'Approval needed — emergency boiler replacement ($18,500)',
+          body: 'Council members,\n\nThe basement boiler failed this week and needs replacement at an estimated $18,500. I\'m proposing a hybrid funding plan: $8,500 from reserves, $5,000 reallocated from Programs, and a $5,000 10-day building appeal.\n\nThis keeps reserves above the 2-month minimum and limits the cut to ministry programs. Net 2026 income would land at +$62,500 vs. the +$76,000 originally forecast.\n\nA full impact analysis and updated forecast are attached. Please reply with your approval by end of day Wednesday.\n\nThanks,\nTracy'
+        })}
+        <p style="margin-top:12px;">Send it now?</p>`,
+      options: [
+        { label: 'Yes, send to council', next: 'a5-7', primary: true },
+        { label: 'Edit first', next: 'idle' }
+      ]
+    },
+    'a5-7': {
+      user: 'Yes, send to council.',
+      aaron: () => {
+        showToast('Approval request sent to 5 council members');
+        setTimeout(() => runStep('a5-8'), 2400);
+        return `Sent ✓ The approval request is on its way to all 5 council members. I'll let you know as responses come in.`;
+      },
+      options: []
+    },
+    'a5-8': {
+      // auto-followup — approval received
+      aaron: () => `Update — the council has approved the plan:
+        ${approvalReceivedCard()}
+        <p style="margin-top:12px;">I'll go ahead and update the forecast now.</p>
+        ${updatedForecastCard()}
+        <p style="margin-top:12px;">Want me to export the updated forecast for the council and your records?</p>`,
+      options: [
+        { label: 'Export PDF + Excel', next: 'a5-9', primary: true },
+        { label: 'PDF only', next: 'a5-9-pdf' },
+        { label: 'Skip for now', next: 'idle' }
+      ]
+    },
+    'a5-9': {
+      user: 'Export PDF + Excel.',
+      aaron: () => {
+        showToast('Forecast exported and shared with council');
+        return `Done ✓
+          ${exportedForecastCard('both')}
+          <p style="margin-top:12px;">All set. The forecast is updated, exported, and shared. The new building maintenance line and adjusted reserves are reflected in <strong>Finances → Budget</strong>.</p>`;
+      },
+      options: []
+    },
+    'a5-9-pdf': {
+      user: 'PDF only.',
+      aaron: () => {
+        showToast('Forecast exported and shared with council');
+        return `Done ✓
+          ${exportedForecastCard('pdf')}
+          <p style="margin-top:12px;">All set. The forecast is updated, exported, and shared.</p>`;
+      },
+      options: []
+    },
+
     'idle': { aaron: () => `OK — I'll be here when you need me.`, options: [] }
   };
 
@@ -3541,6 +4241,8 @@
       if (action === 'action1') runStep('a1-1');
       if (action === 'action2') runStep('a2-1');
       if (action === 'action3') runStep('a3-1');
+      if (action === 'action4') runStep('a4-1');
+      if (action === 'action5') runStep('a5-1');
     });
   });
 
@@ -3571,6 +4273,8 @@
     if (/(skill|talent|interest)/.test(lower) && /form/.test(lower)) next = 'a1-1';
     else if (/age/.test(lower) && /(giving|donat|email|list)/.test(lower)) next = 'a2-1';
     else if (/baptism/.test(lower) && /(tom|smith|form|send)/.test(lower)) next = 'a3-1';
+    else if (/(work order|maintenance|repair|broken|fix)/.test(lower)) next = 'a4-1';
+    else if (/(unplanned|unexpected|emergency expense|forecast|budget shock|update budget)/.test(lower)) next = 'a5-1';
 
     if (next) {
       // skip the user-message inside that step (we already added one)
