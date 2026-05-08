@@ -326,51 +326,71 @@
   }
   .builder-tab.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
 
-  .form-cover {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-top: 8px solid var(--primary);
-    border-radius: var(--radius-lg);
-    padding: var(--lg);
-    margin-bottom: var(--md);
-  }
-  .form-cover .form-title-input {
-    width: 100%; border: none; padding: 4px 0; font-size: 28px; font-weight: 600;
-    border-bottom: 1px solid transparent;
-    transition: border-color 150ms;
-  }
-  .form-cover .form-title-input:focus { outline: none; border-bottom-color: var(--primary); }
-  .form-cover .form-desc-input {
-    width: 100%; border: none; padding: 6px 0; font-size: 14px; color: var(--text-secondary);
-    border-bottom: 1px solid transparent;
-    transition: border-color 150ms;
-    margin-top: 6px;
-  }
-  .form-cover .form-desc-input:focus { outline: none; border-bottom-color: var(--primary); color: var(--text); }
+  .builder-questions-header { padding: 0 var(--xs); margin-bottom: var(--sm); }
+  .builder-questions { display: flex; flex-direction: column; gap: var(--sm); }
 
+  /* Wrapper holds the question card AND the floating action toolbar */
+  .question-wrap { position: relative; }
   .question-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-left: 4px solid transparent;
     border-radius: var(--radius-lg);
     padding: var(--md) var(--lg);
-    margin-bottom: var(--sm);
     transition: border-left-color 150ms ease-out, box-shadow 150ms ease-out;
   }
-  .question-card.focused { border-left-color: var(--primary); box-shadow: var(--shadow-md); }
-  .question-row { display: grid; grid-template-columns: 1fr 220px; gap: var(--md); align-items: center; margin-bottom: var(--md); }
-  .question-row .input { font-size: 16px; }
-  .options-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: var(--md); }
+  .question-wrap.focused .question-card { border-left-color: var(--primary); box-shadow: var(--shadow-md); }
+  .question-index { font-size: 11px; font-weight: 600; color: var(--text-disabled); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+
+  .question-row { display: flex; gap: var(--md); align-items: center; margin-bottom: var(--md); }
+  .question-row .select { flex: 0 0 200px; }
+  .options-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--md); }
   .option-row { display: flex; align-items: center; gap: 10px; }
   .option-row .marker { width: 18px; height: 18px; border: 1.5px solid var(--border-strong); flex-shrink: 0; }
   .option-row .marker.radio { border-radius: 50%; }
   .option-row .marker.check { border-radius: 4px; }
-  .option-row .input { padding: 6px 10px; border: none; border-bottom: 1px solid var(--border); border-radius: 0; }
+  .option-row .input { padding: 6px 10px; border: none; border-bottom: 1px solid var(--border); border-radius: 0; background: transparent; }
   .option-row .input:focus { box-shadow: none; border-bottom-color: var(--primary); }
-  .option-row button { color: var(--text-disabled); padding: 4px; }
-  .option-row button:hover { color: var(--text); }
+  .icon-btn-sm { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: var(--text-disabled); }
+  .icon-btn-sm:hover { color: var(--text); background: #F3F4F6; }
+  .icon-btn-sm svg { width: 14px; height: 14px; }
+  .preview-field { margin-bottom: var(--md); background: #F9FAFB; }
 
   .question-footer { display: flex; align-items: center; justify-content: flex-end; gap: var(--md); padding-top: var(--md); border-top: 1px solid var(--border); }
+
+  /* Floating toolbar to the right of focused question */
+  .question-toolbar {
+    position: absolute;
+    top: 8px;
+    right: -52px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 4px;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    transform: translateX(-8px);
+    pointer-events: none;
+    transition: opacity 150ms ease-out, transform 150ms ease-out;
+  }
+  .question-wrap.focused .question-toolbar { opacity: 1; transform: translateX(0); pointer-events: auto; }
+  .toolbar-btn {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    transition: background 120ms ease-out, color 120ms ease-out;
+  }
+  .toolbar-btn:hover { background: #F3F4F6; color: var(--text); }
+  .toolbar-btn-danger:hover { color: var(--error); background: var(--error-light); }
+  .toolbar-btn svg { width: 16px; height: 16px; }
+  @media (max-width: 1280px) {
+    /* Tuck toolbar inside on narrower screens */
+    .question-toolbar { right: 8px; top: -42px; flex-direction: row; }
+  }
   .toggle { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
   .toggle input { display: none; }
   .toggle .switch {
@@ -387,18 +407,6 @@
   .toggle input:checked + .switch { background: var(--primary); }
   .toggle input:checked + .switch::before { transform: translateX(14px); }
   .toggle .label-text { font-size: 13px; color: var(--text); }
-
-  .add-question-bar {
-    display: flex; align-items: center; gap: 8px;
-    padding: var(--md);
-    background: var(--surface);
-    border: 1px dashed var(--border-strong);
-    border-radius: var(--radius-lg);
-    color: var(--text-secondary);
-    width: 100%; justify-content: center;
-    font-weight: 500;
-  }
-  .add-question-bar:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
 
   /* ---- Responses ---- */
   .table { width: 100%; border-collapse: collapse; font-size: 14px; }
@@ -424,9 +432,19 @@
     box-shadow: var(--shadow-lg);
     overflow: hidden;
   }
+  .modal-lg { max-width: 820px; }
   .modal-head { padding: var(--lg) var(--lg) var(--md); border-bottom: 1px solid var(--border); display:flex; align-items: center; justify-content: space-between; }
   .modal-body { padding: var(--lg); max-height: 70vh; overflow-y: auto; }
   .modal-footer { padding: var(--md) var(--lg); border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+  /* Form sections inside modals */
+  .form-section { padding-bottom: var(--lg); margin-bottom: var(--lg); border-bottom: 1px solid var(--border); }
+  .form-section:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+  .form-section-title { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--md); display: flex; align-items: center; gap: 8px; }
+  .form-section-hint { font-size: 11px; font-weight: 500; color: var(--text-disabled); text-transform: none; letter-spacing: 0; }
+  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--md); }
+  @media (max-width: 700px) { .form-row-2 { grid-template-columns: 1fr; } }
+  .req { color: var(--error); }
 
   /* ---- Settings ---- */
   .integration-row { display: flex; align-items: center; gap: var(--md); padding: var(--md) 0; border-bottom: 1px solid var(--border); }
@@ -524,56 +542,56 @@ const familiesSeed = [
 ];
 
 const membersSeed = [
-  { id:'m1', familyId:'f1', firstName:'Sarah',   lastName:'Anderson', age:34, email:'sarah.anderson@email.com',  phone:'(608) 555-0142', address:'412 Linden St, Madison WI 53703',
+  { id:'m1', familyId:'f1', firstName:'Sarah',   lastName:'Anderson', birthdate:'1991-08-12', email:'sarah.anderson@email.com',  phone:'(608) 555-0142', address:'412 Linden St, Madison WI 53703',
     membership:'2018-04-22', baptism:'1991-09-15', firstCommunion:'1999-05-08', confirmation:'2005-04-10', marriage:'2015-08-20',
     skills:['Choir','Sunday school teacher','Spanish'], notes:'Leads the spring volunteer drive. Prefers email contact.', activity:[
       {t:'Submitted "Updated member information" form', d:'2 days ago'},
       {t:'Signed up for Spring Festival volunteer slot', d:'1 week ago'},
       {t:'Attended new-member welcome dinner', d:'Mar 4, 2026'}
     ]},
-  { id:'m2', familyId:'f1', firstName:'Tom',     lastName:'Anderson', age:36, email:'t.anderson@email.com', phone:'(608) 555-0142', address:'412 Linden St, Madison WI 53703',
+  { id:'m2', familyId:'f1', firstName:'Tom',     lastName:'Anderson', birthdate:'1989-04-22', email:'t.anderson@email.com', phone:'(608) 555-0142', address:'412 Linden St, Madison WI 53703',
     membership:'2018-04-22', baptism:'1989-06-04', firstCommunion:null, confirmation:'2003-04-14', marriage:'2015-08-20',
     skills:['Audio/visual','Carpentry'], notes:'Helps with sanctuary AV every other Sunday.', activity:[
       {t:'Volunteered for AV team — Easter service', d:'Apr 1, 2026'}
     ]},
-  { id:'m3', familyId:'f1', firstName:'Lily',    lastName:'Anderson', age:8,  email:null, phone:null, address:'412 Linden St, Madison WI 53703',
+  { id:'m3', familyId:'f1', firstName:'Lily',    lastName:'Anderson', birthdate:'2017-09-03',  email:null, phone:null, address:'412 Linden St, Madison WI 53703',
     membership:'2018-04-22', baptism:'2017-10-12', firstCommunion:null, confirmation:null, marriage:null,
     skills:['Children’s choir'], notes:'Allergic to peanuts — noted for snack time.', activity:[
       {t:'Joined children’s choir', d:'Sep 10, 2025'}
     ]},
-  { id:'m4', familyId:'f2', firstName:'David',   lastName:'Becker',   age:67, email:'dbecker@email.com', phone:'(608) 555-0177', address:'88 Oak Ridge Rd, Madison WI 53711',
+  { id:'m4', familyId:'f2', firstName:'David',   lastName:'Becker',   birthdate:'1959-02-14', email:'dbecker@email.com', phone:'(608) 555-0177', address:'88 Oak Ridge Rd, Madison WI 53711',
     membership:'1985-06-15', baptism:'1959-03-22', firstCommunion:'1967-05-21', confirmation:'1973-04-08', marriage:'1982-09-04',
     skills:['Council member','Treasurer','Bookkeeping'], notes:'Long-time council member. Available weekday mornings.', activity:[
       {t:'Approved Q1 financial report', d:'1 month ago'},
       {t:'Led adult education series', d:'Feb 2026'}
     ]},
-  { id:'m5', familyId:'f2', firstName:'Linda',   lastName:'Becker',   age:64, email:'l.becker@email.com', phone:'(608) 555-0177', address:'88 Oak Ridge Rd, Madison WI 53711',
+  { id:'m5', familyId:'f2', firstName:'Linda',   lastName:'Becker',   birthdate:'1962-06-08', email:'l.becker@email.com', phone:'(608) 555-0177', address:'88 Oak Ridge Rd, Madison WI 53711',
     membership:'1985-06-15', baptism:'1962-07-19', firstCommunion:'1970-05-03', confirmation:'1976-04-25', marriage:'1982-09-04',
     skills:['Quilting ministry','Hospitality'], notes:'', activity:[
       {t:'Coordinated funeral hospitality', d:'Mar 18, 2026'}
     ]},
-  { id:'m6', familyId:'f3', firstName:'Michael', lastName:'Garcia',   age:52, email:'mgarcia@email.com', phone:'(608) 555-0118', address:'1207 Birch Ln, Madison WI 53703',
+  { id:'m6', familyId:'f3', firstName:'Michael', lastName:'Garcia',   birthdate:'1973-12-29', email:'mgarcia@email.com', phone:'(608) 555-0118', address:'1207 Birch Ln, Madison WI 53703',
     membership:'2002-10-06', baptism:'1974-02-11', firstCommunion:'1982-05-09', confirmation:'1988-04-17', marriage:'1999-06-12',
     skills:['Choir director','Piano','Music arrangement'], notes:'Choir director since 2014.', activity:[
       {t:'Scheduled Holy Week rehearsals', d:'2 weeks ago'}
     ]},
-  { id:'m7', familyId:'f4', firstName:'Emily',   lastName:'Foster',   age:12, email:null, phone:null, address:'305 Maple Ave, Madison WI 53704',
+  { id:'m7', familyId:'f4', firstName:'Emily',   lastName:'Foster',   birthdate:'2014-03-18', email:null, phone:null, address:'305 Maple Ave, Madison WI 53704',
     membership:'2014-05-04', baptism:'2014-05-04', firstCommunion:'2025-05-04', confirmation:null, marriage:null,
     skills:['Acolyte'], notes:'Confirmation class candidate for 2027.', activity:[
       {t:'First communion received', d:'May 4, 2025'}
     ]},
-  { id:'m8', familyId:'f4', firstName:'Rebecca', lastName:'Foster',   age:42, email:'rfoster@email.com', phone:'(608) 555-0210', address:'305 Maple Ave, Madison WI 53704',
+  { id:'m8', familyId:'f4', firstName:'Rebecca', lastName:'Foster',   birthdate:'1984-07-22', email:'rfoster@email.com', phone:'(608) 555-0210', address:'305 Maple Ave, Madison WI 53704',
     membership:'2014-05-04', baptism:'1984-08-14', firstCommunion:'1992-05-10', confirmation:'1998-04-26', marriage:'2010-07-31',
     skills:['Sunday school coordinator'], notes:'', activity:[
       {t:'Submitted volunteer form', d:'3 days ago'}
     ]},
-  { id:'m9', familyId:'f5', firstName:'Maria',   lastName:'Chen',     age:28, email:'maria.c@email.com', phone:'(608) 555-0233', address:'52 Lake View Dr, Madison WI 53715',
+  { id:'m9', familyId:'f5', firstName:'Maria',   lastName:'Chen',     birthdate:'1998-05-10', email:'maria.c@email.com', phone:'(608) 555-0233', address:'52 Lake View Dr, Madison WI 53715',
     membership:'2024-11-03', baptism:'2024-11-03', firstCommunion:'2024-12-22', confirmation:'2025-04-13', marriage:null,
     skills:['Tech / website','Mandarin'], notes:'Recent adult convert. Helping modernize the website.', activity:[
       {t:'Joined tech committee', d:'Jan 2026'},
       {t:'Confirmation received', d:'Apr 13, 2025'}
     ]},
-  { id:'m10', familyId:'f6', firstName:'James',  lastName:'Donovan',  age:45, email:'jdonovan@email.com', phone:'(608) 555-0166', address:'7 Hillcrest Ct, Madison WI 53711',
+  { id:'m10', familyId:'f6', firstName:'James',  lastName:'Donovan',  birthdate:'1980-09-25', email:'jdonovan@email.com', phone:'(608) 555-0166', address:'7 Hillcrest Ct, Madison WI 53711',
     membership:'2010-03-21', baptism:'1980-11-08', firstCommunion:'1988-05-15', confirmation:'1994-04-03', marriage:'2008-05-24',
     skills:['Property committee','Plumbing','Snow removal'], notes:'Calls dibs on the snow blower in winter.', activity:[
       {t:'Repaired sanctuary HVAC', d:'Last week'}
@@ -650,8 +668,8 @@ const state = {
   fillFormId: null,                 // when set, opens fill modal
   fillAnswers: {},
   fillAsMemberId: 'm9',             // demo: simulate Maria submitting
-  emailConnected: false,
-  emailProvider: null,
+  addMemberOpen: false,
+  addMemberDraft: null,
   toasts: [],
   members: structuredClone(membersSeed),
   families: structuredClone(familiesSeed),
@@ -667,6 +685,15 @@ const fmtDate = (iso) => {
   if (!iso) return null;
   const d = new Date(iso + 'T12:00:00');
   return d.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+};
+const ageFromBirthdate = (iso) => {
+  if (!iso) return null;
+  const b = new Date(iso + 'T12:00:00');
+  const now = new Date();
+  let a = now.getFullYear() - b.getFullYear();
+  const mo = now.getMonth() - b.getMonth();
+  if (mo < 0 || (mo === 0 && now.getDate() < b.getDate())) a--;
+  return a >= 0 ? a : null;
 };
 const memberById = (id) => state.members.find(m => m.id === id);
 const formById = (id) => state.forms.find(f => f.id === id);
@@ -699,6 +726,7 @@ function render() {
     </div>
     ${ToastStack()}
     ${state.fillFormId ? FillFormModal() : ''}
+    ${state.addMemberOpen ? AddMemberModal() : ''}
   `;
   attach();
 }
@@ -788,15 +816,17 @@ function MembersView() {
           </div>
         </div>
         <div class="list">
-          ${list.map(m => `
+          ${list.map(m => {
+            const a = ageFromBirthdate(m.birthdate);
+            return `
             <button class="list-row ${m.id===state.selectedMemberId?'active':''}" data-select-member="${m.id}">
               <div class="avatar">${escape(initials(m.firstName, m.lastName))}</div>
               <div>
                 <div class="row-name">${escape(fullName(m))}</div>
-                <div class="row-sub">${m.age ? m.age + ' yrs' : ''}${m.age && m.email ? ' · ' : ''}${escape(m.email||'')}</div>
+                <div class="row-sub">${a!=null ? a + ' yrs' : ''}${a!=null && m.email ? ' · ' : ''}${escape(m.email||'')}</div>
               </div>
-            </button>
-          `).join('')}
+            </button>`;
+          }).join('')}
           ${list.length===0 ? `<div class="empty"><svg><use href="#i-search"/></svg><div>No members match "${escape(state.memberSearch)}"</div></div>` : ''}
         </div>
       </div>
@@ -808,13 +838,14 @@ function MembersView() {
 function MemberDetail(m) {
   const family = familyById(m.familyId);
   const skills = (m.skills||[]).map(s => `<span class="chip">${escape(s)}</span>`).join('');
+  const age = ageFromBirthdate(m.birthdate);
   return `
     <div class="card">
       <div class="detail-header">
         <div class="detail-avatar">${escape(initials(m.firstName, m.lastName))}</div>
         <div>
           <h2 class="detail-name">${escape(fullName(m))}</h2>
-          <div class="detail-meta">${m.age ? m.age + ' years old' : 'Age not on file'} · ${escape(family ? family.name : 'No family on file')}</div>
+          <div class="detail-meta">${age!=null ? age + ' years old' : 'Age not on file'} · ${escape(family ? family.name : 'No family on file')}</div>
         </div>
         <div class="detail-actions">
           <button class="btn btn-neutral btn-sm" data-action="email-member" data-id="${m.id}"><svg><use href="#i-mail"/></svg> Email</button>
@@ -831,6 +862,7 @@ function MemberDetail(m) {
         </div>
         <div class="info-block">
           <h4>Key dates</h4>
+          ${row('Birthdate',      fmtDate(m.birthdate))}
           ${row('Membership',     fmtDate(m.membership))}
           ${row('Baptism',        fmtDate(m.baptism))}
           ${row('First communion',fmtDate(m.firstCommunion))}
@@ -983,61 +1015,90 @@ function FormDetailPage() {
 
 function FormBuilder(f) {
   return `
-    <div class="form-cover">
-      <input class="form-title-input" placeholder="Untitled form" value="${escape(f.title)}" data-form-field="title" data-id="${f.id}" />
-      <input class="form-desc-input" placeholder="Form description" value="${escape(f.description)}" data-form-field="description" data-id="${f.id}" />
+    <div class="card" style="margin-bottom: var(--lg);">
+      <div class="form-section-title">Form details</div>
+      <div class="field">
+        <label class="label">Title</label>
+        <input class="input" placeholder="Untitled form" value="${escape(f.title)}" data-form-field="title" data-id="${f.id}" />
+      </div>
+      <div class="field" style="margin-bottom: 0;">
+        <label class="label">Description</label>
+        <textarea class="textarea" placeholder="What is this form for? Members will see this above the questions." data-form-field="description" data-id="${f.id}">${escape(f.description)}</textarea>
+      </div>
     </div>
-    ${ f.questions.map(q => QuestionCard(f.id, q)).join('') }
-    <button class="add-question-bar" data-action="add-question" data-id="${f.id}">
-      <svg><use href="#i-plus"/></svg> Add question
-    </button>
+
+    <div class="builder-questions-header">
+      <span class="form-section-title" style="margin:0;">Questions <span class="form-section-hint">${f.questions.length} total</span></span>
+    </div>
+
+    <div class="builder-questions">
+      ${ f.questions.map((q, i) => QuestionCard(f.id, q, i, f.questions.length)).join('') }
+    </div>
+
+    <div style="margin-top: var(--md);">
+      <button class="btn btn-secondary" data-action="add-question" data-id="${f.id}">
+        <svg><use href="#i-plus"/></svg> Add question
+      </button>
+    </div>
   `;
 }
 
-function QuestionCard(formId, q) {
+function QuestionCard(formId, q, index, total) {
   const focused = state.focusedQuestionId === q.id;
   const showOptions = (q.type === 'multiple' || q.type === 'checkboxes');
   return `
-    <div class="question-card ${focused?'focused':''}" data-question-card="${q.id}">
-      <div class="question-row">
-        <input class="input" placeholder="Question" value="${escape(q.text)}"
-               data-q-field="text" data-form-id="${formId}" data-q-id="${q.id}" />
-        <select class="select" data-q-field="type" data-form-id="${formId}" data-q-id="${q.id}">
-          <option value="short" ${q.type==='short'?'selected':''}>Short answer</option>
-          <option value="paragraph" ${q.type==='paragraph'?'selected':''}>Paragraph</option>
-          <option value="multiple" ${q.type==='multiple'?'selected':''}>Multiple choice</option>
-          <option value="checkboxes" ${q.type==='checkboxes'?'selected':''}>Checkboxes</option>
-        </select>
+    <div class="question-wrap ${focused?'focused':''}" data-question-card="${q.id}">
+      <div class="question-card">
+        <div class="question-index">Question ${index+1} of ${total}</div>
+        <div class="question-row">
+          <input class="input grow" placeholder="Question text" value="${escape(q.text)}"
+                 data-q-field="text" data-form-id="${formId}" data-q-id="${q.id}" />
+          <select class="select" data-q-field="type" data-form-id="${formId}" data-q-id="${q.id}">
+            <option value="short" ${q.type==='short'?'selected':''}>Short answer</option>
+            <option value="paragraph" ${q.type==='paragraph'?'selected':''}>Paragraph</option>
+            <option value="multiple" ${q.type==='multiple'?'selected':''}>Multiple choice</option>
+            <option value="checkboxes" ${q.type==='checkboxes'?'selected':''}>Checkboxes</option>
+          </select>
+        </div>
+
+        ${ showOptions ? `
+          <div class="options-list">
+            ${ q.options.map((opt, i) => `
+              <div class="option-row">
+                <span class="marker ${q.type==='multiple'?'radio':'check'}"></span>
+                <input class="input grow" value="${escape(opt)}" placeholder="Option ${i+1}"
+                       data-opt-field="text" data-form-id="${formId}" data-q-id="${q.id}" data-opt-i="${i}"/>
+                <button class="icon-btn-sm" title="Remove option" data-action="remove-option" data-form-id="${formId}" data-q-id="${q.id}" data-opt-i="${i}"><svg><use href="#i-x"/></svg></button>
+              </div>
+            `).join('') }
+            <button class="btn btn-text" style="margin-left: 28px;" data-action="add-option" data-form-id="${formId}" data-q-id="${q.id}">
+              <svg><use href="#i-plus"/></svg> Add option
+            </button>
+          </div>` : '' }
+
+        ${ q.type === 'short' ? `<input class="input preview-field" disabled placeholder="Short answer (member's response)"/>` : '' }
+        ${ q.type === 'paragraph' ? `<textarea class="textarea preview-field" disabled placeholder="Long answer (member's response)"></textarea>` : '' }
+
+        <div class="question-footer">
+          <label class="toggle">
+            <input type="checkbox" ${q.required?'checked':''} data-q-field="required" data-form-id="${formId}" data-q-id="${q.id}" />
+            <span class="switch"></span>
+            <span class="label-text">Required</span>
+          </label>
+        </div>
       </div>
 
-      ${ showOptions ? `
-        <div class="options-list">
-          ${ q.options.map((opt, i) => `
-            <div class="option-row">
-              <span class="marker ${q.type==='multiple'?'radio':'check'}"></span>
-              <input class="input grow" value="${escape(opt)}" placeholder="Option ${i+1}"
-                     data-opt-field="text" data-form-id="${formId}" data-q-id="${q.id}" data-opt-i="${i}"/>
-              <button title="Remove option" data-action="remove-option" data-form-id="${formId}" data-q-id="${q.id}" data-opt-i="${i}"><svg><use href="#i-x"/></svg></button>
-            </div>
-          `).join('') }
-          <div class="option-row">
-            <span class="marker ${q.type==='multiple'?'radio':'check'}"></span>
-            <button class="btn btn-text" data-action="add-option" data-form-id="${formId}" data-q-id="${q.id}">Add option</button>
-          </div>
-        </div>` : '' }
-
-      ${ q.type === 'short' ? `<input class="input" disabled placeholder="Short answer text" style="margin-bottom: var(--md);"/>` : '' }
-      ${ q.type === 'paragraph' ? `<textarea class="textarea" disabled placeholder="Long answer text" style="margin-bottom: var(--md);"></textarea>` : '' }
-
-      <div class="question-footer">
-        <button class="btn btn-text" data-action="duplicate-question" data-form-id="${formId}" data-q-id="${q.id}"><svg><use href="#i-copy"/></svg> Duplicate</button>
-        <button class="btn btn-danger-text" data-action="delete-question" data-form-id="${formId}" data-q-id="${q.id}"><svg><use href="#i-trash"/></svg> Delete</button>
-        <span style="width:1px; background: var(--border); align-self: stretch;"></span>
-        <label class="toggle">
-          <input type="checkbox" ${q.required?'checked':''} data-q-field="required" data-form-id="${formId}" data-q-id="${q.id}" />
-          <span class="switch"></span>
-          <span class="label-text">Required</span>
-        </label>
+      <!-- Floating action toolbar shown when card is focused -->
+      <div class="question-toolbar" aria-hidden="${focused ? 'false' : 'true'}">
+        <button class="toolbar-btn" title="Insert question below" data-action="insert-question-below" data-form-id="${formId}" data-q-id="${q.id}">
+          <svg><use href="#i-plus"/></svg>
+        </button>
+        <button class="toolbar-btn" title="Duplicate" data-action="duplicate-question" data-form-id="${formId}" data-q-id="${q.id}">
+          <svg><use href="#i-copy"/></svg>
+        </button>
+        <button class="toolbar-btn toolbar-btn-danger" title="Delete" data-action="delete-question" data-form-id="${formId}" data-q-id="${q.id}">
+          <svg><use href="#i-trash"/></svg>
+        </button>
       </div>
     </div>
   `;
@@ -1163,17 +1224,6 @@ function SettingsPage() {
 
     <div style="display: grid; grid-template-columns: 1fr; gap: var(--md); max-width: 760px;">
       <div class="card">
-        <h3 class="subsection" style="margin-bottom: var(--xs);">Connect email</h3>
-        <p class="caption" style="margin-bottom: var(--md);">Send form invitations and member communication directly from ChurchPlannerPro.</p>
-
-        <div>
-          ${ EmailIntegrationRow('Gmail',   'gmail',   'Send from Tracy@christlutheran.org via Google Workspace.') }
-          ${ EmailIntegrationRow('Outlook', 'outlook', 'Send via Microsoft 365.') }
-          ${ EmailIntegrationRow('Other (IMAP/SMTP)', 'imap', 'Connect any provider with SMTP credentials.') }
-        </div>
-      </div>
-
-      <div class="card">
         <h3 class="subsection" style="margin-bottom: var(--xs);">Church profile</h3>
         <p class="caption" style="margin-bottom: var(--md);">This information appears on forms and emails sent from your account.</p>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap: var(--md);">
@@ -1187,19 +1237,107 @@ function SettingsPage() {
   `;
 }
 
-function EmailIntegrationRow(name, key, desc) {
-  const connected = state.emailConnected && state.emailProvider === key;
+// ====================== Add Member ======================
+function emptyMemberDraft() {
+  return {
+    firstName:'', lastName:'', birthdate:'',
+    email:'', phone:'', address:'',
+    familyId:'', newFamilyName:'',
+    membership:'', baptism:'', firstCommunion:'', confirmation:'', marriage:'',
+    skills:'', notes:''
+  };
+}
+
+function AddMemberModal() {
+  const d = state.addMemberDraft;
+  const familyOptions = state.families.map(f => `<option value="${f.id}" ${d.familyId===f.id?'selected':''}>${escape(f.name)}</option>`).join('');
+  const previewAge = ageFromBirthdate(d.birthdate);
+
   return `
-    <div class="integration-row">
-      <div class="integration-icon"><svg style="width:22px;height:22px;color:var(--text-secondary);"><use href="#i-mail"/></svg></div>
-      <div class="grow">
-        <div class="integration-name">${escape(name)}</div>
-        <div class="integration-desc">${escape(desc)}</div>
+    <div class="modal-overlay" data-action="close-add-member">
+      <div class="modal modal-lg" onclick="event.stopPropagation()">
+        <div class="modal-head">
+          <div>
+            <h3 class="subsection">Add member</h3>
+            <div class="caption" style="margin-top: 4px;">Create a new member record for Christ Lutheran.</div>
+          </div>
+          <button class="icon-btn" data-action="close-add-member"><svg><use href="#i-x"/></svg></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-section">
+            <div class="form-section-title">Identity</div>
+            <div class="form-row-2">
+              <div class="field"><label class="label">First name <span class="req">*</span></label>
+                <input class="input" data-am="firstName" value="${escape(d.firstName)}" /></div>
+              <div class="field"><label class="label">Last name <span class="req">*</span></label>
+                <input class="input" data-am="lastName" value="${escape(d.lastName)}" /></div>
+            </div>
+            <div class="form-row-2">
+              <div class="field"><label class="label">Birthdate</label>
+                <input class="input" type="date" data-am="birthdate" value="${escape(d.birthdate)}" /></div>
+              <div class="field"><label class="label">Age</label>
+                <input class="input" disabled value="${previewAge!=null ? previewAge + ' yrs' : '—'}" /></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Contact</div>
+            <div class="form-row-2">
+              <div class="field"><label class="label">Email</label>
+                <input class="input" type="email" data-am="email" value="${escape(d.email)}" /></div>
+              <div class="field"><label class="label">Phone</label>
+                <input class="input" data-am="phone" value="${escape(d.phone)}" /></div>
+            </div>
+            <div class="field"><label class="label">Mailing address</label>
+              <input class="input" data-am="address" value="${escape(d.address)}" placeholder="Street, City, State ZIP" /></div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Family</div>
+            <div class="form-row-2">
+              <div class="field"><label class="label">Family</label>
+                <select class="select" data-am="familyId">
+                  <option value="" ${!d.familyId?'selected':''}>— Select existing —</option>
+                  ${familyOptions}
+                  <option value="__new" ${d.familyId==='__new'?'selected':''}>+ Create new family</option>
+                </select>
+              </div>
+              ${ d.familyId === '__new'
+                  ? `<div class="field"><label class="label">New family name</label>
+                       <input class="input" data-am="newFamilyName" value="${escape(d.newFamilyName)}" placeholder="e.g. Smith family" /></div>`
+                  : '<div></div>' }
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Key dates <span class="form-section-hint">All optional</span></div>
+            <div class="form-row-2">
+              <div class="field"><label class="label">Membership</label><input class="input" type="date" data-am="membership" value="${escape(d.membership)}" /></div>
+              <div class="field"><label class="label">Baptism</label><input class="input" type="date" data-am="baptism" value="${escape(d.baptism)}" /></div>
+            </div>
+            <div class="form-row-2">
+              <div class="field"><label class="label">First communion</label><input class="input" type="date" data-am="firstCommunion" value="${escape(d.firstCommunion)}" /></div>
+              <div class="field"><label class="label">Confirmation</label><input class="input" type="date" data-am="confirmation" value="${escape(d.confirmation)}" /></div>
+            </div>
+            <div class="form-row-2">
+              <div class="field"><label class="label">Marriage</label><input class="input" type="date" data-am="marriage" value="${escape(d.marriage)}" /></div>
+              <div></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">Other</div>
+            <div class="field"><label class="label">Skills, talents and interests</label>
+              <input class="input" data-am="skills" value="${escape(d.skills)}" placeholder="Choir, Bookkeeping, Spanish (comma separated)" /></div>
+            <div class="field"><label class="label">Notes</label>
+              <textarea class="textarea" data-am="notes" placeholder="Anything Tracy should remember about this member.">${escape(d.notes)}</textarea></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-neutral" data-action="close-add-member">Cancel</button>
+          <button class="btn btn-primary" data-action="save-add-member"><svg><use href="#i-check"/></svg> Save member</button>
+        </div>
       </div>
-      ${ connected
-        ? `<span class="chip chip-success"><svg style="width:12px;height:12px;vertical-align:-1px;"><use href="#i-check"/></svg> Connected</span>
-           <button class="btn btn-neutral btn-sm" data-action="disconnect-email">Disconnect</button>`
-        : `<button class="btn btn-secondary btn-sm" data-action="connect-email" data-provider="${key}">Connect</button>` }
     </div>
   `;
 }
@@ -1321,12 +1459,21 @@ function attach() {
     el.onclick = (e) => {
       const a = el.dataset.action;
       if (a === 'add-member') {
-        toast('Member creation coming soon — using sample data for now.');
+        state.addMemberDraft = emptyMemberDraft();
+        state.addMemberOpen = true;
+        render();
+      } else if (a === 'close-add-member') {
+        if (el.dataset.action === 'close-add-member') {
+          state.addMemberOpen = false;
+          state.addMemberDraft = null;
+          render();
+        }
+      } else if (a === 'save-add-member') {
+        saveNewMember();
       } else if (a === 'edit-member') {
         toast('Editing member profile is coming soon.');
       } else if (a === 'email-member') {
-        if (!state.emailConnected) toast('Connect an email provider in Settings first.');
-        else toast('Composer opened (demo).');
+        toast('Composer opened (demo).');
       } else if (a === 'create-form') {
         const f = { id: uid('fm'), title: 'Untitled form', description: '', status: 'draft', createdAt: new Date().toISOString().slice(0,10),
           questions: [{ id: uid('q'), text: '', type:'short', required:false, options:[], mapsTo:null }],
@@ -1337,7 +1484,16 @@ function attach() {
         render();
       } else if (a === 'add-question') {
         const f = formById(el.dataset.id);
-        f.questions.push({ id: uid('q'), text:'', type:'short', required:false, options:[], mapsTo:null });
+        const q = { id: uid('q'), text:'', type:'short', required:false, options:[], mapsTo:null };
+        f.questions.push(q);
+        state.focusedQuestionId = q.id;
+        render();
+      } else if (a === 'insert-question-below') {
+        const f = formById(el.dataset.formId);
+        const idx = f.questions.findIndex(q => q.id === el.dataset.qId);
+        const q = { id: uid('q'), text:'', type:'short', required:false, options:[], mapsTo:null };
+        f.questions.splice(idx+1, 0, q);
+        state.focusedQuestionId = q.id;
         render();
       } else if (a === 'duplicate-question') {
         const f = formById(el.dataset.formId);
@@ -1384,20 +1540,32 @@ function attach() {
         }
       } else if (a === 'submit-fill') {
         submitFill();
-      } else if (a === 'connect-email') {
-        state.emailConnected = true;
-        state.emailProvider = el.dataset.provider;
-        toast('Email connected.');
-        render();
-      } else if (a === 'disconnect-email') {
-        state.emailConnected = false;
-        state.emailProvider = null;
-        toast('Email disconnected.');
-        render();
       } else if (a === 'form-more') {
         toast('More options menu coming soon.');
       }
     };
+  });
+
+  // Add Member modal field bindings
+  $$('[data-am]').forEach(el => {
+    const handler = (e) => {
+      if (!state.addMemberDraft) return;
+      const key = el.dataset.am;
+      const val = e.target.value;
+      // Re-render only when field affects layout (familyId or birthdate for age preview)
+      const reRender = (key === 'familyId') || (key === 'birthdate');
+      if (reRender) {
+        // preserve focus on the changed field
+        state.addMemberDraft[key] = val;
+        render();
+        const back = document.querySelector(`[data-am="${key}"]`);
+        if (back && back.focus) back.focus();
+      } else {
+        state.addMemberDraft[key] = val;
+      }
+    };
+    el.oninput = handler;
+    el.onchange = handler;
   });
 
   // Fill modal inputs
@@ -1413,6 +1581,55 @@ function attach() {
     if (e.target.checked) state.fillAnswers[qid] = [...cur, e.target.value];
     else state.fillAnswers[qid] = cur.filter(x => x !== e.target.value);
   });
+}
+
+// ----- Save new member from Add Member modal -----
+function saveNewMember() {
+  const d = state.addMemberDraft;
+  if (!d) return;
+  if (!d.firstName.trim() || !d.lastName.trim()) {
+    toast('First and last name are required.', 'error');
+    return;
+  }
+
+  // Resolve family
+  let familyId = d.familyId;
+  if (familyId === '__new') {
+    const name = d.newFamilyName.trim() || `${d.lastName.trim()} family`;
+    const newFam = { id: uid('f'), name, address: d.address || '' };
+    state.families.push(newFam);
+    familyId = newFam.id;
+  } else if (!familyId) {
+    familyId = null;
+  }
+
+  const skills = d.skills.split(',').map(s => s.trim()).filter(Boolean);
+  const m = {
+    id: uid('m'),
+    familyId,
+    firstName: d.firstName.trim(),
+    lastName: d.lastName.trim(),
+    birthdate: d.birthdate || null,
+    email: d.email.trim() || null,
+    phone: d.phone.trim() || null,
+    address: d.address.trim() || null,
+    membership: d.membership || null,
+    baptism: d.baptism || null,
+    firstCommunion: d.firstCommunion || null,
+    confirmation: d.confirmation || null,
+    marriage: d.marriage || null,
+    skills,
+    notes: d.notes.trim(),
+    activity: [{ t: 'Member added to ChurchPlannerPro', d: 'Just now' }]
+  };
+  state.members.push(m);
+  state.selectedMemberId = m.id;
+  state.peopleSubtab = 'members';
+  state.tab = 'people';
+  state.addMemberOpen = false;
+  state.addMemberDraft = null;
+  render();
+  toast(`${fullName(m)} added`);
 }
 
 // ----- Submit a filled form: record response AND update member profile -----
