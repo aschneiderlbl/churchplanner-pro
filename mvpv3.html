@@ -433,6 +433,19 @@
     overflow: hidden;
   }
   .modal-lg { max-width: 820px; }
+  .modal-xl { max-width: 1120px; }
+
+  /* CSV preview table inside import modal */
+  .csv-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-md); }
+  .csv-preview-table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  .csv-preview-table th, .csv-preview-table td { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  .csv-preview-table th:last-child, .csv-preview-table td:last-child { border-right: none; }
+  .csv-preview-table th { background: #F9FAFB; min-width: 180px; }
+  .csv-preview-table tr:last-child td { border-bottom: none; }
+  .csv-map-select { width: 100%; padding: 6px 10px; font-size: 13px; }
+  .csv-header-name { margin-top: 4px; font-size: 11px; color: var(--text-secondary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+  .csv-cell-mapped { color: var(--text); }
+  .csv-cell-skipped { color: var(--text-disabled); background: #F9FAFB; }
   .modal-head { padding: var(--lg) var(--lg) var(--md); border-bottom: 1px solid var(--border); display:flex; align-items: center; justify-content: space-between; }
   .modal-body { padding: var(--lg); max-height: 70vh; overflow-y: auto; }
   .modal-footer { padding: var(--md) var(--lg); border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
@@ -533,65 +546,65 @@
 
 // ---------- Seed data ----------
 const familiesSeed = [
-  { id: 'f1', name: 'Anderson family', address: '412 Linden St, Madison WI 53703' },
-  { id: 'f2', name: 'Becker family',   address: '88 Oak Ridge Rd, Madison WI 53711' },
-  { id: 'f3', name: 'Garcia family',   address: '1207 Birch Ln, Madison WI 53703' },
-  { id: 'f4', name: 'Foster family',   address: '305 Maple Ave, Madison WI 53704' },
-  { id: 'f5', name: 'Chen family',     address: '52 Lake View Dr, Madison WI 53715' },
-  { id: 'f6', name: 'Donovan family',  address: '7 Hillcrest Ct, Madison WI 53711' }
+  { id: 'f1', name: 'Anderson family', address: '412 Summit Ave, St. Paul MN 55102' },
+  { id: 'f2', name: 'Becker family',   address: '88 Grand Ave, St. Paul MN 55105' },
+  { id: 'f3', name: 'Garcia family',   address: '1207 Selby Ave, St. Paul MN 55104' },
+  { id: 'f4', name: 'Foster family',   address: '305 Marshall Ave, St. Paul MN 55102' },
+  { id: 'f5', name: 'Chen family',     address: '52 Cleveland Ave N, St. Paul MN 55104' },
+  { id: 'f6', name: 'Donovan family',  address: '7 Saint Clair Ave, St. Paul MN 55105' }
 ];
 
 const membersSeed = [
-  { id:'m1', familyId:'f1', firstName:'Sarah',   lastName:'Anderson', birthdate:'1991-08-12', email:'sarah.anderson@email.com',  phone:'(608) 555-0142', address:'412 Linden St, Madison WI 53703',
+  { id:'m1', familyId:'f1', firstName:'Sarah',   lastName:'Anderson', birthdate:'1991-08-12', email:'sarah.anderson@email.com',  phone:'(651) 555-0142', address:'412 Summit Ave, St. Paul MN 55102',
     membership:'2018-04-22', baptism:'1991-09-15', firstCommunion:'1999-05-08', confirmation:'2005-04-10', marriage:'2015-08-20',
     skills:['Choir','Sunday school teacher','Spanish'], notes:'Leads the spring volunteer drive. Prefers email contact.', activity:[
       {t:'Submitted "Updated member information" form', d:'2 days ago'},
       {t:'Signed up for Spring Festival volunteer slot', d:'1 week ago'},
       {t:'Attended new-member welcome dinner', d:'Mar 4, 2026'}
     ]},
-  { id:'m2', familyId:'f1', firstName:'Tom',     lastName:'Anderson', birthdate:'1989-04-22', email:'t.anderson@email.com', phone:'(608) 555-0142', address:'412 Linden St, Madison WI 53703',
+  { id:'m2', familyId:'f1', firstName:'Tom',     lastName:'Anderson', birthdate:'1989-04-22', email:'t.anderson@email.com', phone:'(651) 555-0142', address:'412 Summit Ave, St. Paul MN 55102',
     membership:'2018-04-22', baptism:'1989-06-04', firstCommunion:null, confirmation:'2003-04-14', marriage:'2015-08-20',
     skills:['Audio/visual','Carpentry'], notes:'Helps with sanctuary AV every other Sunday.', activity:[
       {t:'Volunteered for AV team — Easter service', d:'Apr 1, 2026'}
     ]},
-  { id:'m3', familyId:'f1', firstName:'Lily',    lastName:'Anderson', birthdate:'2017-09-03',  email:null, phone:null, address:'412 Linden St, Madison WI 53703',
+  { id:'m3', familyId:'f1', firstName:'Lily',    lastName:'Anderson', birthdate:'2017-09-03',  email:null, phone:null, address:'412 Summit Ave, St. Paul MN 55102',
     membership:'2018-04-22', baptism:'2017-10-12', firstCommunion:null, confirmation:null, marriage:null,
     skills:['Children’s choir'], notes:'Allergic to peanuts — noted for snack time.', activity:[
       {t:'Joined children’s choir', d:'Sep 10, 2025'}
     ]},
-  { id:'m4', familyId:'f2', firstName:'David',   lastName:'Becker',   birthdate:'1959-02-14', email:'dbecker@email.com', phone:'(608) 555-0177', address:'88 Oak Ridge Rd, Madison WI 53711',
+  { id:'m4', familyId:'f2', firstName:'David',   lastName:'Becker',   birthdate:'1959-02-14', email:'dbecker@email.com', phone:'(651) 555-0177', address:'88 Grand Ave, St. Paul MN 55105',
     membership:'1985-06-15', baptism:'1959-03-22', firstCommunion:'1967-05-21', confirmation:'1973-04-08', marriage:'1982-09-04',
     skills:['Council member','Treasurer','Bookkeeping'], notes:'Long-time council member. Available weekday mornings.', activity:[
       {t:'Approved Q1 financial report', d:'1 month ago'},
       {t:'Led adult education series', d:'Feb 2026'}
     ]},
-  { id:'m5', familyId:'f2', firstName:'Linda',   lastName:'Becker',   birthdate:'1962-06-08', email:'l.becker@email.com', phone:'(608) 555-0177', address:'88 Oak Ridge Rd, Madison WI 53711',
+  { id:'m5', familyId:'f2', firstName:'Linda',   lastName:'Becker',   birthdate:'1962-06-08', email:'l.becker@email.com', phone:'(651) 555-0177', address:'88 Grand Ave, St. Paul MN 55105',
     membership:'1985-06-15', baptism:'1962-07-19', firstCommunion:'1970-05-03', confirmation:'1976-04-25', marriage:'1982-09-04',
     skills:['Quilting ministry','Hospitality'], notes:'', activity:[
       {t:'Coordinated funeral hospitality', d:'Mar 18, 2026'}
     ]},
-  { id:'m6', familyId:'f3', firstName:'Michael', lastName:'Garcia',   birthdate:'1973-12-29', email:'mgarcia@email.com', phone:'(608) 555-0118', address:'1207 Birch Ln, Madison WI 53703',
+  { id:'m6', familyId:'f3', firstName:'Michael', lastName:'Garcia',   birthdate:'1973-12-29', email:'mgarcia@email.com', phone:'(651) 555-0118', address:'1207 Selby Ave, St. Paul MN 55104',
     membership:'2002-10-06', baptism:'1974-02-11', firstCommunion:'1982-05-09', confirmation:'1988-04-17', marriage:'1999-06-12',
     skills:['Choir director','Piano','Music arrangement'], notes:'Choir director since 2014.', activity:[
       {t:'Scheduled Holy Week rehearsals', d:'2 weeks ago'}
     ]},
-  { id:'m7', familyId:'f4', firstName:'Emily',   lastName:'Foster',   birthdate:'2014-03-18', email:null, phone:null, address:'305 Maple Ave, Madison WI 53704',
+  { id:'m7', familyId:'f4', firstName:'Emily',   lastName:'Foster',   birthdate:'2014-03-18', email:null, phone:null, address:'305 Marshall Ave, St. Paul MN 55102',
     membership:'2014-05-04', baptism:'2014-05-04', firstCommunion:'2025-05-04', confirmation:null, marriage:null,
     skills:['Acolyte'], notes:'Confirmation class candidate for 2027.', activity:[
       {t:'First communion received', d:'May 4, 2025'}
     ]},
-  { id:'m8', familyId:'f4', firstName:'Rebecca', lastName:'Foster',   birthdate:'1984-07-22', email:'rfoster@email.com', phone:'(608) 555-0210', address:'305 Maple Ave, Madison WI 53704',
+  { id:'m8', familyId:'f4', firstName:'Rebecca', lastName:'Foster',   birthdate:'1984-07-22', email:'rfoster@email.com', phone:'(651) 555-0210', address:'305 Marshall Ave, St. Paul MN 55102',
     membership:'2014-05-04', baptism:'1984-08-14', firstCommunion:'1992-05-10', confirmation:'1998-04-26', marriage:'2010-07-31',
     skills:['Sunday school coordinator'], notes:'', activity:[
       {t:'Submitted volunteer form', d:'3 days ago'}
     ]},
-  { id:'m9', familyId:'f5', firstName:'Maria',   lastName:'Chen',     birthdate:'1998-05-10', email:'maria.c@email.com', phone:'(608) 555-0233', address:'52 Lake View Dr, Madison WI 53715',
+  { id:'m9', familyId:'f5', firstName:'Maria',   lastName:'Chen',     birthdate:'1998-05-10', email:'maria.c@email.com', phone:'(651) 555-0233', address:'52 Cleveland Ave N, St. Paul MN 55104',
     membership:'2024-11-03', baptism:'2024-11-03', firstCommunion:'2024-12-22', confirmation:'2025-04-13', marriage:null,
     skills:['Tech / website','Mandarin'], notes:'Recent adult convert. Helping modernize the website.', activity:[
       {t:'Joined tech committee', d:'Jan 2026'},
       {t:'Confirmation received', d:'Apr 13, 2025'}
     ]},
-  { id:'m10', familyId:'f6', firstName:'James',  lastName:'Donovan',  birthdate:'1980-09-25', email:'jdonovan@email.com', phone:'(608) 555-0166', address:'7 Hillcrest Ct, Madison WI 53711',
+  { id:'m10', familyId:'f6', firstName:'James',  lastName:'Donovan',  birthdate:'1980-09-25', email:'jdonovan@email.com', phone:'(651) 555-0166', address:'7 Saint Clair Ave, St. Paul MN 55105',
     membership:'2010-03-21', baptism:'1980-11-08', firstCommunion:'1988-05-15', confirmation:'1994-04-03', marriage:'2008-05-24',
     skills:['Property committee','Plumbing','Snow removal'], notes:'Calls dibs on the snow blower in winter.', activity:[
       {t:'Repaired sanctuary HVAC', d:'Last week'}
@@ -615,9 +628,9 @@ const formsSeed = [
       { id:'q6', text:'Anything else you’d like Pastor to know?', type:'paragraph', required:false, options:[], mapsTo:'notes' }
     ],
     responses:[
-      { memberId:'m1', submittedAt:'2 days ago', answers:{ q1:'Sarah Anderson', q2:'sarah.anderson@email.com', q3:'(608) 555-0142', q4:'412 Linden St, Madison WI 53703', q5:['Choir','Sunday school'], q6:'Happy to help with the spring drive.' }},
-      { memberId:'m8', submittedAt:'3 days ago', answers:{ q1:'Rebecca Foster', q2:'rfoster@email.com', q3:'(608) 555-0210', q4:'305 Maple Ave, Madison WI 53704', q5:['Sunday school'], q6:'' }},
-      { memberId:'m4', submittedAt:'1 week ago', answers:{ q1:'David Becker', q2:'dbecker@email.com', q3:'(608) 555-0177', q4:'88 Oak Ridge Rd, Madison WI 53711', q5:['Bookkeeping'], q6:'Available weekday mornings.' }}
+      { memberId:'m1', submittedAt:'2 days ago', answers:{ q1:'Sarah Anderson', q2:'sarah.anderson@email.com', q3:'(651) 555-0142', q4:'412 Summit Ave, St. Paul MN 55102', q5:['Choir','Sunday school'], q6:'Happy to help with the spring drive.' }},
+      { memberId:'m8', submittedAt:'3 days ago', answers:{ q1:'Rebecca Foster', q2:'rfoster@email.com', q3:'(651) 555-0210', q4:'305 Marshall Ave, St. Paul MN 55102', q5:['Sunday school'], q6:'' }},
+      { memberId:'m4', submittedAt:'1 week ago', answers:{ q1:'David Becker', q2:'dbecker@email.com', q3:'(651) 555-0177', q4:'88 Grand Ave, St. Paul MN 55105', q5:['Bookkeeping'], q6:'Available weekday mornings.' }}
     ]
   },
   {
@@ -670,6 +683,11 @@ const state = {
   fillAsMemberId: 'm9',             // demo: simulate Maria submitting
   addMemberOpen: false,
   addMemberDraft: null,
+  csvImportOpen: false,
+  csvImportPasteMode: false,
+  csvImportText: '',
+  csvImportRows: [],          // [[header...], [row1...], ...]
+  csvImportMapping: {},       // colIdx -> fieldKey
   toasts: [],
   members: structuredClone(membersSeed),
   families: structuredClone(familiesSeed),
@@ -713,6 +731,89 @@ function toast(text, kind='success') {
 
 function uid(prefix='id') { return prefix + '_' + Math.random().toString(36).slice(2, 9); }
 
+// ---------- CSV utilities ----------
+const CSV_FIELDS = [
+  { key: 'firstName',     label: 'First name',      patterns: ['firstname','first','givenname'] },
+  { key: 'lastName',      label: 'Last name',       patterns: ['lastname','last','surname','familyname'] },
+  { key: 'birthdate',     label: 'Birthdate',       patterns: ['birthdate','birth','dob','dateofbirth'] },
+  { key: 'email',         label: 'Email',           patterns: ['email','emailaddress'] },
+  { key: 'phone',         label: 'Phone',           patterns: ['phone','phonenumber','mobile','cell','telephone'] },
+  { key: 'address',       label: 'Mailing address', patterns: ['address','mailingaddress','street','home'] },
+  { key: 'family',        label: 'Family',          patterns: ['family','familyname','household'] },
+  { key: 'membership',    label: 'Membership date', patterns: ['membership','membershipdate','memberdate','membersince','joindate'] },
+  { key: 'baptism',       label: 'Baptism date',    patterns: ['baptism','baptismdate','baptized'] },
+  { key: 'firstCommunion',label: 'First communion', patterns: ['firstcommunion','communion'] },
+  { key: 'confirmation',  label: 'Confirmation',    patterns: ['confirmation','confirmationdate','confirmed'] },
+  { key: 'marriage',      label: 'Marriage date',   patterns: ['marriage','marriagedate','wedding','married'] },
+  { key: 'skills',        label: 'Skills',          patterns: ['skills','talents','interests','skillstalents','gifts'] },
+  { key: 'notes',         label: 'Notes',           patterns: ['notes','note','comments','remarks'] }
+];
+
+const SAMPLE_CSV = `First name,Last name,Birthdate,Email,Phone,Address,Family,Membership date,Baptism date,First communion,Confirmation,Marriage date,Skills,Notes
+Jane,Doe,1985-04-12,jane.doe@email.com,(651) 555-0301,"123 Main St, St. Paul MN 55101",Doe family,2020-06-14,1985-05-22,1993-05-09,1999-04-25,2010-08-15,"Choir, Hospitality",Joined after moving from Iowa.
+John,Doe,1983-09-08,john.doe@email.com,(651) 555-0301,"123 Main St, St. Paul MN 55101",Doe family,2020-06-14,1983-10-30,,1997-04-13,2010-08-15,"Property, Bookkeeping",
+Emma,Doe,2018-11-22,,,,Doe family,2020-06-14,2018-12-09,,,Children’s choir,Allergic to latex.
+Thomas,Wright,1972-07-30,twright@email.com,(651) 555-0344,"604 Snelling Ave N, St. Paul MN 55104",Wright family,2008-02-17,1972-08-14,1980-05-04,1986-04-20,1998-06-13,"Council, Legal counsel",Serves on the property committee.
+Olivia,Wright,1975-11-04,owright@email.com,(651) 555-0344,"604 Snelling Ave N, St. Paul MN 55104",Wright family,2008-02-17,1975-11-23,1983-05-08,1989-04-30,1998-06-13,"Education, Quilting",`;
+
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = '', inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"' && text[i+1] === '"') { field += '"'; i++; }
+      else if (c === '"') { inQuotes = false; }
+      else field += c;
+    } else {
+      if (c === '"') inQuotes = true;
+      else if (c === ',') { row.push(field); field = ''; }
+      else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+      else if (c === '\r') { /* skip */ }
+      else field += c;
+    }
+  }
+  if (field !== '' || row.length) { row.push(field); rows.push(row); }
+  while (rows.length && rows[rows.length-1].every(x => !x)) rows.pop();
+  return rows;
+}
+
+const NORM = s => (s||'').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+function autoMapHeaders(headers) {
+  const map = {};
+  const claimed = new Set();
+  // Pass 1: exact normalized match
+  headers.forEach((h, i) => {
+    const n = NORM(h);
+    for (const f of CSV_FIELDS) {
+      if (claimed.has(f.key)) continue;
+      if (f.patterns.some(p => p === n)) { map[i] = f.key; claimed.add(f.key); break; }
+    }
+  });
+  // Pass 2: contains match for unmapped columns
+  headers.forEach((h, i) => {
+    if (i in map) return;
+    const n = NORM(h);
+    for (const f of CSV_FIELDS) {
+      if (claimed.has(f.key)) continue;
+      if (f.patterns.some(p => n.includes(p) || p.includes(n))) { map[i] = f.key; claimed.add(f.key); break; }
+    }
+  });
+  return map;
+}
+
+function loadCsvText(text) {
+  const rows = parseCSV(text || '');
+  if (rows.length < 2) { toast('CSV needs a header row plus at least one data row.', 'error'); return; }
+  state.csvImportRows = rows;
+  state.csvImportMapping = autoMapHeaders(rows[0]);
+  state.csvImportPasteMode = false;
+  state.csvImportText = '';
+  state.csvImportOpen = true;
+  render();
+}
+
 // ---------- Top-level render ----------
 function render() {
   const root = $('#app');
@@ -727,6 +828,7 @@ function render() {
     ${ToastStack()}
     ${state.fillFormId ? FillFormModal() : ''}
     ${state.addMemberOpen ? AddMemberModal() : ''}
+    ${state.csvImportOpen ? CsvImportModal() : ''}
   `;
   attach();
 }
@@ -761,7 +863,7 @@ function Topbar() {
   return `
     <div class="topbar">
       <div class="topbar-left">
-        <span class="church-name"><strong>Christ Lutheran</strong> · Madison, WI</span>
+        <span class="church-name"><strong>Christ Lutheran</strong> · St. Paul, MN</span>
       </div>
       <div class="topbar-actions">
         <button class="icon-btn" title="Notifications"><svg><use href="#i-bell"/></svg></button>
@@ -1229,12 +1331,45 @@ function SettingsPage() {
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap: var(--md);">
           <div class="field"><label class="label">Church name</label><input class="input" value="Christ Lutheran" /></div>
           <div class="field"><label class="label">Administrator</label><input class="input" value="Tracy McKee" /></div>
-          <div class="field"><label class="label">Address</label><input class="input" value="201 N Westfield Rd, Madison WI 53717" /></div>
-          <div class="field"><label class="label">Phone</label><input class="input" value="(608) 555-0100" /></div>
+          <div class="field"><label class="label">Address</label><input class="input" value="1490 Como Ave, St. Paul MN 55108" /></div>
+          <div class="field"><label class="label">Phone</label><input class="input" value="(651) 555-0100" /></div>
         </div>
+      </div>
+
+      <div class="card">
+        <h3 class="subsection" style="margin-bottom: var(--xs);">Import members from CSV</h3>
+        <p class="caption" style="margin-bottom: var(--md);">Upload a spreadsheet of members (e.g. exported from your previous system). Columns are auto-matched to ChurchPlannerPro fields and reviewed before import.</p>
+
+        <div class="row-flex" style="flex-wrap: wrap; gap: 8px; margin-bottom: var(--md);">
+          <button class="btn btn-primary" data-action="csv-pick-file">
+            <svg><use href="#i-document"/></svg> Upload CSV file
+          </button>
+          <button class="btn btn-secondary" data-action="csv-paste">Paste CSV</button>
+          <a class="btn btn-text" href="${csvDataUrl()}" download="churchplannerpro-members-sample.csv">
+            <svg><use href="#i-document"/></svg> Download sample CSV
+          </a>
+          <input type="file" accept=".csv,text/csv" id="csv-file-input" data-csv-file style="display:none" />
+        </div>
+
+        ${ state.csvImportPasteMode ? `
+          <div class="field">
+            <label class="label">Paste CSV content</label>
+            <textarea class="textarea" data-csv-paste-area placeholder="First name,Last name,Email,..." style="min-height: 160px; font-family: 'SF Mono', Menlo, monospace; font-size: 13px;"></textarea>
+            <div class="row-flex" style="margin-top: 8px; justify-content: flex-end; gap: 8px;">
+              <button class="btn btn-neutral btn-sm" data-action="csv-cancel-paste">Cancel</button>
+              <button class="btn btn-secondary btn-sm" data-action="csv-parse-paste">Parse CSV</button>
+            </div>
+          </div>` : `
+          <div class="caption" style="background: #F9FAFB; padding: 12px 14px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+            Expected columns: <strong>First name</strong>, <strong>Last name</strong>, Birthdate, Email, Phone, Address, Family, Membership date, Baptism date, First communion, Confirmation, Marriage date, Skills, Notes. Header order doesn't matter — column mapping is reviewed in the next step.
+          </div>` }
       </div>
     </div>
   `;
+}
+
+function csvDataUrl() {
+  return 'data:text/csv;charset=utf-8,' + encodeURIComponent(SAMPLE_CSV);
 }
 
 // ====================== Add Member ======================
@@ -1340,6 +1475,151 @@ function AddMemberModal() {
       </div>
     </div>
   `;
+}
+
+// ====================== CSV Import Modal ======================
+function CsvImportModal() {
+  const headers = state.csvImportRows[0] || [];
+  const data    = state.csvImportRows.slice(1);
+  const previewRows = data.slice(0, 8);
+  const more = Math.max(0, data.length - previewRows.length);
+
+  const mappedFields = Object.values(state.csvImportMapping);
+  const mappedCount = new Set(mappedFields).size;
+  const importable = data.filter(r => {
+    const fIdx = headerIdxFor('firstName');
+    const lIdx = headerIdxFor('lastName');
+    return fIdx != null && lIdx != null && r[fIdx]?.trim() && r[lIdx]?.trim();
+  }).length;
+
+  const hasFirst = mappedFields.includes('firstName');
+  const hasLast  = mappedFields.includes('lastName');
+
+  return `
+    <div class="modal-overlay" data-action="close-csv-import">
+      <div class="modal modal-xl" onclick="event.stopPropagation()">
+        <div class="modal-head">
+          <div>
+            <h3 class="subsection">Import members</h3>
+            <div class="caption" style="margin-top: 4px;">${data.length} row${data.length===1?'':'s'} detected · ${headers.length} columns · ${mappedCount} fields mapped automatically</div>
+          </div>
+          <button class="icon-btn" data-action="close-csv-import"><svg><use href="#i-x"/></svg></button>
+        </div>
+
+        ${ (!hasFirst || !hasLast) ? `
+          <div style="margin: 0 var(--lg); padding: 10px 14px; background: var(--warning-light); color: #78350F; border-radius: var(--radius-md); font-size: 13px;">
+            Map columns to <strong>First name</strong> and <strong>Last name</strong> below to enable import.
+          </div>` : '' }
+
+        <div class="modal-body">
+          <div class="form-section-title">Column mapping <span class="form-section-hint">Click a dropdown to change the field a column maps to</span></div>
+
+          <div class="csv-table-wrap">
+            <table class="csv-preview-table">
+              <thead>
+                <tr>
+                  ${ headers.map((h, i) => `
+                    <th>
+                      <select class="select csv-map-select" data-csv-map="${i}">
+                        <option value="">— Skip column —</option>
+                        ${ CSV_FIELDS.map(f => `<option value="${f.key}" ${state.csvImportMapping[i]===f.key?'selected':''}>${escape(f.label)}</option>`).join('') }
+                      </select>
+                      <div class="csv-header-name">${escape(h || `Column ${i+1}`)}</div>
+                    </th>
+                  `).join('') }
+                </tr>
+              </thead>
+              <tbody>
+                ${ previewRows.map(r => `
+                  <tr>
+                    ${ headers.map((_, i) => {
+                      const v = r[i] || '';
+                      const mapped = state.csvImportMapping[i];
+                      return `<td class="${mapped?'csv-cell-mapped':'csv-cell-skipped'}" title="${escape(v)}">${escape(v).slice(0, 80)}${v.length>80?'…':''}</td>`;
+                    }).join('') }
+                  </tr>
+                `).join('') }
+              </tbody>
+            </table>
+          </div>
+          ${ more > 0 ? `<div class="caption" style="margin-top: var(--sm);">+ ${more} more row${more===1?'':'s'} not shown in preview.</div>` : '' }
+        </div>
+
+        <div class="modal-footer" style="justify-content: space-between;">
+          <div class="caption">${importable} of ${data.length} rows are ready to import.</div>
+          <div style="display:flex; gap: 8px;">
+            <button class="btn btn-neutral" data-action="close-csv-import">Cancel</button>
+            <button class="btn btn-primary" data-action="csv-perform-import" ${(importable===0 || !hasFirst || !hasLast)?'disabled':''}>
+              <svg><use href="#i-check"/></svg> Import ${importable} member${importable===1?'':'s'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function headerIdxFor(fieldKey) {
+  for (const [i, k] of Object.entries(state.csvImportMapping)) {
+    if (k === fieldKey) return +i;
+  }
+  return null;
+}
+
+function performCsvImport() {
+  const headers = state.csvImportRows[0];
+  const data    = state.csvImportRows.slice(1);
+  const mapping = state.csvImportMapping; // colIdx -> fieldKey
+
+  let imported = 0;
+  for (const row of data) {
+    const obj = {};
+    Object.entries(mapping).forEach(([col, field]) => {
+      const v = (row[+col] || '').trim();
+      if (!v) return;
+      if (field === 'skills') obj.skills = v.split(',').map(s => s.trim()).filter(Boolean);
+      else if (field === 'family') obj.familyName = v;
+      else obj[field] = v;
+    });
+    if (!obj.firstName || !obj.lastName) continue;
+
+    // Resolve family by name (create if missing)
+    let familyId = null;
+    if (obj.familyName) {
+      let fam = state.families.find(f => f.name.toLowerCase() === obj.familyName.toLowerCase());
+      if (!fam) {
+        fam = { id: uid('f'), name: obj.familyName, address: obj.address || '' };
+        state.families.push(fam);
+      }
+      familyId = fam.id;
+    }
+
+    state.members.push({
+      id: uid('m'),
+      familyId,
+      firstName: obj.firstName,
+      lastName: obj.lastName,
+      birthdate: obj.birthdate || null,
+      email: obj.email || null,
+      phone: obj.phone || null,
+      address: obj.address || null,
+      membership: obj.membership || null,
+      baptism: obj.baptism || null,
+      firstCommunion: obj.firstCommunion || null,
+      confirmation: obj.confirmation || null,
+      marriage: obj.marriage || null,
+      skills: obj.skills || [],
+      notes: obj.notes || '',
+      activity: [{ t: 'Imported from CSV', d: 'Just now' }]
+    });
+    imported++;
+  }
+
+  state.csvImportOpen = false;
+  state.csvImportRows = [];
+  state.csvImportMapping = {};
+  render();
+  toast(`Imported ${imported} member${imported===1?'':'s'}`);
 }
 
 // ====================== Toast ======================
@@ -1542,8 +1822,63 @@ function attach() {
         submitFill();
       } else if (a === 'form-more') {
         toast('More options menu coming soon.');
+      } else if (a === 'csv-pick-file') {
+        const f = document.getElementById('csv-file-input');
+        if (f) f.click();
+      } else if (a === 'csv-paste') {
+        state.csvImportPasteMode = true;
+        render();
+        const ta = document.querySelector('[data-csv-paste-area]');
+        if (ta) ta.focus();
+      } else if (a === 'csv-cancel-paste') {
+        state.csvImportPasteMode = false;
+        render();
+      } else if (a === 'csv-parse-paste') {
+        const ta = document.querySelector('[data-csv-paste-area]');
+        loadCsvText(ta?.value || '');
+      } else if (a === 'close-csv-import') {
+        if (el.dataset.action === 'close-csv-import') {
+          state.csvImportOpen = false;
+          state.csvImportRows = [];
+          state.csvImportMapping = {};
+          render();
+        }
+      } else if (a === 'csv-perform-import') {
+        performCsvImport();
       }
     };
+  });
+
+  // CSV file input
+  const csvFile = document.querySelector('[data-csv-file]');
+  if (csvFile) {
+    csvFile.onchange = (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        loadCsvText(String(reader.result || ''));
+      };
+      reader.onerror = () => toast('Could not read that file.', 'error');
+      reader.readAsText(file);
+      e.target.value = ''; // allow re-uploading the same file
+    };
+  }
+
+  // CSV column mapping dropdowns
+  $$('[data-csv-map]').forEach(el => el.onchange = (e) => {
+    const col = +el.dataset.csvMap;
+    const newField = e.target.value;
+    // Ensure each field is mapped at most once: if newField is in use, clear that other column first
+    if (newField) {
+      Object.entries(state.csvImportMapping).forEach(([c, f]) => {
+        if (+c !== col && f === newField) delete state.csvImportMapping[c];
+      });
+      state.csvImportMapping[col] = newField;
+    } else {
+      delete state.csvImportMapping[col];
+    }
+    render();
   });
 
   // Add Member modal field bindings
