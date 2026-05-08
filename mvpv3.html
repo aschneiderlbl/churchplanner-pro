@@ -1,0 +1,1482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ChurchPlannerPro — Christ Lutheran</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Color tokens (from design-guidelines) */
+    --primary: #2563EB;
+    --primary-hover: #1D4ED8;
+    --primary-light: #DBEAFE;
+    --bg: #F5F7FA;
+    --surface: #FFFFFF;
+    --border: #E5E7EB;
+    --border-strong: #D1D5DB;
+    --text: #111827;
+    --text-secondary: #6B7280;
+    --text-disabled: #9CA3AF;
+    --cta: #22C55E;
+    --cta-hover: #16A34A;
+    --cta-light: #DCFCE7;
+    --warning: #F59E0B;
+    --warning-light: #FEF3C7;
+    --error: #EF4444;
+    --error-light: #FEE2E2;
+
+    /* Spacing (8px system) */
+    --xs: 4px; --sm: 8px; --md: 16px; --lg: 24px; --xl: 32px; --xxl: 48px;
+
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --shadow-sm: 0 1px 2px rgba(17,24,39,.04);
+    --shadow-md: 0 1px 3px rgba(17,24,39,.06), 0 4px 12px rgba(17,24,39,.04);
+    --shadow-lg: 0 4px 6px rgba(17,24,39,.05), 0 12px 24px rgba(17,24,39,.08);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  input, textarea, select { font-family: inherit; font-size: inherit; color: inherit; }
+  a { color: var(--primary); text-decoration: none; }
+
+  /* ---- Layout ---- */
+  .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+  /* ---- Sidebar ---- */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: var(--lg) var(--md);
+    display: flex; flex-direction: column;
+    position: sticky; top: 0; height: 100vh;
+  }
+  .brand {
+    display: flex; align-items: baseline; gap: 6px;
+    padding: var(--sm) var(--sm) var(--lg);
+    margin-bottom: var(--sm);
+  }
+  .brand-name { font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+  .brand-name .pro { font-size: 9px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.08em; vertical-align: super; }
+  .nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    font-size: 14px; font-weight: 500;
+    color: var(--text-secondary);
+    transition: background-color 150ms ease-out, color 150ms ease-out;
+    text-align: left;
+    width: 100%;
+  }
+  .nav-item:hover { background: #F3F4F6; color: var(--text); }
+  .nav-item.active { background: var(--primary-light); color: var(--primary); }
+  .nav-item.active svg { color: var(--primary); }
+  .nav-item svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--text-secondary); }
+  .nav-item.active svg { color: var(--primary); }
+
+  .sidebar-footer {
+    border-top: 1px solid var(--border);
+    padding-top: var(--md);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
+    color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 13px;
+    flex-shrink: 0;
+  }
+  .admin-name { font-weight: 600; font-size: 13px; color: var(--text); }
+  .admin-role { font-size: 12px; color: var(--text-secondary); }
+
+  /* ---- Main column ---- */
+  .main { display: flex; flex-direction: column; min-width: 0; }
+  .topbar {
+    height: 64px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 var(--xl);
+    position: sticky; top: 0; z-index: 5;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .church-name { font-size: 14px; color: var(--text-secondary); }
+  .church-name strong { color: var(--text); font-weight: 600; }
+  .topbar-actions { display: flex; align-items: center; gap: var(--sm); }
+  .icon-btn {
+    width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-md); color: var(--text-secondary);
+    transition: background 150ms ease-out;
+  }
+  .icon-btn:hover { background: #F3F4F6; color: var(--text); }
+  .icon-btn svg { width: 20px; height: 20px; }
+
+  .content { flex: 1; padding: var(--xl); }
+
+  /* ---- Typography ---- */
+  h1.page-title { font-size: 32px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.02em; }
+  h2.section-title { font-size: 24px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  h3.subsection { font-size: 20px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  .page-subtitle { color: var(--text-secondary); font-size: 14px; margin: 0; }
+  .caption { font-size: 12px; color: var(--text-secondary); }
+
+  /* ---- Buttons ---- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    font-size: 14px; font-weight: 500;
+    transition: background-color 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+    min-height: 36px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .btn-primary { background: var(--cta); color: white; }
+  .btn-primary:hover { background: var(--cta-hover); }
+  .btn-secondary { background: var(--surface); color: var(--primary); border-color: var(--primary); }
+  .btn-secondary:hover { background: var(--primary-light); }
+  .btn-neutral { background: var(--surface); color: var(--text); border-color: var(--border-strong); }
+  .btn-neutral:hover { background: #F9FAFB; }
+  .btn-text { padding: 6px 8px; color: var(--primary); min-height: auto; }
+  .btn-text:hover { background: var(--primary-light); }
+  .btn-danger-text { padding: 6px 8px; color: var(--error); min-height: auto; }
+  .btn-danger-text:hover { background: var(--error-light); }
+  .btn-sm { min-height: 32px; padding: 6px 12px; font-size: 13px; }
+  .btn svg { width: 16px; height: 16px; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ---- Inputs ---- */
+  .input, .textarea, .select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--text);
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+  }
+  .input:focus, .textarea:focus, .select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+  }
+  .input::placeholder, .textarea::placeholder { color: var(--text-disabled); }
+  .textarea { min-height: 80px; resize: vertical; }
+  .label { display: block; font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .field { margin-bottom: var(--md); }
+
+  .search {
+    position: relative; display: flex; align-items: center;
+  }
+  .search svg { position: absolute; left: 12px; width: 16px; height: 16px; color: var(--text-disabled); pointer-events: none; }
+  .search input { padding-left: 36px; }
+
+  /* ---- Cards ---- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--lg);
+  }
+  .card-tight { padding: var(--md); }
+  .card-flush { padding: 0; overflow: hidden; }
+
+  /* ---- Sub tabs ---- */
+  .subtabs { display: flex; gap: var(--xs); border-bottom: 1px solid var(--border); margin-bottom: var(--lg); }
+  .subtab {
+    padding: 10px 14px;
+    font-size: 14px; font-weight: 500;
+    color: var(--text-secondary);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 150ms ease-out, border-color 150ms ease-out;
+  }
+  .subtab:hover { color: var(--text); }
+  .subtab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+  /* ---- People list / detail layout ---- */
+  .split { display: grid; grid-template-columns: 360px 1fr; gap: var(--lg); align-items: start; }
+  @media (max-width: 1100px) { .split { grid-template-columns: 1fr; } }
+
+  .list { display: flex; flex-direction: column; }
+  .list-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px var(--md);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 120ms ease-out;
+    text-align: left;
+    width: 100%;
+  }
+  .list-row:last-child { border-bottom: none; }
+  .list-row:hover { background: #F9FAFB; }
+  .list-row.active { background: var(--primary-light); }
+  .list-row.active .row-name { color: var(--primary); }
+  .row-name { font-weight: 500; font-size: 14px; }
+  .row-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .row-meta { font-size: 12px; color: var(--text-secondary); margin-left: auto; }
+
+  .list-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--md);
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .list-header h3 { margin: 0; font-size: 14px; font-weight: 600; }
+  .list-count { font-size: 12px; color: var(--text-secondary); }
+
+  /* ---- Member detail ---- */
+  .detail-header { display: flex; align-items: center; gap: var(--md); padding-bottom: var(--lg); border-bottom: 1px solid var(--border); margin-bottom: var(--lg); }
+  .detail-avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: linear-gradient(135deg, #DBEAFE, #93C5FD);
+    color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 22px;
+    flex-shrink: 0;
+  }
+  .detail-name { font-size: 24px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  .detail-meta { color: var(--text-secondary); font-size: 14px; margin-top: 2px; }
+  .detail-actions { margin-left: auto; display: flex; gap: 8px; }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--lg) var(--xl); margin-bottom: var(--xl); }
+  @media (max-width: 800px) { .info-grid { grid-template-columns: 1fr; gap: var(--md); } }
+  .info-block h4 { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 var(--sm); }
+  .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-key { color: var(--text-secondary); }
+  .info-val { color: var(--text); font-weight: 500; }
+  .info-val.empty { color: var(--text-disabled); font-weight: 400; font-style: italic; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    padding: 4px 10px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 999px;
+    font-size: 12px; font-weight: 500;
+  }
+  .chip-neutral { background: #F3F4F6; color: var(--text-secondary); }
+  .chip-success { background: var(--cta-light); color: #15803D; }
+  .chip-warning { background: var(--warning-light); color: #B45309; }
+
+  .activity { display: flex; flex-direction: column; gap: 4px; }
+  .activity-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .activity-row:last-child { border-bottom: none; }
+  .activity-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); margin-top: 7px; flex-shrink: 0; }
+  .activity-text { font-size: 14px; }
+  .activity-time { font-size: 12px; color: var(--text-secondary); }
+
+  .notes-block { background: #FEFCE8; border-left: 3px solid #F59E0B; padding: 12px 14px; border-radius: var(--radius-md); font-size: 14px; line-height: 1.55; color: #78350F; }
+
+  /* ---- Family ---- */
+  .family-card { display: flex; flex-direction: column; gap: 12px; }
+  .family-members-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .member-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 10px 6px 6px;
+    background: #F3F4F6;
+    border-radius: 999px;
+    font-size: 13px; font-weight: 500;
+  }
+  .member-pill .avatar { width: 24px; height: 24px; font-size: 11px; }
+
+  /* ---- Forms tab ---- */
+  .form-row {
+    display: grid; grid-template-columns: 1fr 120px 120px 100px 36px;
+    align-items: center;
+    gap: var(--md);
+    padding: 14px var(--md);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 120ms ease-out;
+  }
+  .form-row:last-child { border-bottom: none; }
+  .form-row:hover { background: #F9FAFB; }
+  .form-row .form-name { font-weight: 500; font-size: 14px; }
+  .form-row .form-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+  .form-builder-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: var(--lg);
+    gap: var(--md);
+  }
+  .builder-tabs { display: flex; gap: 0; background: #F3F4F6; padding: 4px; border-radius: var(--radius-md); }
+  .builder-tab {
+    padding: 6px 14px;
+    font-size: 13px; font-weight: 500;
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+  }
+  .builder-tab.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+
+  .form-cover {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 8px solid var(--primary);
+    border-radius: var(--radius-lg);
+    padding: var(--lg);
+    margin-bottom: var(--md);
+  }
+  .form-cover .form-title-input {
+    width: 100%; border: none; padding: 4px 0; font-size: 28px; font-weight: 600;
+    border-bottom: 1px solid transparent;
+    transition: border-color 150ms;
+  }
+  .form-cover .form-title-input:focus { outline: none; border-bottom-color: var(--primary); }
+  .form-cover .form-desc-input {
+    width: 100%; border: none; padding: 6px 0; font-size: 14px; color: var(--text-secondary);
+    border-bottom: 1px solid transparent;
+    transition: border-color 150ms;
+    margin-top: 6px;
+  }
+  .form-cover .form-desc-input:focus { outline: none; border-bottom-color: var(--primary); color: var(--text); }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid transparent;
+    border-radius: var(--radius-lg);
+    padding: var(--md) var(--lg);
+    margin-bottom: var(--sm);
+    transition: border-left-color 150ms ease-out, box-shadow 150ms ease-out;
+  }
+  .question-card.focused { border-left-color: var(--primary); box-shadow: var(--shadow-md); }
+  .question-row { display: grid; grid-template-columns: 1fr 220px; gap: var(--md); align-items: center; margin-bottom: var(--md); }
+  .question-row .input { font-size: 16px; }
+  .options-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: var(--md); }
+  .option-row { display: flex; align-items: center; gap: 10px; }
+  .option-row .marker { width: 18px; height: 18px; border: 1.5px solid var(--border-strong); flex-shrink: 0; }
+  .option-row .marker.radio { border-radius: 50%; }
+  .option-row .marker.check { border-radius: 4px; }
+  .option-row .input { padding: 6px 10px; border: none; border-bottom: 1px solid var(--border); border-radius: 0; }
+  .option-row .input:focus { box-shadow: none; border-bottom-color: var(--primary); }
+  .option-row button { color: var(--text-disabled); padding: 4px; }
+  .option-row button:hover { color: var(--text); }
+
+  .question-footer { display: flex; align-items: center; justify-content: flex-end; gap: var(--md); padding-top: var(--md); border-top: 1px solid var(--border); }
+  .toggle { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+  .toggle input { display: none; }
+  .toggle .switch {
+    width: 32px; height: 18px; border-radius: 999px;
+    background: var(--border-strong);
+    position: relative;
+    transition: background 150ms ease-out;
+  }
+  .toggle .switch::before {
+    content: ''; position: absolute; left: 2px; top: 2px;
+    width: 14px; height: 14px; border-radius: 50%; background: white;
+    transition: transform 150ms ease-out;
+  }
+  .toggle input:checked + .switch { background: var(--primary); }
+  .toggle input:checked + .switch::before { transform: translateX(14px); }
+  .toggle .label-text { font-size: 13px; color: var(--text); }
+
+  .add-question-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: var(--md);
+    background: var(--surface);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+    color: var(--text-secondary);
+    width: 100%; justify-content: center;
+    font-weight: 500;
+  }
+  .add-question-bar:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+
+  /* ---- Responses ---- */
+  .table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .table th, .table td { text-align: left; padding: 12px var(--md); border-bottom: 1px solid var(--border); }
+  .table th { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; background: #F9FAFB; }
+  .table tr:last-child td { border-bottom: none; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--md); margin-bottom: var(--lg); }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--md) var(--lg); }
+  .stat-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+  .stat-value { font-size: 28px; font-weight: 600; margin-top: 4px; letter-spacing: -0.02em; }
+
+  /* ---- Modal ---- */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(17,24,39,.5);
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: var(--xl) var(--md); z-index: 50;
+    overflow-y: auto;
+  }
+  .modal {
+    background: var(--surface); border-radius: var(--radius-lg);
+    width: 100%; max-width: 720px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+  .modal-head { padding: var(--lg) var(--lg) var(--md); border-bottom: 1px solid var(--border); display:flex; align-items: center; justify-content: space-between; }
+  .modal-body { padding: var(--lg); max-height: 70vh; overflow-y: auto; }
+  .modal-footer { padding: var(--md) var(--lg); border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+  /* ---- Settings ---- */
+  .integration-row { display: flex; align-items: center; gap: var(--md); padding: var(--md) 0; border-bottom: 1px solid var(--border); }
+  .integration-row:last-child { border-bottom: none; }
+  .integration-icon {
+    width: 40px; height: 40px; border-radius: 8px; background: #F3F4F6;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .integration-name { font-weight: 600; }
+  .integration-desc { font-size: 12px; color: var(--text-secondary); }
+  .integration-row .grow { flex: 1; }
+
+  /* ---- Toast ---- */
+  .toast-stack { position: fixed; bottom: var(--lg); left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 8px; z-index: 100; }
+  .toast {
+    background: #111827; color: white;
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    font-size: 13px; font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    display: flex; align-items: center; gap: 8px;
+    animation: toastIn 200ms ease-out;
+  }
+  .toast.success { background: #166534; }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---- Misc ---- */
+  .row-flex { display: flex; align-items: center; gap: var(--sm); }
+  .grow { flex: 1; }
+  .empty {
+    text-align: center;
+    padding: var(--xxl) var(--md);
+    color: var(--text-secondary);
+  }
+  .empty svg { width: 32px; height: 32px; color: var(--text-disabled); margin-bottom: var(--sm); }
+  .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); margin-bottom: var(--md); }
+  .breadcrumb a { color: var(--text-secondary); cursor: pointer; }
+  .breadcrumb a:hover { color: var(--primary); }
+  .divider { height: 1px; background: var(--border); margin: var(--lg) 0; }
+  .hr-text { display: flex; align-items: center; gap: var(--md); color: var(--text-secondary); font-size: 12px; margin: var(--md) 0; }
+  .hr-text::before, .hr-text::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .copy-link-row { display: flex; gap: 8px; align-items: center; padding: 12px; background: #F9FAFB; border: 1px solid var(--border); border-radius: var(--radius-md); }
+  .copy-link-row code { flex: 1; font-family: 'SF Mono', Menlo, monospace; font-size: 12px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<!-- Inline SVG icon defs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-people" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-form" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9 1.65 1.65 0 0 0 4.27 7.18l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 1 0-7.07-7.07L11 5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07L13 19"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+    <symbol id="i-document" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></symbol>
+  </defs>
+</svg>
+
+<script>
+/* ============================================================
+   ChurchPlannerPro — interactive prototype (Christ Lutheran)
+   Single-file demo, no build step.
+   ============================================================ */
+
+// ---------- Seed data ----------
+const familiesSeed = [
+  { id: 'f1', name: 'Anderson family', address: '412 Linden St, Madison WI 53703' },
+  { id: 'f2', name: 'Becker family',   address: '88 Oak Ridge Rd, Madison WI 53711' },
+  { id: 'f3', name: 'Garcia family',   address: '1207 Birch Ln, Madison WI 53703' },
+  { id: 'f4', name: 'Foster family',   address: '305 Maple Ave, Madison WI 53704' },
+  { id: 'f5', name: 'Chen family',     address: '52 Lake View Dr, Madison WI 53715' },
+  { id: 'f6', name: 'Donovan family',  address: '7 Hillcrest Ct, Madison WI 53711' }
+];
+
+const membersSeed = [
+  { id:'m1', familyId:'f1', firstName:'Sarah',   lastName:'Anderson', age:34, email:'sarah.anderson@email.com',  phone:'(608) 555-0142', address:'412 Linden St, Madison WI 53703',
+    membership:'2018-04-22', baptism:'1991-09-15', firstCommunion:'1999-05-08', confirmation:'2005-04-10', marriage:'2015-08-20',
+    skills:['Choir','Sunday school teacher','Spanish'], notes:'Leads the spring volunteer drive. Prefers email contact.', activity:[
+      {t:'Submitted "Updated member information" form', d:'2 days ago'},
+      {t:'Signed up for Spring Festival volunteer slot', d:'1 week ago'},
+      {t:'Attended new-member welcome dinner', d:'Mar 4, 2026'}
+    ]},
+  { id:'m2', familyId:'f1', firstName:'Tom',     lastName:'Anderson', age:36, email:'t.anderson@email.com', phone:'(608) 555-0142', address:'412 Linden St, Madison WI 53703',
+    membership:'2018-04-22', baptism:'1989-06-04', firstCommunion:null, confirmation:'2003-04-14', marriage:'2015-08-20',
+    skills:['Audio/visual','Carpentry'], notes:'Helps with sanctuary AV every other Sunday.', activity:[
+      {t:'Volunteered for AV team — Easter service', d:'Apr 1, 2026'}
+    ]},
+  { id:'m3', familyId:'f1', firstName:'Lily',    lastName:'Anderson', age:8,  email:null, phone:null, address:'412 Linden St, Madison WI 53703',
+    membership:'2018-04-22', baptism:'2017-10-12', firstCommunion:null, confirmation:null, marriage:null,
+    skills:['Children’s choir'], notes:'Allergic to peanuts — noted for snack time.', activity:[
+      {t:'Joined children’s choir', d:'Sep 10, 2025'}
+    ]},
+  { id:'m4', familyId:'f2', firstName:'David',   lastName:'Becker',   age:67, email:'dbecker@email.com', phone:'(608) 555-0177', address:'88 Oak Ridge Rd, Madison WI 53711',
+    membership:'1985-06-15', baptism:'1959-03-22', firstCommunion:'1967-05-21', confirmation:'1973-04-08', marriage:'1982-09-04',
+    skills:['Council member','Treasurer','Bookkeeping'], notes:'Long-time council member. Available weekday mornings.', activity:[
+      {t:'Approved Q1 financial report', d:'1 month ago'},
+      {t:'Led adult education series', d:'Feb 2026'}
+    ]},
+  { id:'m5', familyId:'f2', firstName:'Linda',   lastName:'Becker',   age:64, email:'l.becker@email.com', phone:'(608) 555-0177', address:'88 Oak Ridge Rd, Madison WI 53711',
+    membership:'1985-06-15', baptism:'1962-07-19', firstCommunion:'1970-05-03', confirmation:'1976-04-25', marriage:'1982-09-04',
+    skills:['Quilting ministry','Hospitality'], notes:'', activity:[
+      {t:'Coordinated funeral hospitality', d:'Mar 18, 2026'}
+    ]},
+  { id:'m6', familyId:'f3', firstName:'Michael', lastName:'Garcia',   age:52, email:'mgarcia@email.com', phone:'(608) 555-0118', address:'1207 Birch Ln, Madison WI 53703',
+    membership:'2002-10-06', baptism:'1974-02-11', firstCommunion:'1982-05-09', confirmation:'1988-04-17', marriage:'1999-06-12',
+    skills:['Choir director','Piano','Music arrangement'], notes:'Choir director since 2014.', activity:[
+      {t:'Scheduled Holy Week rehearsals', d:'2 weeks ago'}
+    ]},
+  { id:'m7', familyId:'f4', firstName:'Emily',   lastName:'Foster',   age:12, email:null, phone:null, address:'305 Maple Ave, Madison WI 53704',
+    membership:'2014-05-04', baptism:'2014-05-04', firstCommunion:'2025-05-04', confirmation:null, marriage:null,
+    skills:['Acolyte'], notes:'Confirmation class candidate for 2027.', activity:[
+      {t:'First communion received', d:'May 4, 2025'}
+    ]},
+  { id:'m8', familyId:'f4', firstName:'Rebecca', lastName:'Foster',   age:42, email:'rfoster@email.com', phone:'(608) 555-0210', address:'305 Maple Ave, Madison WI 53704',
+    membership:'2014-05-04', baptism:'1984-08-14', firstCommunion:'1992-05-10', confirmation:'1998-04-26', marriage:'2010-07-31',
+    skills:['Sunday school coordinator'], notes:'', activity:[
+      {t:'Submitted volunteer form', d:'3 days ago'}
+    ]},
+  { id:'m9', familyId:'f5', firstName:'Maria',   lastName:'Chen',     age:28, email:'maria.c@email.com', phone:'(608) 555-0233', address:'52 Lake View Dr, Madison WI 53715',
+    membership:'2024-11-03', baptism:'2024-11-03', firstCommunion:'2024-12-22', confirmation:'2025-04-13', marriage:null,
+    skills:['Tech / website','Mandarin'], notes:'Recent adult convert. Helping modernize the website.', activity:[
+      {t:'Joined tech committee', d:'Jan 2026'},
+      {t:'Confirmation received', d:'Apr 13, 2025'}
+    ]},
+  { id:'m10', familyId:'f6', firstName:'James',  lastName:'Donovan',  age:45, email:'jdonovan@email.com', phone:'(608) 555-0166', address:'7 Hillcrest Ct, Madison WI 53711',
+    membership:'2010-03-21', baptism:'1980-11-08', firstCommunion:'1988-05-15', confirmation:'1994-04-03', marriage:'2008-05-24',
+    skills:['Property committee','Plumbing','Snow removal'], notes:'Calls dibs on the snow blower in winter.', activity:[
+      {t:'Repaired sanctuary HVAC', d:'Last week'}
+    ]},
+];
+
+const formsSeed = [
+  {
+    id:'fm1',
+    title:'Updated member information',
+    description:'Help us keep your contact information current. Submissions update your church profile automatically.',
+    status:'published',
+    createdAt:'2026-04-12',
+    questions:[
+      { id:'q1', text:'Full name', type:'short', required:true, options:[], mapsTo:'name' },
+      { id:'q2', text:'Email address', type:'short', required:true, options:[], mapsTo:'email' },
+      { id:'q3', text:'Phone number', type:'short', required:false, options:[], mapsTo:'phone' },
+      { id:'q4', text:'Mailing address', type:'paragraph', required:false, options:[], mapsTo:'address' },
+      { id:'q5', text:'Skills, talents and interests', type:'checkboxes', required:false,
+        options:['Choir','Sunday school','Hospitality','Property','Tech / AV','Bookkeeping','Other'], mapsTo:'skills' },
+      { id:'q6', text:'Anything else you’d like Pastor to know?', type:'paragraph', required:false, options:[], mapsTo:'notes' }
+    ],
+    responses:[
+      { memberId:'m1', submittedAt:'2 days ago', answers:{ q1:'Sarah Anderson', q2:'sarah.anderson@email.com', q3:'(608) 555-0142', q4:'412 Linden St, Madison WI 53703', q5:['Choir','Sunday school'], q6:'Happy to help with the spring drive.' }},
+      { memberId:'m8', submittedAt:'3 days ago', answers:{ q1:'Rebecca Foster', q2:'rfoster@email.com', q3:'(608) 555-0210', q4:'305 Maple Ave, Madison WI 53704', q5:['Sunday school'], q6:'' }},
+      { memberId:'m4', submittedAt:'1 week ago', answers:{ q1:'David Becker', q2:'dbecker@email.com', q3:'(608) 555-0177', q4:'88 Oak Ridge Rd, Madison WI 53711', q5:['Bookkeeping'], q6:'Available weekday mornings.' }}
+    ]
+  },
+  {
+    id:'fm2',
+    title:'Spring Festival volunteer sign-up',
+    description:'Sign up to help with our Spring Festival on May 23, 2026.',
+    status:'published',
+    createdAt:'2026-04-02',
+    questions:[
+      { id:'q1', text:'Your name', type:'short', required:true, options:[], mapsTo:'name' },
+      { id:'q2', text:'Email', type:'short', required:true, options:[], mapsTo:'email' },
+      { id:'q3', text:'Which area would you like to help with?', type:'multiple', required:true,
+        options:['Set-up (Friday)','Food service','Kids’ games','Music & sound','Clean-up (Saturday)'], mapsTo:null },
+      { id:'q4', text:'Are you able to bring a dish?', type:'multiple', required:false,
+        options:['Yes','No','Maybe'], mapsTo:null }
+    ],
+    responses:[
+      { memberId:'m1', submittedAt:'1 week ago', answers:{ q1:'Sarah Anderson', q2:'sarah.anderson@email.com', q3:'Kids’ games', q4:'Yes' }},
+      { memberId:'m6', submittedAt:'5 days ago', answers:{ q1:'Michael Garcia', q2:'mgarcia@email.com', q3:'Music & sound', q4:'No' }},
+      { memberId:'m10', submittedAt:'4 days ago', answers:{ q1:'James Donovan', q2:'jdonovan@email.com', q3:'Set-up (Friday)', q4:'Maybe' }},
+      { memberId:'m2', submittedAt:'3 days ago', answers:{ q1:'Tom Anderson', q2:'t.anderson@email.com', q3:'Music & sound', q4:'Yes' }}
+    ]
+  },
+  {
+    id:'fm3',
+    title:'Confirmation class registration 2026',
+    description:'Registration for the 2026–2027 confirmation cohort. Open to youth ages 12–15.',
+    status:'draft',
+    createdAt:'2026-05-06',
+    questions:[
+      { id:'q1', text:'Student name', type:'short', required:true, options:[], mapsTo:null },
+      { id:'q2', text:'Parent / guardian email', type:'short', required:true, options:[], mapsTo:null }
+    ],
+    responses:[]
+  }
+];
+
+// ---------- App state ----------
+const state = {
+  tab: 'people',                    // 'people' | 'forms' | 'settings'
+  peopleSubtab: 'members',          // 'members' | 'families'
+  selectedMemberId: 'm1',
+  selectedFamilyId: 'f1',
+  memberSearch: '',
+  selectedFormId: null,
+  formView: 'edit',                 // 'edit' | 'responses'
+  focusedQuestionId: null,
+  fillFormId: null,                 // when set, opens fill modal
+  fillAnswers: {},
+  fillAsMemberId: 'm9',             // demo: simulate Maria submitting
+  emailConnected: false,
+  emailProvider: null,
+  toasts: [],
+  members: structuredClone(membersSeed),
+  families: structuredClone(familiesSeed),
+  forms: structuredClone(formsSeed),
+};
+
+// ---------- Helpers ----------
+const $ = (sel, root=document) => root.querySelector(sel);
+const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+const escape = (s) => (s ?? '').toString().replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const initials = (first, last) => ((first||'')[0]||'') + ((last||'')[0]||'');
+const fmtDate = (iso) => {
+  if (!iso) return null;
+  const d = new Date(iso + 'T12:00:00');
+  return d.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+};
+const memberById = (id) => state.members.find(m => m.id === id);
+const formById = (id) => state.forms.find(f => f.id === id);
+const familyById = (id) => state.families.find(f => f.id === id);
+const membersOfFamily = (fid) => state.members.filter(m => m.familyId === fid);
+const fullName = (m) => `${m.firstName} ${m.lastName}`;
+
+function toast(text, kind='success') {
+  const id = Date.now() + Math.random();
+  state.toasts.push({ id, text, kind });
+  render();
+  setTimeout(() => {
+    state.toasts = state.toasts.filter(t => t.id !== id);
+    render();
+  }, 2400);
+}
+
+function uid(prefix='id') { return prefix + '_' + Math.random().toString(36).slice(2, 9); }
+
+// ---------- Top-level render ----------
+function render() {
+  const root = $('#app');
+  root.innerHTML = `
+    <div class="app">
+      ${Sidebar()}
+      <div class="main">
+        ${Topbar()}
+        <div class="content">${Page()}</div>
+      </div>
+    </div>
+    ${ToastStack()}
+    ${state.fillFormId ? FillFormModal() : ''}
+  `;
+  attach();
+}
+
+// ---------- Sidebar ----------
+function Sidebar() {
+  const item = (id, label, icon) => `
+    <button class="nav-item ${state.tab===id?'active':''}" data-nav="${id}">
+      <svg><use href="#i-${icon}"/></svg>
+      <span>${label}</span>
+    </button>`;
+  return `
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-name">ChurchPlanner<span class="pro">PRO</span></span></div>
+      <nav class="nav">
+        ${item('people','People','people')}
+        ${item('forms','Forms','form')}
+        ${item('settings','Settings','settings')}
+      </nav>
+      <div class="sidebar-footer">
+        <div class="avatar">TM</div>
+        <div>
+          <div class="admin-name">Tracy McKee</div>
+          <div class="admin-role">Administrator</div>
+        </div>
+      </div>
+    </aside>`;
+}
+
+// ---------- Topbar ----------
+function Topbar() {
+  return `
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="church-name"><strong>Christ Lutheran</strong> · Madison, WI</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" title="Notifications"><svg><use href="#i-bell"/></svg></button>
+        <button class="icon-btn" title="Help"><svg><use href="#i-mail"/></svg></button>
+      </div>
+    </div>`;
+}
+
+// ---------- Pages ----------
+function Page() {
+  if (state.tab === 'people')   return PeoplePage();
+  if (state.tab === 'forms')    return FormsPage();
+  if (state.tab === 'settings') return SettingsPage();
+  return '';
+}
+
+// ====================== PEOPLE ======================
+function PeoplePage() {
+  return `
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--md);">
+      <div>
+        <h1 class="page-title">People</h1>
+        <p class="page-subtitle">Members and families of Christ Lutheran.</p>
+      </div>
+      <button class="btn btn-primary" data-action="add-member">
+        <svg><use href="#i-plus"/></svg> Add member
+      </button>
+    </div>
+    <div class="subtabs">
+      <button class="subtab ${state.peopleSubtab==='members'?'active':''}" data-people-sub="members">Members</button>
+      <button class="subtab ${state.peopleSubtab==='families'?'active':''}" data-people-sub="families">Families</button>
+    </div>
+    ${ state.peopleSubtab === 'members' ? MembersView() : FamiliesView() }
+  `;
+}
+
+function MembersView() {
+  const q = state.memberSearch.toLowerCase().trim();
+  const list = state.members.filter(m => {
+    if (!q) return true;
+    return fullName(m).toLowerCase().includes(q) || (m.email||'').toLowerCase().includes(q);
+  }).sort((a,b)=>a.lastName.localeCompare(b.lastName));
+
+  const member = memberById(state.selectedMemberId) || list[0];
+
+  return `
+    <div class="split">
+      <div class="card card-flush">
+        <div class="list-header">
+          <div class="search grow"><svg><use href="#i-search"/></svg>
+            <input class="input" placeholder="Search members" data-action="member-search" value="${escape(state.memberSearch)}" />
+          </div>
+        </div>
+        <div class="list">
+          ${list.map(m => `
+            <button class="list-row ${m.id===state.selectedMemberId?'active':''}" data-select-member="${m.id}">
+              <div class="avatar">${escape(initials(m.firstName, m.lastName))}</div>
+              <div>
+                <div class="row-name">${escape(fullName(m))}</div>
+                <div class="row-sub">${m.age ? m.age + ' yrs' : ''}${m.age && m.email ? ' · ' : ''}${escape(m.email||'')}</div>
+              </div>
+            </button>
+          `).join('')}
+          ${list.length===0 ? `<div class="empty"><svg><use href="#i-search"/></svg><div>No members match "${escape(state.memberSearch)}"</div></div>` : ''}
+        </div>
+      </div>
+      <div>${ member ? MemberDetail(member) : `<div class="empty">No member selected.</div>` }</div>
+    </div>
+  `;
+}
+
+function MemberDetail(m) {
+  const family = familyById(m.familyId);
+  const skills = (m.skills||[]).map(s => `<span class="chip">${escape(s)}</span>`).join('');
+  return `
+    <div class="card">
+      <div class="detail-header">
+        <div class="detail-avatar">${escape(initials(m.firstName, m.lastName))}</div>
+        <div>
+          <h2 class="detail-name">${escape(fullName(m))}</h2>
+          <div class="detail-meta">${m.age ? m.age + ' years old' : 'Age not on file'} · ${escape(family ? family.name : 'No family on file')}</div>
+        </div>
+        <div class="detail-actions">
+          <button class="btn btn-neutral btn-sm" data-action="email-member" data-id="${m.id}"><svg><use href="#i-mail"/></svg> Email</button>
+          <button class="btn btn-secondary btn-sm" data-action="edit-member" data-id="${m.id}"><svg><use href="#i-edit"/></svg> Edit</button>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-block">
+          <h4>Contact</h4>
+          ${row('Email', m.email)}
+          ${row('Phone', m.phone)}
+          ${row('Mailing address', m.address)}
+        </div>
+        <div class="info-block">
+          <h4>Key dates</h4>
+          ${row('Membership',     fmtDate(m.membership))}
+          ${row('Baptism',        fmtDate(m.baptism))}
+          ${row('First communion',fmtDate(m.firstCommunion))}
+          ${row('Confirmation',   fmtDate(m.confirmation))}
+          ${row('Marriage',       fmtDate(m.marriage))}
+        </div>
+      </div>
+
+      <div class="info-block" style="margin-bottom: var(--xl)">
+        <h4>Skills, talents and interests</h4>
+        <div class="chips">${skills || '<span class="info-val empty">No skills recorded yet.</span>'}</div>
+      </div>
+
+      <div class="info-block" style="margin-bottom: var(--xl)">
+        <h4>Notes</h4>
+        ${ m.notes ? `<div class="notes-block">${escape(m.notes)}</div>` : `<span class="info-val empty">No notes yet.</span>` }
+      </div>
+
+      <div class="info-block">
+        <h4>Recent activity</h4>
+        <div class="activity">
+          ${ (m.activity||[]).map(a => `
+            <div class="activity-row">
+              <div class="activity-dot"></div>
+              <div>
+                <div class="activity-text">${escape(a.t)}</div>
+                <div class="activity-time">${escape(a.d)}</div>
+              </div>
+            </div>
+          `).join('') || `<span class="info-val empty">No recent activity.</span>` }
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function row(k, v) {
+  return `<div class="info-row"><span class="info-key">${escape(k)}</span><span class="info-val ${v?'':'empty'}">${v ? escape(v) : '—'}</span></div>`;
+}
+
+function FamiliesView() {
+  return `
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--md);">
+      ${ state.families.map(f => {
+        const ms = membersOfFamily(f.id);
+        return `
+          <div class="card family-card">
+            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">
+              <div>
+                <h3 class="subsection" style="font-size:18px;">${escape(f.name)}</h3>
+                <div class="caption" style="margin-top:4px;">${escape(f.address)}</div>
+              </div>
+              <span class="chip chip-neutral">${ms.length} member${ms.length===1?'':'s'}</span>
+            </div>
+            <div class="family-members-row">
+              ${ ms.map(m => `
+                <button class="member-pill" data-jump-member="${m.id}">
+                  <span class="avatar">${escape(initials(m.firstName, m.lastName))}</span>
+                  <span>${escape(fullName(m))}</span>
+                </button>
+              `).join('') }
+            </div>
+          </div>`;
+      }).join('') }
+    </div>
+  `;
+}
+
+// ====================== FORMS ======================
+function FormsPage() {
+  if (state.selectedFormId) return FormDetailPage();
+  return FormsListPage();
+}
+
+function FormsListPage() {
+  return `
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--md);">
+      <div>
+        <h1 class="page-title">Forms</h1>
+        <p class="page-subtitle">Build forms for sign-ups, sacrament records, and member updates.</p>
+      </div>
+      <button class="btn btn-primary" data-action="create-form">
+        <svg><use href="#i-plus"/></svg> Create form
+      </button>
+    </div>
+
+    <div class="card card-flush">
+      <div class="form-row" style="background: #F9FAFB; cursor: default; font-size:12px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.06em;">
+        <div>Form</div>
+        <div>Status</div>
+        <div>Responses</div>
+        <div>Created</div>
+        <div></div>
+      </div>
+      ${ state.forms.map(f => `
+        <div class="form-row" data-open-form="${f.id}">
+          <div>
+            <div class="form-name">${escape(f.title)}</div>
+            <div class="form-desc">${escape(f.description)}</div>
+          </div>
+          <div>
+            ${ f.status === 'published'
+                ? `<span class="chip chip-success">Published</span>`
+                : `<span class="chip chip-warning">Draft</span>` }
+          </div>
+          <div>${f.responses.length}</div>
+          <div class="caption">${escape(f.createdAt)}</div>
+          <button class="icon-btn" data-action="form-more" data-id="${f.id}" onclick="event.stopPropagation()"><svg><use href="#i-more"/></svg></button>
+        </div>
+      `).join('') }
+    </div>
+  `;
+}
+
+function FormDetailPage() {
+  const f = formById(state.selectedFormId);
+  if (!f) { state.selectedFormId = null; return FormsListPage(); }
+
+  return `
+    <div class="breadcrumb">
+      <a data-form-back>Forms</a> <span>›</span> <span>${escape(f.title || 'Untitled form')}</span>
+    </div>
+
+    <div class="form-builder-header">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button class="icon-btn" data-form-back><svg><use href="#i-arrow-left"/></svg></button>
+        <div>
+          <div style="display:flex; align-items:center; gap: 8px;">
+            <h2 class="section-title">${escape(f.title || 'Untitled form')}</h2>
+            ${ f.status === 'published' ? `<span class="chip chip-success">Published</span>` : `<span class="chip chip-warning">Draft</span>` }
+          </div>
+          <div class="caption">${f.responses.length} response${f.responses.length===1?'':'s'} · Created ${escape(f.createdAt)}</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <div class="builder-tabs">
+          <button class="builder-tab ${state.formView==='edit'?'active':''}" data-form-view="edit">Edit</button>
+          <button class="builder-tab ${state.formView==='responses'?'active':''}" data-form-view="responses">Responses (${f.responses.length})</button>
+        </div>
+        ${ f.status === 'published'
+            ? `<button class="btn btn-secondary btn-sm" data-action="copy-link" data-id="${f.id}"><svg><use href="#i-link"/></svg> Copy link</button>
+               <button class="btn btn-neutral btn-sm" data-action="preview-form" data-id="${f.id}"><svg><use href="#i-eye"/></svg> Preview & fill</button>`
+            : `<button class="btn btn-primary btn-sm" data-action="publish-form" data-id="${f.id}"><svg><use href="#i-send"/></svg> Publish</button>` }
+      </div>
+    </div>
+
+    ${ state.formView === 'edit' ? FormBuilder(f) : FormResponses(f) }
+  `;
+}
+
+function FormBuilder(f) {
+  return `
+    <div class="form-cover">
+      <input class="form-title-input" placeholder="Untitled form" value="${escape(f.title)}" data-form-field="title" data-id="${f.id}" />
+      <input class="form-desc-input" placeholder="Form description" value="${escape(f.description)}" data-form-field="description" data-id="${f.id}" />
+    </div>
+    ${ f.questions.map(q => QuestionCard(f.id, q)).join('') }
+    <button class="add-question-bar" data-action="add-question" data-id="${f.id}">
+      <svg><use href="#i-plus"/></svg> Add question
+    </button>
+  `;
+}
+
+function QuestionCard(formId, q) {
+  const focused = state.focusedQuestionId === q.id;
+  const showOptions = (q.type === 'multiple' || q.type === 'checkboxes');
+  return `
+    <div class="question-card ${focused?'focused':''}" data-question-card="${q.id}">
+      <div class="question-row">
+        <input class="input" placeholder="Question" value="${escape(q.text)}"
+               data-q-field="text" data-form-id="${formId}" data-q-id="${q.id}" />
+        <select class="select" data-q-field="type" data-form-id="${formId}" data-q-id="${q.id}">
+          <option value="short" ${q.type==='short'?'selected':''}>Short answer</option>
+          <option value="paragraph" ${q.type==='paragraph'?'selected':''}>Paragraph</option>
+          <option value="multiple" ${q.type==='multiple'?'selected':''}>Multiple choice</option>
+          <option value="checkboxes" ${q.type==='checkboxes'?'selected':''}>Checkboxes</option>
+        </select>
+      </div>
+
+      ${ showOptions ? `
+        <div class="options-list">
+          ${ q.options.map((opt, i) => `
+            <div class="option-row">
+              <span class="marker ${q.type==='multiple'?'radio':'check'}"></span>
+              <input class="input grow" value="${escape(opt)}" placeholder="Option ${i+1}"
+                     data-opt-field="text" data-form-id="${formId}" data-q-id="${q.id}" data-opt-i="${i}"/>
+              <button title="Remove option" data-action="remove-option" data-form-id="${formId}" data-q-id="${q.id}" data-opt-i="${i}"><svg><use href="#i-x"/></svg></button>
+            </div>
+          `).join('') }
+          <div class="option-row">
+            <span class="marker ${q.type==='multiple'?'radio':'check'}"></span>
+            <button class="btn btn-text" data-action="add-option" data-form-id="${formId}" data-q-id="${q.id}">Add option</button>
+          </div>
+        </div>` : '' }
+
+      ${ q.type === 'short' ? `<input class="input" disabled placeholder="Short answer text" style="margin-bottom: var(--md);"/>` : '' }
+      ${ q.type === 'paragraph' ? `<textarea class="textarea" disabled placeholder="Long answer text" style="margin-bottom: var(--md);"></textarea>` : '' }
+
+      <div class="question-footer">
+        <button class="btn btn-text" data-action="duplicate-question" data-form-id="${formId}" data-q-id="${q.id}"><svg><use href="#i-copy"/></svg> Duplicate</button>
+        <button class="btn btn-danger-text" data-action="delete-question" data-form-id="${formId}" data-q-id="${q.id}"><svg><use href="#i-trash"/></svg> Delete</button>
+        <span style="width:1px; background: var(--border); align-self: stretch;"></span>
+        <label class="toggle">
+          <input type="checkbox" ${q.required?'checked':''} data-q-field="required" data-form-id="${formId}" data-q-id="${q.id}" />
+          <span class="switch"></span>
+          <span class="label-text">Required</span>
+        </label>
+      </div>
+    </div>
+  `;
+}
+
+function FormResponses(f) {
+  if (!f.responses.length) {
+    return `<div class="card empty">
+      <svg><use href="#i-form"/></svg>
+      <div style="font-weight:600; margin-bottom: 4px;">No responses yet</div>
+      <div>Once members submit ${escape(f.title)}, their answers will appear here.</div>
+    </div>`;
+  }
+  const cols = f.questions.slice(0, 5);
+  return `
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-label">Total responses</div><div class="stat-value">${f.responses.length}</div></div>
+      <div class="stat"><div class="stat-label">Required questions</div><div class="stat-value">${f.questions.filter(q=>q.required).length}</div></div>
+      <div class="stat"><div class="stat-label">Last submission</div><div class="stat-value" style="font-size:18px; padding-top:8px;">${escape(f.responses[0].submittedAt)}</div></div>
+    </div>
+    <div class="card card-flush">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Member</th>
+            ${ cols.map(c => `<th>${escape(c.text)}</th>`).join('') }
+            <th>Submitted</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${ f.responses.map(r => {
+            const m = memberById(r.memberId);
+            return `<tr>
+              <td><strong>${m ? escape(fullName(m)) : 'Unknown'}</strong></td>
+              ${ cols.map(c => {
+                const v = r.answers[c.id];
+                return `<td>${ Array.isArray(v) ? v.map(x=>escape(x)).join(', ') : escape(v||'') }</td>`;
+              }).join('') }
+              <td class="caption">${escape(r.submittedAt)}</td>
+            </tr>`;
+          }).join('') }
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+// ----- Fill form modal -----
+function FillFormModal() {
+  const f = formById(state.fillFormId);
+  if (!f) return '';
+  const m = memberById(state.fillAsMemberId) || state.members[0];
+
+  return `
+    <div class="modal-overlay" data-action="close-fill">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-head">
+          <div>
+            <div style="font-size:13px; color:var(--text-secondary); margin-bottom: 4px;">Submitting as ${escape(fullName(m))}</div>
+            <h3 class="subsection">${escape(f.title)}</h3>
+          </div>
+          <button class="icon-btn" data-action="close-fill"><svg><use href="#i-x"/></svg></button>
+        </div>
+        <div class="modal-body">
+          <p class="caption" style="margin: 0 0 var(--lg);">${escape(f.description)}</p>
+          ${ f.questions.map(q => FillField(q)).join('') }
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-neutral" data-action="close-fill">Cancel</button>
+          <button class="btn btn-primary" data-action="submit-fill"><svg><use href="#i-send"/></svg> Submit</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function FillField(q) {
+  const v = state.fillAnswers[q.id];
+  const req = q.required ? `<span style="color: var(--error);"> *</span>` : '';
+  if (q.type === 'short') {
+    return `<div class="field">
+      <label class="label">${escape(q.text)}${req}</label>
+      <input class="input" value="${escape(v||'')}" data-fill="${q.id}" />
+    </div>`;
+  }
+  if (q.type === 'paragraph') {
+    return `<div class="field">
+      <label class="label">${escape(q.text)}${req}</label>
+      <textarea class="textarea" data-fill="${q.id}">${escape(v||'')}</textarea>
+    </div>`;
+  }
+  if (q.type === 'multiple') {
+    return `<div class="field">
+      <label class="label">${escape(q.text)}${req}</label>
+      ${ q.options.map(opt => `
+        <label class="row-flex" style="padding: 6px 0; cursor:pointer;">
+          <input type="radio" name="${q.id}" value="${escape(opt)}" ${v===opt?'checked':''} data-fill-radio="${q.id}" />
+          <span>${escape(opt)}</span>
+        </label>`).join('') }
+    </div>`;
+  }
+  if (q.type === 'checkboxes') {
+    const arr = Array.isArray(v) ? v : [];
+    return `<div class="field">
+      <label class="label">${escape(q.text)}${req}</label>
+      ${ q.options.map(opt => `
+        <label class="row-flex" style="padding: 6px 0; cursor:pointer;">
+          <input type="checkbox" value="${escape(opt)}" ${arr.includes(opt)?'checked':''} data-fill-check="${q.id}" />
+          <span>${escape(opt)}</span>
+        </label>`).join('') }
+    </div>`;
+  }
+  return '';
+}
+
+// ====================== SETTINGS ======================
+function SettingsPage() {
+  return `
+    <div style="margin-bottom: var(--md);">
+      <h1 class="page-title">Settings</h1>
+      <p class="page-subtitle">Manage your church profile and connected services.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr; gap: var(--md); max-width: 760px;">
+      <div class="card">
+        <h3 class="subsection" style="margin-bottom: var(--xs);">Connect email</h3>
+        <p class="caption" style="margin-bottom: var(--md);">Send form invitations and member communication directly from ChurchPlannerPro.</p>
+
+        <div>
+          ${ EmailIntegrationRow('Gmail',   'gmail',   'Send from Tracy@christlutheran.org via Google Workspace.') }
+          ${ EmailIntegrationRow('Outlook', 'outlook', 'Send via Microsoft 365.') }
+          ${ EmailIntegrationRow('Other (IMAP/SMTP)', 'imap', 'Connect any provider with SMTP credentials.') }
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="subsection" style="margin-bottom: var(--xs);">Church profile</h3>
+        <p class="caption" style="margin-bottom: var(--md);">This information appears on forms and emails sent from your account.</p>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: var(--md);">
+          <div class="field"><label class="label">Church name</label><input class="input" value="Christ Lutheran" /></div>
+          <div class="field"><label class="label">Administrator</label><input class="input" value="Tracy McKee" /></div>
+          <div class="field"><label class="label">Address</label><input class="input" value="201 N Westfield Rd, Madison WI 53717" /></div>
+          <div class="field"><label class="label">Phone</label><input class="input" value="(608) 555-0100" /></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function EmailIntegrationRow(name, key, desc) {
+  const connected = state.emailConnected && state.emailProvider === key;
+  return `
+    <div class="integration-row">
+      <div class="integration-icon"><svg style="width:22px;height:22px;color:var(--text-secondary);"><use href="#i-mail"/></svg></div>
+      <div class="grow">
+        <div class="integration-name">${escape(name)}</div>
+        <div class="integration-desc">${escape(desc)}</div>
+      </div>
+      ${ connected
+        ? `<span class="chip chip-success"><svg style="width:12px;height:12px;vertical-align:-1px;"><use href="#i-check"/></svg> Connected</span>
+           <button class="btn btn-neutral btn-sm" data-action="disconnect-email">Disconnect</button>`
+        : `<button class="btn btn-secondary btn-sm" data-action="connect-email" data-provider="${key}">Connect</button>` }
+    </div>
+  `;
+}
+
+// ====================== Toast ======================
+function ToastStack() {
+  if (!state.toasts.length) return '';
+  return `<div class="toast-stack">
+    ${ state.toasts.map(t => `<div class="toast ${t.kind==='success'?'success':''}"><svg style="width:14px;height:14px"><use href="#i-check"/></svg> ${escape(t.text)}</div>`).join('') }
+  </div>`;
+}
+
+// ====================== Event wiring ======================
+function attach() {
+  // Sidebar nav
+  $$('[data-nav]').forEach(b => b.onclick = () => {
+    state.tab = b.dataset.nav;
+    state.selectedFormId = null;
+    render();
+  });
+
+  // People sub tabs
+  $$('[data-people-sub]').forEach(b => b.onclick = () => {
+    state.peopleSubtab = b.dataset.peopleSub;
+    render();
+  });
+
+  // Member list
+  $$('[data-select-member]').forEach(b => b.onclick = () => {
+    state.selectedMemberId = b.dataset.selectMember;
+    render();
+  });
+
+  // Member search (debounce-free; preserve focus)
+  const search = document.querySelector('[data-action="member-search"]');
+  if (search) {
+    search.oninput = (e) => {
+      state.memberSearch = e.target.value;
+      render();
+      const again = document.querySelector('[data-action="member-search"]');
+      if (again) { again.focus(); again.setSelectionRange(state.memberSearch.length, state.memberSearch.length); }
+    };
+  }
+
+  // Family pill -> open member
+  $$('[data-jump-member]').forEach(b => b.onclick = () => {
+    state.peopleSubtab = 'members';
+    state.selectedMemberId = b.dataset.jumpMember;
+    render();
+  });
+
+  // Form list / open
+  $$('[data-open-form]').forEach(b => b.onclick = () => {
+    state.selectedFormId = b.dataset.openForm;
+    state.formView = 'edit';
+    render();
+  });
+
+  // Form builder back
+  $$('[data-form-back]').forEach(b => b.onclick = () => {
+    state.selectedFormId = null;
+    render();
+  });
+
+  // Builder tabs
+  $$('[data-form-view]').forEach(b => b.onclick = () => {
+    state.formView = b.dataset.formView;
+    render();
+  });
+
+  // Form title/description edits
+  $$('[data-form-field]').forEach(el => el.oninput = (e) => {
+    const f = formById(el.dataset.id);
+    if (!f) return;
+    f[el.dataset.formField] = e.target.value;
+  });
+
+  // Question card focus state
+  $$('[data-question-card]').forEach(card => {
+    card.addEventListener('focusin', () => {
+      state.focusedQuestionId = card.dataset.questionCard;
+      render();
+    });
+  });
+
+  // Question fields
+  $$('[data-q-field]').forEach(el => {
+    const handler = (e) => {
+      const f = formById(el.dataset.formId);
+      const q = f && f.questions.find(qq => qq.id === el.dataset.qId);
+      if (!q) return;
+      const field = el.dataset.qField;
+      if (field === 'type') {
+        q.type = e.target.value;
+        if ((q.type === 'multiple' || q.type === 'checkboxes') && q.options.length === 0) {
+          q.options = ['Option 1'];
+        }
+        render();
+      } else if (field === 'required') {
+        q.required = e.target.checked;
+      } else {
+        q[field] = e.target.value;
+      }
+    };
+    el.oninput = handler;
+    el.onchange = handler;
+  });
+
+  // Option text
+  $$('[data-opt-field]').forEach(el => el.oninput = (e) => {
+    const f = formById(el.dataset.formId);
+    const q = f && f.questions.find(qq => qq.id === el.dataset.qId);
+    if (!q) return;
+    q.options[+el.dataset.optI] = e.target.value;
+  });
+
+  // Generic click actions
+  $$('[data-action]').forEach(el => {
+    el.onclick = (e) => {
+      const a = el.dataset.action;
+      if (a === 'add-member') {
+        toast('Member creation coming soon — using sample data for now.');
+      } else if (a === 'edit-member') {
+        toast('Editing member profile is coming soon.');
+      } else if (a === 'email-member') {
+        if (!state.emailConnected) toast('Connect an email provider in Settings first.');
+        else toast('Composer opened (demo).');
+      } else if (a === 'create-form') {
+        const f = { id: uid('fm'), title: 'Untitled form', description: '', status: 'draft', createdAt: new Date().toISOString().slice(0,10),
+          questions: [{ id: uid('q'), text: '', type:'short', required:false, options:[], mapsTo:null }],
+          responses: [] };
+        state.forms.unshift(f);
+        state.selectedFormId = f.id;
+        state.formView = 'edit';
+        render();
+      } else if (a === 'add-question') {
+        const f = formById(el.dataset.id);
+        f.questions.push({ id: uid('q'), text:'', type:'short', required:false, options:[], mapsTo:null });
+        render();
+      } else if (a === 'duplicate-question') {
+        const f = formById(el.dataset.formId);
+        const q = f.questions.find(q => q.id === el.dataset.qId);
+        const copy = JSON.parse(JSON.stringify(q));
+        copy.id = uid('q');
+        const i = f.questions.indexOf(q);
+        f.questions.splice(i+1, 0, copy);
+        render();
+      } else if (a === 'delete-question') {
+        const f = formById(el.dataset.formId);
+        f.questions = f.questions.filter(q => q.id !== el.dataset.qId);
+        render();
+      } else if (a === 'add-option') {
+        const f = formById(el.dataset.formId);
+        const q = f.questions.find(q => q.id === el.dataset.qId);
+        q.options.push('Option ' + (q.options.length+1));
+        render();
+      } else if (a === 'remove-option') {
+        const f = formById(el.dataset.formId);
+        const q = f.questions.find(q => q.id === el.dataset.qId);
+        q.options.splice(+el.dataset.optI, 1);
+        render();
+      } else if (a === 'publish-form') {
+        const f = formById(el.dataset.id);
+        f.status = 'published';
+        toast('Form published — link copied to clipboard.');
+        render();
+      } else if (a === 'copy-link') {
+        const f = formById(el.dataset.id);
+        const link = `https://forms.churchplannerpro.app/${f.id}`;
+        navigator.clipboard?.writeText(link).catch(()=>{});
+        toast('Link copied: ' + link);
+      } else if (a === 'preview-form') {
+        state.fillFormId = el.dataset.id;
+        state.fillAnswers = {};
+        render();
+      } else if (a === 'close-fill') {
+        // Only close when clicking the overlay or close buttons
+        if (el.dataset.action === 'close-fill') {
+          state.fillFormId = null;
+          state.fillAnswers = {};
+          render();
+        }
+      } else if (a === 'submit-fill') {
+        submitFill();
+      } else if (a === 'connect-email') {
+        state.emailConnected = true;
+        state.emailProvider = el.dataset.provider;
+        toast('Email connected.');
+        render();
+      } else if (a === 'disconnect-email') {
+        state.emailConnected = false;
+        state.emailProvider = null;
+        toast('Email disconnected.');
+        render();
+      } else if (a === 'form-more') {
+        toast('More options menu coming soon.');
+      }
+    };
+  });
+
+  // Fill modal inputs
+  $$('[data-fill]').forEach(el => el.oninput = (e) => {
+    state.fillAnswers[el.dataset.fill] = e.target.value;
+  });
+  $$('[data-fill-radio]').forEach(el => el.onchange = (e) => {
+    state.fillAnswers[el.dataset.fillRadio] = e.target.value;
+  });
+  $$('[data-fill-check]').forEach(el => el.onchange = (e) => {
+    const qid = el.dataset.fillCheck;
+    const cur = Array.isArray(state.fillAnswers[qid]) ? state.fillAnswers[qid] : [];
+    if (e.target.checked) state.fillAnswers[qid] = [...cur, e.target.value];
+    else state.fillAnswers[qid] = cur.filter(x => x !== e.target.value);
+  });
+}
+
+// ----- Submit a filled form: record response AND update member profile -----
+function submitFill() {
+  const f = formById(state.fillFormId);
+  if (!f) return;
+
+  // Required validation
+  for (const q of f.questions) {
+    const v = state.fillAnswers[q.id];
+    const empty = v == null || v === '' || (Array.isArray(v) && v.length === 0);
+    if (q.required && empty) {
+      toast('Please answer required questions.', 'error');
+      return;
+    }
+  }
+
+  const m = memberById(state.fillAsMemberId);
+  const updates = [];
+  // Apply field mappings to member profile
+  if (m) {
+    for (const q of f.questions) {
+      const v = state.fillAnswers[q.id];
+      if (!q.mapsTo || v == null || v === '' || (Array.isArray(v) && v.length === 0)) continue;
+      switch (q.mapsTo) {
+        case 'name': {
+          const parts = String(v).trim().split(/\s+/);
+          if (parts.length >= 2) {
+            m.firstName = parts.slice(0,-1).join(' ');
+            m.lastName = parts.slice(-1)[0];
+            updates.push('name');
+          }
+          break;
+        }
+        case 'email':   if (m.email !== v)   { m.email = v;   updates.push('email'); }   break;
+        case 'phone':   if (m.phone !== v)   { m.phone = v;   updates.push('phone'); }   break;
+        case 'address': if (m.address !== v) { m.address = v; updates.push('address'); } break;
+        case 'skills':  m.skills = Array.from(new Set([...(m.skills||[]), ...(Array.isArray(v)?v:[v])])); updates.push('skills'); break;
+        case 'notes':   if (v) { m.notes = (m.notes ? m.notes + '\n' : '') + v; updates.push('notes'); } break;
+      }
+    }
+    m.activity = [{ t: `Submitted "${f.title}" form`, d: 'Just now' }, ...(m.activity||[])].slice(0, 8);
+  }
+
+  f.responses.unshift({
+    memberId: state.fillAsMemberId,
+    submittedAt: 'Just now',
+    answers: { ...state.fillAnswers }
+  });
+
+  state.fillFormId = null;
+  state.fillAnswers = {};
+  state.formView = 'responses';
+  render();
+
+  if (updates.length) {
+    toast(`Response recorded · ${memberById(state.fillAsMemberId).firstName}'s profile updated (${updates.join(', ')})`);
+  } else {
+    toast('Response recorded.');
+  }
+}
+
+// ---------- Boot ----------
+render();
+</script>
+</body>
+</html>
