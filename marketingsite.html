@@ -896,9 +896,262 @@
   .pos-rel { position: relative; }
   .hide-mobile { display: initial; }
   @media (max-width: 640px) { .hide-mobile { display: none; } }
+
+  /* ===== View switching (landing vs. auth) ===== */
+  .view { display: none; }
+  body[data-view="landing"] .view-landing { display: block; }
+  body[data-view="auth"] .view-auth { display: block; }
+
+  /* ===== Auth view (matches Figma: Auth · #01) ===== */
+  .view-auth {
+    min-height: 100vh;
+    background:
+      radial-gradient(60% 60% at 50% 0%, rgba(37,99,235,.06), transparent 60%),
+      radial-gradient(50% 50% at 100% 100%, rgba(124,58,237,.05), transparent 60%),
+      var(--bg);
+    padding: 32px 20px 56px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+  }
+  .auth-brand {
+    display: inline-flex; align-items: baseline;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    margin-bottom: 28px;
+  }
+  .auth-brand .l-church  { font-weight: 800; }
+  .auth-brand .l-planner { font-weight: 500; }
+  .auth-brand .l-pro {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-disabled);
+    letter-spacing: 0.12em;
+    margin-left: 4px;
+    transform: translateY(-8px);
+    display: inline-block;
+  }
+  .auth-card {
+    width: 100%;
+    max-width: 380px;
+    background: #FAFAFC;
+    border: 1px solid #E8E8ED;
+    border-radius: 16px;
+    padding: 28px 32px;
+    display: flex; flex-direction: column;
+    gap: 16px;
+    box-shadow: var(--shadow-lg);
+  }
+  .auth-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1C1C21;
+    text-align: center;
+  }
+  .auth-sub {
+    margin: 0;
+    font-size: 12px;
+    color: #9E9EAB;
+    text-align: center;
+  }
+  .auth-google {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 20px;
+    background: #FFFFFF;
+    border: 1px solid #E8E8ED;
+    border-radius: 10px;
+    color: #1C1C21;
+    font: 500 13px 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background 120ms ease, box-shadow 120ms ease, transform 80ms ease;
+  }
+  .auth-google:hover { background: #F4F4F8; box-shadow: var(--shadow-sm); }
+  .auth-google:active { transform: translateY(1px); }
+  .auth-google:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .auth-google:disabled { opacity: 0.6; cursor: not-allowed; }
+  .g-mark { display: inline-flex; align-items: center; gap: 3px; }
+  .g-mark .dot { width: 4px; height: 4px; border-radius: 50%; }
+  .g-mark .dot.blue   { background: #4285F4; }
+  .g-mark .dot.red    { background: #EA4335; }
+  .g-mark .dot.yellow { background: #FBBC05; }
+  .g-mark .dot.green  { background: #34A853; }
+
+  .auth-divider {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%;
+  }
+  .auth-divider .line { flex: 1; height: 1px; background: #E8E8ED; }
+  .auth-divider .lbl  { color: #9E9EAB; font-size: 11px; }
+
+  .auth-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: #F7F7FA;
+    border: 1px solid #E8E8ED;
+    border-radius: 10px;
+    font: 400 13px 'Inter', sans-serif;
+    color: #1C1C21;
+    transition: background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+  }
+  .auth-input::placeholder { color: #9E9EAB; }
+  .auth-input:hover { background: #F2F2F6; }
+  .auth-input:focus {
+    background: #FFFFFF;
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+  }
+  .auth-input.error {
+    border-color: #DC2626;
+    background: #FEF2F2;
+  }
+  .auth-input.error:focus { box-shadow: 0 0 0 3px rgba(220,38,38,.15); }
+
+  .auth-error {
+    margin: -8px 0 0;
+    font-size: 12px;
+    color: #DC2626;
+    min-height: 16px;
+    display: none;
+  }
+  .auth-error.show { display: block; }
+
+  .auth-submit {
+    width: 100%;
+    padding: 12px 20px;
+    background: #1C1C21;
+    border: 1px solid #1C1C21;
+    border-radius: 10px;
+    color: white;
+    font: 600 13px 'Inter', sans-serif;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px;
+    transition: background 120ms ease, transform 80ms ease;
+  }
+  .auth-submit:hover { background: #2A2A30; border-color: #2A2A30; }
+  .auth-submit:active { transform: translateY(1px); }
+  .auth-submit:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .auth-submit:disabled { background: #C7C7CF; border-color: #C7C7CF; cursor: not-allowed; }
+  .auth-submit .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,.35);
+    border-top-color: white;
+    border-radius: 50%;
+    display: none;
+    animation: spin 700ms linear infinite;
+  }
+  .auth-submit.loading .spinner { display: inline-block; }
+  .auth-submit.loading .label { opacity: 0.85; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Password field with show/hide */
+  .auth-password-wrap { position: relative; width: 100%; }
+  .auth-password-wrap .auth-input { padding-right: 70px; }
+  .auth-password-toggle {
+    position: absolute;
+    right: 8px; top: 50%; transform: translateY(-50%);
+    background: none; border: none;
+    color: #9E9EAB;
+    font: 600 11px 'Inter', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 6px;
+  }
+  .auth-password-toggle:hover { color: #1C1C21; background: rgba(28,28,33,.04); }
+  body[data-auth-mode="login"] .signup-only,
+  body[data-auth-mode="signup"] .login-only { display: none; }
+
+  /* T&C / Privacy checkbox (signup only) */
+  .auth-consent-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 12px;
+    color: #1C1C21;
+    line-height: 1.45;
+    cursor: pointer;
+    user-select: none;
+    margin: -4px 0 0;
+  }
+  .auth-consent-row input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border: 1px solid #C7C7CF;
+    border-radius: 4px;
+    background: #FFFFFF;
+    flex-shrink: 0;
+    margin: 1px 0 0;
+    cursor: pointer;
+    position: relative;
+    transition: background 120ms ease, border-color 120ms ease;
+  }
+  .auth-consent-row input[type="checkbox"]:hover { border-color: #9E9EAB; }
+  .auth-consent-row input[type="checkbox"]:checked {
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+  .auth-consent-row input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px; top: 1px;
+    width: 5px; height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .auth-consent-row input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+  .auth-consent-row.error input[type="checkbox"] {
+    border-color: #DC2626;
+    background: #FEF2F2;
+  }
+  .auth-consent-row a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 500;
+  }
+  .auth-consent-row a:hover { color: var(--primary-hover); }
+
+  .auth-footnote {
+    margin-top: 24px;
+    font-size: 13px;
+    color: #9E9EAB;
+    text-align: center;
+  }
+  .auth-footnote a, .auth-footnote button {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    background: none; border: none; padding: 0;
+    font: inherit; cursor: pointer;
+  }
+  .auth-footnote a:hover, .auth-footnote button:hover { color: var(--primary-hover); text-decoration: underline; }
+  .auth-legal {
+    position: absolute;
+    bottom: 16px; left: 0; right: 0;
+    text-align: center;
+    font-size: 12px;
+    color: #9E9EAB;
+  }
+  .auth-legal a { color: #9E9EAB; text-decoration: none; }
+  .auth-legal a:hover { color: #1C1C21; text-decoration: underline; }
+
+  @media (max-width: 420px) { .auth-card { padding: 24px 22px; } }
 </style>
 </head>
-<body>
+<body data-view="landing">
 
 <!-- ===== SVG Icon defs ===== -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -923,6 +1176,11 @@
   </defs>
 </svg>
 
+<!-- =============================================================
+     LANDING VIEW
+     ============================================================= -->
+<div class="view view-landing">
+
 <!-- ===== Nav ===== -->
 <nav class="nav">
   <div class="container nav-inner">
@@ -937,8 +1195,8 @@
       <a href="#faq">FAQ</a>
     </div>
     <div class="nav-actions">
-      <a class="btn btn-ghost hide-mobile" href="/auth.html">Login</a>
-      <a class="btn btn-primary" href="/auth.html?mode=signup">Sign up</a>
+      <a class="btn btn-ghost hide-mobile" href="/?mode=login">Login</a>
+      <a class="btn btn-primary" href="/?mode=signup">Sign up</a>
     </div>
   </div>
 </nav>
@@ -955,7 +1213,7 @@
         and one-off tools admins juggle every week.
       </p>
       <div class="hero-cta">
-        <a class="btn btn-cta" href="/auth.html?mode=signup">Sign up <svg style="width:16px;height:16px"><use href="#i-arrow-right"/></svg></a>
+        <a class="btn btn-cta" href="/?mode=signup">Sign up <svg style="width:16px;height:16px"><use href="#i-arrow-right"/></svg></a>
       </div>
       <div class="hero-trust">
         <span class="check"><svg><use href="#i-check"/></svg></span>
@@ -1452,8 +1710,309 @@
   </div>
 </footer>
 
+</div><!-- /.view-landing -->
+
+
+<!-- =============================================================
+     AUTH VIEW (login + signup, mode toggled via URL)
+     ============================================================= -->
+<div class="view view-auth">
+  <a class="auth-brand" href="/" aria-label="ChurchPlannerPro home">
+    <span class="l-church">Church</span><span class="l-planner">Planner</span><span class="l-pro">PRO</span>
+  </a>
+
+  <form class="auth-card" id="authForm" novalidate>
+    <h1 class="auth-title" id="authTitle">Sign in to your account</h1>
+    <p class="auth-sub" id="authSub">Choose your preferred sign-in method</p>
+
+    <button type="button" class="auth-google" id="authGoogle">
+      <span class="g-mark" aria-hidden="true">
+        <span class="dot blue"></span>
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </span>
+      <span id="authGoogleLabel">Continue with Google</span>
+    </button>
+
+    <div class="auth-divider" role="separator">
+      <span class="line"></span>
+      <span class="lbl">or</span>
+      <span class="line"></span>
+    </div>
+
+    <label for="authEmail" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Email address</label>
+    <input
+      id="authEmail"
+      class="auth-input"
+      type="email"
+      name="email"
+      autocomplete="email"
+      placeholder="Enter email address"
+      aria-describedby="authEmailError"
+      inputmode="email"
+      spellcheck="false"
+      autocapitalize="off"
+    />
+    <p class="auth-error" id="authEmailError" role="alert"></p>
+
+    <label for="authPassword" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Password</label>
+    <div class="auth-password-wrap">
+      <input
+        id="authPassword"
+        class="auth-input"
+        type="password"
+        name="password"
+        placeholder="Password"
+        aria-describedby="authPasswordError"
+        autocomplete="current-password"
+      />
+      <button type="button" class="auth-password-toggle" id="authPasswordToggle" aria-label="Show password">Show</button>
+    </div>
+    <p class="auth-error" id="authPasswordError" role="alert"></p>
+
+    <label class="auth-consent-row signup-only" id="authConsentRow">
+      <input type="checkbox" id="authConsent" />
+      <span>
+        I agree to the
+        <a href="https://www.churchplannerpro.com/terms" target="_blank" rel="noopener">Terms of Service</a>
+        and
+        <a href="https://www.churchplannerpro.com/privacy" target="_blank" rel="noopener">Privacy Policy</a>.
+      </span>
+    </label>
+
+    <button type="submit" class="auth-submit" id="authSubmit">
+      <span class="spinner" aria-hidden="true"></span>
+      <span class="label" id="authSubmitLabel">Continue</span>
+    </button>
+  </form>
+
+  <p class="auth-footnote" id="authFootnote"></p>
+
+  <p class="auth-legal">
+    Need help signing in? <a href="mailto:hello@churchplannerpro.com">Contact support</a>.
+  </p>
+</div><!-- /.view-auth -->
+
+
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ==========================================================
+  // View routing — single-file landing + auth
+  // URL contract:
+  //   /                  → landing
+  //   /?mode=login       → auth (login)
+  //   /?mode=signup      → auth (signup)
+  //   /#login            → auth (login)
+  //   /#signup           → auth (signup)
+  // ==========================================================
+  const AUTH_MODES = {
+    login: {
+      docTitle:    'Sign in · ChurchPlannerPro',
+      title:       'Sign in to your account',
+      sub:         'Choose your preferred sign-in method',
+      googleLabel: 'Continue with Google',
+      submitLabel: 'Continue',
+      footnote:    `Don't have an account yet? <button type="button" data-mode-toggle="signup">Sign up</button>`
+    },
+    signup: {
+      docTitle:    'Sign up · ChurchPlannerPro',
+      title:       'Create your account',
+      sub:         'Start running your church from one platform',
+      googleLabel: 'Sign up with Google',
+      submitLabel: 'Create account',
+      footnote:    `Already have an account? <button type="button" data-mode-toggle="login">Sign in</button>`
+    }
+  };
+  const LANDING_DOC_TITLE = document.title;
+  // Hook real auth into the two `authSubmit(...)` callsites below.
+  const DEMO_URL = 'https://aschneiderlbl.github.io/churchplanner-pro/mvpv3';
+
+  const body              = document.body;
+  const authForm          = document.getElementById('authForm');
+  const authEmail         = document.getElementById('authEmail');
+  const authErr           = document.getElementById('authEmailError');
+  const authPassword      = document.getElementById('authPassword');
+  const authPasswordErr   = document.getElementById('authPasswordError');
+  const authPasswordToggle = document.getElementById('authPasswordToggle');
+  const authConsent       = document.getElementById('authConsent');
+  const authConsentRow    = document.getElementById('authConsentRow');
+  const authSubmitBtn     = document.getElementById('authSubmit');
+  const authSubmitLbl     = document.getElementById('authSubmitLabel');
+  const authGoogle        = document.getElementById('authGoogle');
+  const authGoogleLbl     = document.getElementById('authGoogleLabel');
+  const authTitle         = document.getElementById('authTitle');
+  const authSub           = document.getElementById('authSub');
+  const authFootnote      = document.getElementById('authFootnote');
+
+  function readRouteFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const q = (params.get('mode') || '').toLowerCase();
+    if (q === 'login' || q === 'signin')   return { view: 'auth', mode: 'login' };
+    if (q === 'signup' || q === 'register') return { view: 'auth', mode: 'signup' };
+    const hash = (window.location.hash || '').replace('#','').toLowerCase();
+    if (hash === 'login' || hash === 'signin')   return { view: 'auth', mode: 'login' };
+    if (hash === 'signup' || hash === 'register') return { view: 'auth', mode: 'signup' };
+    return { view: 'landing', mode: null };
+  }
+
+  function setView(route, opts) {
+    const { view, mode } = route;
+    const updateURL = (opts && opts.updateURL) !== false;
+
+    body.dataset.view = view;
+    if (view === 'auth') {
+      body.dataset.authMode = mode;
+      const m = AUTH_MODES[mode] || AUTH_MODES.login;
+      authTitle.textContent       = m.title;
+      authSub.textContent         = m.sub;
+      authGoogleLbl.textContent   = m.googleLabel;
+      authSubmitLbl.textContent   = m.submitLabel;
+      authFootnote.innerHTML      = m.footnote;
+      document.title              = m.docTitle;
+      // Mode-appropriate password autocomplete hint
+      authPassword.setAttribute('autocomplete', mode === 'signup' ? 'new-password' : 'current-password');
+      // Reset T&C state on mode switch (signup only field)
+      authConsent.checked = false;
+      authConsentRow.classList.remove('error');
+      // Re-wire the toggle buttons in the footnote
+      authFootnote.querySelectorAll('[data-mode-toggle]').forEach(btn => {
+        btn.addEventListener('click', () => setView({ view: 'auth', mode: btn.dataset.modeToggle }));
+      });
+      // Scroll auth to top
+      window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+      // Autofocus the email input on desktop
+      try {
+        if (typeof window.matchMedia === 'function' && window.matchMedia('(min-width: 600px)').matches) {
+          setTimeout(() => authEmail.focus({ preventScroll: true }), 50);
+        }
+      } catch (_) {}
+      setAuthError('');
+      setPasswordError('');
+    } else {
+      delete body.dataset.authMode;
+      document.title = LANDING_DOC_TITLE;
+    }
+
+    if (updateURL) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('mode');
+      url.hash = '';
+      if (view === 'auth') url.searchParams.set('mode', mode);
+      window.history.replaceState({}, '', url.toString());
+    }
+  }
+
+  function isValidEmail(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || '').trim()); }
+
+  function setAuthError(msg) {
+    authErr.textContent = msg || '';
+    authErr.classList.toggle('show', !!msg);
+    authEmail.classList.toggle('error', !!msg);
+    if (msg) authEmail.setAttribute('aria-invalid','true');
+    else authEmail.removeAttribute('aria-invalid');
+  }
+  function setPasswordError(msg) {
+    authPasswordErr.textContent = msg || '';
+    authPasswordErr.classList.toggle('show', !!msg);
+    authPassword.classList.toggle('error', !!msg);
+    if (msg) authPassword.setAttribute('aria-invalid','true');
+    else authPassword.removeAttribute('aria-invalid');
+  }
+
+  function authSubmit(method) {
+    const mode = body.dataset.authMode;
+    authSubmitBtn.classList.add('loading');
+    authSubmitBtn.disabled = true;
+    authGoogle.disabled = true;
+    if (method === 'google') {
+      authSubmitLbl.textContent = 'Connecting to Google…';
+    } else {
+      authSubmitLbl.textContent = mode === 'signup' ? 'Creating your account…' : 'Signing in…';
+    }
+    setTimeout(() => { window.location.href = DEMO_URL; }, 700);
+  }
+
+  // ---- Auth bindings ----
+  authForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const mode = body.dataset.authMode;
+    const email = authEmail.value.trim();
+    const pwd = authPassword.value;
+
+    // Email validation
+    if (!email)               { setAuthError('Enter your email address.'); authEmail.focus(); return; }
+    if (!isValidEmail(email)) { setAuthError('That doesn’t look like a valid email address.'); authEmail.focus(); return; }
+    setAuthError('');
+
+    // Password validation
+    if (!pwd) {
+      setPasswordError(mode === 'signup' ? 'Choose a password.' : 'Enter your password.');
+      authPassword.focus(); return;
+    }
+    if (mode === 'signup' && pwd.length < 8) {
+      setPasswordError('Use at least 8 characters.');
+      authPassword.focus(); return;
+    }
+    setPasswordError('');
+
+    // T&C / Privacy acceptance (signup only)
+    if (mode === 'signup' && !authConsent.checked) {
+      authConsentRow.classList.add('error');
+      authConsent.focus();
+      return;
+    }
+    authConsentRow.classList.remove('error');
+
+    authSubmit('email');
+  });
+
+  authEmail.addEventListener('input', () => { if (authErr.classList.contains('show')) setAuthError(''); });
+  authPassword.addEventListener('input', () => { if (authPasswordErr.classList.contains('show')) setPasswordError(''); });
+  authConsent.addEventListener('change', () => { if (authConsent.checked) authConsentRow.classList.remove('error'); });
+
+  // Show/hide password
+  authPasswordToggle.addEventListener('click', () => {
+    const showing = authPassword.type === 'text';
+    authPassword.type = showing ? 'password' : 'text';
+    authPasswordToggle.textContent = showing ? 'Show' : 'Hide';
+    authPasswordToggle.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+  });
+
+  authGoogle.addEventListener('click', () => authSubmit('google'));
+
+  // Intercept internal nav clicks so the page doesn't reload between views
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a');
+    if (!a) return;
+    const href = a.getAttribute('href') || '';
+    // Logo "/" link → return to landing
+    if (href === '/' || href === '/index.html') {
+      e.preventDefault();
+      setView({ view: 'landing', mode: null });
+      return;
+    }
+    // ?mode=… or #login / #signup links → enter auth
+    if (href.startsWith('/?mode=') || href.startsWith('?mode=')) {
+      e.preventDefault();
+      const m = new URLSearchParams(href.split('?')[1]).get('mode');
+      setView({ view: 'auth', mode: (m === 'signup' || m === 'register') ? 'signup' : 'login' });
+    } else if (href === '/#login' || href === '#login' || href === '/#signin' || href === '#signin') {
+      e.preventDefault();
+      setView({ view: 'auth', mode: 'login' });
+    } else if (href === '/#signup' || href === '#signup' || href === '/#register' || href === '#register') {
+      e.preventDefault();
+      setView({ view: 'auth', mode: 'signup' });
+    }
+  });
+
+  // Back/forward
+  window.addEventListener('popstate', () => setView(readRouteFromURL(), { updateURL: false }));
+  window.addEventListener('hashchange', () => setView(readRouteFromURL(), { updateURL: false }));
+
+  // ---- Init from URL ----
+  setView(readRouteFromURL(), { updateURL: false });
 </script>
 
 </body>
