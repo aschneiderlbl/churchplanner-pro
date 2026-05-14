@@ -1136,6 +1136,7 @@ function Sidebar() {
     <aside class="sidebar">
       <div class="brand"><span class="brand-name">ChurchPlanner<span class="pro">PRO</span></span></div>
       <nav class="nav">
+        ${item('ask-aaron','Ask Aaron','sparkle')}
         ${item('workflows','Workflows','workflow')}
         ${item('people','People','people')}
         ${item('finances','Finances','wallet')}
@@ -1198,6 +1199,13 @@ function Page() {
 
 // ====================== Coming Soon ======================
 const COMING_SOON = {
+  'ask-aaron': {
+    title: 'Ask Aaron',
+    subtitle: 'Your AI assistant for forms, emails, scheduling, and more',
+    icon: 'i-sparkle',
+    tagline: 'Aaron will draft emails, build forms, schedule events, and update records — just by asking.',
+    mockKind: 'cards'
+  },
   workflows: {
     title: 'Workflows',
     subtitle: 'Automated sequences Aaron runs on your behalf',
