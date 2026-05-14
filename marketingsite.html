@@ -1,0 +1,1460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ChurchPlannerPro — The church management platform</title>
+<meta name="description" content="ChurchPlannerPro brings members, giving, workflows, facilities, calendar, and reporting into one platform — plus an AI assistant that handles the admin grind. Built for church administrators." />
+<link rel="canonical" href="https://discover.churchplannerpro.com/" />
+
+<meta property="og:title" content="ChurchPlannerPro — The church management platform" />
+<meta property="og:description" content="One platform to run your whole church. Members, giving, workflows, facilities, calendar, and an AI assistant — built for the way churches actually run." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://discover.churchplannerpro.com/" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --primary: #2563EB;
+    --primary-hover: #1D4ED8;
+    --primary-light: #DBEAFE;
+    --primary-bg: #EFF4FF;
+    --indigo: #4F46E5;
+    --violet: #7C3AED;
+    --bg: #F8FAFC;
+    --bg-soft: #F1F5F9;
+    --surface: #FFFFFF;
+    --border: #E5E7EB;
+    --border-strong: #D1D5DB;
+    --text: #0F172A;
+    --text-secondary: #475569;
+    --text-disabled: #94A3B8;
+    --cta: #22C55E;
+    --cta-hover: #16A34A;
+    --cta-light: #DCFCE7;
+    --amber: #F59E0B;
+    --rose: #F43F5E;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,.04);
+    --shadow-md: 0 4px 12px rgba(15,23,42,.06), 0 1px 3px rgba(15,23,42,.04);
+    --shadow-lg: 0 12px 32px rgba(15,23,42,.08), 0 4px 12px rgba(15,23,42,.05);
+    --shadow-xl: 0 24px 64px rgba(15,23,42,.12), 0 8px 24px rgba(15,23,42,.06);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--text);
+    background: var(--surface);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  img { max-width: 100%; height: auto; display: block; }
+  a { color: var(--primary); text-decoration: none; }
+  a:hover { color: var(--primary-hover); }
+
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  .container-narrow { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== Buttons ===== */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 22px;
+    border-radius: var(--radius-md);
+    font-weight: 600; font-size: 15px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 120ms ease, background 120ms ease, box-shadow 120ms ease;
+    font-family: inherit;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 1px 0 rgba(255,255,255,.2) inset, var(--shadow-md);
+  }
+  .btn-primary:hover { background: var(--primary-hover); color: white; box-shadow: 0 1px 0 rgba(255,255,255,.2) inset, var(--shadow-lg); }
+  .btn-cta {
+    background: var(--cta);
+    color: white;
+    box-shadow: 0 1px 0 rgba(255,255,255,.2) inset, var(--shadow-md);
+  }
+  .btn-cta:hover { background: var(--cta-hover); color: white; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+  .btn-ghost:hover { background: var(--bg-soft); color: var(--text); }
+  .btn-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--primary); font-weight: 600; font-size: 15px;
+  }
+  .btn-link:hover { color: var(--primary-hover); }
+  .btn-link svg { width: 16px; height: 16px; transition: transform 120ms ease; }
+  .btn-link:hover svg { transform: translateX(3px); }
+
+  /* ===== Nav ===== */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.85);
+    backdrop-filter: saturate(140%) blur(10px);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 0;
+  }
+  .logo {
+    display: inline-flex; align-items: baseline;
+    text-decoration: none;
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 22px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .logo .l-church  { font-weight: 800; }
+  .logo .l-planner { font-weight: 500; }
+  .logo .l-pro {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--text-disabled);
+    letter-spacing: 0.12em;
+    margin-left: 4px;
+    transform: translateY(-7px);
+    display: inline-block;
+  }
+  .logo-footer { font-size: 24px; }
+  .logo-footer .l-pro { font-size: 10px; transform: translateY(-8px); }
+  .nav-links {
+    display: flex; align-items: center; gap: 28px;
+  }
+  .nav-links a {
+    color: var(--text-secondary); font-weight: 500; font-size: 14px;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-actions { display: flex; align-items: center; gap: 10px; }
+  .nav-actions .btn { padding: 9px 16px; font-size: 14px; }
+  @media (max-width: 768px) { .nav-links { display: none; } }
+
+  /* ===== Hero ===== */
+  .hero {
+    position: relative;
+    padding: 80px 0 120px;
+    overflow: hidden;
+    background:
+      radial-gradient(60% 60% at 50% 0%, rgba(37,99,235,.10), transparent 65%),
+      radial-gradient(50% 50% at 90% 30%, rgba(124,58,237,.08), transparent 70%),
+      linear-gradient(to bottom, #FAFBFF, var(--surface));
+  }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: center;
+  }
+  @media (max-width: 980px) { .hero-grid { grid-template-columns: 1fr; gap: 48px; } }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 999px;
+    font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 18px;
+  }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cta); box-shadow: 0 0 0 4px rgba(34,197,94,.18); }
+  .hero h1 {
+    font-size: 56px;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    font-weight: 700;
+    margin: 0 0 18px;
+    color: var(--text);
+  }
+  .hero h1 .accent {
+    background: linear-gradient(90deg, var(--primary), var(--indigo));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-lede {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    margin: 0 0 28px;
+    max-width: 540px;
+  }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .hero-trust {
+    margin-top: 28px;
+    display: flex; align-items: center; gap: 12px;
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+  .hero-trust .check {
+    width: 18px; height: 18px;
+    background: var(--cta-light);
+    color: var(--cta-hover);
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .hero-trust .check svg { width: 11px; height: 11px; }
+
+  @media (max-width: 640px) {
+    .hero { padding: 56px 0 80px; }
+    .hero h1 { font-size: 38px; }
+    .hero-lede { font-size: 17px; }
+  }
+
+  /* ===== Hero app mockup ===== */
+  .mockup-stack { position: relative; }
+  .mockup {
+    position: relative;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transform: perspective(1400px) rotateX(2deg) rotateY(-6deg);
+  }
+  .mockup-titlebar {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 14px;
+    background: #F8FAFC;
+    border-bottom: 1px solid var(--border);
+  }
+  .mockup-dot { width: 11px; height: 11px; border-radius: 50%; background: #E5E7EB; }
+  .mockup-dot.red { background: #F87171; }
+  .mockup-dot.yellow { background: #FBBF24; }
+  .mockup-dot.green { background: #34D399; }
+  .mockup-body {
+    display: grid;
+    grid-template-columns: 168px 1fr;
+    min-height: 380px;
+  }
+  .mockup-sidebar {
+    background: #F8FAFC;
+    padding: 14px 10px;
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .mock-brand { font-weight: 800; font-size: 13px; padding: 4px 8px 12px; color: var(--text); }
+  .mock-brand sup { color: var(--text-disabled); font-size: 8px; font-weight: 700; }
+  .mock-navitem {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 8px;
+    border-radius: 6px;
+    font-size: 12px; color: var(--text-secondary);
+    font-weight: 500;
+  }
+  .mock-navitem.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+  .mock-navitem .ni-dot { width: 12px; height: 12px; border-radius: 3px; background: #CBD5E1; flex-shrink: 0; }
+  .mock-navitem.active .ni-dot { background: var(--primary); }
+  .mock-section-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-disabled); padding: 10px 8px 4px; font-weight: 700; }
+
+  .mockup-content { padding: 18px 20px; background: var(--surface); }
+  .mock-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+  .mock-sub { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+  .mock-stat-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    margin: 16px 0;
+  }
+  .mock-stat {
+    background: #F8FAFC;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .mock-stat-label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+  .mock-stat-value { font-size: 18px; font-weight: 700; margin-top: 4px; letter-spacing: -0.01em; }
+  .mock-stat-delta { font-size: 10px; color: var(--cta-hover); margin-top: 2px; font-weight: 600; }
+  .mock-table {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .mock-tr { display: grid; grid-template-columns: 1.6fr 1fr 0.6fr 0.9fr; padding: 9px 12px; align-items: center; border-bottom: 1px solid var(--border); font-size: 11px; }
+  .mock-tr:last-child { border-bottom: none; }
+  .mock-tr.head { background: #F8FAFC; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; font-size: 9px; }
+  .mock-avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--indigo));
+    color: white;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; margin-right: 8px;
+  }
+  .mock-avatar.a { background: linear-gradient(135deg, #F59E0B, #F43F5E); }
+  .mock-avatar.b { background: linear-gradient(135deg, #10B981, #06B6D4); }
+  .mock-avatar.c { background: linear-gradient(135deg, #6366F1, #8B5CF6); }
+  .mock-avatar.d { background: linear-gradient(135deg, #EC4899, #F97316); }
+  .mock-name { display: flex; align-items: center; }
+  .mock-pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 9px; font-weight: 600; }
+  .mock-pill.good { background: var(--cta-light); color: #166534; }
+  .mock-pill.warn { background: #FEF3C7; color: #92400E; }
+  .mock-pill.muted { background: #F1F5F9; color: var(--text-secondary); }
+
+  /* Floating cards next to mockup */
+  .float-card {
+    position: absolute;
+    background: var(--surface);
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px;
+    animation: float 4s ease-in-out infinite;
+  }
+  .float-card .fc-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .float-card .fc-icon svg { width: 18px; height: 18px; }
+  .float-card .fc-title { font-weight: 600; line-height: 1.2; font-size: 13px; }
+  .float-card .fc-sub { color: var(--text-secondary); font-size: 11px; margin-top: 2px; }
+  .float-card.a {
+    top: -22px; left: -28px;
+    animation-delay: 0s;
+  }
+  .float-card.a .fc-icon { background: linear-gradient(135deg, var(--primary), var(--indigo)); color: white; }
+  .float-card.b {
+    bottom: -22px; right: -22px;
+    animation-delay: -2s;
+  }
+  .float-card.b .fc-icon { background: var(--cta-light); color: var(--cta-hover); }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @media (max-width: 980px) {
+    .mockup { transform: none; }
+    .float-card { display: none; }
+  }
+
+  /* ===== Sections ===== */
+  section { padding: 96px 0; }
+  @media (max-width: 640px) { section { padding: 64px 0; } }
+  .section-bg { background: var(--bg); }
+
+  .section-eyebrow {
+    display: inline-block;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 40px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    margin: 0 0 16px;
+    color: var(--text);
+  }
+  .section-lede {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 640px;
+    margin: 0 0 56px;
+    line-height: 1.55;
+  }
+  .section-head-center { text-align: center; }
+  .section-head-center .section-lede { margin-left: auto; margin-right: auto; }
+  @media (max-width: 640px) { .section-title { font-size: 30px; } .section-lede { font-size: 16px; margin-bottom: 40px; } }
+
+  /* ===== Modules grid ===== */
+  .modules {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 900px) { .modules { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .modules { grid-template-columns: 1fr; } }
+  .module {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    position: relative;
+  }
+  .module:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: #CBD5E1;
+  }
+  .module-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    background: var(--primary-light);
+    color: var(--primary);
+  }
+  .module-icon svg { width: 22px; height: 22px; }
+  .module-title {
+    font-size: 17px; font-weight: 700; letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    color: var(--text);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .module-desc { font-size: 14px; color: var(--text-secondary); margin: 0; line-height: 1.55; }
+  .module-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 999px;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  /* Color variations per module */
+  .module.m-aaron .module-icon { background: linear-gradient(135deg, rgba(124,58,237,.15), rgba(37,99,235,.15)); color: var(--violet); }
+  .module.m-people .module-icon { background: #DBEAFE; color: #2563EB; }
+  .module.m-workflows .module-icon { background: #FEF3C7; color: #B45309; }
+  .module.m-finances .module-icon { background: #DCFCE7; color: #15803D; }
+  .module.m-forms .module-icon { background: #E0E7FF; color: #4F46E5; }
+  .module.m-calendar .module-icon { background: #FCE7F3; color: #BE185D; }
+  .module.m-reporting .module-icon { background: #CFFAFE; color: #0E7490; }
+  .module.m-integrations .module-icon { background: #F3E8FF; color: #7C3AED; }
+  .module.m-facilities .module-icon { background: #FFEDD5; color: #C2410C; }
+
+  /* ===== Feature spotlights ===== */
+  .spotlight {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .spotlight + .spotlight { margin-top: 112px; }
+  .spotlight.reverse { direction: rtl; }
+  .spotlight.reverse > * { direction: ltr; }
+  @media (max-width: 900px) {
+    .spotlight { grid-template-columns: 1fr; gap: 32px; }
+    .spotlight + .spotlight { margin-top: 80px; }
+    .spotlight.reverse { direction: ltr; }
+  }
+  .spotlight-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .spotlight-eyebrow svg { width: 16px; height: 16px; }
+  .spotlight h3 {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin: 0 0 16px;
+  }
+  .spotlight p { color: var(--text-secondary); font-size: 17px; margin: 0 0 18px; line-height: 1.55; }
+  .spot-checks { list-style: none; padding: 0; margin: 0 0 20px; display: flex; flex-direction: column; gap: 10px; }
+  .spot-checks li {
+    display: flex; align-items: flex-start; gap: 10px;
+    color: var(--text);
+    font-size: 15px;
+  }
+  .spot-checks li svg {
+    width: 20px; height: 20px;
+    color: var(--cta-hover);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .spot-visual {
+    background: linear-gradient(135deg, var(--bg-soft), var(--surface));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 32px;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Ask Aaron chat mock */
+  .chat {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .chat-bubble {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 14px;
+    box-shadow: var(--shadow-sm);
+    max-width: 88%;
+  }
+  .chat-bubble.user {
+    background: var(--primary);
+    color: white;
+    border-color: transparent;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .chat-bubble.aaron {
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .chat-bubble.aaron .role {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: var(--violet);
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .chat-bubble.aaron .role-mark {
+    width: 16px; height: 16px; border-radius: 5px;
+    background: linear-gradient(135deg, var(--primary), var(--violet));
+    color: white;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .chat-bubble.aaron .role-mark svg { width: 10px; height: 10px; }
+  .chat-card {
+    background: linear-gradient(135deg, #F8FAFC, var(--surface));
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-size: 13px;
+  }
+  .chat-card .field {
+    display: flex; justify-content: space-between;
+    padding: 5px 0; color: var(--text-secondary);
+  }
+  .chat-card .field strong { color: var(--text); font-weight: 600; }
+  .chat-action-row { display: flex; gap: 8px; margin-top: 10px; }
+  .chip {
+    padding: 5px 10px; border-radius: 999px;
+    background: var(--bg-soft);
+    color: var(--text);
+    font-size: 12px; font-weight: 500;
+    border: 1px solid var(--border);
+  }
+  .chip.primary { background: var(--primary); color: white; border-color: transparent; }
+
+  /* Form → profile flow visual */
+  .flow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .flow-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .flow-card-head {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+  .flow-card-head .fc-mark {
+    width: 22px; height: 22px; border-radius: 6px;
+    background: var(--primary-light); color: var(--primary);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .flow-card-head .fc-mark svg { width: 12px; height: 12px; }
+  .flow-row {
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: #F8FAFC;
+    margin-bottom: 6px;
+    border-left: 3px solid #E2E8F0;
+  }
+  .flow-row.changed {
+    background: var(--cta-light);
+    border-left-color: var(--cta);
+    color: #166534;
+    font-weight: 600;
+  }
+  .flow-arrow {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--indigo));
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-md);
+  }
+  .flow-arrow svg { width: 18px; height: 18px; }
+  @media (max-width: 560px) { .flow { grid-template-columns: 1fr; }  .flow-arrow { transform: rotate(90deg); margin: 0 auto; } }
+
+  /* Workflows visual */
+  .wf-list { display: flex; flex-direction: column; gap: 10px; }
+  .wf-step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+  }
+  .wf-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .wf-step.done .wf-num { background: var(--cta); }
+  .wf-step.active .wf-num { background: var(--amber); }
+  .wf-step.pending .wf-num { background: var(--text-disabled); }
+  .wf-text { font-size: 13px; flex: 1; color: var(--text); font-weight: 500; }
+  .wf-status {
+    font-size: 11px; padding: 3px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .wf-status.done { background: var(--cta-light); color: #166534; }
+  .wf-status.active { background: #FEF3C7; color: #92400E; }
+  .wf-status.pending { background: #F1F5F9; color: var(--text-secondary); }
+
+  /* ===== Integrations ===== */
+  .integrations-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+    margin-top: 40px;
+  }
+  @media (max-width: 900px) { .integrations-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .integrations-grid { grid-template-columns: repeat(2, 1fr); } }
+  .integration {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 22px 16px;
+    text-align: center;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+  .integration:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+  .integration-mark {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--bg-soft);
+    color: var(--text);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 16px;
+    margin: 0 auto 12px;
+    letter-spacing: -0.02em;
+  }
+  .integration-name { font-weight: 600; font-size: 14px; color: var(--text); }
+  .integration-cat { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+  /* ===== Comparison ===== */
+  .compare {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+  .compare-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+  .compare-row:last-child { border-bottom: none; }
+  .compare-row > div { padding: 18px 22px; border-right: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .compare-row > div:last-child { border-right: none; }
+  .compare-row .cell-attr { font-weight: 600; color: var(--text); font-size: 15px; }
+  .compare-head {
+    background: var(--bg-soft);
+  }
+  .compare-head > div { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); padding-top: 16px; padding-bottom: 16px; }
+  .compare-head .col-us { background: linear-gradient(135deg, rgba(37,99,235,.10), rgba(124,58,237,.10)); color: var(--primary); }
+  .compare-row .cell-us { background: rgba(37,99,235,.04); color: var(--text); font-weight: 600; }
+  .compare-row .cell-them { color: var(--text-secondary); }
+  .compare-row svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .compare-row .check-good { color: var(--cta-hover); }
+  .compare-row .check-bad { color: var(--rose); }
+  @media (max-width: 700px) {
+    .compare-row { grid-template-columns: 1fr; }
+    .compare-row > div { border-right: none; border-bottom: 1px solid var(--border); padding: 12px 18px; }
+    .compare-row > div:last-child { border-bottom: none; }
+    .compare-row .cell-attr { background: var(--bg-soft); font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; }
+  }
+
+  /* ===== Testimonial ===== */
+  .quote {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 56px 64px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+  }
+  .quote::before {
+    content: '"';
+    position: absolute;
+    top: -40px; left: 28px;
+    font-size: 220px;
+    line-height: 1;
+    color: var(--primary-light);
+    font-family: Georgia, serif;
+    pointer-events: none;
+  }
+  .quote-text {
+    font-size: 24px;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    font-weight: 500;
+    max-width: 680px;
+    margin: 0 auto 28px;
+    position: relative;
+  }
+  .quote-cite { display: inline-flex; align-items: center; gap: 12px; }
+  .quote-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--indigo));
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .quote-name { font-weight: 700; font-size: 15px; }
+  .quote-role { font-size: 13px; color: var(--text-secondary); }
+  @media (max-width: 640px) { .quote { padding: 40px 24px; } .quote-text { font-size: 19px; } }
+
+  /* ===== FAQ ===== */
+  .faq {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .faq details {
+    border-bottom: 1px solid var(--border);
+  }
+  .faq details:last-child { border-bottom: none; }
+  .faq summary {
+    padding: 20px 24px;
+    cursor: pointer;
+    list-style: none;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    font-weight: 600; font-size: 16px;
+    color: var(--text);
+    transition: background 120ms ease;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary:hover { background: var(--bg-soft); }
+  .faq summary::after {
+    content: '+';
+    color: var(--text-secondary);
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1;
+    transition: transform 200ms ease;
+  }
+  .faq details[open] summary::after { content: '−'; }
+  .faq-body { padding: 0 24px 22px; color: var(--text-secondary); font-size: 15px; line-height: 1.6; }
+
+  /* ===== About / Founder ===== */
+  .founder {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 40px;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 48px;
+  }
+  @media (max-width: 720px) { .founder { grid-template-columns: 1fr; text-align: center; padding: 32px; } }
+  .founder-photo {
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: var(--bg-soft);
+    background-image: url('https://discover.churchplannerpro.com/headshot.jpeg');
+    background-size: cover; background-position: center;
+    box-shadow: var(--shadow-md);
+    margin: 0 auto;
+  }
+  .founder-quote { font-size: 18px; line-height: 1.6; color: var(--text); }
+  .founder-quote p { margin: 0 0 14px; }
+  .founder-quote p:last-child { margin: 0; }
+  .founder-cite { margin-top: 18px; font-size: 14px; color: var(--text-secondary); }
+  .founder-cite strong { color: var(--text); font-weight: 700; }
+
+  /* ===== Security ===== */
+  .security {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 720px) { .security { grid-template-columns: 1fr; } }
+  .security-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 22px;
+  }
+  .security-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px;
+  }
+  .security-icon svg { width: 18px; height: 18px; }
+  .security-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .security-desc { color: var(--text-secondary); font-size: 13px; line-height: 1.5; }
+
+  /* ===== Final CTA ===== */
+  .final-cta {
+    background:
+      radial-gradient(60% 80% at 50% 100%, rgba(124,58,237,.20), transparent 70%),
+      radial-gradient(50% 80% at 10% 0%, rgba(37,99,235,.20), transparent 70%),
+      linear-gradient(135deg, #0F172A, #1E293B);
+    color: white;
+    border-radius: var(--radius-xl);
+    padding: 80px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .final-cta h2 {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 0 0 16px;
+  }
+  .final-cta p {
+    font-size: 18px;
+    color: rgba(255,255,255,.7);
+    margin: 0 0 32px;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .final-cta .btn-cta { font-size: 16px; padding: 14px 26px; }
+  .final-cta .btn-link { color: rgba(255,255,255,.85); margin-left: 16px; }
+  .final-cta .btn-link:hover { color: white; }
+  @media (max-width: 640px) { .final-cta { padding: 56px 24px; } .final-cta h2 { font-size: 30px; } }
+
+  /* ===== Footer ===== */
+  .footer {
+    padding: 56px 0 32px;
+    border-top: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 48px;
+  }
+  @media (max-width: 720px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
+  .footer-brand { max-width: 320px; }
+  .footer-brand p { margin: 14px 0 0; color: var(--text-secondary); }
+  .footer h4 { font-size: 13px; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 12px; }
+  .footer ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  .footer ul a { color: var(--text-secondary); }
+  .footer ul a:hover { color: var(--primary); }
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+    font-size: 13px;
+  }
+
+  /* helpers */
+  .pos-rel { position: relative; }
+  .hide-mobile { display: initial; }
+  @media (max-width: 640px) { .hide-mobile { display: none; } }
+</style>
+</head>
+<body>
+
+<!-- ===== SVG Icon defs ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></symbol>
+    <symbol id="i-people" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-workflow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="9" y="15" width="6" height="6" rx="1"/><path d="M6 9v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V9"/><path d="M12 13v2"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/><path d="M16 12h5v4h-5a2 2 0 0 1 0-4Z"/><circle cx="18" cy="14" r="0.6" fill="currentColor"/></symbol>
+    <symbol id="i-form" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+    <symbol id="i-chart-bar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="20" x2="21" y2="20"/><rect x="5" y="11" width="3" height="9"/><rect x="10.5" y="6" width="3" height="14"/><rect x="16" y="14" width="3" height="6"/></symbol>
+    <symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6"/><path d="M15 2v6"/><path d="M6 8h12v3a6 6 0 0 1-12 0V8z"/><path d="M12 17v5"/></symbol>
+    <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 6h1.5M13.5 6H15M9 10h1.5M13.5 10H15M9 14h1.5M13.5 14H15"/><path d="M10 22v-4h4v4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/><path d="M5 12h13"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10a5 5 0 0 0-9.6-1.5A4 4 0 0 0 5 17h13a4 4 0 0 0 0-7z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+  </defs>
+</svg>
+
+<!-- ===== Nav ===== -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a class="logo" href="/" aria-label="ChurchPlannerPro">
+      <span class="l-church">Church</span><span class="l-planner">Planner</span><span class="l-pro">PRO</span>
+    </a>
+    <div class="nav-links">
+      <a href="#modules">Product</a>
+      <a href="#aaron">Ask Aaron</a>
+      <a href="#integrations">Integrations</a>
+      <a href="#why">Why CPP</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-actions">
+      <a class="btn btn-ghost hide-mobile" href="/auth.html">Login</a>
+      <a class="btn btn-primary" href="/auth.html?mode=signup">Sign up</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow"><span class="dot"></span> Built for church administrators</span>
+      <h1>Run your whole church from <span class="accent">one platform</span></h1>
+      <p class="hero-lede">
+        Members, giving, workflows, calendar, facilities, reporting — plus an AI assistant
+        that handles the admin grind. ChurchPlannerPro replaces the patchwork of spreadsheets
+        and one-off tools admins juggle every week.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-cta" href="/auth.html?mode=signup">Sign up <svg style="width:16px;height:16px"><use href="#i-arrow-right"/></svg></a>
+      </div>
+      <div class="hero-trust">
+        <span class="check"><svg><use href="#i-check"/></svg></span>
+        Free while we validate with churches · No credit card · 15-minute setup
+      </div>
+    </div>
+
+    <div class="pos-rel">
+      <div class="mockup-stack">
+        <div class="mockup">
+          <div class="mockup-titlebar">
+            <span class="mockup-dot red"></span>
+            <span class="mockup-dot yellow"></span>
+            <span class="mockup-dot green"></span>
+          </div>
+          <div class="mockup-body">
+            <aside class="mockup-sidebar">
+              <div class="mock-brand">ChurchPlanner<sup>PRO</sup></div>
+              <div class="mock-navitem"><span class="ni-dot"></span>Ask Aaron</div>
+              <div class="mock-navitem"><span class="ni-dot"></span>Workflows</div>
+              <div class="mock-navitem active"><span class="ni-dot"></span>People</div>
+              <div class="mock-navitem"><span class="ni-dot"></span>Finances</div>
+              <div class="mock-navitem"><span class="ni-dot"></span>Calendar</div>
+              <div class="mock-navitem"><span class="ni-dot"></span>Forms</div>
+              <div class="mock-navitem"><span class="ni-dot"></span>Reporting</div>
+              <div class="mock-section-label">Operations</div>
+              <div class="mock-navitem"><span class="ni-dot"></span>Integrations</div>
+              <div class="mock-navitem"><span class="ni-dot"></span>Facilities</div>
+              <div class="mock-navitem"><span class="ni-dot"></span>Settings</div>
+            </aside>
+            <div class="mockup-content">
+              <div class="mock-title">People</div>
+              <div class="mock-sub">Members and families of Christ Lutheran</div>
+              <div class="mock-stat-row">
+                <div class="mock-stat">
+                  <div class="mock-stat-label">Total members</div>
+                  <div class="mock-stat-value">312</div>
+                  <div class="mock-stat-delta">+8 this month</div>
+                </div>
+                <div class="mock-stat">
+                  <div class="mock-stat-label">Families</div>
+                  <div class="mock-stat-value">128</div>
+                  <div class="mock-stat-delta">+3 this month</div>
+                </div>
+                <div class="mock-stat">
+                  <div class="mock-stat-label">Avg attendance</div>
+                  <div class="mock-stat-value">184</div>
+                  <div class="mock-stat-delta">+6% vs Q1</div>
+                </div>
+              </div>
+              <div class="mock-table">
+                <div class="mock-tr head">
+                  <div>Member</div><div>Family</div><div>Age</div><div>Status</div>
+                </div>
+                <div class="mock-tr">
+                  <div class="mock-name"><span class="mock-avatar a">SA</span>Sarah Anderson</div>
+                  <div>Anderson</div><div>34</div><div><span class="mock-pill good">Active</span></div>
+                </div>
+                <div class="mock-tr">
+                  <div class="mock-name"><span class="mock-avatar b">DB</span>David Becker</div>
+                  <div>Becker</div><div>49</div><div><span class="mock-pill good">Active</span></div>
+                </div>
+                <div class="mock-tr">
+                  <div class="mock-name"><span class="mock-avatar c">MG</span>Maria Garcia</div>
+                  <div>Garcia</div><div>27</div><div><span class="mock-pill warn">New</span></div>
+                </div>
+                <div class="mock-tr">
+                  <div class="mock-name"><span class="mock-avatar d">RF</span>Rebecca Foster</div>
+                  <div>Foster</div><div>52</div><div><span class="mock-pill good">Active</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="float-card a">
+          <div class="fc-icon"><svg><use href="#i-spark"/></svg></div>
+          <div>
+            <div class="fc-title">Aaron drafted 4 emails</div>
+            <div class="fc-sub">Waiting your approval</div>
+          </div>
+        </div>
+        <div class="float-card b">
+          <div class="fc-icon"><svg><use href="#i-check"/></svg></div>
+          <div>
+            <div class="fc-title">3 forms auto-updated profiles</div>
+            <div class="fc-sub">Last hour</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Modules ===== -->
+<section id="modules" class="section-bg">
+  <div class="container">
+    <div class="section-head-center" style="margin-bottom: 56px;">
+      <span class="section-eyebrow">Built for the way churches actually run</span>
+      <h2 class="section-title">Everything a church admin needs.<br/>In one platform.</h2>
+      <p class="section-lede">Nine modules covering the work admins actually do — from member care to payroll, scheduling to work orders. No more juggling tools.</p>
+    </div>
+
+    <div class="modules">
+      <div class="module m-aaron">
+        <div class="module-icon"><svg><use href="#i-spark"/></svg></div>
+        <h3 class="module-title">Ask Aaron <span class="module-pill">AI</span></h3>
+        <p class="module-desc">Drafts emails, builds forms, schedules events, and updates records — just ask. Aaron waits for your approval before doing anything.</p>
+      </div>
+      <div class="module m-people">
+        <div class="module-icon"><svg><use href="#i-people"/></svg></div>
+        <h3 class="module-title">People</h3>
+        <p class="module-desc">Member and family profiles with key dates, skills, and full activity history. The source of truth for everyone you serve.</p>
+      </div>
+      <div class="module m-workflows">
+        <div class="module-icon"><svg><use href="#i-workflow"/></svg></div>
+        <h3 class="module-title">Workflows</h3>
+        <p class="module-desc">Automated sequences that route forms, update records, send emails, and request approvals — without you having to remember.</p>
+      </div>
+      <div class="module m-finances">
+        <div class="module-icon"><svg><use href="#i-wallet"/></svg></div>
+        <h3 class="module-title">Finances</h3>
+        <p class="module-desc">Banking, accounting, donations, payroll, and budgets in one place. Reconciliations and reports without the spreadsheet gymnastics.</p>
+      </div>
+      <div class="module m-forms">
+        <div class="module-icon"><svg><use href="#i-form"/></svg></div>
+        <h3 class="module-title">Forms</h3>
+        <p class="module-desc">Smart forms whose answers flow directly into member profiles — no more retyping addresses or skills into a spreadsheet.</p>
+      </div>
+      <div class="module m-calendar">
+        <div class="module-icon"><svg><use href="#i-calendar"/></svg></div>
+        <h3 class="module-title">Calendar</h3>
+        <p class="module-desc">Events, small groups, and attendance — all on one page. Track trends, manage RSVPs, plan the year.</p>
+      </div>
+      <div class="module m-reporting">
+        <div class="module-icon"><svg><use href="#i-chart-bar"/></svg></div>
+        <h3 class="module-title">Reporting</h3>
+        <p class="module-desc">The few numbers leadership actually needs: giving, attendance, growth. At a glance, on demand.</p>
+      </div>
+      <div class="module m-integrations">
+        <div class="module-icon"><svg><use href="#i-plug"/></svg></div>
+        <h3 class="module-title">Integrations</h3>
+        <p class="module-desc">Connect the systems you already use. Accounting, giving, scheduling, your bank, Gmail — data flows in, no double entry.</p>
+      </div>
+      <div class="module m-facilities">
+        <div class="module-icon"><svg><use href="#i-building"/></svg></div>
+        <h3 class="module-title">Facilities</h3>
+        <p class="module-desc">Work orders, vendors, and asset maintenance. Trigger them from a workflow when something needs fixing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Spotlights ===== -->
+<section id="aaron">
+  <div class="container">
+
+    <!-- Spotlight 1: Aaron -->
+    <div class="spotlight">
+      <div>
+        <span class="spotlight-eyebrow"><svg><use href="#i-spark"/></svg> Ask Aaron</span>
+        <h3>An AI co-pilot for the admin grind</h3>
+        <p>Aaron drafts emails, builds forms, books events, and updates member records when you ask — in plain English. Every action waits for your approval, so you stay in control.</p>
+        <ul class="spot-checks">
+          <li><svg><use href="#i-check"/></svg> "Send a baptism form to the Garcia family" — done</li>
+          <li><svg><use href="#i-check"/></svg> "Draft this month's giving email" — drafted, pending review</li>
+          <li><svg><use href="#i-check"/></svg> "Schedule confirmation classes for the new cohort" — calendar built</li>
+          <li><svg><use href="#i-check"/></svg> Approve, edit, or send. Aaron never acts without you.</li>
+        </ul>
+      </div>
+      <div class="spot-visual">
+        <div class="chat">
+          <div class="chat-bubble user">Add an unplanned roof repair expense to the budget</div>
+          <div class="chat-bubble aaron">
+            <div class="role"><span class="role-mark"><svg><use href="#i-spark"/></svg></span> Aaron</div>
+            Here's what I'm proposing. Let me know if this looks right.
+            <div class="chat-card">
+              <div class="field"><span>Category</span><strong>Facilities · Repairs</strong></div>
+              <div class="field"><span>Amount</span><strong>$8,400</strong></div>
+              <div class="field"><span>Funding</span><strong>Reserves</strong></div>
+              <div class="field"><span>Council approval</span><strong>Email drafted</strong></div>
+            </div>
+            <div class="chat-action-row">
+              <span class="chip primary">Approve & update budget</span>
+              <span class="chip">Edit</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spotlight 2: Forms → Profiles -->
+    <div class="spotlight reverse">
+      <div>
+        <span class="spotlight-eyebrow"><svg><use href="#i-form"/></svg> Forms that maintain themselves</span>
+        <h3>One form fills out a member's whole profile</h3>
+        <p>Map a form question to a profile field once. When a member updates their phone number on the "Updated info" form, their profile updates too. No retyping, no stale data.</p>
+        <ul class="spot-checks">
+          <li><svg><use href="#i-check"/></svg> Address, phone, email, skills — sync straight into the member record</li>
+          <li><svg><use href="#i-check"/></svg> Forms publish to a shareable link, embeddable in your bulletin or newsletter</li>
+          <li><svg><use href="#i-check"/></svg> See every response and every profile change in one timeline</li>
+        </ul>
+      </div>
+      <div class="spot-visual">
+        <div class="flow">
+          <div class="flow-card">
+            <div class="flow-card-head"><span class="fc-mark"><svg><use href="#i-form"/></svg></span> Form response</div>
+            <div class="flow-row">Name · Sarah Anderson</div>
+            <div class="flow-row changed">Phone · (651) 555-0188</div>
+            <div class="flow-row changed">Skills · Choir, Spanish</div>
+            <div class="flow-row">Notes · "Available weekend AM"</div>
+          </div>
+          <div class="flow-arrow"><svg><use href="#i-arrow-right"/></svg></div>
+          <div class="flow-card">
+            <div class="flow-card-head"><span class="fc-mark"><svg><use href="#i-people"/></svg></span> Profile updated</div>
+            <div class="flow-row">Name · Sarah Anderson</div>
+            <div class="flow-row changed">Phone updated</div>
+            <div class="flow-row changed">+ 2 skills added</div>
+            <div class="flow-row">Note appended</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spotlight 3: Workflows -->
+    <div class="spotlight">
+      <div>
+        <span class="spotlight-eyebrow"><svg><use href="#i-workflow"/></svg> Workflows</span>
+        <h3>Automate the things you keep meaning to systematize</h3>
+        <p>Multi-step sequences for the work that follows a predictable path: new member onboarding, baptism prep, Sunday school registration, work orders, unplanned expense approval. Aaron handles the steps; you only see the moments that need a human.</p>
+        <ul class="spot-checks">
+          <li><svg><use href="#i-check"/></svg> Branching logic for in-house vs. external vendors, approval thresholds, segments</li>
+          <li><svg><use href="#i-check"/></svg> Triggered by forms, expenses, calendar events, or manual kickoff</li>
+          <li><svg><use href="#i-check"/></svg> Every step is auditable — see who approved what, and when</li>
+        </ul>
+      </div>
+      <div class="spot-visual">
+        <div class="wf-list">
+          <div class="wf-step done"><span class="wf-num"><svg style="width:12px;height:12px"><use href="#i-check"/></svg></span><span class="wf-text">Form submitted: new member registration</span><span class="wf-status done">Done</span></div>
+          <div class="wf-step done"><span class="wf-num"><svg style="width:12px;height:12px"><use href="#i-check"/></svg></span><span class="wf-text">Create member profile from form data</span><span class="wf-status done">Done</span></div>
+          <div class="wf-step active"><span class="wf-num">3</span><span class="wf-text">Assign to welcome team for follow-up</span><span class="wf-status active">In progress</span></div>
+          <div class="wf-step pending"><span class="wf-num">4</span><span class="wf-text">Send welcome email + new-member packet</span><span class="wf-status pending">Pending</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== Integrations ===== -->
+<section id="integrations" class="section-bg">
+  <div class="container">
+    <div class="section-head-center" style="margin-bottom: 0;">
+      <span class="section-eyebrow">Plays nicely with your stack</span>
+      <h2 class="section-title">Connect what you already use</h2>
+      <p class="section-lede">ChurchPlannerPro sits on top of the tools you've invested in — and pulls the data into one place.</p>
+    </div>
+    <div class="integrations-grid">
+      <div class="integration">
+        <div class="integration-mark">I</div>
+        <div class="integration-name">Icon</div>
+        <div class="integration-cat">Accounting · Payroll</div>
+      </div>
+      <div class="integration">
+        <div class="integration-mark">V</div>
+        <div class="integration-name">Vanco</div>
+        <div class="integration-cat">Online giving</div>
+      </div>
+      <div class="integration">
+        <div class="integration-mark">G</div>
+        <div class="integration-name">Gmail</div>
+        <div class="integration-cat">Email</div>
+      </div>
+      <div class="integration">
+        <div class="integration-mark" style="background: #FEF3C7; color: #92400E;">$</div>
+        <div class="integration-name">Bank sync</div>
+        <div class="integration-cat">Daily transactions</div>
+      </div>
+      <div class="integration">
+        <div class="integration-mark" style="background: #DCFCE7; color: #166534;">Q</div>
+        <div class="integration-name">QuickBooks</div>
+        <div class="integration-cat">Accounting</div>
+      </div>
+      <div class="integration">
+        <div class="integration-mark" style="background: #E0E7FF; color: #4F46E5;">+</div>
+        <div class="integration-name">And more</div>
+        <div class="integration-cat">Coming soon</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Why CPP / Comparison ===== -->
+<section id="why">
+  <div class="container">
+    <div class="section-head-center" style="margin-bottom: 56px;">
+      <span class="section-eyebrow">Why churches switch</span>
+      <h2 class="section-title">Stop running your church<br/>from a stack of spreadsheets</h2>
+      <p class="section-lede">Most churches still patch together Excel, email, paper forms, and a handful of disconnected SaaS tools. ChurchPlannerPro replaces the patchwork.</p>
+    </div>
+
+    <div class="compare">
+      <div class="compare-row compare-head">
+        <div class="cell-attr">&nbsp;</div>
+        <div class="col-us">ChurchPlannerPro</div>
+        <div>Spreadsheets &amp; patchwork tools</div>
+      </div>
+      <div class="compare-row">
+        <div class="cell-attr">Member profiles</div>
+        <div class="cell-us"><svg class="check-good"><use href="#i-check"/></svg> Always current — forms keep them updated</div>
+        <div class="cell-them"><svg class="check-bad"><use href="#i-x"/></svg> Stale, scattered across docs</div>
+      </div>
+      <div class="compare-row">
+        <div class="cell-attr">Reporting</div>
+        <div class="cell-us"><svg class="check-good"><use href="#i-check"/></svg> Generated automatically, on demand</div>
+        <div class="cell-them"><svg class="check-bad"><use href="#i-x"/></svg> Manual every month — formulas break</div>
+      </div>
+      <div class="compare-row">
+        <div class="cell-attr">Routine processes</div>
+        <div class="cell-us"><svg class="check-good"><use href="#i-check"/></svg> Workflows run themselves</div>
+        <div class="cell-them"><svg class="check-bad"><use href="#i-x"/></svg> Lives in someone's head</div>
+      </div>
+      <div class="compare-row">
+        <div class="cell-attr">Drafting emails &amp; forms</div>
+        <div class="cell-us"><svg class="check-good"><use href="#i-check"/></svg> Aaron drafts, you approve</div>
+        <div class="cell-them"><svg class="check-bad"><use href="#i-x"/></svg> You write every one from scratch</div>
+      </div>
+      <div class="compare-row">
+        <div class="cell-attr">Source of truth</div>
+        <div class="cell-us"><svg class="check-good"><use href="#i-check"/></svg> One platform, one record per person</div>
+        <div class="cell-them"><svg class="check-bad"><use href="#i-x"/></svg> Three copies, two of them wrong</div>
+      </div>
+      <div class="compare-row">
+        <div class="cell-attr">When your admin is out</div>
+        <div class="cell-us"><svg class="check-good"><use href="#i-check"/></svg> Anyone can pick it up</div>
+        <div class="cell-them"><svg class="check-bad"><use href="#i-x"/></svg> Things stop</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Testimonial (placeholder) ===== -->
+<section class="section-bg" style="padding-bottom: 64px;">
+  <div class="container-narrow">
+    <div class="quote">
+      <p class="quote-text">ChurchPlannerPro gave us back the hours we used to spend rebuilding the same spreadsheet every month. Our admin actually has time to do the work that matters now.</p>
+      <div class="quote-cite">
+        <span class="quote-avatar">PD</span>
+        <div style="text-align: left;">
+          <div class="quote-name">Pastor David Olsen</div>
+          <div class="quote-role">Christ Lutheran · St. Paul, MN</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section id="faq">
+  <div class="container-narrow">
+    <div class="section-head-center" style="margin-bottom: 40px;">
+      <span class="section-eyebrow">FAQ</span>
+      <h2 class="section-title">Common questions</h2>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary>What is ChurchPlannerPro?</summary>
+        <div class="faq-body">A church management platform that brings members, giving, workflows, forms, calendar, facilities, and reporting into one place — with an AI assistant (Aaron) that handles the admin work for you.</div>
+      </details>
+      <details>
+        <summary>Who is it for?</summary>
+        <div class="faq-body">Church and parish administrators who are tired of running everything from spreadsheets, email threads, and a stack of disconnected tools.</div>
+      </details>
+      <details>
+        <summary>Do I have to replace the tools I already use?</summary>
+        <div class="faq-body">No. ChurchPlannerPro integrates with the accounting, giving, and email systems most churches already use, so your existing data flows in. You can adopt one module at a time.</div>
+      </details>
+      <details>
+        <summary>What does Aaron actually do?</summary>
+        <div class="faq-body">Aaron is an AI assistant inside ChurchPlannerPro. It can draft emails, build forms, schedule events, update member records, and run multi-step workflows on your behalf — always with your approval before anything goes out.</div>
+      </details>
+      <details>
+        <summary>Is it really free?</summary>
+        <div class="faq-body">Yes, while we validate the workflows with churches. Early customers help shape the product and lock in pricing for the long term.</div>
+      </details>
+      <details>
+        <summary>How do I get started?</summary>
+        <div class="faq-body">Book a 20-minute demo. We'll show you the platform with your real workflows in mind and get you set up the same week.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===== About / Founder ===== -->
+<section id="about" class="section-bg">
+  <div class="container-narrow">
+    <div class="section-head-center" style="margin-bottom: 40px;">
+      <span class="section-eyebrow">About</span>
+      <h2 class="section-title">Built for church admins, by people who've watched them work</h2>
+    </div>
+    <div class="founder">
+      <div class="founder-photo" aria-label="Founder portrait"></div>
+      <div class="founder-quote">
+        <p>I started ChurchPlannerPro after watching church administrators do incredible work in impossible conditions — wearing every hat, holding everything together with spreadsheets, email threads, and memory.</p>
+        <p>After more than a decade building software, I'm building the platform I wish every church admin already had: one place for the people, the money, the events, the facilities, and the dozens of little processes that keep a church running.</p>
+        <div class="founder-cite"><strong>Andrew Schneider</strong> · Founder, ChurchPlannerPro</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Security ===== -->
+<section>
+  <div class="container">
+    <div class="section-head-center" style="margin-bottom: 40px;">
+      <span class="section-eyebrow">Security</span>
+      <h2 class="section-title">Your data is in good hands</h2>
+    </div>
+    <div class="security">
+      <div class="security-card">
+        <div class="security-icon"><svg><use href="#i-cloud"/></svg></div>
+        <div class="security-title">Hosted on AWS</div>
+        <div class="security-desc">Enterprise-grade infrastructure with redundancy, automatic backups, and 99.9% uptime targets.</div>
+      </div>
+      <div class="security-card">
+        <div class="security-icon"><svg><use href="#i-shield"/></svg></div>
+        <div class="security-title">Protected by Cloudflare</div>
+        <div class="security-desc">Every request is filtered through Cloudflare's DDoS protection and web application firewall.</div>
+      </div>
+      <div class="security-card">
+        <div class="security-icon"><svg><use href="#i-lock"/></svg></div>
+        <div class="security-title">Encrypted end to end</div>
+        <div class="security-desc">Data is encrypted in transit (TLS 1.3) and at rest. Access is least-privileged and audited.</div>
+      </div>
+    </div>
+    <p style="text-align: center; margin-top: 28px;"><a href="https://discover.churchplannerpro.com/security" class="btn-link">Read the full security details <svg><use href="#i-arrow-right"/></svg></a></p>
+  </div>
+</section>
+
+<!-- ===== Final CTA ===== -->
+<section id="book" style="padding-top: 0;">
+  <div class="container">
+    <div class="final-cta">
+      <h2>Ready to give your admin their time back?</h2>
+      <p>Book a 20-minute demo and we'll show you ChurchPlannerPro with your real workflows in mind.</p>
+      <div>
+        <a class="btn btn-cta" href="mailto:hello@churchplannerpro.com?subject=Demo%20request">Book a demo <svg style="width:16px;height:16px"><use href="#i-arrow-right"/></svg></a>
+        <a class="btn-link" href="https://aschneiderlbl.github.io/churchplanner-pro/mvpv3" target="_blank" rel="noopener">Try the live demo <svg><use href="#i-arrow-right"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo logo-footer" href="/" aria-label="ChurchPlannerPro">
+          <span class="l-church">Church</span><span class="l-planner">Planner</span><span class="l-pro">PRO</span>
+        </a>
+        <p>The church management platform — built for administrators who deserve to spend less time in spreadsheets and more time serving their communities.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#modules">Modules</a></li>
+          <li><a href="#aaron">Ask Aaron</a></li>
+          <li><a href="#integrations">Integrations</a></li>
+          <li><a href="https://aschneiderlbl.github.io/churchplanner-pro/mvpv3" target="_blank" rel="noopener">Live demo</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#book">Book a demo</a></li>
+          <li><a href="mailto:hello@churchplannerpro.com">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="https://discover.churchplannerpro.com/security">Security</a></li>
+          <li><a href="https://www.churchplannerpro.com/privacy">Privacy</a></li>
+          <li><a href="https://www.churchplannerpro.com/terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© <span id="year"></span> ChurchPlannerPro. All rights reserved.</div>
+      <div>Made for church administrators.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
