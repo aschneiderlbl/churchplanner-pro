@@ -507,6 +507,153 @@
   .copy-link-row { display: flex; gap: 8px; align-items: center; padding: 12px; background: #F9FAFB; border: 1px solid var(--border); border-radius: var(--radius-md); }
   .copy-link-row code { flex: 1; font-family: 'SF Mono', Menlo, monospace; font-size: 12px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+  /* ---- Sidebar section label ---- */
+  .nav-section-label {
+    font-size: 11px; font-weight: 600;
+    color: var(--text-disabled);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: var(--md) var(--md) 6px;
+    margin-top: 4px;
+  }
+
+  /* ---- Feedback banner ---- */
+  .feedback-banner {
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px;
+    padding: 10px var(--lg);
+    background: var(--primary-light);
+    color: #1E3A8A;
+    border-bottom: 1px solid #C7D6F5;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .feedback-banner .feedback-icon {
+    width: 14px; height: 14px; color: var(--primary);
+    flex-shrink: 0;
+  }
+  .feedback-link {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-left: 2px;
+  }
+  .feedback-link:hover { color: var(--primary-hover); }
+
+  /* ---- Coming Soon ---- */
+  .cs-page { display: flex; flex-direction: column; gap: var(--lg); }
+  .cs-frame { position: relative; min-height: 480px; }
+  .cs-mock {
+    filter: blur(3px) saturate(.4);
+    opacity: 0.55;
+    pointer-events: none;
+    user-select: none;
+    display: flex; flex-direction: column; gap: var(--lg);
+  }
+  .cs-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--md); }
+  .cs-stat {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--lg);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .cs-table {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .cs-table-head, .cs-table-row {
+    display: grid;
+    grid-template-columns: 2fr 1.4fr 1fr 1.2fr;
+    gap: var(--md);
+    padding: 14px var(--md);
+    align-items: center;
+  }
+  .cs-table-head { background: #F9FAFB; border-bottom: 1px solid var(--border); }
+  .cs-table-row { border-bottom: 1px solid var(--border); }
+  .cs-table-row:last-child { border-bottom: none; }
+  .cs-chart {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--lg);
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: var(--md); height: 180px;
+  }
+  .cs-bar { flex: 1; background: #D1D5DB; border-radius: 4px 4px 0 0; }
+  .cs-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--md); }
+  @media (max-width: 900px) { .cs-cards { grid-template-columns: repeat(2, 1fr); } .cs-stats { grid-template-columns: 1fr; } }
+  .cs-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--md);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .cs-skel-line {
+    height: 10px;
+    background: #E5E7EB;
+    border-radius: 4px;
+  }
+  .cs-skel-line.tall { height: 18px; }
+  .cs-skel-line.w-20  { width: 20%; }
+  .cs-skel-line.w-24  { width: 24%; }
+  .cs-skel-line.w-28  { width: 28%; }
+  .cs-skel-line.w-32  { width: 32%; }
+  .cs-skel-line.w-40  { width: 40%; }
+  .cs-skel-line.w-44  { width: 44%; }
+  .cs-skel-line.w-48  { width: 48%; }
+
+  .cs-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding-top: 80px;
+    pointer-events: none;
+  }
+  .cs-overlay-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--xl) var(--xxl);
+    text-align: center;
+    max-width: 460px;
+    pointer-events: auto;
+  }
+  .cs-icon {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto var(--md);
+  }
+  .cs-icon svg { width: 28px; height: 28px; }
+  .cs-badge {
+    display: inline-block;
+    background: var(--cta-light);
+    color: #166534;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: var(--md);
+  }
+  .cs-title {
+    font-size: 22px; font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 10px;
+    color: var(--text);
+  }
+  .cs-tagline {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
   /* ---- Onboarding ---- */
   .onb-overlay {
     position: fixed; inset: 0;
@@ -666,6 +813,11 @@
     <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></symbol>
     <symbol id="i-user-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></symbol>
     <symbol id="i-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M3 12h3M18 12h3M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></symbol>
+    <symbol id="i-workflow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="9" y="15" width="6" height="6" rx="1"/><path d="M6 9v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V9"/><path d="M12 13v2"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/><path d="M16 12h5v4h-5a2 2 0 0 1 0-4Z"/><circle cx="18" cy="14" r="0.6" fill="currentColor"/></symbol>
+    <symbol id="i-chart-bar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="20" x2="21" y2="20"/><rect x="5" y="11" width="3" height="9"/><rect x="10.5" y="6" width="3" height="14"/><rect x="16" y="14" width="3" height="6"/></symbol>
+    <symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6"/><path d="M15 2v6"/><path d="M6 8h12v3a6 6 0 0 1-12 0V8z"/><path d="M12 17v5"/></symbol>
+    <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 6h1.5M13.5 6H15M9 10h1.5M13.5 10H15M9 14h1.5M13.5 14H15"/><path d="M10 22v-4h4v4"/></symbol>
   </defs>
 </svg>
 
@@ -960,6 +1112,7 @@ function render() {
       ${Sidebar()}
       <div class="main">
         ${Topbar()}
+        ${FeedbackBanner()}
         <div class="content">${Page()}</div>
       </div>
     </div>
@@ -983,8 +1136,16 @@ function Sidebar() {
     <aside class="sidebar">
       <div class="brand"><span class="brand-name">ChurchPlanner<span class="pro">PRO</span></span></div>
       <nav class="nav">
+        ${item('workflows','Workflows','workflow')}
         ${item('people','People','people')}
+        ${item('finances','Finances','wallet')}
+        ${item('calendar','Calendar','calendar')}
         ${item('forms','Forms','form')}
+        ${item('reporting','Reporting','chart-bar')}
+
+        <div class="nav-section-label">Operations</div>
+        ${item('integrations','Integrations','plug')}
+        ${item('facilities','Facilities','building')}
         ${item('settings','Settings','settings')}
       </nav>
       <div class="sidebar-footer">
@@ -1011,12 +1172,143 @@ function Topbar() {
     </div>`;
 }
 
+// ---------- Feedback Banner ----------
+// TODO: replace the href below with the real PostHog survey URL.
+const FEEDBACK_SURVEY_URL = '#';
+function FeedbackBanner() {
+  return `
+    <div class="feedback-banner" role="region" aria-label="Feedback">
+      <svg class="feedback-icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
+      <span>Got feedback?</span>
+      <a href="${FEEDBACK_SURVEY_URL}" target="_blank" rel="noopener noreferrer" class="feedback-link">Share it with us</a>
+      <span>.</span>
+    </div>`;
+}
+
 // ---------- Pages ----------
 function Page() {
   if (state.tab === 'people')   return PeoplePage();
   if (state.tab === 'forms')    return FormsPage();
   if (state.tab === 'settings') return SettingsPage();
+
+  // Coming Soon tabs
+  const cs = COMING_SOON[state.tab];
+  if (cs) return ComingSoonPage(cs);
   return '';
+}
+
+// ====================== Coming Soon ======================
+const COMING_SOON = {
+  workflows: {
+    title: 'Workflows',
+    subtitle: 'Automated sequences Aaron runs on your behalf',
+    icon: 'i-workflow',
+    tagline: 'Build multi-step workflows that route forms, update records, send emails, and request approvals — all without lifting a finger.',
+    mockKind: 'cards'
+  },
+  finances: {
+    title: 'Finances',
+    subtitle: 'Bank, accounting, donations, payroll and budget',
+    icon: 'i-wallet',
+    tagline: 'A single home for accounts, giving, payroll, and budgets — synced with Icon, Vanco, and your bank.',
+    mockKind: 'stats-table'
+  },
+  calendar: {
+    title: 'Calendar',
+    subtitle: 'Events, groups, and attendance',
+    icon: 'i-calendar',
+    tagline: 'Plan services and small groups, track RSVPs, and watch attendance trends in one place.',
+    mockKind: 'stats-table'
+  },
+  reporting: {
+    title: 'Reporting',
+    subtitle: 'At-a-glance health of the church',
+    icon: 'i-chart-bar',
+    tagline: 'Giving, attendance, and growth — surfaced as the few numbers leadership actually needs.',
+    mockKind: 'stats-chart'
+  },
+  integrations: {
+    title: 'Integrations',
+    subtitle: 'Connected services that sync data into ChurchPlannerPro',
+    icon: 'i-plug',
+    tagline: 'Connect Icon, Planning Center, Vanco, Gmail, and your bank so the data flows in automatically.',
+    mockKind: 'cards'
+  },
+  facilities: {
+    title: 'Facilities',
+    subtitle: 'Asset management, work orders, and vendors',
+    icon: 'i-building',
+    tagline: 'Track work orders, vendors, and asset maintenance schedules — and trigger them from a workflow.',
+    mockKind: 'stats-table'
+  }
+};
+
+function ComingSoonPage(cs) {
+  return `
+    <div class="cs-page">
+      <div>
+        <h1 class="page-title">${escape(cs.title)}</h1>
+        <p class="page-subtitle">${escape(cs.subtitle)}</p>
+      </div>
+      <div class="cs-frame">
+        <div class="cs-mock" aria-hidden="true">${ComingSoonMock(cs.mockKind)}</div>
+        <div class="cs-overlay">
+          <div class="cs-overlay-card">
+            <div class="cs-icon"><svg><use href="#${cs.icon}"/></svg></div>
+            <div class="cs-badge">Coming soon</div>
+            <h2 class="cs-title">${escape(cs.title)} is on the way</h2>
+            <p class="cs-tagline">${escape(cs.tagline)}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function ComingSoonMock(kind) {
+  const skelStats = `
+    <div class="cs-stats">
+      <div class="cs-stat"><div class="cs-skel-line w-24"></div><div class="cs-skel-line w-48 tall"></div><div class="cs-skel-line w-32"></div></div>
+      <div class="cs-stat"><div class="cs-skel-line w-32"></div><div class="cs-skel-line w-40 tall"></div><div class="cs-skel-line w-28"></div></div>
+      <div class="cs-stat"><div class="cs-skel-line w-28"></div><div class="cs-skel-line w-44 tall"></div><div class="cs-skel-line w-32"></div></div>
+    </div>`;
+  const skelTable = `
+    <div class="cs-table">
+      <div class="cs-table-head">
+        <div class="cs-skel-line w-32"></div>
+        <div class="cs-skel-line w-24"></div>
+        <div class="cs-skel-line w-20"></div>
+        <div class="cs-skel-line w-28"></div>
+      </div>
+      ${ Array.from({ length: 6 }).map(() => `
+        <div class="cs-table-row">
+          <div class="cs-skel-line w-44"></div>
+          <div class="cs-skel-line w-32"></div>
+          <div class="cs-skel-line w-20"></div>
+          <div class="cs-skel-line w-28"></div>
+        </div>
+      `).join('') }
+    </div>`;
+  const skelChart = `
+    <div class="cs-chart">
+      ${ [40, 56, 72, 88, 104, 80].map(h => `<div class="cs-bar" style="height:${h}px"></div>`).join('') }
+    </div>`;
+  const skelCards = `
+    <div class="cs-cards">
+      ${ Array.from({ length: 6 }).map(() => `
+        <div class="cs-card">
+          <div class="cs-skel-line w-48 tall"></div>
+          <div class="cs-skel-line w-32"></div>
+          <div class="cs-skel-line w-44"></div>
+          <div class="cs-skel-line w-40"></div>
+        </div>
+      `).join('') }
+    </div>`;
+
+  if (kind === 'cards') return skelCards;
+  if (kind === 'stats-chart') return skelStats + skelChart;
+  // default: stats + table
+  return skelStats + skelTable;
 }
 
 // ====================== PEOPLE ======================
