@@ -634,38 +634,6 @@
   }
   .onb-sent-banner svg { width: 16px; height: 16px; }
 
-  /* Template grid */
-  .onb-template-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: var(--md);
-  }
-  @media (max-width: 600px) { .onb-template-grid { grid-template-columns: 1fr; } }
-  .onb-template-card {
-    border: 1px solid var(--border); border-radius: var(--radius-md);
-    padding: var(--md); cursor: pointer;
-    background: var(--surface); text-align: left;
-    transition: all 150ms ease;
-    font: inherit; color: inherit;
-    display: block; width: 100%;
-  }
-  .onb-template-card:hover { border-color: var(--primary); box-shadow: var(--shadow-sm); }
-  .onb-template-card.selected {
-    border-color: var(--primary);
-    background: #F3F6FE;
-    box-shadow: 0 0 0 3px rgba(37,99,235,.14);
-  }
-  .onb-template-icon {
-    width: 36px; height: 36px; border-radius: 8px;
-    background: var(--primary-light); color: var(--primary);
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: var(--sm);
-    transition: all 150ms ease;
-  }
-  .onb-template-icon svg { width: 18px; height: 18px; }
-  .onb-template-card.selected .onb-template-icon { background: var(--primary); color: white; }
-  .onb-template-title { font-weight: 600; font-size: 14px; color: var(--text); }
-  .onb-template-desc { font-size: 12px; color: var(--text-secondary); margin-top: 4px; line-height: 1.45; }
-
 </style>
 </head>
 <body>
@@ -862,7 +830,6 @@ const state = {
   onboardingImportDone: false,     // mock: true after "Try sample" / drop
   onboardingInvite: { name: '', email: '' },
   onboardingInviteSent: false,
-  onboardingTemplate: null,        // key from ONB_TEMPLATES
 };
 
 // ---------- Helpers ----------
@@ -1797,56 +1764,6 @@ function performCsvImport() {
 // ====================== Onboarding ======================
 const ONB_STEPS = ['Import members', 'Invite team', 'Create form'];
 
-const ONB_TEMPLATES = [
-  {
-    key: 'member-info',
-    title: 'Updated member information',
-    desc: 'Keep contact info, address, and skills current.',
-    icon: 'i-people',
-    description: 'Help us keep your contact information current. Submissions update your church profile automatically.',
-    questions: [
-      { id: 'q1', text: 'Full name', type: 'short', required: true, options: [], mapsTo: 'name' },
-      { id: 'q2', text: 'Email address', type: 'short', required: true, options: [], mapsTo: 'email' },
-      { id: 'q3', text: 'Phone number', type: 'short', required: false, options: [], mapsTo: 'phone' },
-      { id: 'q4', text: 'Mailing address', type: 'paragraph', required: false, options: [], mapsTo: 'address' }
-    ]
-  },
-  {
-    key: 'volunteer',
-    title: 'Volunteer signup',
-    desc: 'Recruit helpers for a service or event.',
-    icon: 'i-check',
-    description: 'Sign up to help with an upcoming event.',
-    questions: [
-      { id: 'q1', text: 'Your name', type: 'short', required: true, options: [], mapsTo: 'name' },
-      { id: 'q2', text: 'Email', type: 'short', required: true, options: [], mapsTo: 'email' },
-      { id: 'q3', text: 'Which area would you like to help with?', type: 'multiple', required: true,
-        options: ['Set-up', 'Food service', 'Music & sound', 'Clean-up'], mapsTo: null }
-    ]
-  },
-  {
-    key: 'event-rsvp',
-    title: 'Event RSVP',
-    desc: 'Collect attendance counts and notes.',
-    icon: 'i-calendar',
-    description: 'Let us know if you can join us.',
-    questions: [
-      { id: 'q1', text: 'Your name', type: 'short', required: true, options: [], mapsTo: 'name' },
-      { id: 'q2', text: 'Email', type: 'short', required: true, options: [], mapsTo: 'email' },
-      { id: 'q3', text: 'Number attending', type: 'short', required: true, options: [], mapsTo: null },
-      { id: 'q4', text: 'Anything we should know?', type: 'paragraph', required: false, options: [], mapsTo: null }
-    ]
-  },
-  {
-    key: 'blank',
-    title: 'Blank form',
-    desc: 'Start from scratch with an empty question.',
-    icon: 'i-document',
-    description: '',
-    questions: [{ id: 'q1', text: '', type: 'short', required: false, options: [], mapsTo: null }]
-  }
-];
-
 function OnbStepper() {
   const s = state.onboardingStep;
   return `<div class="onb-stepper">
@@ -1968,25 +1885,26 @@ function OnbStep2() {
 }
 
 function OnbStep3() {
-  const sel = state.onboardingTemplate;
   const body = `
-    <div class="onb-template-grid">
-      ${ ONB_TEMPLATES.map(t => `
-        <button class="onb-template-card ${sel === t.key ? 'selected' : ''}" data-action="onb-pick-template" data-onb-template="${t.key}" type="button">
-          <div class="onb-template-icon"><svg><use href="#${t.icon}"/></svg></div>
-          <div class="onb-template-title">${escape(t.title)}</div>
-          <div class="onb-template-desc">${escape(t.desc)}</div>
-        </button>
-      `).join('') }
+    <div class="onb-invite-hero">
+      <div class="onb-invite-hero-icon"><svg><use href="#i-form"/></svg></div>
+      <div>
+        <div class="onb-invite-hero-title">Build a form to collect member info</div>
+        <div class="onb-invite-hero-sub">Forms send updates straight into member profiles — addresses, skills, RSVPs, anything you need.</div>
+      </div>
     </div>
+    <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">
+      You'll land in the Forms tab next. Hit <strong style="color: var(--text);">Create form</strong> in the top right to start one from scratch, or open one of the example forms already in the workspace to see how it works.
+    </p>
   `;
   return {
     title: 'Create your first form',
-    subtitle: 'Forms collect updates from members and write directly into their profiles. Pick a template to start.',
+    subtitle: 'Forms collect updates from members and write directly into their profiles.',
     body,
     actions: `
-      <button class="btn btn-primary" data-action="onb-finish" ${sel ? '' : 'disabled'}>
-        <svg><use href="#i-check"/></svg> ${ sel ? 'Create form & finish' : 'Pick a template' }
+      <button class="btn btn-primary" data-action="onb-finish">
+        Take me to Forms
+        <svg style="margin-left: 2px;"><use href="#i-arrow-right"/></svg>
       </button>
     `
   };
@@ -2016,29 +1934,12 @@ function OnboardingModal() {
   `;
 }
 
-function onboardingFinish(picked) {
+function onboardingFinish(goToForms) {
   state.onboardingOpen = false;
   try { localStorage.setItem('cpp-onboarded', '1'); } catch (e) {}
-  if (picked) {
-    const t = ONB_TEMPLATES.find(x => x.key === picked);
-    if (t) {
-      const f = {
-        id: uid('fm'),
-        title: t.title === 'Blank form' ? 'Untitled form' : t.title,
-        description: t.description || '',
-        status: 'draft',
-        createdAt: new Date().toISOString().slice(0,10),
-        questions: structuredClone(t.questions).map(q => ({ ...q, id: uid('q') })),
-        responses: []
-      };
-      state.forms.unshift(f);
-      state.tab = 'forms';
-      state.selectedFormId = f.id;
-      state.formView = 'edit';
-      render();
-      toast(`Form "${f.title}" created`);
-      return;
-    }
+  if (goToForms) {
+    state.tab = 'forms';
+    state.selectedFormId = null;
   }
   render();
   toast('Setup complete — welcome aboard!');
@@ -2284,9 +2185,6 @@ function attach() {
           render();
           toast(`Invite sent to ${inv.email.trim()}`);
         }
-      } else if (a === 'onb-pick-template') {
-        state.onboardingTemplate = el.dataset.onbTemplate;
-        render();
       } else if (a === 'onb-back') {
         state.onboardingStep = Math.max(1, state.onboardingStep - 1);
         render();
@@ -2296,10 +2194,9 @@ function attach() {
           render();
         }
       } else if (a === 'onb-finish') {
-        if (!state.onboardingTemplate) return;
-        onboardingFinish(state.onboardingTemplate);
+        onboardingFinish(true);
       } else if (a === 'onb-skip-all') {
-        onboardingFinish(null);
+        onboardingFinish(false);
       }
     };
   });
