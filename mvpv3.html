@@ -1178,7 +1178,6 @@ const FEEDBACK_SURVEY_URL = '#';
 function FeedbackBanner() {
   return `
     <div class="feedback-banner" role="region" aria-label="Feedback">
-      <svg class="feedback-icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
       <span>Got feedback?</span>
       <a href="${FEEDBACK_SURVEY_URL}" target="_blank" rel="noopener noreferrer" class="feedback-link">Share it with us</a>
       <span>.</span>
@@ -1248,7 +1247,6 @@ function ComingSoonPage(cs) {
     <div class="cs-page">
       <div>
         <h1 class="page-title">${escape(cs.title)}</h1>
-        <p class="page-subtitle">${escape(cs.subtitle)}</p>
       </div>
       <div class="cs-frame">
         <div class="cs-mock" aria-hidden="true">${ComingSoonMock(cs.mockKind)}</div>
@@ -1257,7 +1255,6 @@ function ComingSoonPage(cs) {
             <div class="cs-icon"><svg><use href="#${cs.icon}"/></svg></div>
             <div class="cs-badge">Coming soon</div>
             <h2 class="cs-title">${escape(cs.title)} is on the way</h2>
-            <p class="cs-tagline">${escape(cs.tagline)}</p>
           </div>
         </div>
       </div>
