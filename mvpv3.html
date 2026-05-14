@@ -507,6 +507,165 @@
   .copy-link-row { display: flex; gap: 8px; align-items: center; padding: 12px; background: #F9FAFB; border: 1px solid var(--border); border-radius: var(--radius-md); }
   .copy-link-row code { flex: 1; font-family: 'SF Mono', Menlo, monospace; font-size: 12px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+  /* ---- Onboarding ---- */
+  .onb-overlay {
+    position: fixed; inset: 0;
+    background: rgba(17,24,39,.55);
+    display: flex; align-items: center; justify-content: center;
+    padding: var(--lg) var(--md);
+    z-index: 60; overflow-y: auto;
+    animation: onbFade 200ms ease-out;
+  }
+  @keyframes onbFade { from { opacity: 0; } to { opacity: 1; } }
+  .onb-modal {
+    background: var(--surface); border-radius: var(--radius-lg);
+    width: 100%; max-width: 680px;
+    box-shadow: var(--shadow-lg);
+    display: flex; flex-direction: column;
+    max-height: 92vh;
+    overflow: hidden;
+    animation: onbPop 240ms cubic-bezier(.2,.9,.3,1.2);
+  }
+  @keyframes onbPop { from { opacity: 0; transform: translateY(8px) scale(.985); } to { opacity: 1; transform: none; } }
+  .onb-head { padding: var(--lg) var(--lg) 0; }
+  .onb-stepper { display: flex; gap: 8px; align-items: center; margin-bottom: var(--lg); }
+  .onb-step-pill { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-disabled); }
+  .onb-step-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #F3F4F6; color: var(--text-secondary);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; flex-shrink: 0;
+    transition: background 150ms ease, color 150ms ease;
+  }
+  .onb-step-pill.active .onb-step-num { background: var(--primary); color: white; }
+  .onb-step-pill.done .onb-step-num { background: var(--cta); color: white; }
+  .onb-step-pill.active .onb-step-label { color: var(--text); font-weight: 600; }
+  .onb-step-pill.done .onb-step-label { color: var(--text); }
+  .onb-step-num svg { width: 12px; height: 12px; }
+  .onb-step-connector { flex: 1; height: 2px; background: var(--border); border-radius: 2px; transition: background 150ms ease; }
+  .onb-step-connector.done { background: var(--cta); }
+  .onb-title { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; margin: 0; color: var(--text); }
+  .onb-subtitle { color: var(--text-secondary); margin: 6px 0 var(--lg); font-size: 14px; }
+  .onb-body { padding: 0 var(--lg) var(--lg); overflow-y: auto; flex: 1; }
+  .onb-footer {
+    padding: var(--md) var(--lg);
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    background: #FCFCFD;
+  }
+  .onb-skip {
+    background: none; border: none; color: var(--text-secondary);
+    font-size: 13px; cursor: pointer; padding: 6px 0;
+    font-family: inherit;
+  }
+  .onb-skip:hover { color: var(--text); text-decoration: underline; }
+  .onb-actions { display: flex; gap: 8px; }
+
+  /* Drop zone */
+  .onb-dropzone {
+    border: 2px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+    padding: var(--xxl) var(--lg);
+    text-align: center; background: #F9FAFB;
+    cursor: pointer;
+    transition: all 150ms ease;
+  }
+  .onb-dropzone:hover { border-color: var(--primary); background: #F0F5FF; }
+  .onb-dropzone.dragover { border-color: var(--primary); background: var(--primary-light); border-style: solid; }
+  .onb-dropzone.success { border-style: solid; border-color: var(--cta); background: var(--cta-light); cursor: default; }
+  .onb-dropzone-icon {
+    width: 48px; height: 48px;
+    margin: 0 auto var(--sm);
+    color: var(--text-secondary);
+    display: block;
+  }
+  .onb-dropzone.success .onb-dropzone-icon { color: var(--cta-hover); }
+  .onb-dropzone-title { font-weight: 600; font-size: 15px; color: var(--text); }
+  .onb-dropzone-sub { color: var(--text-secondary); font-size: 13px; margin-top: 4px; }
+  .onb-link-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px; margin-top: var(--md);
+    font-size: 13px; color: var(--text-secondary);
+    flex-wrap: wrap;
+  }
+  .onb-link-row .dot { color: var(--text-disabled); }
+  .onb-link-btn {
+    background: none; border: none; padding: 0;
+    color: var(--primary); cursor: pointer; font: inherit; font-weight: 500;
+  }
+  .onb-link-btn:hover { text-decoration: underline; }
+
+  /* CSV preview after upload */
+  .onb-preview { margin-top: var(--md); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+  .onb-preview-head {
+    padding: 10px 14px; background: #F9FAFB; border-bottom: 1px solid var(--border);
+    font-size: 12px; font-weight: 600; color: var(--text-secondary);
+    text-transform: uppercase; letter-spacing: 0.04em;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .onb-pill-good { background: var(--cta-light); color: #166534; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; text-transform: none; letter-spacing: 0; }
+  .onb-preview-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .onb-preview-table th, .onb-preview-table td { padding: 8px 14px; border-bottom: 1px solid var(--border); text-align: left; }
+  .onb-preview-table th { font-weight: 500; color: var(--text-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; background: #FBFCFD; }
+  .onb-preview-table tr:last-child td { border-bottom: none; }
+  .onb-preview-table .muted { color: var(--text-disabled); }
+
+  /* Invite step */
+  .onb-invite-hero {
+    display: flex; gap: var(--md); align-items: center;
+    padding: var(--md); background: #F9FAFB;
+    border: 1px solid var(--border); border-radius: var(--radius-md);
+    margin-bottom: var(--lg);
+  }
+  .onb-invite-hero-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--primary-light); color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .onb-invite-hero-icon svg { width: 20px; height: 20px; }
+  .onb-invite-hero-title { font-weight: 600; font-size: 14px; }
+  .onb-invite-hero-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .onb-sent-banner {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; background: var(--cta-light); color: #166534;
+    border-radius: var(--radius-md); font-size: 13px; font-weight: 500;
+    margin-bottom: var(--md);
+  }
+  .onb-sent-banner svg { width: 16px; height: 16px; }
+
+  /* Template grid */
+  .onb-template-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: var(--md);
+  }
+  @media (max-width: 600px) { .onb-template-grid { grid-template-columns: 1fr; } }
+  .onb-template-card {
+    border: 1px solid var(--border); border-radius: var(--radius-md);
+    padding: var(--md); cursor: pointer;
+    background: var(--surface); text-align: left;
+    transition: all 150ms ease;
+    font: inherit; color: inherit;
+    display: block; width: 100%;
+  }
+  .onb-template-card:hover { border-color: var(--primary); box-shadow: var(--shadow-sm); }
+  .onb-template-card.selected {
+    border-color: var(--primary);
+    background: #F3F6FE;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.14);
+  }
+  .onb-template-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--primary-light); color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: var(--sm);
+    transition: all 150ms ease;
+  }
+  .onb-template-icon svg { width: 18px; height: 18px; }
+  .onb-template-card.selected .onb-template-icon { background: var(--primary); color: white; }
+  .onb-template-title { font-weight: 600; font-size: 14px; color: var(--text); }
+  .onb-template-desc { font-size: 12px; color: var(--text-secondary); margin-top: 4px; line-height: 1.45; }
+
 </style>
 </head>
 <body>
@@ -535,6 +694,10 @@
     <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
     <symbol id="i-document" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></symbol>
     <symbol id="i-more" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-user-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M3 12h3M18 12h3M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></symbol>
   </defs>
 </svg>
 
@@ -692,6 +855,14 @@ const state = {
   members: structuredClone(membersSeed),
   families: structuredClone(familiesSeed),
   forms: structuredClone(formsSeed),
+
+  // Onboarding (first-visit overlay)
+  onboardingOpen: false,           // set by boot logic below
+  onboardingStep: 1,               // 1 = import, 2 = invite, 3 = create form
+  onboardingImportDone: false,     // mock: true after "Try sample" / drop
+  onboardingInvite: { name: '', email: '' },
+  onboardingInviteSent: false,
+  onboardingTemplate: null,        // key from ONB_TEMPLATES
 };
 
 // ---------- Helpers ----------
@@ -829,6 +1000,7 @@ function render() {
     ${state.fillFormId ? FillFormModal() : ''}
     ${state.addMemberOpen ? AddMemberModal() : ''}
     ${state.csvImportOpen ? CsvImportModal() : ''}
+    ${state.onboardingOpen ? OnboardingModal() : ''}
   `;
   attach();
 }
@@ -1622,6 +1794,256 @@ function performCsvImport() {
   toast(`Imported ${imported} member${imported===1?'':'s'}`);
 }
 
+// ====================== Onboarding ======================
+const ONB_STEPS = ['Import members', 'Invite team', 'Create form'];
+
+const ONB_TEMPLATES = [
+  {
+    key: 'member-info',
+    title: 'Updated member information',
+    desc: 'Keep contact info, address, and skills current.',
+    icon: 'i-people',
+    description: 'Help us keep your contact information current. Submissions update your church profile automatically.',
+    questions: [
+      { id: 'q1', text: 'Full name', type: 'short', required: true, options: [], mapsTo: 'name' },
+      { id: 'q2', text: 'Email address', type: 'short', required: true, options: [], mapsTo: 'email' },
+      { id: 'q3', text: 'Phone number', type: 'short', required: false, options: [], mapsTo: 'phone' },
+      { id: 'q4', text: 'Mailing address', type: 'paragraph', required: false, options: [], mapsTo: 'address' }
+    ]
+  },
+  {
+    key: 'volunteer',
+    title: 'Volunteer signup',
+    desc: 'Recruit helpers for a service or event.',
+    icon: 'i-check',
+    description: 'Sign up to help with an upcoming event.',
+    questions: [
+      { id: 'q1', text: 'Your name', type: 'short', required: true, options: [], mapsTo: 'name' },
+      { id: 'q2', text: 'Email', type: 'short', required: true, options: [], mapsTo: 'email' },
+      { id: 'q3', text: 'Which area would you like to help with?', type: 'multiple', required: true,
+        options: ['Set-up', 'Food service', 'Music & sound', 'Clean-up'], mapsTo: null }
+    ]
+  },
+  {
+    key: 'event-rsvp',
+    title: 'Event RSVP',
+    desc: 'Collect attendance counts and notes.',
+    icon: 'i-calendar',
+    description: 'Let us know if you can join us.',
+    questions: [
+      { id: 'q1', text: 'Your name', type: 'short', required: true, options: [], mapsTo: 'name' },
+      { id: 'q2', text: 'Email', type: 'short', required: true, options: [], mapsTo: 'email' },
+      { id: 'q3', text: 'Number attending', type: 'short', required: true, options: [], mapsTo: null },
+      { id: 'q4', text: 'Anything we should know?', type: 'paragraph', required: false, options: [], mapsTo: null }
+    ]
+  },
+  {
+    key: 'blank',
+    title: 'Blank form',
+    desc: 'Start from scratch with an empty question.',
+    icon: 'i-document',
+    description: '',
+    questions: [{ id: 'q1', text: '', type: 'short', required: false, options: [], mapsTo: null }]
+  }
+];
+
+function OnbStepper() {
+  const s = state.onboardingStep;
+  return `<div class="onb-stepper">
+    ${ ONB_STEPS.map((label, i) => {
+      const n = i + 1;
+      const cls = n < s ? 'done' : n === s ? 'active' : '';
+      const isLast = i === ONB_STEPS.length - 1;
+      return `
+        <div class="onb-step-pill ${cls}">
+          <div class="onb-step-num">${ n < s ? '<svg><use href="#i-check"/></svg>' : n }</div>
+          <div class="onb-step-label">${label}</div>
+        </div>
+        ${ !isLast ? `<div class="onb-step-connector ${n < s ? 'done' : ''}"></div>` : '' }
+      `;
+    }).join('') }
+  </div>`;
+}
+
+function OnbStep1() {
+  const done = state.onboardingImportDone;
+  const body = done ? `
+    <div class="onb-dropzone success" data-onb-drop>
+      <svg class="onb-dropzone-icon"><use href="#i-check"/></svg>
+      <div class="onb-dropzone-title">5 members ready to import</div>
+      <div class="onb-dropzone-sub">13 of 14 columns mapped automatically.</div>
+    </div>
+    <div class="onb-preview">
+      <div class="onb-preview-head">
+        <span>Preview</span>
+        <span class="onb-pill-good">5 rows · 13 fields detected</span>
+      </div>
+      <table class="onb-preview-table">
+        <thead>
+          <tr><th>First name</th><th>Last name</th><th>Email</th><th>Family</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Jane</td><td>Doe</td><td>jane.doe@email.com</td><td>Doe family</td></tr>
+          <tr><td>John</td><td>Doe</td><td>john.doe@email.com</td><td>Doe family</td></tr>
+          <tr><td>Emma</td><td>Doe</td><td class="muted">—</td><td>Doe family</td></tr>
+          <tr><td>Thomas</td><td>Wright</td><td>twright@email.com</td><td>Wright family</td></tr>
+          <tr><td>Olivia</td><td>Wright</td><td>owright@email.com</td><td>Wright family</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="onb-link-row" style="margin-top: var(--md);">
+      <button class="onb-link-btn" data-action="onb-import-reset">Choose a different file</button>
+    </div>
+  ` : `
+    <div class="onb-dropzone" data-action="onb-import-load" data-onb-drop>
+      <svg class="onb-dropzone-icon"><use href="#i-upload"/></svg>
+      <div class="onb-dropzone-title">Drag and drop your CSV here</div>
+      <div class="onb-dropzone-sub">or click to browse files on your computer</div>
+    </div>
+    <div class="onb-link-row">
+      <span>Don't have one yet?</span>
+      <button class="onb-link-btn" data-action="onb-import-load">Try the sample CSV</button>
+      <span class="dot">·</span>
+      <button class="onb-link-btn" data-action="onb-download-template">Download template</button>
+    </div>
+  `;
+
+  const primaryLabel = done ? 'Continue' : 'Skip for now';
+  return {
+    title: 'Bring your members in',
+    subtitle: 'Upload a CSV and we’ll map columns to the right fields. You can edit anything later.',
+    body,
+    actions: `
+      <button class="btn btn-primary" data-action="onb-next">
+        ${primaryLabel}
+        <svg style="margin-left: 2px;"><use href="#i-arrow-right"/></svg>
+      </button>
+    `
+  };
+}
+
+function OnbStep2() {
+  const inv = state.onboardingInvite;
+  const sent = state.onboardingInviteSent;
+  const canSend = inv.name.trim() && inv.email.trim() && /.+@.+\..+/.test(inv.email.trim());
+  const body = `
+    <div class="onb-invite-hero">
+      <div class="onb-invite-hero-icon"><svg><use href="#i-user-plus"/></svg></div>
+      <div>
+        <div class="onb-invite-hero-title">Add another administrator</div>
+        <div class="onb-invite-hero-sub">Team members get their own login and can manage people and forms with you.</div>
+      </div>
+    </div>
+    ${ sent ? `
+      <div class="onb-sent-banner">
+        <svg><use href="#i-check"/></svg>
+        Invite sent to ${escape(inv.email)}.
+      </div>
+    ` : '' }
+    <div class="form-row-2">
+      <div class="field">
+        <label class="label">Name</label>
+        <input class="input" data-onb-invite="name" value="${escape(inv.name)}" placeholder="e.g. Pastor John Miller" />
+      </div>
+      <div class="field">
+        <label class="label">Email</label>
+        <input class="input" type="email" data-onb-invite="email" value="${escape(inv.email)}" placeholder="name@church.org" />
+      </div>
+    </div>
+  `;
+  const primary = sent
+    ? `<button class="btn btn-primary" data-action="onb-next">Continue<svg style="margin-left: 2px;"><use href="#i-arrow-right"/></svg></button>`
+    : `<button class="btn btn-primary" data-action="onb-invite-send" ${canSend ? '' : 'disabled'}>
+         <svg><use href="#i-send"/></svg> Send invite
+       </button>`;
+  return {
+    title: 'Invite a teammate',
+    subtitle: 'Bring someone along to help manage members and forms — or skip and add team later.',
+    body,
+    actions: `
+      <button class="btn btn-neutral" data-action="onb-next">Skip this step</button>
+      ${primary}
+    `
+  };
+}
+
+function OnbStep3() {
+  const sel = state.onboardingTemplate;
+  const body = `
+    <div class="onb-template-grid">
+      ${ ONB_TEMPLATES.map(t => `
+        <button class="onb-template-card ${sel === t.key ? 'selected' : ''}" data-action="onb-pick-template" data-onb-template="${t.key}" type="button">
+          <div class="onb-template-icon"><svg><use href="#${t.icon}"/></svg></div>
+          <div class="onb-template-title">${escape(t.title)}</div>
+          <div class="onb-template-desc">${escape(t.desc)}</div>
+        </button>
+      `).join('') }
+    </div>
+  `;
+  return {
+    title: 'Create your first form',
+    subtitle: 'Forms collect updates from members and write directly into their profiles. Pick a template to start.',
+    body,
+    actions: `
+      <button class="btn btn-primary" data-action="onb-finish" ${sel ? '' : 'disabled'}>
+        <svg><use href="#i-check"/></svg> ${ sel ? 'Create form & finish' : 'Pick a template' }
+      </button>
+    `
+  };
+}
+
+function OnboardingModal() {
+  const s = state.onboardingStep;
+  const conf = s === 1 ? OnbStep1() : s === 2 ? OnbStep2() : OnbStep3();
+  return `
+    <div class="onb-overlay">
+      <div class="onb-modal" onclick="event.stopPropagation()">
+        <div class="onb-head">
+          ${ OnbStepper() }
+          <h2 class="onb-title">${conf.title}</h2>
+          <p class="onb-subtitle">${conf.subtitle}</p>
+        </div>
+        <div class="onb-body">${conf.body}</div>
+        <div class="onb-footer">
+          <button class="onb-skip" data-action="onb-skip-all">Skip setup</button>
+          <div class="onb-actions">
+            ${ s > 1 ? `<button class="btn btn-neutral" data-action="onb-back"><svg><use href="#i-arrow-left"/></svg> Back</button>` : '' }
+            ${conf.actions}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function onboardingFinish(picked) {
+  state.onboardingOpen = false;
+  try { localStorage.setItem('cpp-onboarded', '1'); } catch (e) {}
+  if (picked) {
+    const t = ONB_TEMPLATES.find(x => x.key === picked);
+    if (t) {
+      const f = {
+        id: uid('fm'),
+        title: t.title === 'Blank form' ? 'Untitled form' : t.title,
+        description: t.description || '',
+        status: 'draft',
+        createdAt: new Date().toISOString().slice(0,10),
+        questions: structuredClone(t.questions).map(q => ({ ...q, id: uid('q') })),
+        responses: []
+      };
+      state.forms.unshift(f);
+      state.tab = 'forms';
+      state.selectedFormId = f.id;
+      state.formView = 'edit';
+      render();
+      toast(`Form "${f.title}" created`);
+      return;
+    }
+  }
+  render();
+  toast('Setup complete — welcome aboard!');
+}
+
 // ====================== Toast ======================
 function ToastStack() {
   if (!state.toasts.length) return '';
@@ -1845,6 +2267,39 @@ function attach() {
         }
       } else if (a === 'csv-perform-import') {
         performCsvImport();
+      } else if (a === 'onb-import-load') {
+        state.onboardingImportDone = true;
+        render();
+      } else if (a === 'onb-import-reset') {
+        state.onboardingImportDone = false;
+        render();
+      } else if (a === 'onb-download-template') {
+        toast('Template download started (demo).');
+      } else if (a === 'onb-invite-send') {
+        const inv = state.onboardingInvite;
+        if (!inv.name.trim() || !inv.email.trim() || !/.+@.+\..+/.test(inv.email.trim())) {
+          toast('Add a name and a valid email first.', 'error');
+        } else {
+          state.onboardingInviteSent = true;
+          render();
+          toast(`Invite sent to ${inv.email.trim()}`);
+        }
+      } else if (a === 'onb-pick-template') {
+        state.onboardingTemplate = el.dataset.onbTemplate;
+        render();
+      } else if (a === 'onb-back') {
+        state.onboardingStep = Math.max(1, state.onboardingStep - 1);
+        render();
+      } else if (a === 'onb-next') {
+        if (state.onboardingStep < 3) {
+          state.onboardingStep += 1;
+          render();
+        }
+      } else if (a === 'onb-finish') {
+        if (!state.onboardingTemplate) return;
+        onboardingFinish(state.onboardingTemplate);
+      } else if (a === 'onb-skip-all') {
+        onboardingFinish(null);
       }
     };
   });
@@ -1901,6 +2356,38 @@ function attach() {
     };
     el.oninput = handler;
     el.onchange = handler;
+  });
+
+  // Onboarding invite inputs (no full re-render on input — keep focus)
+  $$('[data-onb-invite]').forEach(el => {
+    const handler = (e) => {
+      const key = el.dataset.onbInvite;
+      const prevValid = state.onboardingInvite.name.trim() && /.+@.+\..+/.test(state.onboardingInvite.email.trim());
+      state.onboardingInvite[key] = e.target.value;
+      const nowValid = state.onboardingInvite.name.trim() && /.+@.+\..+/.test(state.onboardingInvite.email.trim());
+      // Re-render only when the Send button enabled/disabled state flips
+      if (prevValid !== nowValid) {
+        render();
+        const back = document.querySelector(`[data-onb-invite="${key}"]`);
+        if (back) { back.focus(); const v = back.value; back.setSelectionRange(v.length, v.length); }
+      }
+    };
+    el.oninput = handler;
+  });
+
+  // Onboarding drop-zone — simulate file-drop visual feedback
+  $$('[data-onb-drop]').forEach(zone => {
+    zone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      zone.classList.add('dragover');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      state.onboardingImportDone = true;
+      render();
+    });
   });
 
   // Fill modal inputs
@@ -2028,6 +2515,19 @@ function submitFill() {
 }
 
 // ---------- Boot ----------
+try {
+  // Show onboarding once per browser. Add ?onboarding=1 to force-show again.
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('onboarding') === '1') {
+    localStorage.removeItem('cpp-onboarded');
+    state.onboardingOpen = true;
+  } else if (!localStorage.getItem('cpp-onboarded')) {
+    state.onboardingOpen = true;
+  }
+} catch (e) {
+  // localStorage unavailable (e.g. file:// + Safari private mode) — show anyway.
+  state.onboardingOpen = true;
+}
 render();
 </script>
 </body>
