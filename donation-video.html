@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Campaign Video Studio — ChurchPlannerPro</title>
+<style>
+  :root{
+    --ink:#0f1729; --ink2:#3a4358; --muted:#6b7488; --line:#e6e9f0;
+    --bg:#f6f7fb; --card:#ffffff;
+    --brand:#2f5fe0; --brand-dk:#1f44ad; --brand-soft:#eef3ff;
+    --green:#16a34a; --green-soft:#e9f8ef;
+    --amber:#d98e04; --amber-soft:#fdf4e0;
+    --red:#dc2626; --red-soft:#fdecec;
+    --shadow:0 1px 2px rgba(16,23,41,.05), 0 8px 30px rgba(16,23,41,.06);
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink); background:var(--bg); line-height:1.5; -webkit-font-smoothing:antialiased;}
+  a{color:var(--brand);text-decoration:none}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+
+  /* top bar */
+  header.app{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;gap:14px;height:62px}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:-.3px;font-size:16px}
+  .logo .mark{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--brand),#6b8cff);display:grid;place-items:center;color:#fff;font-size:14px}
+  .crumb{color:var(--muted);font-weight:600;font-size:13px}
+  .crumb b{color:var(--ink)}
+  .bar .spacer{flex:1}
+  .pill{font-size:12px;font-weight:700;color:var(--brand-dk);background:var(--brand-soft);padding:5px 10px;border-radius:999px}
+
+  /* stepper */
+  .steps{display:flex;gap:8px;flex-wrap:wrap;padding:18px 0 6px}
+  .step{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:700;color:var(--muted);
+    background:var(--card);border:1px solid var(--line);padding:8px 13px;border-radius:999px}
+  .step .n{width:20px;height:20px;border-radius:50%;background:#eceef4;color:var(--muted);display:grid;place-items:center;font-size:12px}
+  .step.active{color:var(--brand-dk);border-color:#c9d6ff;background:var(--brand-soft)}
+  .step.active .n{background:var(--brand);color:#fff}
+  .step.done{color:var(--green)}
+  .step.done .n{background:var(--green);color:#fff}
+
+  main{padding:14px 0 70px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:26px}
+  .card + .card{margin-top:18px}
+  h1{font-size:25px;letter-spacing:-.6px;margin:.1em 0 .3em}
+  h2{font-size:19px;letter-spacing:-.3px;margin:0 0 4px}
+  .sub{color:var(--muted);margin:0 0 22px;font-size:14.5px}
+  .lead{color:var(--ink2);font-size:15px}
+
+  label{display:block;font-weight:700;font-size:13px;margin:0 0 6px}
+  .hint{color:var(--muted);font-weight:500;font-size:12.5px;margin-top:5px}
+  input[type=text],input[type=number],select,textarea{width:100%;font:inherit;color:var(--ink);
+    border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:#fff;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+  textarea{resize:vertical;min-height:84px}
+  .grid{display:grid;gap:16px}
+  .g2{grid-template-columns:1fr 1fr}
+  @media(max-width:680px){.g2{grid-template-columns:1fr}}
+  .field{margin-bottom:16px}
+
+  /* project type cards */
+  .pick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media(max-width:680px){.pick{grid-template-columns:1fr 1fr}}
+  .opt{border:1.5px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;text-align:center;background:#fff;transition:.12s}
+  .opt:hover{border-color:#c9d6ff}
+  .opt.sel{border-color:var(--brand);background:var(--brand-soft);box-shadow:0 0 0 3px var(--brand-soft)}
+  .opt .ic{font-size:22px}
+  .opt .t{font-weight:700;font-size:13.5px;margin-top:6px}
+
+  .btn{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;border-radius:10px;padding:12px 20px;font-size:14.5px}
+  .btn.primary{background:var(--brand);color:#fff}
+  .btn.primary:hover{background:var(--brand-dk)}
+  .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .btn.ghost:hover{border-color:#c9d6ff;color:var(--brand-dk)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .actions{display:flex;justify-content:space-between;gap:12px;margin-top:24px}
+
+  /* coach panel */
+  .split{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
+  @media(max-width:820px){.split{grid-template-columns:1fr}}
+  .coach{background:var(--brand-soft);border:1px solid #d6e0ff;border-radius:12px;padding:18px}
+  .coach h3{margin:0 0 10px;font-size:14px;color:var(--brand-dk);letter-spacing:.2px;text-transform:uppercase}
+  .coach ul{margin:0;padding-left:18px}
+  .coach li{margin:7px 0;font-size:13.5px;color:var(--ink2)}
+
+  /* upload / record */
+  .drop{border:2px dashed #cfd6e6;border-radius:14px;padding:30px;text-align:center;background:#fbfcff;transition:.12s}
+  .drop.over{border-color:var(--brand);background:var(--brand-soft)}
+  .drop .big{font-size:34px}
+  .drop p{margin:8px 0 4px;font-weight:700}
+  video{width:100%;border-radius:12px;background:#000;display:block}
+  .vmeta{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--muted)}
+  .vmeta b{color:var(--ink)}
+  .or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px;font-weight:700;margin:14px 0}
+  .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  /* checklist */
+  .check{display:flex;gap:11px;align-items:flex-start;padding:11px 12px;border:1px solid var(--line);border-radius:11px;margin-bottom:9px;cursor:pointer;background:#fff;transition:.12s}
+  .check:hover{border-color:#c9d6ff}
+  .check input{margin-top:2px;width:17px;height:17px;accent-color:var(--brand)}
+  .check .ct{font-size:13.5px}
+  .check .ct b{display:block;font-size:14px;margin-bottom:1px}
+  .check small{color:var(--muted)}
+  .chk-group h4{margin:18px 0 9px;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+
+  /* score report */
+  .scorehero{display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center}
+  @media(max-width:680px){.scorehero{grid-template-columns:1fr;text-align:center;justify-items:center}}
+  .dial{position:relative;width:160px;height:160px}
+  .dial svg{transform:rotate(-90deg)}
+  .dial .num{position:absolute;inset:0;display:grid;place-items:center;flex-direction:column}
+  .dial .num .v{font-size:42px;font-weight:800;letter-spacing:-1px;line-height:1}
+  .dial .num .g{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-top:3px}
+  .verdict h2{font-size:22px}
+  .badge{display:inline-block;font-size:12px;font-weight:800;padding:5px 11px;border-radius:999px;letter-spacing:.3px}
+  .b-green{background:var(--green-soft);color:var(--green)}
+  .b-amber{background:var(--amber-soft);color:var(--amber)}
+  .b-red{background:var(--red-soft);color:var(--red)}
+
+  .bars{margin-top:24px;display:grid;gap:18px}
+  .barrow .top{display:flex;justify-content:space-between;font-size:13.5px;font-weight:700;margin-bottom:6px}
+  .barrow .top span{color:var(--muted);font-weight:700}
+  .track{height:10px;background:#eef0f6;border-radius:99px;overflow:hidden}
+  .fill{height:100%;border-radius:99px;width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+
+  .breakdown{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:680px){.breakdown{grid-template-columns:1fr}}
+  .li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;padding:10px 12px;border:1px solid var(--line);border-radius:10px}
+  .li .ic{font-size:15px;line-height:1.3}
+  .li.ok .ic{color:var(--green)} .li.no .ic{color:var(--amber)}
+  .li small{display:block;color:var(--muted)}
+
+  .tips{margin-top:22px;background:var(--amber-soft);border:1px solid #f3e1b8;border-radius:12px;padding:16px 18px}
+  .tips h3{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.4px;color:var(--amber)}
+  .tips li{font-size:13.5px;color:var(--ink2);margin:6px 0}
+
+  /* share page preview */
+  .device{max-width:430px;margin:0 auto;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden;background:#fff}
+  .dvtop{height:34px;background:#0f1729;display:flex;align-items:center;justify-content:center}
+  .dvtop .dot{width:60px;height:6px;border-radius:99px;background:#3a4358}
+  .dvbody{padding:0 0 22px}
+  .hero{background:linear-gradient(135deg,#1f44ad,#3f74ff);color:#fff;padding:20px 20px 24px}
+  .hero .ch{font-size:12px;font-weight:700;opacity:.85;letter-spacing:.4px;text-transform:uppercase}
+  .hero h3{margin:6px 0 4px;font-size:21px;letter-spacing:-.3px}
+  .hero p{margin:0;font-size:13.5px;opacity:.92}
+  .vidph{margin:16px 20px 0;border-radius:14px;aspect-ratio:16/10;background:#000;position:relative;overflow:hidden;display:grid;place-items:center}
+  .vidph video{height:100%;object-fit:cover}
+  .play{position:absolute;width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;color:var(--brand-dk);font-size:20px;box-shadow:0 6px 20px rgba(0,0,0,.3);pointer-events:none}
+  .prog{margin:18px 20px 0}
+  .prog .nums{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+  .prog .raised{font-size:22px;font-weight:800;letter-spacing:-.5px}
+  .prog .goal{font-size:13px;color:var(--muted);font-weight:600}
+  .prog .track{height:12px}
+  .prog .fill{background:linear-gradient(90deg,var(--green),#34d27b)}
+  .prog .meta{display:flex;justify-content:space-between;margin-top:7px;font-size:12px;color:var(--muted);font-weight:600}
+  .give{margin:18px 20px 0}
+  .give .amts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .amt{border:1.5px solid var(--line);border-radius:11px;padding:12px 6px;text-align:center;font-weight:800;cursor:pointer;font-size:15px;transition:.12s}
+  .amt:hover{border-color:#c9d6ff}
+  .amt.sel{border-color:var(--green);background:var(--green-soft);color:var(--green)}
+  .give .cta{margin-top:10px;width:100%;background:var(--green);color:#fff;border:0;border-radius:11px;padding:14px;font-weight:800;font-size:15px;cursor:pointer}
+  .give .cta:hover{filter:brightness(.96)}
+  .scripture{margin:18px 20px 0;font-size:13px;color:var(--ink2);font-style:italic;border-left:3px solid var(--brand-soft);padding-left:12px}
+
+  .sharebar{display:flex;gap:10px;align-items:center;margin-top:20px;background:var(--brand-soft);border:1px solid #d6e0ff;border-radius:12px;padding:14px 16px;flex-wrap:wrap}
+  .sharebar .url{flex:1;min-width:200px;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--brand-dk);background:#fff;border:1px solid #d6e0ff;border-radius:8px;padding:9px 11px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:60}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .channels{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .chan{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;border:1px solid var(--line);border-radius:10px;padding:9px 13px;background:#fff;color:var(--ink2);cursor:pointer;font-family:inherit}
+  .chan:hover{border-color:#c9d6ff;color:var(--brand-dk)}
+  .vidcard{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:12px;background:#fbfcff}
+  .vidcard-row{display:flex;align-items:center;gap:10px}
+  .vidcard-title{font-weight:800;font-size:15px;letter-spacing:-.2px}
+  .vidcard-need{margin:8px 0 0;font-size:13.5px;color:var(--ink2)}
+  .hide{display:none!important}
+  .footnote{color:var(--muted);font-size:12px;text-align:center;margin:26px 0 0}
+</style>
+</head>
+<body>
+<header class="app">
+  <div class="wrap bar">
+    <div class="logo"><span class="mark">✦</span> ChurchPlanner<span style="color:var(--brand)">PRO</span></div>
+    <span class="crumb">Capital Campaigns <b>›</b> <b id="crumbCamp">Campaign Video Studio</b></span>
+    <span class="spacer"></span>
+    <span class="pill">Beta</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="steps">
+    <div class="step active" data-s="1"><span class="n">1</span> Campaign</div>
+    <div class="step" data-s="2"><span class="n">2</span> Record</div>
+    <div class="step" data-s="3"><span class="n">3</span> Grade</div>
+    <div class="step" data-s="4"><span class="n">4</span> Share</div>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <!-- STEP 1 -->
+  <section id="s1">
+    <div class="card">
+      <h1>Start a capital campaign video</h1>
+      <p class="sub">Tell members exactly what needs fixing and why. We'll grade your video and turn it into a shareable giving page.</p>
+
+      <div class="field">
+        <label>What are you raising money for?</label>
+        <div class="pick" id="ptype">
+          <div class="opt" data-v="New Roof" data-emoji="🏠"><div class="ic">🏠</div><div class="t">New Roof</div></div>
+          <div class="opt" data-v="HVAC System" data-emoji="❄️"><div class="ic">❄️</div><div class="t">HVAC System</div></div>
+          <div class="opt" data-v="Parking Lot" data-emoji="🅿️"><div class="ic">🅿️</div><div class="t">Parking Lot</div></div>
+          <div class="opt" data-v="Building Repair" data-emoji="🧱"><div class="ic">🧱</div><div class="t">Other Repair</div></div>
+        </div>
+      </div>
+
+      <div class="grid g2">
+        <div class="field">
+          <label for="church">Church name</label>
+          <input id="church" type="text" placeholder="e.g. Christ Lutheran" value="Christ Lutheran" />
+        </div>
+        <div class="field">
+          <label for="title">Campaign title</label>
+          <input id="title" type="text" placeholder="e.g. Keep Us Warm: New HVAC Fund" />
+        </div>
+      </div>
+
+      <div class="grid g2">
+        <div class="field">
+          <label for="goal">Fundraising goal ($)</label>
+          <input id="goal" type="number" min="0" step="500" placeholder="85000" value="85000" />
+        </div>
+        <div class="field">
+          <label for="raised">Already raised so far ($)</label>
+          <input id="raised" type="number" min="0" step="500" placeholder="12000" value="12000" />
+          <div class="hint">Shown as the starting point on the progress bar.</div>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:0">
+        <label for="need">The need, in one or two sentences</label>
+        <textarea id="need" placeholder="Our 22-year-old furnace failed twice this winter. Replacing it keeps our sanctuary warm for Sunday worship and the Tuesday food pantry.">Our 22-year-old furnace failed twice this winter. Replacing it keeps our sanctuary warm for Sunday worship and the Tuesday food pantry.</textarea>
+      </div>
+
+      <div class="actions">
+        <span></span>
+        <button class="btn primary" id="to2">Continue to recording →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section id="s2" class="hide">
+    <div class="card">
+      <h1>Record or upload your video</h1>
+      <p class="sub">A phone video is perfect. Keep it 60–180 seconds. Walk the camera right up to the problem.</p>
+      <div class="split">
+        <div>
+          <div class="drop" id="drop">
+            <div class="big">🎥</div>
+            <p>Drag a video here, or</p>
+            <button class="btn ghost" id="pick">Choose a video file</button>
+            <input id="file" type="file" accept="video/*" class="hide" />
+            <div class="or">or</div>
+            <button class="btn ghost" id="rec">● Record with camera</button>
+            <div class="hint" style="margin-top:10px">Nothing is uploaded anywhere — this is a working prototype on your device.</div>
+          </div>
+
+          <div id="vwrap" class="hide" style="margin-top:4px">
+            <video id="player" controls playsinline></video>
+            <div class="vmeta">
+              <span>Length: <b id="mDur">—</b></span>
+              <span>Resolution: <b id="mRes">—</b></span>
+              <span>Audio: <b id="mAud">—</b></span>
+            </div>
+            <div class="actions" style="margin-top:14px">
+              <button class="btn ghost" id="redo">↺ Replace video</button>
+              <button class="btn primary" id="to3">Grade this video →</button>
+            </div>
+          </div>
+
+          <div id="recwrap" class="hide" style="margin-top:4px">
+            <video id="live" autoplay muted playsinline></video>
+            <div class="actions" style="margin-top:14px">
+              <button class="btn ghost" id="recStop">■ Stop recording</button>
+              <span style="align-self:center;color:var(--red);font-weight:700" id="recDot">● Recording…</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="coach">
+          <h3>📋 Say this on camera</h3>
+          <ul>
+            <li><b>Show the problem.</b> Point the camera at the cracked roof / dead furnace up close.</li>
+            <li><b>Explain the impact.</b> "If we don't fix this, here's what stops…"</li>
+            <li><b>Tie it to mission.</b> Worship, the food pantry, the kids' program.</li>
+            <li><b>Make the ask.</b> Say the dollar goal out loud.</li>
+            <li><b>Pastor on camera</b> builds trust — a friendly face beats a voiceover.</li>
+            <li><b>End with the next step.</b> "Tap give below — any amount helps."</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section id="s3" class="hide">
+    <div class="card">
+      <h2>Confirm what's in your video</h2>
+      <p class="sub">We auto-graded the technical quality. Check off what you covered so we can score how well it'll drive giving.</p>
+
+      <div class="split">
+        <div>
+          <div class="chk-group">
+            <h4>Video quality (auto-detected + confirm)</h4>
+            <label class="check"><input type="checkbox" data-cat="q" data-w="10" id="qLight" checked><span class="ct"><b>Problem is clearly visible</b><small>Good lighting, in focus, up close</small></span></label>
+            <label class="check"><input type="checkbox" data-cat="q" data-w="10" id="qAudio"><span class="ct"><b>Clear narration / audio</b><small>Someone is explaining, not just silent footage</small></span></label>
+            <label class="check"><input type="checkbox" data-cat="q" data-w="8" id="qStable"><span class="ct"><b>Steady footage</b><small>Held reasonably still, not shaky</small></span></label>
+          </div>
+          <div class="chk-group">
+            <h4>Donation persuasiveness</h4>
+            <label class="check"><input type="checkbox" data-cat="p" data-w="12" id="pProblem" checked><span class="ct"><b>Shows the actual problem</b><small>Members can see what's broken</small></span></label>
+            <label class="check"><input type="checkbox" data-cat="p" data-w="12" id="pImpact"><span class="ct"><b>Explains why it matters</b><small>Ties the repair to the church's mission</small></span></label>
+            <label class="check"><input type="checkbox" data-cat="p" data-w="12" id="pAsk"><span class="ct"><b>States the funding goal out loud</b><small>"We need to raise $85,000"</small></span></label>
+            <label class="check"><input type="checkbox" data-cat="p" data-w="10" id="pFace"><span class="ct"><b>A trusted face on camera</b><small>Pastor or staff, not anonymous</small></span></label>
+            <label class="check"><input type="checkbox" data-cat="p" data-w="10" id="pCta"><span class="ct"><b>Clear call to give</b><small>Tells members the next step</small></span></label>
+          </div>
+          <button class="btn primary" id="regrade" style="width:100%">Calculate my grade</button>
+        </div>
+
+        <div>
+          <div class="card" style="box-shadow:none;background:var(--bg)">
+            <div class="scorehero">
+              <div class="dial">
+                <svg width="160" height="160" viewBox="0 0 160 160">
+                  <circle cx="80" cy="80" r="68" fill="none" stroke="#e9ecf4" stroke-width="14"/>
+                  <circle id="ring" cx="80" cy="80" r="68" fill="none" stroke="var(--brand)" stroke-width="14"
+                          stroke-linecap="round" stroke-dasharray="427" stroke-dashoffset="427"/>
+                </svg>
+                <div class="num"><div><div class="v" id="scoreNum">0</div><div class="g" id="scoreGrade" style="color:var(--muted)">—</div></div></div>
+              </div>
+              <div class="verdict">
+                <span class="badge b-amber" id="verdictBadge">Awaiting grade</span>
+                <h2 id="verdictTitle" style="margin:.4em 0 .2em">Let's see how it scores</h2>
+                <p class="lead" id="verdictText" style="margin:0">Confirm the checklist and hit calculate.</p>
+              </div>
+            </div>
+
+            <div class="bars">
+              <div class="barrow">
+                <div class="top">Video quality <span id="qPct">0 / 40</span></div>
+                <div class="track"><div class="fill" id="qFill" style="background:var(--brand)"></div></div>
+              </div>
+              <div class="barrow">
+                <div class="top">Donation persuasiveness <span id="pPct">0 / 60</span></div>
+                <div class="track"><div class="fill" id="pFill" style="background:var(--green)"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tips hide" id="tipsBox">
+            <h3>💡 To raise your grade</h3>
+            <ul id="tipsList"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn ghost" id="back2">← Back to video</button>
+        <button class="btn primary" id="to4" disabled>Build the giving page →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section id="s4" class="hide">
+    <div class="card">
+      <h1>Your video is ready to share</h1>
+      <p class="sub">One link to your graded campaign video. Drop it anywhere — text, email, your bulletin, or social.</p>
+
+      <div class="split">
+        <div>
+          <video id="shareVid" controls playsinline></video>
+          <div class="vidcard">
+            <div class="vidcard-row">
+              <span class="badge" id="finalBadge">Grade —</span>
+              <span class="vidcard-title" id="finalTitle">Campaign video</span>
+            </div>
+            <p class="vidcard-need" id="finalNeed"></p>
+          </div>
+        </div>
+
+        <div>
+          <h2 style="margin-bottom:6px">Shareable link</h2>
+          <p class="sub" style="margin-bottom:14px">Anyone with the link can watch — no login needed.</p>
+
+          <div class="sharebar">
+            <span class="url" id="shareUrl">https://watch.churchplannerpro.com/v/…</span>
+            <button class="btn primary" id="copyBtn" style="padding:9px 16px">Copy</button>
+          </div>
+
+          <label style="margin-top:18px">Share to</label>
+          <div class="channels">
+            <button class="chan" id="shText">💬 Text</button>
+            <button class="chan" id="shEmail">✉️ Email</button>
+            <button class="chan" id="shFb">📘 Facebook</button>
+            <button class="chan" id="shCopy2">🔗 Copy link</button>
+          </div>
+
+          <div class="coach" style="margin-top:18px">
+            <h3>📣 Where to share it</h3>
+            <ul>
+              <li>Paste into your weekly member email or text blast.</li>
+              <li>Add the link (or a QR code) to the Sunday bulletin.</li>
+              <li>Post to the church Facebook group or website.</li>
+            </ul>
+          </div>
+
+          <div class="actions">
+            <button class="btn ghost" id="back3">← Back to grade</button>
+            <button class="btn primary" id="restart">Start another video</button>
+          </div>
+        </div>
+      </div>
+      <p class="footnote">Prototype — the share link is simulated. Built as a ChurchPlannerPro module concept.</p>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const state = { type:"HVAC System", emoji:"❄️", quality:{auto:0}, durOK:false, hasAudio:false, videoURL:null };
+
+/* ---------- step nav ---------- */
+function goto(n){
+  [1,2,3,4].forEach(i=>$('#s'+i).classList.toggle('hide', i!==n));
+  $$('.step').forEach(el=>{
+    const s=+el.dataset.s;
+    el.classList.toggle('active', s===n);
+    el.classList.toggle('done', s<n);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- step 1 ---------- */
+$$('#ptype .opt').forEach(o=>o.addEventListener('click',()=>{
+  $$('#ptype .opt').forEach(x=>x.classList.remove('sel'));
+  o.classList.add('sel');
+  state.type=o.dataset.v; state.emoji=o.dataset.emoji;
+  if(!$('#title').value){
+    $('#title').value = state.type==="New Roof" ? "Raise the Roof Fund"
+      : state.type==="HVAC System" ? "Keep Us Warm: New HVAC Fund"
+      : state.type==="Parking Lot" ? "Repave & Restore Fund" : "Building Restoration Fund";
+  }
+}));
+$('#ptype .opt[data-v="HVAC System"]').classList.add('sel');
+
+$('#to2').addEventListener('click',()=>{
+  if(!$('#church').value.trim() || !$('#title').value.trim() || !$('#goal').value){
+    alert("Please add a church name, campaign title, and goal."); return;
+  }
+  state.church=$('#church').value.trim();
+  state.title=$('#title').value.trim();
+  state.goal=+$('#goal').value;
+  state.raised=+($('#raised').value||0);
+  state.need=$('#need').value.trim();
+  $('#crumbCamp').textContent = state.title;
+  goto(2);
+});
+
+/* ---------- step 2: upload ---------- */
+const drop=$('#drop'), fileInput=$('#file'), player=$('#player');
+$('#pick').addEventListener('click',()=>fileInput.click());
+fileInput.addEventListener('change',e=>{ if(e.target.files[0]) loadVideo(e.target.files[0]); });
+['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
+drop.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f&&f.type.startsWith('video')) loadVideo(f); });
+
+function fmt(t){ if(!isFinite(t))return"—"; const m=Math.floor(t/60),s=Math.round(t%60); return m+":"+String(s).padStart(2,'0'); }
+
+function loadVideo(file){
+  if(state.videoURL) URL.revokeObjectURL(state.videoURL);
+  state.videoURL=URL.createObjectURL(file);
+  player.src=state.videoURL;
+  $('#recwrap').classList.add('hide'); stopStream();
+  drop.classList.add('hide'); $('#vwrap').classList.remove('hide');
+  player.onloadedmetadata=()=>{
+    const d=player.duration, w=player.videoWidth, h=player.videoHeight;
+    $('#mDur').textContent=fmt(d);
+    $('#mRes').textContent=(w&&h)?`${w}×${h}`:"—";
+    state.durOK = d>=45 && d<=210;
+    state.dur=d;
+    // crude audio presence check
+    const a = player.mozHasAudio || Boolean(player.webkitAudioDecodedByteCount) || Boolean(player.audioTracks && player.audioTracks.length);
+    state.hasAudio = a;
+    $('#mAud').textContent = a ? "Detected" : "Not detected";
+    // auto quality: resolution + duration window
+    let q=0; if(h>=720) q+=12; else if(h>=480) q+=7; else q+=3;
+    if(state.durOK) q+=6;
+    state.quality.auto=q;
+    if(a) $('#qAudio').checked=true;
+  };
+}
+$('#redo').addEventListener('click',()=>{ $('#vwrap').classList.add('hide'); drop.classList.remove('hide'); fileInput.value=""; });
+
+/* ---------- step 2: live record ---------- */
+let stream=null, recorder=null, chunks=[];
+$('#rec').addEventListener('click',async()=>{
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+    drop.classList.add('hide'); $('#vwrap').classList.add('hide'); $('#recwrap').classList.remove('hide');
+    $('#live').srcObject=stream;
+    chunks=[]; recorder=new MediaRecorder(stream);
+    recorder.ondataavailable=e=>{ if(e.data.size) chunks.push(e.data); };
+    recorder.onstop=()=>{ const blob=new Blob(chunks,{type:'video/webm'}); loadVideo(new File([blob],'recording.webm',{type:'video/webm'})); };
+    recorder.start();
+  }catch(err){ alert("Couldn't access the camera. You can upload a file instead."); }
+});
+$('#recStop').addEventListener('click',()=>{ if(recorder&&recorder.state!=='inactive') recorder.stop(); });
+function stopStream(){ if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; } }
+
+$('#to3').addEventListener('click',()=>{ goto(3); });
+
+/* ---------- step 3: grading ---------- */
+const RING=427;
+function setDial(score){
+  const off = RING - (RING*score/100);
+  const ring=$('#ring');
+  ring.style.transition="stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1), stroke .4s";
+  ring.style.strokeDashoffset=off;
+  const color = score>=80?'var(--green)':score>=55?'var(--amber)':'var(--red)';
+  ring.style.stroke=color;
+  // count up
+  let cur=0; clearInterval(window._ci);
+  window._ci=setInterval(()=>{ cur+=Math.ceil((score-cur)/6)||1; if(cur>=score){cur=score;clearInterval(window._ci);} $('#scoreNum').textContent=cur; },45);
+}
+
+function grade(){
+  let q=0,p=0;
+  $$('input[data-cat="q"]').forEach(c=>{ if(c.checked) q+=+c.dataset.w; });
+  q += state.quality.auto||0;
+  const qMax=40, pMax=60;
+  q=Math.min(q,qMax);
+  $$('input[data-cat="p"]').forEach(c=>{ if(c.checked) p+=+c.dataset.w; });
+  p=Math.min(p,pMax);
+  const total=Math.round(q+p);
+
+  $('#qFill').style.width=(q/qMax*100)+'%';
+  $('#pFill').style.width=(p/pMax*100)+'%';
+  $('#qPct').textContent=Math.round(q)+' / 40';
+  $('#pPct').textContent=Math.round(p)+' / 60';
+
+  setDial(total);
+  const g = total>=90?'A':total>=80?'B':total>=70?'C':total>=55?'D':'F';
+  $('#scoreGrade').textContent='Grade '+g;
+  $('#scoreGrade').style.color = total>=80?'var(--green)':total>=55?'var(--amber)':'var(--red)';
+
+  const badge=$('#verdictBadge');
+  badge.className='badge '+(total>=80?'b-green':total>=55?'b-amber':'b-red');
+  if(total>=80){ badge.textContent='Ready to send'; $('#verdictTitle').textContent="This will drive donations 🎉";
+    $('#verdictText').textContent="Strong, clear, and persuasive. Build your giving page."; }
+  else if(total>=55){ badge.textContent='Good — could be stronger'; $('#verdictTitle').textContent="Solid start";
+    $('#verdictText').textContent="You can send it, but a tweak or two will lift giving."; }
+  else{ badge.textContent='Needs work'; $('#verdictTitle').textContent="Let's strengthen this first";
+    $('#verdictText').textContent="A few quick fixes will make this far more effective."; }
+
+  // tips
+  const tips=[];
+  if(!$('#qAudio').checked) tips.push("Add narration — silent footage rarely converts.");
+  if(!$('#qStable').checked) tips.push("Steady the camera (lean on something or use both hands).");
+  if(!$('#pImpact').checked) tips.push("Say what stops if it isn't fixed — connect it to your mission.");
+  if(!$('#pAsk').checked) tips.push("State the dollar goal out loud: “We need to raise $"+ (state.goal||0).toLocaleString() +".”");
+  if(!$('#pFace').checked) tips.push("Get the pastor on camera — a trusted face builds giving.");
+  if(!$('#pCta').checked) tips.push("End with a clear call: “Tap give below — any amount helps.”");
+  if(state.dur && !state.durOK) tips.push("Aim for 60–180 seconds — yours is "+fmt(state.dur)+".");
+  if(tips.length){ $('#tipsBox').classList.remove('hide'); $('#tipsList').innerHTML=tips.map(t=>'<li>'+t+'</li>').join(''); }
+  else $('#tipsBox').classList.add('hide');
+
+  state.grade=g; state.score=total;
+  $('#to4').disabled=false;
+}
+$('#regrade').addEventListener('click',grade);
+$$('#s3 input[type=checkbox]').forEach(c=>c.addEventListener('change',grade));
+$('#back2').addEventListener('click',()=>goto(2));
+$('#to3').addEventListener('click',()=>setTimeout(grade,200));
+
+/* ---------- step 4: shareable video ---------- */
+function buildPage(){
+  // grade badge
+  const b=$('#finalBadge'), s=state.score||0;
+  b.className='badge '+(s>=80?'b-green':s>=55?'b-amber':'b-red');
+  b.textContent='Grade '+(state.grade||'—')+' · '+s+'/100';
+  $('#finalTitle').textContent=state.title||'Campaign video';
+  $('#finalNeed').textContent=state.need||(state.church||'Our church')+' capital campaign.';
+  // play the actual video
+  if(state.videoURL) $('#shareVid').src=state.videoURL;
+  // simulated link
+  const slug=(state.church||'church').toLowerCase().replace(/[^a-z]+/g,'-').slice(0,16);
+  state.link='https://watch.churchplannerpro.com/v/'+slug+'-'+Math.random().toString(36).slice(2,7);
+  $('#shareUrl').textContent=state.link;
+}
+function copyLink(){
+  navigator.clipboard?.writeText(state.link||'').then(()=>toast('Link copied!')).catch(()=>toast('Link copied!'));
+}
+$('#to4').addEventListener('click',()=>{ buildPage(); goto(4); });
+$('#back3').addEventListener('click',()=>goto(3));
+$('#restart').addEventListener('click',()=>{ location.reload(); });
+$('#copyBtn').addEventListener('click',copyLink);
+$('#shCopy2').addEventListener('click',copyLink);
+$('#shText').addEventListener('click',()=>toast('Opening your messages app… (simulated)'));
+$('#shEmail').addEventListener('click',()=>toast('Opening your email… (simulated)'));
+$('#shFb').addEventListener('click',()=>toast('Opening Facebook share… (simulated)'));
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('show'),1800); }
+</script>
+</body>
+</html>
