@@ -1,0 +1,1359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>ChurchPlannerPro Connect — Giving (Member App Prototype)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================================
+   BLOCK A — BASE TOKENS + SHELL
+   These are copied verbatim from memberapp.html so this file runs standalone.
+   When integrating, DELETE this block — memberapp.html already has it.
+   ========================================================================= */
+:root{
+  --accent:#0FA36B; --accent-text:#5cc09a; --accent-soft:rgba(15,163,107,.18);
+  --bg:#0B0B0C; --bg-elev:#141416; --bg-soft:#1A1A1D; --bg-sunk:#111113;
+  --text:#F4F4F5; --text-2:#A2A6AE; --text-3:#71757E;
+  --line:#26262A; --line-soft:#1D1D20;
+  --r:14px; --r-lg:18px;
+  --shadow:0 1px 3px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:Inter,-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;line-height:1.2;letter-spacing:-.02em;font-weight:700}
+p{margin:0 0 12px}
+button{font-family:inherit}
+input,select,textarea{font-family:inherit}
+.muted{color:var(--text-2)} .faint{color:var(--text-3)}
+.sm{font-size:14.5px} .tiny{font-size:12.5px} .center{text-align:center}
+.accent{color:var(--accent-text)}
+.wrap{max-width:640px;margin:0 auto;padding:0 22px}
+main{padding:8px 0 120px}
+.rule{height:1px;background:var(--line);margin:30px 0}
+.sechead{text-align:center;font-size:23px;font-weight:700;margin-bottom:22px}
+.pagehead{padding:14px 0 8px}
+.pagehead h1{font-size:29px;margin-bottom:6px}
+.pagehead p{color:var(--text-2);font-size:15.5px}
+.gap-sm{height:14px} .gap{height:26px}
+.topbar{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:900px;margin:0 auto;height:58px;padding:0 16px;display:grid;grid-template-columns:64px 1fr 64px;align-items:center}
+.topbar .title{text-align:center;font-weight:650;font-size:16.5px}
+.topbar .right{display:flex;gap:6px;justify-content:flex-end}
+.iconbtn{background:none;border:none;padding:4px;cursor:pointer;display:grid;place-items:center;color:inherit;opacity:.9}
+.ava{width:38px;height:38px;border-radius:50%;background:var(--bg-soft);color:var(--text-2);display:grid;place-items:center;font-size:13.5px;font-weight:700;letter-spacing:.03em;border:none;cursor:pointer}
+.ava.accent-fill{background:var(--accent);color:#fff}
+.desknav{display:none;border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:58px;z-index:39}
+.desknav-in{max-width:900px;margin:0 auto;display:flex;gap:4px;padding:0 16px}
+.desknav a{padding:14px 14px 12px;font-size:15px;font-weight:600;color:var(--text-2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.desknav a.on{color:var(--accent-text);border-bottom-color:var(--accent)}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--bg);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);padding:8px 2px calc(8px + env(safe-area-inset-bottom))}
+.tabs button{background:none;border:none;cursor:pointer;padding:4px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--text-3);font-size:10.5px;font-weight:600}
+.tabs button.on{color:var(--text)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;border:1px solid transparent;border-radius:999px;padding:15px 26px;font-size:16px;font-weight:650;transition:.15s;white-space:nowrap}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-outline{background:transparent;color:var(--text);border-color:var(--line)}
+.btn-text{background:none;border:none;color:var(--accent-text);font-weight:650;padding:10px 4px;cursor:pointer;font-size:15.5px}
+.btn-block{width:100%}
+.btn-sm{padding:10px 18px;font-size:14.5px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.backbtn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--text-2);font-size:15px;font-weight:600;padding:12px 0}
+.field{margin-bottom:22px}
+.label{display:block;font-size:15px;font-weight:650;margin-bottom:9px}
+.input,.select,.textarea{width:100%;padding:15px 16px;font-size:16px;color:var(--text);background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--r);transition:.15s;appearance:none}
+.select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23A2A6AE' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:44px}
+.input:focus,.select:focus,.textarea:focus{outline:none;border-color:var(--accent)}
+.hint{font-size:13px;color:var(--text-3);margin-top:8px}
+.checkrow{display:flex;align-items:center;gap:12px;padding:11px 0;cursor:pointer}
+.checkrow input{width:20px;height:20px;accent-color:var(--accent);flex:0 0 auto}
+.pills{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:2px 0 4px;margin-bottom:6px}
+.pills::-webkit-scrollbar{display:none}
+.pill{padding:10px 18px;border-radius:999px;border:1px solid var(--line);background:none;font-size:14.5px;font-weight:600;color:var(--text-2);cursor:pointer;white-space:nowrap;transition:.15s}
+.pill.on{color:var(--accent-text);border-color:var(--accent);background:var(--accent-soft)}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:999px;background:var(--bg-soft);color:var(--text-2)}
+.tag.a{background:var(--accent-soft);color:var(--accent-text)}
+.tag.warn{background:rgba(234,179,8,.15);color:#eab308}
+.tag.bad{background:rgba(239,68,68,.15);color:#f87171}
+.notice{border-radius:var(--r);padding:18px;background:var(--accent-soft);margin-bottom:26px}
+.notice.ok{background:rgba(34,197,94,.12)}
+.notice.warn{background:rgba(234,179,8,.12)}
+.entry{background:none;border:none;padding:17px 0;text-align:left;width:100%;cursor:pointer;display:block}
+.entry+.entry{border-top:1px solid var(--line-soft)}
+.entry .t{color:var(--accent-text);font-size:17.5px;font-weight:650;letter-spacing:-.01em;margin-bottom:5px}
+.entry .m{font-size:15.5px;color:var(--text)}
+.datehead{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2);padding:26px 0 4px}
+.circ{flex:0 0 auto;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:700;letter-spacing:.02em;background:var(--bg-soft);color:var(--text-2)}
+.circ.tint{background:var(--accent-soft);color:var(--accent-text)}
+.circ.lg{width:56px;height:56px;font-size:19px}
+.menurow{display:flex;align-items:center;gap:16px;padding:18px 0;width:100%;background:none;border:none;text-align:left;cursor:pointer;font-size:17px;font-weight:600;color:var(--text)}
+.menurow+.menurow{border-top:1px solid var(--line-soft)}
+.menurow .ic{flex:0 0 auto;color:var(--text-2);display:grid;place-items:center}
+.menurow .chev{margin-left:auto;color:var(--text-3)}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:14px 0}
+.kv+.kv{border-top:1px solid var(--line-soft)}
+.kv .k{color:var(--text-2)}
+.kv .v{font-weight:650;text-align:right}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--bg-elev);width:100%;max-width:520px;border-radius:22px 22px 0 0;max-height:86dvh;overflow:auto;padding:12px 22px calc(30px + env(safe-area-inset-bottom));animation:up .24s cubic-bezier(.2,.8,.3,1)}
+@keyframes up{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}
+.grab{width:38px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 20px}
+.toastwrap{position:fixed;left:0;right:0;bottom:96px;z-index:80;display:flex;justify-content:center;pointer-events:none}
+.toast{background:var(--bg-soft);border:1px solid var(--line);border-radius:999px;padding:12px 22px;font-size:14.5px;font-weight:600;box-shadow:var(--shadow)}
+@media(min-width:860px){
+  .desknav{display:block} .tabs{display:none} main{padding-bottom:70px}
+  .toastwrap{bottom:32px}
+  .scrim{align-items:center}
+  .sheet{border-radius:20px;max-width:520px;padding:26px}
+}
+
+/* ============================================================================
+   BLOCK B — GIVING-SPECIFIC CSS  ***COPY THIS INTO memberapp.html***
+   Everything below is new. Nothing here overrides an existing rule.
+   ========================================================================= */
+
+/* --- Amount display (the big $175) --- */
+.amt{text-align:center;padding:26px 0 8px}
+.amt-in{display:inline-flex;align-items:flex-start;gap:2px;position:relative}
+.amt-cur{font-size:30px;font-weight:600;color:var(--text-3);margin-top:14px}
+.amt-val{font-size:76px;line-height:1;font-weight:700;letter-spacing:-.04em;color:var(--text);background:none;border:none;text-align:center;width:auto;min-width:1ch;padding:0;caret-color:var(--accent);font-family:inherit}
+.amt-val:focus{outline:none}
+.amt-val::-webkit-outer-spin-button,.amt-val::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.amt-rule{height:2px;background:var(--line);width:120px;margin:12px auto 0;border-radius:2px;transition:.15s}
+.amt.focused .amt-rule{background:var(--accent)}
+.amt-sub{margin-top:10px;font-size:14px;color:var(--text-3)}
+
+/* --- Quick amount chips --- */
+.quick{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+.quick button{padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--text-2);font-size:14px;font-weight:650;cursor:pointer;transition:.15s;font-family:inherit}
+.quick button:hover{border-color:var(--text-3);color:var(--text)}
+
+/* --- Fund allocation rows --- */
+.fundrow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.fundrow .select{flex:1 1 auto;min-width:0;padding:13px 40px 13px 14px;font-size:15.5px}
+.fundrow .amtbox{flex:0 0 118px;display:flex;align-items:center;gap:2px;background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--r);padding:0 12px;height:50px}
+.fundrow .amtbox span{color:var(--text-3);font-size:15px}
+.fundrow .amtbox input{flex:1 1 auto;min-width:0;background:none;border:none;color:var(--text);font-size:15.5px;font-weight:650;text-align:right;padding:0;font-family:inherit}
+.fundrow .amtbox input:focus{outline:none}
+.fundrow .amtbox:focus-within{border-color:var(--accent)}
+.iconcirc{flex:0 0 auto;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--text-3);display:grid;place-items:center;cursor:pointer;transition:.15s}
+.iconcirc:hover{color:var(--text);border-color:var(--text-3)}
+.addfund{display:inline-flex;align-items:center;gap:10px;background:none;border:none;color:var(--text);font-size:15.5px;font-weight:600;cursor:pointer;padding:10px 0;font-family:inherit}
+.addfund .plus{width:26px;height:26px;border-radius:50%;background:var(--bg-soft);display:grid;place-items:center;color:var(--text-2)}
+
+/* --- Payment method radio list --- */
+.pmlist{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.pm{display:flex;align-items:center;gap:14px;width:100%;padding:16px;background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--r);cursor:pointer;text-align:left;transition:.15s;font-family:inherit;color:var(--text)}
+.pm:hover{border-color:var(--text-3)}
+.pm.on{border-color:var(--accent);background:var(--accent-soft)}
+.pm .radio{flex:0 0 auto;width:20px;height:20px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;transition:.15s}
+.pm.on .radio{border-color:var(--accent)}
+.pm.on .radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.pm .glyph{flex:0 0 auto;width:38px;height:26px;border-radius:5px;background:var(--bg-soft);display:grid;place-items:center;font-size:9.5px;font-weight:800;letter-spacing:.02em;color:var(--text-2)}
+.pm>span:nth-child(3){flex:1 1 auto;min-width:0}
+.pm .pmname{display:block;font-size:16px;font-weight:600}
+.pm .pmsub{display:block;font-size:13px;color:var(--text-3);margin-top:2px}
+.pm .pmright{flex:0 0 auto;margin-left:auto;font-size:12.5px;color:var(--text-3);text-align:right;line-height:1.3}
+
+/* --- Summary card (checkout) --- */
+.sumcard{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;margin-bottom:26px}
+.sumcard .sumtop{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:14px}
+.sumcard h3{font-size:18px}
+.sumcard .total{font-size:26px;font-weight:700;letter-spacing:-.02em;margin:2px 0 12px}
+.sumline{display:flex;justify-content:space-between;gap:12px;font-size:15px;color:var(--text-2);padding:4px 0}
+.sumline b{color:var(--text);font-weight:650}
+.sumcard .sumdiv{height:1px;background:var(--line-soft);margin:12px 0}
+
+/* --- Giving overview stat tiles --- */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.tile{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.tile .tv{font-size:26px;font-weight:700;letter-spacing:-.02em}
+.tile .tl{font-size:13px;color:var(--text-2);margin-top:4px}
+.tile.wide{grid-column:1 / -1}
+
+/* --- Fund breakdown bars --- */
+.bar{margin-bottom:16px}
+.bar .bhead{display:flex;justify-content:space-between;font-size:14.5px;margin-bottom:7px}
+.bar .bhead b{font-weight:650}
+.bar .btrack{height:8px;border-radius:4px;background:var(--bg-soft);overflow:hidden}
+.bar .bfill{height:100%;border-radius:4px;background:var(--accent);transition:width .4s cubic-bezier(.2,.8,.3,1)}
+
+/* --- Donation history rows --- */
+.giftrow{display:flex;align-items:center;gap:14px;width:100%;padding:15px 0;background:none;border:none;text-align:left;cursor:pointer;color:var(--text);font-family:inherit}
+.giftrow+.giftrow{border-top:1px solid var(--line-soft)}
+.giftrow .gmain{flex:1 1 auto;min-width:0}
+.giftrow .gt{display:block;font-size:16px;font-weight:650;letter-spacing:-.01em}
+.giftrow .gs{display:block;font-size:13.5px;color:var(--text-2);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.giftrow .gamt{flex:0 0 auto;font-size:16.5px;font-weight:700;letter-spacing:-.02em;text-align:right}
+.giftrow .gamt .gsub{display:block;font-size:12px;font-weight:600;color:var(--text-3);margin-top:3px}
+
+/* --- Scheduled (recurring) cards --- */
+.schedcard{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;margin-bottom:14px}
+.schedcard.paused{opacity:.62}
+.schedcard .shead{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.schedcard .samt{font-size:24px;font-weight:700;letter-spacing:-.02em}
+.schedcard .sfreq{font-size:14px;color:var(--text-2);margin-top:2px}
+.schedcard .sacts{display:flex;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line-soft)}
+
+/* --- Statement rows --- */
+.stmtrow{display:flex;align-items:center;gap:14px;padding:16px 0;width:100%}
+.stmtrow+.stmtrow{border-top:1px solid var(--line-soft)}
+
+/* --- Segmented control (My giving sub-tabs) --- */
+.seg{display:flex;gap:4px;background:var(--bg-soft);border-radius:999px;padding:4px;margin-bottom:22px;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:1 1 auto;white-space:nowrap;padding:9px 8px;border-radius:999px;border:none;background:none;color:var(--text-2);font-size:13.5px;font-weight:650;cursor:pointer;transition:.15s;font-family:inherit}
+.seg button.on{background:var(--bg-elev);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.4)}
+
+/* --- Success screen --- */
+.done{text-align:center;padding:56px 0 30px}
+.done .check{width:76px;height:76px;border-radius:50%;background:var(--accent);display:grid;place-items:center;margin:0 auto 26px;animation:pop .34s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:none;opacity:1}}
+.done h1{font-size:28px;margin-bottom:10px}
+.done p{color:var(--text-2);font-size:16px;max-width:340px;margin:0 auto 26px}
+
+/* --- Processing spinner --- */
+.spin{width:44px;height:44px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:sp .8s linear infinite;margin:0 auto}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* --- Empty state --- */
+.empty{text-align:center;padding:56px 22px;color:var(--text-3)}
+.empty .eic{width:60px;height:60px;border-radius:50%;background:var(--bg-soft);display:grid;place-items:center;margin:0 auto 18px;color:var(--text-3)}
+.empty h3{font-size:18px;color:var(--text-2);margin-bottom:8px}
+
+/* Frequency pills wrap instead of scrolling once there's room for it.
+   Scoped to .wrapdesk so the existing .pills usages elsewhere are untouched. */
+@media(min-width:600px){ .pills.wrapdesk{flex-wrap:wrap;overflow:visible} }
+
+/* --- Legal / disclosure text --- */
+.legal{font-size:12.5px;line-height:1.55;color:var(--text-3);margin-top:14px}
+.securebar{display:flex;align-items:center;justify-content:center;gap:7px;font-size:12.5px;color:var(--text-3);margin-top:14px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="toasts" class="toastwrap"></div>
+
+<script>
+/* ============================================================================
+   BLOCK C — ICONS
+   memberapp.html already has an ic() helper. Add ONLY the new keys marked NEW.
+   ========================================================================= */
+const ICONS = {
+  home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/>',
+  users:'<circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.6"/><path d="M16 14.2c3 .3 5.5 2.3 5.5 5.8"/>',
+  hands:'<path d="M7 13V6.5a1.5 1.5 0 1 1 3 0V12"/><path d="M10 12V5.2a1.5 1.5 0 1 1 3 0V12"/><path d="M13 12V6.8a1.5 1.5 0 1 1 3 0V14"/><path d="M16 10.5a1.5 1.5 0 1 1 3 0V15a6 6 0 0 1-6 6h-1.5a6 6 0 0 1-6-6v-1.6"/>',
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  form:'<rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8.5 8.5h7M8.5 12.5h7M8.5 16.5h4"/>',
+  /* NEW ↓ */
+  gift:'<rect x="3" y="9" width="18" height="12" rx="2"/><path d="M3 13h18M12 9v12"/><path d="M12 9S10.6 5 8.6 5A2.1 2.1 0 0 0 8.6 9H12zM12 9s1.4-4 3.4-4A2.1 2.1 0 0 1 15.4 9H12z"/>',
+  chev:'<polyline points="9 18 15 12 9 6"/>',
+  chevL:'<polyline points="15 18 9 12 15 6"/>',
+  chevD:'<polyline points="6 9 12 15 18 9"/>',
+  check:'<polyline points="20 6 9 17 4 12"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  minus:'<path d="M5 12h14"/>',
+  lock:'<rect x="4.5" y="10.5" width="15" height="10.5" rx="2.2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/>',
+  bank:'<path d="M3 10h18L12 3 3 10z"/><path d="M5.5 10v8M9.5 10v8M14.5 10v8M18.5 10v8M3 21h18"/>',
+  card:'<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19"/>',
+  edit:'<path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3z"/>',
+  pause:'<rect x="7" y="5" width="4" height="14" rx="1"/><rect x="13" y="5" width="4" height="14" rx="1"/>',
+  play:'<path d="M7 4.5v15l13-7.5z"/>',
+  trash:'<path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 13.5h9L17.5 7"/>',
+  down:'<path d="M12 4v12M6.5 11.5 12 17l5.5-5.5"/><path d="M4.5 20h15"/>',
+  doc:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/>',
+  repeat:'<path d="M4 9V7.5A3.5 3.5 0 0 1 7.5 4H18"/><polyline points="15 1 18.5 4 15 7"/><path d="M20 15v1.5a3.5 3.5 0 0 1-3.5 3.5H6"/><polyline points="9 23 5.5 20 9 17"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.6v.1"/>',
+  alert:'<path d="M12 3.5 2.5 20h19L12 3.5z"/><path d="M12 10v4.5M12 17.4v.1"/>',
+  bell:'<path d="M6.5 10a5.5 5.5 0 0 1 11 0c0 4 1.5 5.5 1.5 5.5H5S6.5 14 6.5 10z"/><path d="M10 19a2.2 2.2 0 0 0 4 0"/>',
+  chat:'<path d="M4 5h16v11H9l-5 4V5z"/>',
+  x:'<path d="M6 6l12 12M18 6 6 18"/>'
+};
+function ic(name, size){
+  return '<svg width="'+(size||22)+'" height="'+(size||22)+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[name]||'')+'</svg>';
+}
+
+/* ============================================================================
+   BLOCK D — GIVING DATA + CONFIG   ***COPY THIS INTO memberapp.html***
+   ========================================================================= */
+
+/* Processing-fee model. Replace these with whatever ChurchPlannerPro
+   actually charges once the Stripe Connect pricing is settled.
+   `pct` is the percentage taken, `flat` is the per-transaction fixed fee. */
+const FEE_MODEL = {
+  card: { pct: 0.0215, flat: 0.30, label: 'card' },
+  ach:  { pct: 0.0000, flat: 0.30, label: 'bank account' }
+};
+
+/* Gross-up: what must be CHARGED so the church NETS `net` after fees.
+   This is the correct formula — a naive `net * pct + flat` under-collects,
+   because the processor also takes its cut of the fee you added.
+   Planning Center uses this: $175 net -> $179.15 charged at 2.15% + $0.30. */
+function grossUp(net, model){
+  if (net <= 0) return 0;
+  return Math.round(((net + model.flat) / (1 - model.pct)) * 100) / 100;
+}
+function feeFor(net, model){
+  return Math.round((grossUp(net, model) - net) * 100) / 100;
+}
+
+const FUNDS = [
+  { id:'general',    name:'General Fund',       memo:true,  deductible:true,  desc:'Supports the day-to-day ministry and operations of Prairie Ridge.' },
+  { id:'building',   name:'Building Fund',      memo:false, deductible:true,  desc:'Toward the Fellowship Hall expansion.' },
+  { id:'missions',   name:'Missions',           memo:true,  deductible:true,  desc:'Local and global mission partners.' },
+  { id:'benevolence',name:'Benevolence',        memo:true,  deductible:true,  desc:'Direct assistance for families in crisis.' },
+  { id:'youth',      name:'Youth Ministry',     memo:false, deductible:true,  desc:'Student ministry programming and camp scholarships.' },
+  { id:'camp',       name:'Summer Camp Payment',memo:true,  deductible:false, desc:'Payment for camp registration — not tax deductible.' }
+];
+const fundById = id => FUNDS.find(f => f.id === id) || FUNDS[0];
+
+const FREQS = [
+  { id:'once',     label:'Once',            sub:'A single gift today' },
+  { id:'weekly',   label:'Weekly',          sub:'Every week on the same weekday' },
+  { id:'biweekly', label:'Every 2 weeks',   sub:'Every other week' },
+  { id:'twice',    label:'Twice a month',   sub:'On two set dates each month' },
+  { id:'monthly',  label:'Monthly',         sub:'On the same date each month' }
+];
+const TWICE_OPTIONS = [
+  { id:'1-15',  label:'1st & 15th' },
+  { id:'6-20',  label:'6th & 20th' },
+  { id:'11-25', label:'11th & 25th' }
+];
+const WEEKDAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+let PAYMENT_METHODS = [
+  { id:'pm_1', kind:'card', brand:'Visa',       last4:'4242', exp:'04/29', primary:true },
+  { id:'pm_2', kind:'ach',  bank:'Hills Bank',  last4:'6789', primary:false }
+];
+
+/* Donation history — most recent first. `net` is what the church received;
+   `fee` is what the donor added on top when covering it. */
+let GIFTS = [
+  { id:'d_1041', date:'2026-08-02', splits:[{fund:'general',amt:250}], net:250, fee:5.79, method:'pm_1', src:'Mobile app',  status:'succeeded', recurring:true,  memo:'' },
+  { id:'d_1032', date:'2026-07-19', splits:[{fund:'general',amt:250}], net:250, fee:5.79, method:'pm_1', src:'Mobile app',  status:'succeeded', recurring:true,  memo:'' },
+  { id:'d_1024', date:'2026-07-12', splits:[{fund:'missions',amt:400}], net:400, fee:0,    method:'pm_2', src:'Mobile app',  status:'succeeded', recurring:false, memo:'For the Guatemala team' },
+  { id:'d_1019', date:'2026-07-05', splits:[{fund:'general',amt:250}], net:250, fee:5.79, method:'pm_1', src:'Mobile app',  status:'succeeded', recurring:true,  memo:'' },
+  { id:'d_1008', date:'2026-06-21', splits:[{fund:'general',amt:250}], net:250, fee:5.79, method:'pm_1', src:'Mobile app',  status:'succeeded', recurring:true,  memo:'' },
+  { id:'d_0997', date:'2026-06-14', splits:[{fund:'building',amt:1000}], net:1000, fee:0, method:'pm_2', src:'Web',         status:'succeeded', recurring:false, memo:'' },
+  { id:'d_0986', date:'2026-06-07', splits:[{fund:'general',amt:250}], net:250, fee:5.79, method:'pm_1', src:'Mobile app',  status:'succeeded', recurring:true,  memo:'' },
+  { id:'d_0972', date:'2026-05-24', splits:[{fund:'general',amt:250}], net:250, fee:5.79, method:'pm_1', src:'Mobile app',  status:'succeeded', recurring:true,  memo:'' },
+  { id:'d_0961', date:'2026-05-17', splits:[{fund:'camp',amt:325}],    net:325, fee:0,    method:'pm_2', src:'Web',         status:'succeeded', recurring:false, memo:'Ellie — Kids Summer Club' },
+  { id:'d_0950', date:'2026-05-10', splits:[{fund:'general',amt:250},{fund:'benevolence',amt:100}], net:350, fee:7.99, method:'pm_1', src:'Mobile app', status:'succeeded', recurring:false, memo:'' },
+  { id:'d_0938', date:'2026-04-26', splits:[{fund:'general',amt:250}], net:250, fee:5.79, method:'pm_1', src:'Mobile app',  status:'succeeded', recurring:true,  memo:'' },
+  { id:'d_0921', date:'2026-04-12', splits:[{fund:'general',amt:250}], net:250, fee:5.79, method:'pm_1', src:'Mobile app',  status:'succeeded', recurring:true,  memo:'' },
+  { id:'d_0904', date:'2026-03-29', splits:[{fund:'missions',amt:150}], net:150, fee:3.61, method:'pm_1', src:'Mobile app', status:'succeeded', recurring:false, memo:'' },
+  { id:'d_0888', date:'2026-03-15', splits:[{fund:'general',amt:250}], net:250, fee:5.79, method:'pm_1', src:'Mobile app',  status:'succeeded', recurring:true,  memo:'' },
+  { id:'d_0871', date:'2026-02-15', splits:[{fund:'general',amt:250}], net:250, fee:5.79, method:'pm_1', src:'Mobile app',  status:'failed',    recurring:true,  memo:'' },
+  { id:'d_0855', date:'2026-01-18', splits:[{fund:'general',amt:250}], net:250, fee:5.79, method:'pm_1', src:'Mobile app',  status:'succeeded', recurring:true,  memo:'' },
+  { id:'d_0812', date:'2025-12-28', splits:[{fund:'general',amt:1500}], net:1500, fee:0,  method:'pm_2', src:'Web',         status:'succeeded', recurring:false, memo:'Year-end gift' },
+  { id:'d_0790', date:'2025-11-16', splits:[{fund:'building',amt:500}], net:500, fee:0,   method:'pm_2', src:'Web',         status:'succeeded', recurring:false, memo:'' }
+];
+
+let RECURRING = [
+  { id:'r_1', splits:[{fund:'general',amt:250}], freq:'biweekly', weekday:0, next:'2026-08-16',
+    method:'pm_1', coverFee:true, status:'active',  started:'2025-01-05', memo:'' },
+  { id:'r_2', splits:[{fund:'missions',amt:75}],  freq:'monthly',  dayOfMonth:1, next:'2026-09-01',
+    method:'pm_2', coverFee:false, status:'paused', started:'2026-02-01', memo:'Guatemala partnership' }
+];
+
+/* Seed a fuller prior-year history so the yearly totals, the History tab and the
+   statements all agree. In production this comes from the API, paged. */
+(function seedPriorYears(){
+  const series = [
+    // [year, month(0-11), day, fund, amount, method, recurring]
+    ...(() => {                       // 2025: $250 every other Sunday, Jan–Dec
+      const out = [];
+      let d = new Date(2025, 0, 5);
+      while (d.getFullYear() === 2025){
+        out.push([new Date(d), 'general', 250, 'pm_1', true]);
+        d = new Date(d.getTime() + 14*864e5);
+      }
+      return out;
+    })(),
+    ...(() => {                       // 2024: $200 monthly on the 1st
+      const out = [];
+      for (let m = 0; m < 12; m++) out.push([new Date(2024, m, 1), 'general', 200, 'pm_1', true]);
+      return out;
+    })(),
+    [new Date(2025, 4, 18), 'missions',    300, 'pm_2', false],
+    [new Date(2025, 9, 12), 'building',    750, 'pm_2', false],
+    [new Date(2024, 6, 20), 'camp',        275, 'pm_2', false],
+    [new Date(2024, 11, 22),'missions',    450, 'pm_2', false]
+  ];
+  const seeded = series.map(([d, fund, amt, method, recurring], i) => {
+    const iso = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    const model = method === 'pm_2' ? FEE_MODEL.ach : FEE_MODEL.card;
+    return {
+      id: 'd_' + String(600 + i).padStart(4,'0'),
+      date: iso,
+      splits: [{ fund, amt }],
+      net: amt,
+      fee: recurring ? Math.round((grossUp(amt, model) - amt) * 100) / 100 : 0,
+      method, src: method === 'pm_2' ? 'Web' : 'Mobile app',
+      status: 'succeeded', recurring, memo: ''
+    };
+  });
+  GIFTS = GIFTS.concat(seeded).sort((a,b) => b.date.localeCompare(a.date));
+})();
+
+/* Statements are derived from history so the numbers can never drift apart. */
+function buildStatements(){
+  const byYear = {};
+  GIFTS.filter(g => g.status === 'succeeded').forEach(g => {
+    const y = parseDate(g.date).getFullYear();
+    if (y >= new Date().getFullYear()) return;      // current year has no statement yet
+    byYear[y] = byYear[y] || { year:y, total:0, deductible:0, gifts:0 };
+    byYear[y].gifts++;
+    g.splits.forEach(s => {
+      byYear[y].total += s.amt;
+      if (fundById(s.fund).deductible) byYear[y].deductible += s.amt;
+    });
+  });
+  return Object.values(byYear)
+    .sort((a,b) => b.year - a.year)
+    .map(s => Object.assign(s, { issued: (s.year + 1) + '-01-15' }));
+}
+const STATEMENTS = buildStatements();
+
+/* ============================================================================
+   BLOCK E — GIVING STATE   ***MERGE THESE KEYS INTO YOUR `state` OBJECT***
+   ========================================================================= */
+const givingDefaults = () => ({
+  gView: 'give',            // give | checkout | processing | done | mygiving | methods | gift
+  gSeg: 'overview',         // overview | history | scheduled | statements
+  splits: [{ fund:'general', amt:'' }],
+  freq: 'once',
+  weekday: 0,
+  dayOfMonth: 1,
+  twice: '1-15',
+  startDate: '',
+  memoOn: false,
+  memo: '',
+  method: 'pm_1',
+  coverFee: true,
+  histYear: 2026,
+  histFund: 'all',
+  hideNonDeductible: false,
+  lastGift: null,
+  editRecur: null,
+  detailGift: null
+});
+
+const state = Object.assign({
+  screen: 'shell',
+  tab: 'giving',
+  theme: 'dark',
+  sheet: null,
+  toast: null,
+  church: { id:'prairie', name:'Prairie Ridge Church', short:'Prairie Ridge', initials:'PR', color:'#0FA36B' },
+  user: { first:'Andrew', last:'Schneider', name:'Andrew Schneider', initials:'AS', email:'andrew.schneider@example.com' }
+}, givingDefaults());
+
+/* ============================================================================
+   BLOCK F — HELPERS   ***COPY THIS INTO memberapp.html***
+   ========================================================================= */
+const money = n => '$' + Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+const money0 = n => {
+  const v = Number(n||0);
+  return '$' + (v % 1 === 0 ? v.toLocaleString('en-US') : v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}));
+};
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function parseDate(s){ const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); }
+function fmtDate(s){ const d = parseDate(s); return MONTHS_SHORT[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear(); }
+function fmtDateLong(s){ const d = parseDate(s); return MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear(); }
+function monthKey(s){ const d = parseDate(s); return MONTHS[d.getMonth()] + ' ' + d.getFullYear(); }
+
+function splitTotal(splits){
+  return splits.reduce((sum, s) => sum + (parseFloat(s.amt) || 0), 0);
+}
+function methodById(id){ return PAYMENT_METHODS.find(m => m.id === id) || PAYMENT_METHODS[0]; }
+function methodModel(id){
+  const m = methodById(id);
+  return (m && m.kind === 'ach') ? FEE_MODEL.ach : FEE_MODEL.card;
+}
+function methodLabel(id){
+  const m = methodById(id);
+  if (!m) return 'Payment method';
+  return m.kind === 'ach' ? (m.bank + ' ••••' + m.last4) : (m.brand + ' ••••' + m.last4);
+}
+function freqLabel(r){
+  if (r.freq === 'once')     return 'One-time';
+  if (r.freq === 'weekly')   return 'Weekly on ' + WEEKDAYS[r.weekday || 0];
+  if (r.freq === 'biweekly') return 'Every 2 weeks on ' + WEEKDAYS[r.weekday || 0];
+  if (r.freq === 'twice')    return 'Twice a month (' + (TWICE_OPTIONS.find(t=>t.id===r.twice)||TWICE_OPTIONS[0]).label + ')';
+  if (r.freq === 'monthly')  return 'Monthly on the ' + ordinal(r.dayOfMonth || 1);
+  return '';
+}
+/* Same information as freqLabel, but phrased to sit mid-sentence. */
+function freqPhrase(r){
+  if (r.freq === 'weekly')   return 'every week on ' + WEEKDAYS[r.weekday || 0];
+  if (r.freq === 'biweekly') return 'every other week on ' + WEEKDAYS[r.weekday || 0];
+  if (r.freq === 'twice')    return 'twice a month, on the ' + (TWICE_OPTIONS.find(t=>t.id===r.twice)||TWICE_OPTIONS[0]).label;
+  if (r.freq === 'monthly')  return 'every month on the ' + ordinal(r.dayOfMonth || 1);
+  return 'one time';
+}
+function ordinal(n){
+  const s = ['th','st','nd','rd'], v = n % 100;
+  return n + (s[(v-20)%10] || s[v] || s[0]);
+}
+function splitsSummary(splits){
+  return splits.map(s => money0(s.amt) + ' to ' + fundById(s.fund).name).join(' · ');
+}
+function toISO(d){
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+/* Next run date for a schedule, strictly after `from`.
+   Mirror this server-side — the client must never be the source of truth for
+   when a charge happens. */
+function nextOccurrence(cfg, from){
+  const d = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+  if (cfg.freq === 'weekly' || cfg.freq === 'biweekly'){
+    const step = cfg.freq === 'weekly' ? 7 : 14;
+    const target = cfg.weekday || 0;
+    let n = new Date(d);
+    do { n.setDate(n.getDate() + 1); } while (n.getDay() !== target);
+    if (cfg.freq === 'biweekly' && (n - d) / 864e5 < step) n.setDate(n.getDate() + 7);
+    return toISO(n);
+  }
+  if (cfg.freq === 'twice'){
+    const days = (TWICE_OPTIONS.find(t => t.id === cfg.twice) || TWICE_OPTIONS[0]).id.split('-').map(Number);
+    for (const day of days.concat(days)){
+      const n = new Date(d.getFullYear(), d.getMonth(), day);
+      if (n > d) return toISO(n);
+    }
+    return toISO(new Date(d.getFullYear(), d.getMonth() + 1, days[0]));
+  }
+  if (cfg.freq === 'monthly'){
+    const day = cfg.dayOfMonth || 1;
+    const same = new Date(d.getFullYear(), d.getMonth(), day);
+    return toISO(same > d ? same : new Date(d.getFullYear(), d.getMonth() + 1, day));
+  }
+  return toISO(d);
+}
+
+/* ============================================================================
+   BLOCK G — VIEWS   ***COPY THIS INTO memberapp.html***
+   Each returns an HTML string, matching the existing view*() convention.
+   ========================================================================= */
+
+/* ---------- The Giving tab router ---------- */
+function viewGiving(){
+  switch (state.gView){
+    case 'checkout':   return viewGiveCheckout();
+    case 'processing': return viewGiveProcessing();
+    case 'done':       return viewGiveDone();
+    case 'mygiving':   return viewMyGiving();
+    case 'methods':    return viewPaymentMethods();
+    case 'gift':       return viewGiftDetail();
+    default:           return viewGiveForm();
+  }
+}
+
+/* ---------- 1. The give form ---------- */
+function viewGiveForm(){
+  const total = splitTotal(state.splits);
+  const multi = state.splits.length > 1;
+  const anyMemoFund = state.splits.some(s => fundById(s.fund).memo);
+  const nonDeductible = state.splits.filter(s => !fundById(s.fund).deductible);
+  const activeRecur = RECURRING.filter(r => r.status === 'active');
+
+  let h = '<div class="wrap">';
+
+  /* Big amount */
+  h += '<div class="amt' + (total > 0 ? ' focused' : '') + '">'
+     +   '<div class="amt-in">'
+     +     '<span class="amt-cur">$</span>'
+     +     '<input class="amt-val" id="amtMain" inputmode="decimal" value="' + (multi ? total.toFixed(2).replace(/\.00$/,'') : esc(state.splits[0].amt)) + '" placeholder="0"'
+     +       (multi ? ' readonly' : ' oninput="A.setMainAmount(this.value)"') + ' style="width:' + Math.max(1, String(multi ? total : (state.splits[0].amt||'0')).length) + 'ch">'
+     +   '</div>'
+     +   '<div class="amt-rule"></div>'
+     +   (multi ? '<div class="amt-sub">Total across ' + state.splits.length + ' funds</div>' : '')
+     + '</div>';
+
+  /* Quick chips — only when a single fund and nothing typed yet */
+  if (!multi && !state.splits[0].amt){
+    h += '<div class="quick">'
+       + [25,50,100,250,500].map(v => '<button onclick="A.setMainAmount(\'' + v + '\')">$' + v + '</button>').join('')
+       + '</div><div class="gap-sm"></div>';
+  }
+
+  /* Funds */
+  h += '<div class="field"><span class="label">Fund</span>';
+  state.splits.forEach((s, i) => {
+    h += '<div class="fundrow">'
+       +   '<select class="select" onchange="A.setSplitFund(' + i + ', this.value)">'
+       +     FUNDS.map(f => '<option value="' + f.id + '"' + (f.id === s.fund ? ' selected' : '') + '>' + esc(f.name) + '</option>').join('')
+       +   '</select>';
+    if (multi){
+      h += '<div class="amtbox"><span>$</span><input inputmode="decimal" value="' + esc(s.amt) + '" placeholder="0" oninput="A.setSplitAmount(' + i + ', this.value)"></div>'
+         + '<button class="iconcirc" title="Remove fund" onclick="A.removeSplit(' + i + ')">' + ic('minus',16) + '</button>';
+    }
+    h += '</div>';
+  });
+  if (state.splits.length < FUNDS.length){
+    h += '<button class="addfund" onclick="A.addSplit()"><span class="plus">' + ic('plus',15) + '</span>Give to another fund</button>';
+  }
+  h += '</div>';
+
+  /* Frequency */
+  h += '<div class="field"><span class="label">Frequency</span>'
+     + '<div class="pills wrapdesk">'
+     + FREQS.map(f => '<button class="pill' + (state.freq === f.id ? ' on' : '') + '" onclick="A.setFreq(\'' + f.id + '\')">' + f.label + '</button>').join('')
+     + '</div>';
+
+  /* Frequency detail */
+  if (state.freq === 'weekly' || state.freq === 'biweekly'){
+    h += '<div class="gap-sm"></div><select class="select" onchange="A.setWeekday(this.value)">'
+       + WEEKDAYS.map((d,i) => '<option value="' + i + '"' + (state.weekday === i ? ' selected' : '') + '>Every ' + (state.freq==='biweekly'?'other ':'') + d + '</option>').join('')
+       + '</select>';
+  } else if (state.freq === 'twice'){
+    h += '<div class="gap-sm"></div><select class="select" onchange="A.setTwice(this.value)">'
+       + TWICE_OPTIONS.map(t => '<option value="' + t.id + '"' + (state.twice === t.id ? ' selected' : '') + '>On the ' + t.label + '</option>').join('')
+       + '</select>';
+  } else if (state.freq === 'monthly'){
+    h += '<div class="gap-sm"></div><select class="select" onchange="A.setDayOfMonth(this.value)">'
+       + Array.from({length:28}, (_,i) => i+1).map(d => '<option value="' + d + '"' + (state.dayOfMonth === d ? ' selected' : '') + '>On the ' + ordinal(d) + ' of each month</option>').join('')
+       + '</select><div class="hint">Months are limited to the 1st–28th so every month has that date.</div>';
+  }
+  h += '</div>';
+
+  /* Memo */
+  if (anyMemoFund){
+    h += '<div class="field">'
+       + '<label class="checkrow"><input type="checkbox"' + (state.memoOn ? ' checked' : '') + ' onchange="A.toggleMemo(this.checked)"><span>Add a memo</span></label>';
+    if (state.memoOn){
+      h += '<input class="input" placeholder="Specify a purpose for this donation" value="' + esc(state.memo) + '" oninput="A.setMemo(this.value)" maxlength="255">'
+         + '<div class="legal">You\'re welcome to share a preference for your gift. ' + esc(state.church.short) + ' will use donations as needed within the fund\'s guidelines, so that your gift remains fully tax deductible.</div>';
+    }
+    h += '</div>';
+  }
+
+  /* Non-deductible warning */
+  if (nonDeductible.length){
+    h += '<div class="notice warn"><div style="display:flex;gap:12px"><span style="color:#eab308;flex:0 0 auto;margin-top:1px">' + ic('info',20) + '</span>'
+       + '<div><b>' + esc(nonDeductible.map(s => fundById(s.fund).name).join(', ')) + '</b> '
+       + (nonDeductible.length > 1 ? 'are' : 'is') + ' not tax deductible and won\'t appear on your year-end statement.</div></div></div>';
+  }
+
+  /* CTA */
+  h += '<button class="btn btn-accent btn-block" ' + (total <= 0 ? 'disabled' : '') + ' onclick="A.toCheckout()">'
+     + (state.freq === 'once' ? 'Continue to give' : 'Continue to set up giving')
+     + '</button>'
+     + '<div class="center" style="margin-top:14px"><button class="btn-text" onclick="A.goGiving(\'mygiving\')">View my giving ' + ic('chev',15) + '</button></div>';
+
+  /* Active recurring reminder */
+  if (activeRecur.length){
+    h += '<div class="rule"></div>'
+       + '<div class="datehead" style="padding-top:0">Your scheduled giving</div>';
+    activeRecur.forEach(r => {
+      h += '<button class="giftrow" onclick="A.goGiving(\'mygiving\',\'scheduled\')">'
+         +   '<span class="circ tint">' + ic('repeat',20) + '</span>'
+         +   '<span class="gmain"><span class="gt">' + money0(splitTotal(r.splits)) + ' · ' + esc(freqLabel(r)) + '</span>'
+         +     '<span class="gs">Next on ' + fmtDate(r.next) + ' · ' + esc(r.splits.map(s=>fundById(s.fund).name).join(', ')) + '</span></span>'
+         +   '<span class="faint">' + ic('chev',18) + '</span>'
+         + '</button>';
+    });
+  }
+
+  h += '</div>';
+  return h;
+}
+
+/* ---------- 2. Checkout ---------- */
+function viewGiveCheckout(){
+  const net = splitTotal(state.splits);
+  const model = methodModel(state.method);
+  const fee = feeFor(net, model);
+  const charge = state.coverFee ? grossUp(net, model) : net;
+  const isRecurring = state.freq !== 'once';
+
+  let h = '<div class="wrap">'
+        + '<button class="backbtn" onclick="A.goGiving(\'give\')">' + ic('chevL',18) + ' Back</button>';
+
+  /* Summary */
+  h += '<div class="sumcard">'
+     +   '<div class="sumtop">'
+     +     '<div><h3>Give to ' + esc(state.church.name) + '</h3>'
+     +       '<div class="total">' + money(charge) + '</div></div>'
+     +     '<button class="btn-text" style="padding:0" onclick="A.goGiving(\'give\')">Edit</button>'
+     +   '</div>';
+  state.splits.forEach(s => {
+    h += '<div class="sumline"><span>' + esc(fundById(s.fund).name) + '</span><b>' + money0(s.amt) + '</b></div>';
+  });
+  if (state.coverFee && fee > 0){
+    h += '<div class="sumline"><span>Processing fee (covered by you)</span><b>' + money(fee) + '</b></div>';
+  }
+  h += '<div class="sumdiv"></div>'
+     + '<div class="sumline"><span>' + (isRecurring ? esc(freqLabel(state)) : 'One-time gift') + '</span><b>' + money(charge) + '</b></div>';
+  if (isRecurring){
+    h += '<div class="sumline"><span>First gift</span><b>Today</b></div>';
+  }
+  if (state.memoOn && state.memo){
+    h += '<div class="sumdiv"></div><div class="sumline" style="align-items:flex-start"><span>Memo</span><b style="max-width:60%;text-align:right;font-weight:600">' + esc(state.memo) + '</b></div>';
+  }
+  h += '</div>';
+
+  /* Payment methods */
+  h += '<div class="field"><span class="label">Payment method</span><div class="pmlist">';
+
+  /* Saved */
+  PAYMENT_METHODS.forEach(m => {
+    const on = state.method === m.id;
+    h += '<button class="pm' + (on ? ' on' : '') + '" onclick="A.setMethod(\'' + m.id + '\')">'
+       +   '<span class="radio"></span>'
+       +   '<span class="glyph">' + (m.kind === 'ach' ? ic('bank',16) : esc(m.brand.slice(0,4).toUpperCase())) + '</span>'
+       +   '<span><span class="pmname">' + (m.kind === 'ach' ? esc(m.bank) : esc(m.brand)) + ' ••••' + esc(m.last4) + '</span>'
+       +     '<span class="pmsub">' + (m.kind === 'ach' ? 'Bank account · lowest fees' : 'Expires ' + esc(m.exp)) + '</span></span>'
+       +   (m.kind === 'ach' ? '<span class="pmright">$0.30<br>per gift</span>' : '')
+       + '</button>';
+  });
+
+  /* Wallets — hidden for recurring, since Apple/Google Pay can't be reused off-session
+     without saving the underlying card. Stripe DOES let you save the card token from a
+     wallet confirmation, so this is a product choice, not a hard limit. */
+  if (!isRecurring){
+    ['apple','google'].forEach(w => {
+      const on = state.method === w;
+      h += '<button class="pm' + (on ? ' on' : '') + '" onclick="A.setMethod(\'' + w + '\')">'
+         +   '<span class="radio"></span>'
+         +   '<span class="glyph">' + (w === 'apple' ? 'APay' : 'GPay') + '</span>'
+         +   '<span><span class="pmname">' + (w === 'apple' ? 'Apple Pay' : 'Google Pay') + '</span>'
+         +     '<span class="pmsub">Confirm with Face ID or your device</span></span>'
+         + '</button>';
+    });
+  }
+
+  /* New */
+  h += '<button class="pm" onclick="A.toast(\'In production this opens the Stripe Payment Element\')">'
+     +   '<span class="radio"></span><span class="glyph">' + ic('plus',15) + '</span>'
+     +   '<span><span class="pmname">New card or bank account</span>'
+     +     '<span class="pmsub">Add a payment method</span></span>'
+     + '</button>';
+  h += '</div></div>';
+
+  /* Cover the fee */
+  h += '<label class="checkrow" style="padding:16px 0;align-items:flex-start">'
+     +   '<input type="checkbox"' + (state.coverFee ? ' checked' : '') + ' onchange="A.setCoverFee(this.checked)">'
+     +   '<span><b style="font-weight:650">Add ' + money(fee) + ' to cover the processing fee</b>'
+     +     '<span class="hint" style="margin-top:3px;display:block">'
+     +       (model.pct === 0
+            ? 'Fees are only $0.30 when you give through your bank.'
+            : 'Fees are only $0.30 when you give through your bank account.')
+     +     '</span></span>'
+     + '</label>';
+
+  h += '<div class="gap-sm"></div>'
+     + '<button class="btn btn-accent btn-block" onclick="A.submitGift()">'
+     +   (isRecurring ? 'Start giving ' + money(charge) : 'Give ' + money(charge))
+     + '</button>'
+     + '<div class="securebar">' + ic('lock',14) + ' Your payment is processed securely by Stripe.</div>';
+
+  if (isRecurring){
+    h += '<div class="legal center">You can change or cancel this any time from My giving. '
+       + 'We\'ll email you a receipt after every gift.</div>';
+  }
+
+  h += '</div>';
+  return h;
+}
+
+/* ---------- 3. Processing ---------- */
+function viewGiveProcessing(){
+  return '<div class="wrap"><div class="done"><div class="spin"></div>'
+       + '<div class="gap"></div><h1 style="font-size:21px">Processing your gift…</h1>'
+       + '<p>Don\'t close this screen.</p></div></div>';
+}
+
+/* ---------- 4. Success ---------- */
+function viewGiveDone(){
+  const g = state.lastGift || {};
+  return '<div class="wrap"><div class="done">'
+       +   '<div class="check">' + ic('check',36) + '</div>'
+       +   '<h1>Thank you, ' + esc(state.user.first) + '!</h1>'
+       +   '<p>' + (g.recurring
+            ? 'Your gift of ' + money(g.charge) + ' is now set to repeat ' + esc(freqPhrase(g)) + ', and the first one has been received. We emailed a receipt for your records.'
+            : 'Your gift of ' + money(g.charge) + ' has been received, and we emailed a receipt for your records.') + '</p>'
+       +   '<button class="btn btn-accent btn-block" onclick="A.goGiving(\'mygiving\')">View my giving</button>'
+       +   '<div class="gap-sm"></div>'
+       +   '<button class="btn btn-outline btn-block" onclick="A.resetGive()">Give again</button>'
+       + '</div></div>';
+}
+
+/* ---------- 5. My giving ---------- */
+function viewMyGiving(){
+  let h = '<div class="wrap">'
+        + '<button class="backbtn" onclick="A.goGiving(\'give\')">' + ic('chevL',18) + ' Give</button>'
+        + '<div class="pagehead"><h1>My giving</h1><p>' + esc(state.church.name) + '</p></div>'
+        + '<div class="gap-sm"></div>'
+        + '<div class="seg">'
+        + [['overview','Overview'],['history','History'],['scheduled','Scheduled'],['statements','Statements']]
+            .map(([k,l]) => '<button class="' + (state.gSeg === k ? 'on' : '') + '" onclick="A.setSeg(\'' + k + '\')">' + l + '</button>').join('')
+        + '</div>';
+
+  if (state.gSeg === 'overview')   h += segOverview();
+  if (state.gSeg === 'history')    h += segHistory();
+  if (state.gSeg === 'scheduled')  h += segScheduled();
+  if (state.gSeg === 'statements') h += segStatements();
+
+  h += '</div>';
+  return h;
+}
+
+function segOverview(){
+  const ok = GIFTS.filter(g => g.status === 'succeeded');
+  const ytd = ok.filter(g => parseDate(g.date).getFullYear() === 2026);
+  const ytdTotal  = ytd.reduce((s,g) => s + g.net, 0);
+  const lastYear  = ok.filter(g => parseDate(g.date).getFullYear() === 2025).reduce((s,g) => s + g.net, 0);
+  const feesCovered = ytd.reduce((s,g) => s + (g.fee||0), 0);
+  const active = RECURRING.filter(r => r.status === 'active');
+  const nextGift = active.slice().sort((a,b) => a.next.localeCompare(b.next))[0];
+
+  /* Fund breakdown for this year */
+  const byFund = {};
+  ytd.forEach(g => g.splits.forEach(s => { byFund[s.fund] = (byFund[s.fund]||0) + s.amt; }));
+  const rows = Object.entries(byFund).sort((a,b) => b[1] - a[1]);
+  const max = rows.length ? rows[0][1] : 1;
+
+  let h = '<div class="tiles">'
+        + '<div class="tile"><div class="tv">' + money0(ytdTotal) + '</div><div class="tl">Given in 2026</div></div>'
+        + '<div class="tile"><div class="tv">' + ytd.length + '</div><div class="tl">Gifts this year</div></div>'
+        + '<div class="tile"><div class="tv">' + money0(lastYear) + '</div><div class="tl">Given in 2025</div></div>'
+        + '<div class="tile"><div class="tv">' + money0(feesCovered) + '</div><div class="tl">Fees you covered</div></div>'
+        + '</div>';
+
+  /* Failed payment banner */
+  const failed = GIFTS.find(g => g.status === 'failed');
+  if (failed){
+    h += '<div class="notice warn"><div style="display:flex;gap:12px">'
+       +   '<span style="color:#eab308;flex:0 0 auto;margin-top:1px">' + ic('alert',20) + '</span>'
+       +   '<div><b>A gift didn\'t go through on ' + fmtDate(failed.date) + '.</b>'
+       +     '<div class="sm muted" style="margin-top:5px">Your ' + esc(methodLabel(failed.method)) + ' was declined. Your schedule is still active and will try again on the next date.</div>'
+       +     '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">'
+       +       '<button class="btn btn-accent btn-sm" onclick="A.goGiving(\'methods\')">Update payment method</button>'
+       +       '<button class="btn btn-outline btn-sm" onclick="A.makeUpGift(' + failed.net + ',\'' + failed.splits[0].fund + '\')">Give ' + money0(failed.net) + ' now</button>'
+       +     '</div></div></div></div>';
+  }
+
+  /* Next scheduled */
+  if (nextGift){
+    h += '<div class="datehead" style="padding-top:6px">Next scheduled gift</div>'
+       + '<div class="kv"><span class="k">' + esc(fmtDateLong(nextGift.next)) + '</span><span class="v">' + money0(splitTotal(nextGift.splits)) + '</span></div>'
+       + '<div class="kv"><span class="k">' + esc(freqLabel(nextGift)) + '</span><span class="v" style="font-weight:600;color:var(--text-2)">' + esc(methodLabel(nextGift.method)) + '</span></div>';
+  }
+
+  /* Fund breakdown */
+  if (rows.length){
+    h += '<div class="datehead">Where your 2026 giving went</div><div class="gap-sm"></div>';
+    rows.forEach(([fid, amt]) => {
+      h += '<div class="bar">'
+         +   '<div class="bhead"><span>' + esc(fundById(fid).name) + '</span><b>' + money0(amt) + '</b></div>'
+         +   '<div class="btrack"><div class="bfill" style="width:' + Math.round(amt/max*100) + '%"></div></div>'
+         + '</div>';
+    });
+  }
+
+  h += '<div class="rule"></div>'
+     + '<button class="menurow" onclick="A.goGiving(\'methods\')"><span class="ic">' + ic('card',20) + '</span>Payment methods<span class="chev">' + ic('chev',18) + '</span></button>'
+     + '<button class="menurow" onclick="A.setSeg(\'statements\')"><span class="ic">' + ic('doc',20) + '</span>Tax statements<span class="chev">' + ic('chev',18) + '</span></button>'
+     + '<button class="menurow" onclick="A.toast(\'Receipt delivery settings — not built in this prototype\')"><span class="ic">' + ic('bell',20) + '</span>Receipt notifications<span class="chev">' + ic('chev',18) + '</span></button>';
+  return h;
+}
+
+function segHistory(){
+  const years = [...new Set(GIFTS.map(g => parseDate(g.date).getFullYear()))].sort((a,b) => b - a);
+  let list = GIFTS.filter(g => parseDate(g.date).getFullYear() === state.histYear);
+  if (state.histFund !== 'all') list = list.filter(g => g.splits.some(s => s.fund === state.histFund));
+  if (state.hideNonDeductible) list = list.filter(g => g.splits.some(s => fundById(s.fund).deductible));
+
+  const total = list.filter(g => g.status === 'succeeded').reduce((s,g) => s + g.net, 0);
+
+  let h = '<div class="pills">'
+        + years.map(y => '<button class="pill' + (state.histYear === y ? ' on' : '') + '" onclick="A.setHistYear(' + y + ')">' + y + '</button>').join('')
+        + '</div>'
+        + '<div class="gap-sm"></div>'
+        + '<select class="select" onchange="A.setHistFund(this.value)">'
+        +   '<option value="all">All funds</option>'
+        +   FUNDS.map(f => '<option value="' + f.id + '"' + (state.histFund === f.id ? ' selected' : '') + '>' + esc(f.name) + '</option>').join('')
+        + '</select>'
+        + '<label class="checkrow"><input type="checkbox"' + (state.hideNonDeductible ? ' checked' : '') + ' onchange="A.setHideND(this.checked)"><span class="sm">Hide non-deductible gifts</span></label>';
+
+  if (!list.length){
+    return h + '<div class="empty"><div class="eic">' + ic('gift',26) + '</div><h3>No gifts to show</h3><div class="sm">Try a different year or fund.</div></div>';
+  }
+
+  h += '<div class="kv" style="border-top:1px solid var(--line);margin-top:8px">'
+     +   '<span class="k">' + list.length + ' gift' + (list.length===1?'':'s') + ' in ' + state.histYear + '</span>'
+     +   '<span class="v">' + money0(total) + '</span></div>'
+     + '<div class="gap-sm"></div>'
+     + '<button class="btn btn-outline btn-sm btn-block" onclick="A.exportCsv()">' + ic('down',16) + ' Export as CSV</button>';
+
+  let lastMonth = '';
+  list.forEach(g => {
+    const mk = monthKey(g.date);
+    if (mk !== lastMonth){ h += '<div class="datehead">' + mk + '</div>'; lastMonth = mk; }
+    const failed = g.status === 'failed';
+    const fundNames = g.splits.map(s => fundById(s.fund).name).join(', ');
+    h += '<button class="giftrow" onclick="A.openGift(\'' + g.id + '\')">'
+       +   '<span class="circ' + (failed ? '' : ' tint') + '">' + ic(g.recurring ? 'repeat' : 'gift', 20) + '</span>'
+       +   '<span class="gmain">'
+       +     '<span class="gt">' + esc(fundNames) + '</span>'
+       +     '<span class="gs">' + fmtDate(g.date) + ' · ' + esc(methodLabel(g.method))
+       +       (failed ? ' · <span style="color:#f87171;font-weight:650">Failed</span>' : '')
+       +       (g.memo ? ' · ' + esc(g.memo) : '') + '</span>'
+       +   '</span>'
+       +   '<span class="gamt"' + (failed ? ' style="color:var(--text-3);text-decoration:line-through"' : '') + '>' + money0(g.net)
+       +     (g.fee > 0 && !failed ? '<span class="gsub">+' + money(g.fee) + ' fee</span>' : '')
+       +   '</span>'
+       + '</button>';
+  });
+  return h;
+}
+
+function segScheduled(){
+  if (!RECURRING.length){
+    return '<div class="empty"><div class="eic">' + ic('repeat',26) + '</div><h3>Nothing scheduled</h3>'
+         + '<div class="sm" style="margin-bottom:20px">Set up recurring giving so you never have to remember.</div>'
+         + '<button class="btn btn-accent btn-sm" onclick="A.goGiving(\'give\')">Set up giving</button></div>';
+  }
+  let h = '';
+  RECURRING.forEach(r => {
+    const paused = r.status === 'paused';
+    const model = methodModel(r.method);
+    const net = splitTotal(r.splits);
+    const charge = r.coverFee ? grossUp(net, model) : net;
+    h += '<div class="schedcard' + (paused ? ' paused' : '') + '">'
+       +   '<div class="shead">'
+       +     '<span class="circ tint">' + ic('repeat',20) + '</span>'
+       +     '<div style="flex:1 1 auto;min-width:0">'
+       +       '<div class="samt">' + money0(net) + '</div>'
+       +       '<div class="sfreq">' + esc(freqLabel(r)) + '</div>'
+       +     '</div>'
+       +     (paused ? '<span class="tag warn">Paused</span>' : '<span class="tag a">Active</span>')
+       +   '</div>'
+       +   '<div class="kv"><span class="k">Fund' + (r.splits.length > 1 ? 's' : '') + '</span><span class="v">' + esc(r.splits.map(s => fundById(s.fund).name).join(', ')) + '</span></div>'
+       +   '<div class="kv"><span class="k">' + (paused ? 'Would resume' : 'Next gift') + '</span><span class="v">' + fmtDate(r.next) + '</span></div>'
+       +   '<div class="kv"><span class="k">Payment method</span><span class="v">' + esc(methodLabel(r.method)) + '</span></div>'
+       +   '<div class="kv"><span class="k">Total charged</span><span class="v">' + money(charge) + (r.coverFee ? ' <span class="tiny muted" style="font-weight:600">(fee covered)</span>' : '') + '</span></div>'
+       +   (r.memo ? '<div class="kv"><span class="k">Memo</span><span class="v" style="font-weight:600;color:var(--text-2)">' + esc(r.memo) + '</span></div>' : '')
+       +   '<div class="kv"><span class="k">Giving since</span><span class="v" style="font-weight:600;color:var(--text-2)">' + fmtDate(r.started) + '</span></div>'
+       +   '<div class="sacts">'
+       +     '<button class="btn btn-outline btn-sm" onclick="A.editRecur(\'' + r.id + '\')">' + ic('edit',15) + ' Edit</button>'
+       +     '<button class="btn btn-outline btn-sm" onclick="A.togglePause(\'' + r.id + '\')">' + ic(paused ? 'play' : 'pause',15) + ' ' + (paused ? 'Resume' : 'Pause') + '</button>'
+       +     '<button class="btn btn-outline btn-sm" style="color:#f87171;margin-left:auto" onclick="A.confirmCancel(\'' + r.id + '\')">Cancel</button>'
+       +   '</div>'
+       + '</div>';
+  });
+  h += '<div class="gap-sm"></div><button class="btn btn-outline btn-block" onclick="A.goGiving(\'give\')">' + ic('plus',17) + ' Set up another</button>';
+  return h;
+}
+
+function segStatements(){
+  let h = '<div class="notice"><div style="display:flex;gap:12px">'
+        + '<span class="accent" style="flex:0 0 auto;margin-top:1px">' + ic('info',20) + '</span>'
+        + '<div class="sm">Statements include tax-deductible gifts only. '
+        + esc(state.church.short) + ' issues them in mid-January for the prior year.</div></div></div>';
+
+  const ytd = GIFTS.filter(g => g.status === 'succeeded' && parseDate(g.date).getFullYear() === 2026);
+  const ytdDeduct = ytd.reduce((s,g) => s + g.splits.filter(x => fundById(x.fund).deductible).reduce((a,x)=>a+x.amt,0), 0);
+
+  h += '<div class="tile wide" style="margin-bottom:22px">'
+     +   '<div class="tv">' + money0(ytdDeduct) + '</div>'
+     +   '<div class="tl">Deductible so far in 2026 · statement available January 2027</div>'
+     + '</div>';
+
+  STATEMENTS.forEach(s => {
+    h += '<div class="stmtrow">'
+       +   '<span class="circ">' + ic('doc',20) + '</span>'
+       +   '<span style="flex:1 1 auto;min-width:0">'
+       +     '<span style="display:block;font-size:16.5px;font-weight:650">' + s.year + ' giving statement</span>'
+       +     '<span class="sm muted" style="display:block;margin-top:2px">' + money0(s.deductible) + ' deductible · ' + s.gifts + ' gifts · issued ' + fmtDate(s.issued) + '</span>'
+       +   '</span>'
+       +   '<button class="iconcirc" title="Download" onclick="A.toast(\'' + s.year + ' statement PDF would download here\')">' + ic('down',16) + '</button>'
+       + '</div>';
+  });
+  return h;
+}
+
+/* ---------- 6. Payment methods ---------- */
+function viewPaymentMethods(){
+  let h = '<div class="wrap">'
+        + '<button class="backbtn" onclick="A.goGiving(\'mygiving\')">' + ic('chevL',18) + ' My giving</button>'
+        + '<div class="pagehead"><h1>Payment methods</h1><p>Used for giving and for event registrations.</p></div>'
+        + '<div class="gap"></div>';
+
+  PAYMENT_METHODS.forEach(m => {
+    const used = RECURRING.filter(r => r.method === m.id && r.status === 'active').length;
+    h += '<div class="pm" style="cursor:default">'
+       +   '<span class="glyph">' + (m.kind === 'ach' ? ic('bank',16) : esc(m.brand.slice(0,4).toUpperCase())) + '</span>'
+       +   '<span style="flex:1 1 auto;min-width:0">'
+       +     '<span class="pmname">' + (m.kind === 'ach' ? esc(m.bank) : esc(m.brand)) + ' ••••' + esc(m.last4) + '</span>'
+       +     '<span class="pmsub">' + (m.kind === 'ach' ? 'Bank account · $0.30 per gift' : 'Expires ' + esc(m.exp) + ' · 2.15% + $0.30 per gift') + '</span>'
+       +   '</span>'
+       +   (m.primary ? '<span class="tag a">Default</span>' : '')
+       + '</div>'
+       + (used ? '<div class="hint" style="margin:-2px 0 12px 16px">Used by ' + used + ' scheduled gift' + (used===1?'':'s') + '</div>' : '<div class="gap-sm"></div>');
+  });
+
+  h += '<div class="gap-sm"></div>'
+     + '<button class="btn btn-outline btn-block" onclick="A.toast(\'In production this opens the Stripe Payment Element in setup mode\')">' + ic('plus',17) + ' Add payment method</button>'
+     + '<div class="rule"></div>'
+     + '<div class="notice"><div style="display:flex;gap:12px"><span class="accent" style="flex:0 0 auto;margin-top:1px">' + ic('lock',20) + '</span>'
+     + '<div class="sm">Card and bank details are stored by Stripe, never by ' + esc(state.church.short) + ' or ChurchPlannerPro. '
+     + 'We only keep the last four digits so you can tell them apart.</div></div></div>'
+     + '</div>';
+  return h;
+}
+
+/* ---------- 7. Gift detail ---------- */
+function viewGiftDetail(){
+  const g = GIFTS.find(x => x.id === state.detailGift);
+  if (!g) return viewMyGiving();
+  const charged = g.net + (g.fee || 0);
+  let h = '<div class="wrap">'
+        + '<button class="backbtn" onclick="A.goGiving(\'mygiving\',\'history\')">' + ic('chevL',18) + ' History</button>'
+        + '<div class="done" style="padding:22px 0 18px">'
+        +   '<div class="circ lg tint" style="margin:0 auto 16px">' + ic(g.recurring ? 'repeat' : 'gift', 24) + '</div>'
+        +   '<h1 style="font-size:34px">' + money(charged) + '</h1>'
+        +   '<p style="margin-bottom:0">' + fmtDateLong(g.date) + '</p>'
+        + '</div>';
+
+  if (g.status === 'failed'){
+    h += '<div class="notice warn"><div style="display:flex;gap:12px"><span style="color:#eab308;flex:0 0 auto;margin-top:1px">' + ic('alert',20) + '</span>'
+       + '<div class="sm"><b>This payment was declined.</b> Nothing was charged. Your schedule stayed active and tried again on the next date.</div></div></div>';
+  }
+
+  g.splits.forEach(s => {
+    h += '<div class="kv"><span class="k">' + esc(fundById(s.fund).name) + '</span><span class="v">' + money(s.amt) + '</span></div>';
+  });
+  if (g.fee > 0) h += '<div class="kv"><span class="k">Processing fee you covered</span><span class="v">' + money(g.fee) + '</span></div>';
+  h += '<div class="kv"><span class="k">Total charged</span><span class="v">' + money(charged) + '</span></div>'
+     + '<div class="kv"><span class="k">Payment method</span><span class="v">' + esc(methodLabel(g.method)) + '</span></div>'
+     + '<div class="kv"><span class="k">Given from</span><span class="v">' + esc(g.src) + '</span></div>'
+     + '<div class="kv"><span class="k">Type</span><span class="v">' + (g.recurring ? 'Recurring' : 'One-time') + '</span></div>'
+     + (g.memo ? '<div class="kv"><span class="k">Memo</span><span class="v" style="font-weight:600">' + esc(g.memo) + '</span></div>' : '')
+     + '<div class="kv"><span class="k">Tax deductible</span><span class="v">' + (g.splits.every(s => fundById(s.fund).deductible) ? 'Yes' : 'Partially') + '</span></div>'
+     + '<div class="kv"><span class="k">Reference</span><span class="v" style="font-weight:600;color:var(--text-2);font-variant-numeric:tabular-nums">' + esc(g.id.toUpperCase()) + '</span></div>'
+     + '<div class="gap"></div>'
+     + '<button class="btn btn-outline btn-block" onclick="A.toast(\'Receipt re-sent to ' + esc(state.user.email) + '\')">Email me this receipt</button>'
+     + '</div>';
+  return h;
+}
+
+/* ---------- Sheets ---------- */
+function viewSheet(){
+  if (!state.sheet) return '';
+  let inner = '';
+
+  if (state.sheet === 'editRecur'){
+    const r = RECURRING.find(x => x.id === state.editRecur);
+    if (!r) return '';
+    const model = methodModel(r.method);
+    inner = '<h2 style="font-size:22px;margin-bottom:6px">Edit scheduled gift</h2>'
+          + '<p class="muted sm">Changes take effect on the next scheduled date.</p><div class="gap-sm"></div>'
+          + '<div class="field"><span class="label">Amount</span>'
+          +   '<div class="fundrow"><div class="amtbox" style="flex:1 1 auto"><span>$</span>'
+          +     '<input inputmode="decimal" value="' + r.splits[0].amt + '" oninput="A.editRecurField(\'amt\', this.value)"></div></div></div>'
+          + '<div class="field"><span class="label">Fund</span>'
+          +   '<select class="select" onchange="A.editRecurField(\'fund\', this.value)">'
+          +     FUNDS.map(f => '<option value="' + f.id + '"' + (f.id === r.splits[0].fund ? ' selected' : '') + '>' + esc(f.name) + '</option>').join('')
+          +   '</select></div>'
+          + '<div class="field"><span class="label">Frequency</span><div class="pills">'
+          +   FREQS.filter(f => f.id !== 'once').map(f => '<button class="pill' + (r.freq === f.id ? ' on' : '') + '" onclick="A.editRecurField(\'freq\',\'' + f.id + '\')">' + f.label + '</button>').join('')
+          + '</div></div>'
+          + '<div class="field"><span class="label">Payment method</span>'
+          +   '<select class="select" onchange="A.editRecurField(\'method\', this.value)">'
+          +     PAYMENT_METHODS.map(m => '<option value="' + m.id + '"' + (m.id === r.method ? ' selected' : '') + '>' + esc(methodLabel(m.id)) + '</option>').join('')
+          +   '</select></div>'
+          + '<label class="checkrow"><input type="checkbox"' + (r.coverFee ? ' checked' : '') + ' onchange="A.editRecurField(\'coverFee\', this.checked)">'
+          +   '<span>Cover the ' + money(feeFor(splitTotal(r.splits), model)) + ' processing fee</span></label>'
+          + '<div class="gap"></div>'
+          + '<button class="btn btn-accent btn-block" onclick="A.saveRecur()">Save changes</button>'
+          + '<div class="gap-sm"></div>'
+          + '<button class="btn btn-outline btn-block" onclick="A.closeSheet()">Cancel</button>';
+  }
+
+  if (state.sheet === 'cancelRecur'){
+    const r = RECURRING.find(x => x.id === state.editRecur);
+    if (!r) return '';
+    inner = '<h2 style="font-size:22px;margin-bottom:10px">Cancel this scheduled gift?</h2>'
+          + '<p class="muted">Your ' + money0(splitTotal(r.splits)) + ' gift to ' + esc(fundById(r.splits[0].fund).name)
+          + ', repeating ' + esc(freqPhrase(r)) + ', will stop. Gifts already given aren\'t affected.</p>'
+          + '<div class="gap-sm"></div>'
+          + '<p class="sm faint">If you\'d rather take a break, pausing keeps the schedule so you can resume later.</p>'
+          + '<div class="gap"></div>'
+          + '<button class="btn btn-accent btn-block" onclick="A.closeSheet()">Keep giving</button>'
+          + '<div class="gap-sm"></div>'
+          + '<button class="btn btn-outline btn-block" onclick="A.togglePause(\'' + r.id + '\', true)">Pause instead</button>'
+          + '<div class="gap-sm"></div>'
+          + '<button class="btn btn-outline btn-block" style="color:#f87171" onclick="A.doCancel(\'' + r.id + '\')">Cancel this gift</button>';
+  }
+
+  return '<div class="scrim" onclick="if(event.target===this)A.closeSheet()"><div class="sheet"><div class="grab"></div>' + inner + '</div></div>';
+}
+
+/* ============================================================================
+   BLOCK H — ACTIONS   ***COPY THIS INTO memberapp.html (namespace it if needed)***
+   ========================================================================= */
+const A = {
+  /* --- navigation --- */
+  goGiving(view, seg){
+    state.gView = view;
+    if (seg) state.gSeg = seg;
+    if (view === 'mygiving' && !seg) state.gSeg = state.gSeg || 'overview';
+    window.scrollTo(0,0);
+    render();
+  },
+  setSeg(s){ state.gSeg = s; window.scrollTo(0,0); render(); },
+  setTab(t){ state.tab = t; window.scrollTo(0,0); render(); },
+
+  /* --- amount + funds --- */
+  setMainAmount(v){
+    v = String(v).replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1');
+    const parts = v.split('.');
+    if (parts[1] && parts[1].length > 2) v = parts[0] + '.' + parts[1].slice(0,2);
+    state.splits[0].amt = v;
+    render();
+    const el = document.getElementById('amtMain');
+    if (el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+  },
+  setSplitAmount(i, v){
+    v = String(v).replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1');
+    state.splits[i].amt = v;
+    render();
+  },
+  setSplitFund(i, fid){
+    state.splits[i].fund = fid;
+    if (!state.splits.some(s => fundById(s.fund).memo)) { state.memoOn = false; state.memo = ''; }
+    render();
+  },
+  addSplit(){
+    const used = state.splits.map(s => s.fund);
+    const next = FUNDS.find(f => !used.includes(f.id));
+    if (!next) return;
+    state.splits.push({ fund: next.id, amt: '' });
+    render();
+  },
+  removeSplit(i){
+    state.splits.splice(i,1);
+    if (!state.splits.length) state.splits = [{ fund:'general', amt:'' }];
+    render();
+  },
+
+  /* --- frequency --- */
+  setFreq(f){ state.freq = f; render(); },
+  setWeekday(v){ state.weekday = Number(v); render(); },
+  setDayOfMonth(v){ state.dayOfMonth = Number(v); render(); },
+  setTwice(v){ state.twice = v; render(); },
+
+  /* --- memo --- */
+  toggleMemo(on){ state.memoOn = on; if (!on) state.memo = ''; render(); },
+  setMemo(v){ state.memo = v; },
+
+  /* --- checkout --- */
+  toCheckout(){
+    if (splitTotal(state.splits) <= 0) return;
+    if (state.freq !== 'once' && (state.method === 'apple' || state.method === 'google')) state.method = 'pm_1';
+    this.goGiving('checkout');
+  },
+  setMethod(id){ state.method = id; render(); },
+  setCoverFee(on){ state.coverFee = on; render(); },
+
+  submitGift(){
+    const net = splitTotal(state.splits);
+    const model = methodModel(state.method);
+    const charge = state.coverFee ? grossUp(net, model) : net;
+    const fee = state.coverFee ? feeFor(net, model) : 0;
+
+    state.gView = 'processing';
+    render();
+
+    setTimeout(() => {
+      const today = new Date();
+      const iso = toISO(today);
+      const gift = {
+        id: 'd_' + Math.floor(1100 + Math.random()*800),
+        date: iso,
+        splits: state.splits.map(s => ({ fund: s.fund, amt: parseFloat(s.amt) || 0 })),
+        net, fee,
+        method: (state.method === 'apple' || state.method === 'google') ? 'pm_1' : state.method,
+        src: state.method === 'apple' ? 'Apple Pay' : state.method === 'google' ? 'Google Pay' : 'Mobile app',
+        status: 'succeeded',
+        recurring: state.freq !== 'once',
+        memo: state.memoOn ? state.memo : ''
+      };
+      GIFTS.unshift(gift);
+
+      if (state.freq !== 'once'){
+        RECURRING.unshift({
+          id: 'r_' + Date.now(),
+          splits: gift.splits,
+          freq: state.freq,
+          weekday: state.weekday,
+          dayOfMonth: state.dayOfMonth,
+          twice: state.twice,
+          next: nextOccurrence(state, today),
+          method: gift.method,
+          coverFee: state.coverFee,
+          status: 'active',
+          started: iso,
+          memo: gift.memo
+        });
+      }
+
+      state.lastGift = { charge, recurring: state.freq !== 'once', freq: state.freq, weekday: state.weekday, dayOfMonth: state.dayOfMonth, twice: state.twice };
+      state.gView = 'done';
+      window.scrollTo(0,0);
+      render();
+    }, 1400);
+  },
+
+  resetGive(){
+    Object.assign(state, {
+      splits: [{ fund:'general', amt:'' }],
+      freq:'once', memoOn:false, memo:'', coverFee:true, gView:'give'
+    });
+    window.scrollTo(0,0);
+    render();
+  },
+
+  makeUpGift(amt, fund){
+    state.splits = [{ fund, amt: String(amt) }];
+    state.freq = 'once';
+    this.goGiving('give');
+    this.toast('Amount pre-filled — review and give');
+  },
+
+  /* --- history --- */
+  setHistYear(y){ state.histYear = y; render(); },
+  setHistFund(f){ state.histFund = f; render(); },
+  setHideND(on){ state.hideNonDeductible = on; render(); },
+  openGift(id){ state.detailGift = id; this.goGiving('gift'); },
+
+  exportCsv(){
+    const rows = [['Date','Fund','Amount','Fee covered','Total','Method','Source','Status','Memo','Reference']];
+    GIFTS.filter(g => parseDate(g.date).getFullYear() === state.histYear).forEach(g => {
+      g.splits.forEach(s => {
+        rows.push([g.date, fundById(s.fund).name, s.amt.toFixed(2), (g.fee||0).toFixed(2),
+                   (g.net + (g.fee||0)).toFixed(2), methodLabel(g.method), g.src, g.status, g.memo, g.id.toUpperCase()]);
+      });
+    });
+    const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(',')).join('\n');
+    const blob = new Blob([csv], { type:'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'giving-' + state.histYear + '.csv';
+    a.click();
+    this.toast('Downloaded giving-' + state.histYear + '.csv');
+  },
+
+  /* --- recurring management --- */
+  editRecur(id){ state.editRecur = id; state.sheet = 'editRecur'; render(); },
+  editRecurField(field, val){
+    const r = RECURRING.find(x => x.id === state.editRecur);
+    if (!r) return;
+    if (field === 'amt')       r.splits[0].amt = parseFloat(String(val).replace(/[^0-9.]/g,'')) || 0;
+    if (field === 'fund')      r.splits[0].fund = val;
+    if (field === 'freq')     { r.freq = val; r.next = nextOccurrence(r, new Date()); }
+    if (field === 'method')    r.method = val;
+    if (field === 'coverFee')  r.coverFee = val;
+    if (field !== 'amt') render();
+  },
+  saveRecur(){ state.sheet = null; render(); this.toast('Scheduled gift updated'); },
+  togglePause(id, fromSheet){
+    const r = RECURRING.find(x => x.id === id);
+    if (!r) return;
+    r.status = r.status === 'paused' ? 'active' : 'paused';
+    if (fromSheet) state.sheet = null;
+    render();
+    this.toast(r.status === 'paused' ? 'Giving paused' : 'Giving resumed');
+  },
+  confirmCancel(id){ state.editRecur = id; state.sheet = 'cancelRecur'; render(); },
+  doCancel(id){
+    RECURRING = RECURRING.filter(x => x.id !== id);
+    state.sheet = null;
+    render();
+    this.toast('Scheduled gift cancelled');
+  },
+  closeSheet(){ state.sheet = null; render(); },
+
+  /* --- misc --- */
+  toast(msg){
+    const wrap = document.getElementById('toasts');
+    wrap.innerHTML = '<div class="toast">' + esc(msg) + '</div>';
+    clearTimeout(A._t);
+    A._t = setTimeout(() => { wrap.innerHTML = ''; }, 2600);
+  }
+};
+
+/* ============================================================================
+   BLOCK I — DEMO SHELL (standalone only)
+   When integrating, DELETE this block. memberapp.html already has render(),
+   the topbar, desknav and tab bar — you only need to add the NAV entry:
+       { key:'giving', label:'Giving', ic:'gift', title:'Giving' }
+   and add `case 'giving': return viewGiving();` to your tab router.
+   ========================================================================= */
+const NAV = [
+  { key:'home',     label:'Home',     ic:'home',  title:'Home' },
+  { key:'family',   label:'Family',   ic:'users', title:'My Family' },
+  { key:'groups',   label:'Groups',   ic:'hands', title:'Groups' },
+  { key:'giving',   label:'Giving',   ic:'gift',  title:'Giving' },
+  { key:'calendar', label:'Calendar', ic:'cal',   title:'Calendar' },
+  { key:'forms',    label:'Forms',    ic:'form',  title:'Forms' }
+];
+
+function applyTheme(){
+  const c = state.church.color;
+  const r = parseInt(c.slice(1,3),16), g = parseInt(c.slice(3,5),16), b = parseInt(c.slice(5,7),16);
+  const mix = (x) => Math.round(x + (255 - x) * 0.42);
+  const hex = (x) => x.toString(16).padStart(2,'0');
+  document.documentElement.style.setProperty('--accent', c);
+  document.documentElement.style.setProperty('--accent-text', '#' + hex(mix(r)) + hex(mix(g)) + hex(mix(b)));
+  document.documentElement.style.setProperty('--accent-soft', 'rgba(' + r + ',' + g + ',' + b + ',.18)');
+}
+
+function viewStub(name){
+  return '<div class="wrap"><div class="empty" style="padding-top:100px">'
+       + '<div class="eic">' + ic('info',26) + '</div>'
+       + '<h3>' + name + '</h3>'
+       + '<div class="sm">This screen lives in memberapp.html. This file only prototypes Giving.</div>'
+       + '<div class="gap"></div><button class="btn btn-accent btn-sm" onclick="A.setTab(\'giving\')">Go to Giving</button>'
+       + '</div></div>';
+}
+
+function render(){
+  const nav = NAV.find(n => n.key === state.tab) || NAV[3];
+  let title = nav.title;
+  if (state.tab === 'giving'){
+    if (state.gView === 'mygiving' || state.gView === 'gift') title = 'My giving';
+    else if (state.gView === 'methods') title = 'Payment methods';
+    else if (state.gView === 'checkout') title = 'Give';
+  }
+
+  let h = '<div class="topbar"><div class="topbar-in">'
+        +   '<button class="ava accent-fill" title="' + esc(state.user.name) + '">' + esc(state.user.initials) + '</button>'
+        +   '<div class="title">' + esc(title) + '</div>'
+        +   '<div class="right"><button class="iconbtn">' + ic('chat',21) + '</button><button class="iconbtn">' + ic('bell',21) + '</button></div>'
+        + '</div></div>'
+        + '<div class="desknav"><div class="desknav-in">'
+        +   NAV.map(n => '<a class="' + (state.tab === n.key ? 'on' : '') + '" onclick="A.setTab(\'' + n.key + '\')">' + n.label + '</a>').join('')
+        + '</div></div>'
+        + '<main>' + (state.tab === 'giving' ? viewGiving() : viewStub(nav.title)) + '</main>'
+        + '<div class="tabs">'
+        +   NAV.map(n => '<button class="' + (state.tab === n.key ? 'on' : '') + '" onclick="A.setTab(\'' + n.key + '\')">' + ic(n.ic,21) + '<span>' + n.label + '</span></button>').join('')
+        + '</div>'
+        + viewSheet();
+
+  document.getElementById('root').innerHTML = h;
+}
+
+applyTheme();
+render();
+</script>
+</body>
+</html>
