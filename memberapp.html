@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>ChurchPlannerPro Connect — Member App Prototype</title>
+<style>
+:root{
+  --accent:#2563EB;            /* church brand colour — fills */
+  --accent-text:#2563EB;       /* church brand colour — text/links */
+  --accent-soft:rgba(37,99,235,.10);
+  --bg:#FFFFFF; --bg-elev:#FFFFFF; --bg-soft:#F5F6F8; --bg-sunk:#FAFAFB;
+  --text:#0F172A; --text-2:#5C6573; --text-3:#8B93A1;
+  --line:#E7E9ED; --line-soft:#F0F1F4;
+  --r:14px; --r-lg:18px;
+  --shadow:0 1px 3px rgba(15,23,42,.05), 0 8px 24px rgba(15,23,42,.05);
+}
+[data-theme="dark"]{
+  --bg:#0B0B0C; --bg-elev:#141416; --bg-soft:#1A1A1D; --bg-sunk:#111113;
+  --text:#F4F4F5; --text-2:#A2A6AE; --text-3:#71757E;
+  --line:#26262A; --line-soft:#1D1D20;
+  --shadow:0 1px 3px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:Inter,-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg); color:var(--text);
+  font-size:16px; line-height:1.45; -webkit-font-smoothing:antialiased;
+  transition:background .2s,color .2s;
+}
+h1,h2,h3{margin:0;line-height:1.2;letter-spacing:-.02em;font-weight:700}
+p{margin:0}
+button{font-family:inherit;font-size:inherit;color:inherit}
+input,select,textarea{font-family:inherit}
+.muted{color:var(--text-2)}
+.faint{color:var(--text-3)}
+.sm{font-size:14.5px}
+.tiny{font-size:12.5px}
+.center{text-align:center}
+.accent{color:var(--accent-text)}
+
+/* ---------------- layout ---------------- */
+.wrap{max-width:640px;margin:0 auto;padding:0 22px}
+.wrap.wide{max-width:900px}
+main{padding:8px 0 120px}
+.rule{height:1px;background:var(--line);margin:30px 0}
+.sechead{text-align:center;font-size:23px;font-weight:700;margin-bottom:22px}
+.pagehead{padding:14px 0 8px}
+.pagehead h1{font-size:29px;margin-bottom:6px}
+.pagehead p{color:var(--text-2);font-size:15.5px}
+.gap-sm{height:14px}.gap{height:26px}
+
+/* ---------------- top bar ---------------- */
+.topbar{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:900px;margin:0 auto;height:58px;padding:0 16px;
+  display:grid;grid-template-columns:64px 1fr 64px;align-items:center}
+.topbar .title{text-align:center;font-weight:700;font-size:18px;letter-spacing:-.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .right{display:flex;justify-content:flex-end;gap:14px;color:var(--text)}
+.iconbtn{background:none;border:none;padding:4px;cursor:pointer;display:grid;place-items:center;color:inherit;opacity:.9}
+.iconbtn:hover{opacity:1}
+.ava{width:38px;height:38px;border-radius:50%;background:var(--bg-soft);color:var(--text-2);
+  display:grid;place-items:center;font-size:13.5px;font-weight:700;letter-spacing:.03em;border:none;cursor:pointer}
+.ava.accent-fill{background:var(--accent);color:#fff}
+
+/* desktop nav */
+.desknav{display:none;border-bottom:1px solid var(--line);background:var(--bg);
+  position:sticky;top:58px;z-index:39}
+.desknav-in{max-width:900px;margin:0 auto;display:flex;gap:4px;padding:0 16px}
+.desknav a{padding:14px 14px 12px;font-size:15px;font-weight:600;color:var(--text-2);
+  cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.desknav a:hover{color:var(--text)}
+.desknav a.on{color:var(--accent-text);border-bottom-color:var(--accent)}
+
+/* bottom tabs */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--bg);
+  border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);
+  padding:8px 2px calc(8px + env(safe-area-inset-bottom))}
+.tabs button{background:none;border:none;cursor:pointer;padding:4px 2px;
+  display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--text-3);font-size:10.5px;font-weight:600}
+.tabs button.on{color:var(--text)}
+.tabs svg{width:23px;height:23px}
+
+/* ---------------- buttons ---------------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;
+  border:1px solid transparent;border-radius:999px;padding:15px 26px;font-size:16px;font-weight:650;
+  transition:.15s;white-space:nowrap}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{filter:brightness(1.07)}
+.btn-outline{background:transparent;color:var(--text);border-color:var(--line)}
+.btn-outline:hover{background:var(--bg-soft)}
+.btn-text{background:none;border:none;color:var(--accent-text);font-weight:650;padding:10px 4px;cursor:pointer;font-size:15.5px}
+.btn-block{width:100%}
+.btn-sm{padding:10px 18px;font-size:14.5px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.backbtn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;
+  color:var(--text-2);font-size:15px;font-weight:600;padding:12px 0}
+
+/* ---------------- inputs ---------------- */
+.field{margin-bottom:22px}
+.label{display:block;font-size:15px;font-weight:650;margin-bottom:9px}
+.input,.select,.textarea{width:100%;padding:15px 16px;font-size:16px;color:var(--text);
+  background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--r);transition:.15s;appearance:none}
+[data-theme="dark"] .input,[data-theme="dark"] .select,[data-theme="dark"] .textarea{background:var(--bg-soft)}
+.select{border-radius:999px;padding-right:44px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238B93A1' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 18px center}
+.input:focus,.select:focus,.textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.textarea{min-height:100px;resize:vertical;border-radius:var(--r)}
+.hint{font-size:13px;color:var(--text-3);margin-top:8px}
+.err{font-size:13.5px;color:#F43F5E;margin-top:8px;font-weight:600}
+.searchbar{position:relative;margin-bottom:20px}
+.searchbar .input{padding-left:46px;border-radius:999px}
+.searchbar svg{position:absolute;left:17px;top:50%;transform:translateY(-50%);color:var(--text-3)}
+.checkrow{display:flex;align-items:center;gap:12px;padding:11px 0;cursor:pointer}
+.checkrow input{width:20px;height:20px;accent-color:var(--accent);flex:none}
+
+/* ---------------- list items (Church Center style) ---------------- */
+.feed{display:flex;flex-direction:column}
+.entry{background:none;border:none;padding:17px 0;text-align:left;width:100%;cursor:pointer;display:block}
+.entry + .entry{border-top:1px solid var(--line-soft)}
+.entry .t{color:var(--accent-text);font-size:17.5px;font-weight:650;letter-spacing:-.01em;margin-bottom:5px}
+.entry .t.off{color:var(--text-3);text-decoration:line-through}
+.entry .m{font-size:15.5px;color:var(--text)}
+.entry .m i{font-style:normal;color:var(--text-2)}
+.entry .loc{display:flex;align-items:center;gap:6px;margin-top:7px;
+  font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-2);font-weight:600}
+.entry .loc svg{width:14px;height:14px;flex:none}
+.datehead{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text-2);padding:26px 0 4px}
+.datehead:first-child{padding-top:6px}
+
+.personrow{display:flex;align-items:center;gap:14px;padding:14px 0;width:100%;background:none;border:none;
+  text-align:left;cursor:pointer}
+.personrow + .personrow{border-top:1px solid var(--line-soft)}
+.circ{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+  font-size:15px;font-weight:700;letter-spacing:.02em;background:var(--bg-soft);color:var(--text-2)}
+.circ.lg{width:62px;height:62px;font-size:20px}
+.circ.sm{width:32px;height:32px;font-size:12px}
+.circ.on{background:var(--accent);color:#fff}
+.circ.tint{background:var(--accent-soft);color:var(--accent-text)}
+
+.menurow{display:flex;align-items:center;gap:16px;padding:18px 0;width:100%;background:none;border:none;
+  text-align:left;cursor:pointer;font-size:17px;font-weight:600}
+.menurow + .menurow{border-top:1px solid var(--line-soft)}
+.menurow .ic{color:var(--text-2);display:grid;place-items:center}
+.menurow .chev{margin-left:auto;color:var(--text-3)}
+
+/* ---------------- pills / chips ---------------- */
+.pills{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:2px 0 4px;margin-bottom:6px}
+.pills::-webkit-scrollbar{display:none}
+.pill{padding:10px 18px;border-radius:999px;border:1px solid var(--line);background:none;
+  font-size:14.5px;font-weight:600;color:var(--text-2);cursor:pointer;white-space:nowrap;transition:.15s}
+.pill:hover{color:var(--text)}
+.pill.on{color:var(--accent-text);border-color:var(--accent);background:var(--accent-soft)}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;
+  padding:5px 11px;border-radius:999px;background:var(--bg-soft);color:var(--text-2)}
+.tag.a{background:var(--accent-soft);color:var(--accent-text)}
+.tag.warn{background:rgba(245,158,11,.14);color:#B45309}
+[data-theme="dark"] .tag.warn{color:#FBBF24}
+.tag.bad{background:rgba(244,63,94,.13);color:#BE123C}
+[data-theme="dark"] .tag.bad{color:#FB7185}
+.tag svg{width:13px;height:13px}
+
+/* ---------------- home ---------------- */
+.banner{border-radius:6px;overflow:hidden;padding:44px 26px;text-align:center;background:var(--accent);color:#fff;margin-top:12px}
+.banner .mark{width:44px;height:44px;margin:0 auto 16px;border-radius:50%;border:2.5px solid rgba(255,255,255,.9);
+  display:grid;place-items:center;font-weight:800;font-size:15px;letter-spacing:.02em}
+.banner .nm{font-size:26px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;line-height:1.15}
+.banner .sub{font-size:13px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;margin-top:8px;opacity:.85}
+.welcome{font-size:19px;line-height:1.5;font-style:italic;text-align:center;padding:26px 4px 0;font-weight:500}
+
+/* ---------------- cards (forms / signups) ---------------- */
+.scard{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--bg-elev);
+  cursor:pointer;width:100%;text-align:left;padding:0;transition:.15s;display:block}
+.scard:hover{border-color:var(--accent)}
+.scard + .scard{margin-top:18px}
+.scard .art{height:104px;display:grid;place-items:center;font-size:36px}
+.scard .body{padding:16px 18px 18px}
+.scard h3{font-size:18px;margin-bottom:5px}
+.scard .meta{font-size:14.5px;color:var(--text-2)}
+.scard .foot{margin-top:13px;display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------------- calendar grid ---------------- */
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.cal .dow{text-align:center;font-size:11px;font-weight:700;color:var(--text-3);padding:8px 0;letter-spacing:.06em}
+.cal .day{aspect-ratio:1;border:none;background:none;border-radius:10px;cursor:pointer;padding:5px 2px;
+  display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--text)}
+.cal .day:hover{background:var(--bg-soft)}
+.cal .day.out{color:var(--text-3);opacity:.45}
+.cal .day.today .n{color:var(--accent-text);font-weight:800}
+.cal .day.sel{background:var(--accent);color:#fff}
+.cal .day.sel .n{color:#fff}
+.cal .n{font-size:14.5px;font-weight:600}
+.cal .dots{display:flex;gap:3px}
+.cal .dots i{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.cal .day.sel .dots i{background:#fff}
+
+/* ---------------- onboarding ---------------- */
+.onb{min-height:100dvh;display:flex;flex-direction:column;justify-content:flex-start;padding:0 22px 60px}
+.onb-in{width:100%;max-width:420px;margin:0 auto;padding-top:60px}
+.logo{display:flex;align-items:center;justify-content:center;gap:11px;margin-bottom:44px}
+.logo .m{width:34px;height:34px;border-radius:10px;background:var(--accent);color:#fff;
+  display:grid;place-items:center;font-weight:800;font-size:16px}
+.logo .n{font-weight:700;font-size:17px;letter-spacing:-.02em}
+.logo .n b{font-weight:800;color:var(--accent-text)}
+.steps{display:flex;gap:7px;margin-bottom:30px}
+.steps i{height:3px;flex:1;border-radius:2px;background:var(--line)}
+.steps i.on{background:var(--accent)}
+.notice{border-radius:var(--r);padding:18px;background:var(--accent-soft);margin-bottom:26px}
+.notice.ok{background:rgba(34,197,94,.12)}
+
+/* ---------------- sheet / toast ---------------- */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--bg-elev);width:100%;max-width:520px;border-radius:22px 22px 0 0;
+  max-height:86dvh;overflow:auto;padding:12px 22px calc(30px + env(safe-area-inset-bottom));
+  animation:up .24s cubic-bezier(.2,.8,.3,1)}
+@keyframes up{from{transform:translateY(24px);opacity:.4}}
+.grab{width:38px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 20px}
+.codebox{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--accent-soft);
+  padding:22px;text-align:center;margin-bottom:22px}
+.codebox .lbl{font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text-2)}
+.codebox .code{font-size:44px;font-weight:800;letter-spacing:.16em;color:var(--accent-text);
+  margin-top:8px;line-height:1;font-variant-numeric:tabular-nums}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:14px 0;font-size:15.5px}
+.kv + .kv{border-top:1px solid var(--line-soft)}
+.kv .k{color:var(--text-2)}
+.kv .v{font-weight:600;text-align:right}
+.toastwrap{position:fixed;left:0;right:0;bottom:96px;z-index:70;display:flex;justify-content:center;padding:0 20px;pointer-events:none}
+.toast{background:var(--text);color:var(--bg);padding:13px 20px;border-radius:999px;font-size:14.5px;font-weight:600;
+  display:flex;align-items:center;gap:9px;box-shadow:var(--shadow);animation:up .22s ease;max-width:100%}
+.toast span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.flag{display:block;text-align:center;margin:44px auto 0;font-size:9.5px;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--text-3);border:1px solid var(--line);background:var(--bg);
+  padding:5px 11px;border-radius:999px;width:fit-content}
+.fade{animation:fi .22s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}}
+
+@media (min-width:860px){
+  .desknav{display:block}
+  .tabs{display:none}
+  main{padding-bottom:70px}
+  .flag{bottom:16px}
+  .toastwrap{bottom:32px}
+  .scrim{align-items:center}
+  .sheet{border-radius:20px;max-width:520px;padding:26px}
+  .cal .day{aspect-ratio:auto;min-height:64px}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+/* =========================================================================
+   ChurchPlannerPro Connect — member-facing prototype
+   Visual language adapted from Planning Center's Church Center app.
+   All data is MOCK. No network calls, no storage APIs.
+   ========================================================================= */
+
+/* ----------------------------- mock data ------------------------------- */
+
+const CHURCHES = [
+  { id:'prairie', name:'Prairie Ridge Church', short:'Prairie Ridge', city:'Cedar Rapids, IA', members:487,
+    color:'#0FA36B', denom:'Non-denominational', times:'Sundays 9:00 & 11:00 AM', initials:'PR',
+    welcome:'Welcome to Prairie Ridge Church! We invite everyone to join us on a lifelong journey of learning to live and love like Jesus—together.' },
+  { id:'grace', name:'Grace Community Chapel', short:'Grace Community', city:'Iowa City, IA', members:312,
+    color:'#7C3AED', denom:'Evangelical Free', times:'Sundays 10:00 AM', initials:'GC',
+    welcome:'However you found us, you belong here. Come as you are and grow with us.' },
+  { id:'northside', name:'Northside Bible Fellowship', short:'Northside', city:'Des Moines, IA', members:1140,
+    color:'#2563EB', denom:'Baptist', times:'Sundays 8:30, 10:00 & 11:30 AM', initials:'NB',
+    welcome:'A church for the whole city — three services, one family.' },
+  { id:'standrews', name:"St. Andrew's Parish", short:"St. Andrew's", city:'Marion, IA', members:865,
+    color:'#B45309', denom:'Catholic', times:'Sat 5:00 PM · Sun 8:00 & 10:30 AM', initials:'SA',
+    welcome:'Rooted in tradition, serving our neighbours since 1908.' },
+  { id:'riverbend', name:'Riverbend Church', short:'Riverbend', city:'Coralville, IA', members:228,
+    color:'#0891B2', denom:'Methodist', times:'Sundays 9:30 AM', initials:'RB',
+    welcome:'A small church with a wide-open door.' },
+];
+
+const ME = { first:'Andrew', last:'Schneider', email:'andrew.schneider@example.com', phone:'(319) 555-0148' };
+
+const HOUSEHOLD = {
+  name:'The Schneider Household',
+  address:'1420 Meadow Lark Dr, Cedar Rapids, IA 52402',
+  members:[
+    { id:'p1', name:'Andrew Schneider', role:'Head of household', age:38, birthday:'March 4',
+      email:'andrew.schneider@example.com', phone:'(319) 555-0148', kind:'adult', me:true,
+      tags:['Ushers','Young Families Small Group'] },
+    { id:'p2', name:'Marie Schneider', role:'Spouse', age:37, birthday:'September 19',
+      email:'marie.schneider@example.com', phone:'(319) 555-0192', kind:'adult',
+      tags:['Nursery Care','Young Families Small Group'] },
+    { id:'p3', name:'Ellie Schneider', role:'Child', age:9, birthday:'June 2', grade:'4th grade',
+      kind:'child', tags:['Kids Ministry'] },
+    { id:'p4', name:'Sam Schneider', role:'Child', age:6, birthday:'November 27', grade:'1st grade',
+      kind:'child', tags:['Kids Ministry'] },
+    { id:'p5', name:'Grace Schneider', role:'Child', age:2, birthday:'January 15', grade:'Nursery',
+      kind:'child', tags:['Nursery'] },
+  ]
+};
+
+const DIRECTORY = [
+  { id:'h2', name:'The Alvarez Household', city:'Cedar Rapids', people:['Miguel Alvarez','Rosa Alvarez','Diego Alvarez'],
+    phone:'(319) 555-0231', shared:true },
+  { id:'h3', name:'The Okafor Household', city:'Marion', people:['Chidi Okafor','Ngozi Okafor'],
+    phone:'(319) 555-0177', shared:true },
+  { id:'h4', name:'The Bennett Household', city:'Cedar Rapids', people:['Tom Bennett','Julie Bennett','Ava Bennett','Noah Bennett'],
+    phone:'(319) 555-0311', shared:true },
+  { id:'h5', name:'The Whitfield Household', city:'Hiawatha', people:['Dale Whitfield','Nancy Whitfield'],
+    phone:null, shared:false },
+  { id:'h6', name:'The Nguyen Household', city:'Cedar Rapids', people:['Kim Nguyen','Linh Nguyen','Mai Nguyen'],
+    phone:'(319) 555-0455', shared:true },
+  { id:'h7', name:'The Petersen Household', city:'Robins', people:['Erik Petersen','Sarah Petersen','Lucy Petersen'],
+    phone:'(319) 555-0620', shared:true },
+];
+
+const GROUPS = [
+  { id:'g1', name:'Ushers', members:6, joined:true, type:'Serving', day:'Sunday', time:'8:30am',
+    location:'Main Lobby', leader:'Dale Whitfield', open:true,
+    desc:'Greet, seat, and serve on Sunday mornings. Rotating schedule — most ushers serve one or two Sundays a month.',
+    roster:['Dale Whitfield','Andrew Schneider','Tom Bennett','Erik Petersen','Miguel Alvarez','Chidi Okafor'] },
+  { id:'g2', name:'Young Families Small Group', members:14, joined:true, type:'Small group', day:'Wednesday', time:'6:30pm',
+    location:'Schneider home, Cedar Rapids', leader:'Marie Schneider', open:true,
+    desc:'Couples and single parents with kids under 12. We share a meal, work through a book together, and the kids play upstairs.',
+    roster:['Marie Schneider','Andrew Schneider','Rosa Alvarez','Miguel Alvarez','Julie Bennett','Tom Bennett','Kim Nguyen','Linh Nguyen','and 6 more'] },
+  { id:'g3', name:'Nursery Care', members:3, joined:false, type:'Serving', day:'Sunday', time:'9:00am',
+    location:'Room 104', leader:'Ngozi Okafor', open:true,
+    desc:'Care for infants and toddlers during both services. Background check required before your first shift.',
+    roster:['Ngozi Okafor','Marie Schneider','Sarah Petersen'] },
+  { id:'g4', name:"Men's Tuesday Morning Study", members:11, joined:false, type:'Bible study', day:'Tuesday', time:'6:15am',
+    location:'Fellowship Hall', leader:'Erik Petersen', open:true,
+    desc:'Early-morning study in the book of James. Coffee at 6:00, done by 7:15 so everyone makes it to work.',
+    roster:['Erik Petersen','Dale Whitfield','Tom Bennett','and 8 more'] },
+  { id:'g5', name:'Grief & Recovery', members:8, joined:false, type:'Support', day:'Thursday', time:'7:00pm',
+    location:'Room 210', leader:'Pastoral Care Team', open:true, confidential:true,
+    desc:'A confidential group for anyone walking through loss. Membership is never shown in the church directory.',
+    roster:[] },
+  { id:'g6', name:'Worship Team', members:9, joined:false, type:'Serving', day:'Thursday', time:'7:00pm',
+    location:'Sanctuary', leader:'Linh Nguyen', open:false,
+    desc:'Vocalists and instrumentalists. Auditions happen twice a year — the next round opens in September.',
+    roster:['Linh Nguyen','and 8 more'] },
+  { id:'g7', name:'Youth Ministry Volunteers', members:7, joined:false, type:'Serving', day:'Wednesday', time:'6:00pm',
+    location:'The Loft', leader:'Julie Bennett', open:true,
+    desc:'Adults who show up for 6th–12th graders on Wednesday nights. Background check required.',
+    roster:['Julie Bennett','Rosa Alvarez','and 5 more'] },
+];
+
+const EVENTS = [
+  { id:'e14', title:'Centering Prayer',         date:'2026-08-11', time:'7:30–8:15am', repeat:'Every Tuesday',
+    status:'Scheduled', cat:'Worship',    location:'Chapel', checkin:true,
+    desc:'Twenty minutes of silence, bookended by a short reading. Newcomers welcome.' },
+  { id:'e15', title:'Kids Summer Club',         date:'2026-08-11', time:'9–11:30am',   repeat:'Tuesdays through August',
+    status:'Scheduled', cat:'Kids',       location:'Kids Wing', checkin:true,
+    desc:'Games, crafts, and a Bible story for ages 2–11. Check in from your phone before you arrive, then scan your code at the kiosk.' },
+  { id:'e2',  title:'Youth Group Night',        date:'2026-08-12', time:'6:30–8:30pm', repeat:'Every Wednesday',
+    status:'Scheduled', cat:'Youth',      location:'The Loft', checkin:true, desc:'6th–12th grade. Dinner provided. Bring a friend.' },
+  { id:'e4',  title:'Elder Meeting',            date:'2026-08-13', time:'7–8:30pm',    repeat:'The second Thursday of every month',
+    status:'Scheduled', cat:'Leadership', location:'Room 210', desc:'Monthly elder board meeting. Members may request an agenda item through the office.' },
+  { id:'e3',  title:"Men's Breakfast",          date:'2026-08-15', time:'8–9:30am',
+    status:'Open',      cat:'Fellowship', location:'Fellowship Hall', rsvp:true,
+    desc:'Pancakes, sausage, and a short talk from Erik Petersen. $5 at the door.' },
+  { id:'e1',  title:'Sunday Worship',           date:'2026-08-16', time:'9 & 11am',    repeat:'Every Sunday',
+    status:'Scheduled', cat:'Worship',    location:'Sanctuary', checkin:true, desc:'Two identical services. Kids ministry and nursery available at both.' },
+  { id:'e13', title:'Centering Prayer',         date:'2026-08-18', time:'7:30–8:15am', repeat:'Every Tuesday',
+    status:'Scheduled', cat:'Worship',    location:'Chapel', desc:'Twenty minutes of silence, bookended by a short reading. Newcomers welcome.' },
+  { id:'e5',  title:'Choir Rehearsal',          date:'2026-08-20', time:'7pm',
+    status:'Cancelled', cat:'Worship',    location:'Sanctuary', desc:'Cancelled this week — rehearsal resumes August 27.' },
+  { id:'e6',  title:'All-Church Workday',       date:'2026-08-22', time:'9am–1pm',
+    status:'Open',      cat:'Serving',    location:'Church grounds', rsvp:true,
+    desc:'Mulch, paint, and window washing before fall programs start. Lunch provided.' },
+  { id:'e7',  title:'Sunday Worship',           date:'2026-08-23', time:'9 & 11am',    repeat:'Every Sunday',
+    status:'Scheduled', cat:'Worship',    location:'Sanctuary', checkin:true, desc:'Two identical services. Kids ministry and nursery available at both.' },
+  { id:'e8',  title:'Fall Festival',            date:'2026-08-29', time:'4–8pm',
+    status:'Open',      cat:'Fellowship', location:'North parking lot', rsvp:true,
+    desc:'Trunk-or-treat, chili cook-off, and inflatables. Free, but please RSVP so we can plan food.' },
+  { id:'e10', title:'Sunday Worship',           date:'2026-08-30', time:'9 & 11am',    repeat:'Every Sunday',
+    status:'Scheduled', cat:'Worship',    location:'Sanctuary', checkin:true, desc:'Two identical services.' },
+  { id:'e12', title:'Baptism Sunday',           date:'2026-09-06', time:'11am',
+    status:'Open',      cat:'Worship',    location:'Sanctuary', rsvp:true,
+    desc:'Being baptized? Submit the baptism request form and attend the August 30 class.' },
+  { id:'e11', title:'Sunday Worship',           date:'2026-08-09', time:'9 & 11am',    repeat:'Every Sunday',
+    status:'Completed', cat:'Worship',    location:'Sanctuary', desc:'Two identical services.' },
+  { id:'e9',  title:'VBS Wrap-Up Celebration',  date:'2026-08-09', time:'12pm',
+    status:'Completed', cat:'Kids',       location:'Fellowship Hall', desc:'Thanks to the 42 volunteers who made VBS happen this year.' },
+];
+
+const FORMS = [
+  { id:'f1', title:'Usher Signup for Sunday', desc:'Sign up to be an usher this Sunday.', status:'Published',
+    art:'🙋', range:'August 7 – 15, 2026', due:'August 15, 2026', featured:true, responses:2, submitted:false,
+    fields:[
+      { k:'name', label:'Your name', type:'text', prefill:'Andrew Schneider', required:true },
+      { k:'service', label:'Which service?', type:'select', options:['9:00 AM','11:00 AM','Both'], required:true },
+      { k:'date', label:'Which Sunday?', type:'select', options:['August 16','August 23','August 30'], required:true },
+      { k:'notes', label:'Anything we should know?', type:'textarea' },
+    ]},
+  { id:'f2', title:'Fall Festival Volunteer Signup', desc:'Help set up, run a booth, or clean up on August 29.',
+    status:'Published', art:'🍂', range:'July 28 – August 24, 2026', due:'August 24, 2026', responses:31, submitted:false,
+    fields:[
+      { k:'name', label:'Your name', type:'text', prefill:'Andrew Schneider', required:true },
+      { k:'shift', label:'Preferred shift', type:'select', options:['Setup (2–4 PM)','Booths (4–6 PM)','Booths (6–8 PM)','Teardown (8–9 PM)'], required:true },
+      { k:'family', label:'Household members serving with you', type:'checkgroup',
+        options:['Marie Schneider','Ellie Schneider','Sam Schneider'] },
+      { k:'notes', label:'Notes', type:'textarea' },
+    ]},
+  { id:'f4', title:'Baptism Request', desc:'Tell us you would like to be baptized on September 6 and we will follow up.',
+    status:'Published', art:'💧', range:'August 1 – 30, 2026', due:'August 30, 2026', responses:4, submitted:false,
+    fields:[
+      { k:'name', label:'Who is being baptized?', type:'text', required:true },
+      { k:'age', label:'Age', type:'text', required:true },
+      { k:'story', label:'Briefly, tell us your story', type:'textarea', required:true },
+      { k:'class', label:'Can you attend the August 30 class?', type:'select', options:['Yes','No','Need another date'], required:true },
+    ]},
+  { id:'f3', title:'Member Information Update', desc:'Confirm your address, phone, and household details for the fall directory.',
+    status:'Published', art:'🏡', range:'July 15 – September 1, 2026', due:'September 1, 2026', responses:118,
+    submitted:true, submittedOn:'August 3, 2026',
+    fields:[
+      { k:'address', label:'Mailing address', type:'text', prefill:'1420 Meadow Lark Dr, Cedar Rapids, IA 52402', required:true },
+      { k:'phone', label:'Primary phone', type:'text', prefill:'(319) 555-0148', required:true },
+      { k:'directory', label:'Include our household in the printed directory?', type:'select', options:['Yes','No'], required:true },
+    ]},
+  { id:'f5', title:'Child Dedication Registration', desc:'For the October dedication service.', status:'Draft',
+    art:'👶', range:'Not published', responses:0, submitted:false, fields:[] },
+];
+
+/* ------------------------------- state --------------------------------- */
+
+const TODAY = '2026-08-11';
+const state = {
+  screen:'find', church:null, user:null,
+  theme: (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light',
+  auth:{ mode:'create', step:1, email:'', pwd:'', pwd2:'', first:'', last:'', matched:false, code:'', err:'' },
+  churchQuery:'', groupFilter:'All', groupQuery:'', dirQuery:'',
+  calMonth:7, calYear:2026, calDay:null, calFilter:'All', calView:'list',
+  detailGroup:null, detailEvent:null, detailForm:null,
+  formValues:{}, formErr:{},
+  rsvps:{}, joined:{}, submitted:{},
+  checkins:{},        // eventId -> { code, at, people:{ personId:{room,label} } }
+  checkinSel:{},      // personId -> bool, for the in-progress check-in sheet
+  sheet:null, toast:null,
+};
+GROUPS.forEach(g=>{ if(g.joined) state.joined[g.id]=true; });
+FORMS.forEach(f=>{ if(f.submitted) state.submitted[f.id]={on:f.submittedOn}; });
+
+/* ------------------------------ helpers -------------------------------- */
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const initials = n => n.replace(/^The /,'').split(/\s+/).map(w=>w[0]).filter(c=>/[A-Za-z]/.test(c)).slice(0,2).join('').toUpperCase();
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+function hexToRgb(h){ const n=parseInt(h.slice(1),16); return [n>>16&255,n>>8&255,n&255]; }
+function lighten(h,amt){ const [r,g,b]=hexToRgb(h);
+  const f=v=>Math.round(v+(255-v)*amt);
+  return '#'+[f(r),f(g),f(b)].map(v=>v.toString(16).padStart(2,'0')).join(''); }
+
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', state.theme);
+  const c = state.church ? state.church.color : '#2563EB';
+  const [r,g,b] = hexToRgb(c);
+  const s = document.documentElement.style;
+  s.setProperty('--accent', c);
+  s.setProperty('--accent-text', state.theme==='dark' ? lighten(c,.32) : c);
+  s.setProperty('--accent-soft', `rgba(${r},${g},${b},${state.theme==='dark'?.18:.10})`);
+}
+
+function parseISO(iso){ const [y,m,d]=iso.split('-').map(Number); return new Date(Date.UTC(y,m-1,d)); }
+function dowName(iso){ return DAYS[parseISO(iso).getUTCDay()]; }
+function longDate(iso){ const [y,m,d]=iso.split('-').map(Number); return `${dowName(iso)}, ${MONTHS[m-1]} ${d}`; }
+function dayNum(iso){ return String(Number(iso.split('-')[2])); }
+function daysFrom(iso){ return Math.round((parseISO(iso)-parseISO(TODAY))/86400000); }
+function relLabel(iso){ const d=daysFrom(iso); return d===0?'Today':d===1?'Tomorrow':(d>1&&d<7)?`In ${d} days`:null; }
+function upcoming(n){
+  return EVENTS.filter(e=>e.date>=TODAY && e.status!=='Cancelled')
+    .sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time)).slice(0,n);
+}
+
+/* ------------------------------ check-in ------------------------------- */
+// Which room a person is assigned to, and whether they need a printed label.
+// Adults check in without one; anyone under 18 gets a label and is released
+// only to a guardian holding the household's security code.
+function assignment(m){
+  if(m.age < 3)  return { room:'Nursery',     place:'Room 104', label:true };
+  if(m.age < 6)  return { room:'Preschool',   place:'Room 106', label:true };
+  if(m.age < 12) return { room:'Kids Club',   place:'Room 110', label:true };
+  if(m.age < 18) return { room:'Youth',       place:'The Loft', label:true };
+  return { room:'Adult', place:'No label needed', label:false };
+}
+// Deterministic 3-letter security code so a given household+event always
+// shows the same code in the demo.
+function securityCode(eventId){
+  const seed = eventId + '|' + HOUSEHOLD.name;
+  let h = 0;
+  for(let i=0;i<seed.length;i++) h = (h*31 + seed.charCodeAt(i)) >>> 0;
+  const A='ABCDEFGHJKLMNPQRSTUVWXYZ';           // no I or O — misread on labels
+  // NB: parenthesise the shift — % binds tighter than >> in JS.
+  return [0,1,2].map(i => A[ ((h >>> (i*5)) % A.length) ]).join('');
+}
+const canCheckIn   = e => !!e.checkin && e.status !== 'Cancelled' && e.status !== 'Completed';
+const checkInOpen  = e => canCheckIn(e) && e.date === TODAY;
+const todaysCheckIns = () => EVENTS.filter(e => checkInOpen(e)).sort((a,b)=>a.time.localeCompare(b.time));
+
+function icon(name,size){
+  const p={
+    home:'M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z',
+    users:'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8m13 18v-2a4 4 0 0 0-3-3.87M16 3.13A4 4 0 0 1 16 11',
+    hands:'M12 21a8 8 0 0 0 8-8V7a2 2 0 1 0-4 0M8 7V5a2 2 0 1 1 4 0v6M8 7a2 2 0 1 0-4 0v6a8 8 0 0 0 4 7M16 7v4',
+    cal:'M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z',
+    form:'M9 2h6a2 2 0 0 1 2 2h1a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1a2 2 0 0 1 2-2zM9 13h6M9 17h4',
+    chev:'m9 18 6-6-6-6', back:'m15 18-6-6 6-6',
+    search:'M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16zM21 21l-4.35-4.35',
+    check:'m20 6-11 11-5-5',
+    pin:'M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0zM12 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4z',
+    clock:'M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zM12 6v6l4 2',
+    lock:'M5 11h14v10H5zM8 11V7a4 4 0 1 1 8 0v4',
+    chat:'M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z',
+    bell:'M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0',
+    grid:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',
+    list:'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',
+    moon:'M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z',
+    sun:'M12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zM12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4',
+    person:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0',
+    checkcirc:'M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zM8.5 12.2l2.4 2.4 4.6-4.9',
+    tag:'M20.6 13.4 12 22l-9-9V3h10l7.6 7.6a2 2 0 0 1 0 2.8zM7.5 7.5h.01',
+    logout:'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9',
+  }[name]||'';
+  const s = size||18;
+  return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="${p}"/></svg>`;
+}
+
+function go(screen, extra){ Object.assign(state, extra||{}); state.screen=screen; render(); window.scrollTo({top:0}); }
+function toast(msg){
+  state.toast=msg; render(); clearTimeout(toast._t);
+  // Dismiss by removing just the toast node — a full re-render here would
+  // discard anything the user is part-way through typing.
+  toast._t = setTimeout(()=>{
+    state.toast=null;
+    const el=document.querySelector('.toastwrap');
+    if(el) el.remove(); else render();
+  }, 2600);
+}
+
+/* ---------------------------- onboarding ------------------------------- */
+
+function viewFind(){
+  const q = state.churchQuery.trim().toLowerCase();
+  const results = q ? CHURCHES.filter(c=>(c.name+' '+c.city+' '+c.denom).toLowerCase().includes(q)) : CHURCHES.slice(0,2);
+  return `
+  <div class="onb"><div class="onb-in">
+    <div class="logo"><div class="m">C</div><div class="n">ChurchPlanner<b>PRO</b> Connect</div></div>
+    <h1 class="center" style="font-size:30px;margin-bottom:10px">Find your church</h1>
+    <p class="center muted" style="margin-bottom:32px;font-size:16px">
+      Search by name, city, or ZIP to reach your directory, groups, calendar, and forms.</p>
+    <div class="searchbar">${icon('search',18)}
+      <input class="input" id="churchQ" placeholder="Prairie Ridge, or 52402" value="${esc(state.churchQuery)}" autocomplete="off"></div>
+    ${!q?`<div class="tiny faint" style="font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 0 2px">Recently viewed</div>`:''}
+    <div class="feed">
+      ${results.map(c=>`
+        <button class="personrow" data-church="${c.id}">
+          <div class="circ" style="background:${c.color};color:#fff">${c.initials}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:650;font-size:16.5px">${esc(c.name)}</div>
+            <div class="sm muted">${esc(c.city)} · ${esc(c.denom)}</div>
+          </div>
+          <span class="faint">${icon('chev',18)}</span>
+        </button>`).join('')
+      || `<p class="muted center" style="padding:26px 0">No churches match “${esc(state.churchQuery)}”. Try a city or ZIP.</p>`}
+    </div>
+    <p class="center tiny faint" style="margin-top:34px">Your church must be on ChurchPlannerPro for its Connect page to appear.</p>
+  </div></div>`;
+}
+
+function viewAuth(){
+  const c = state.church, a = state.auth, isCreate = a.mode==='create';
+  let body='';
+
+  if(!isCreate){
+    body = `
+      <h1 style="font-size:26px;margin-bottom:26px">Sign in</h1>
+      <div class="field"><label class="label">Email</label>
+        <input class="input" id="a-email" type="email" value="${esc(a.email)}" placeholder="you@example.com" autocomplete="username"></div>
+      <div class="field"><label class="label">Password</label>
+        <input class="input" id="a-pwd" type="password" value="${esc(a.pwd)}" autocomplete="current-password"></div>
+      ${a.err?`<div class="err" style="margin:-10px 0 16px">${esc(a.err)}</div>`:''}
+      <button class="btn btn-accent btn-block" id="a-signin">Sign in</button>
+      <p class="center sm muted" style="margin-top:20px">New here?
+        <a data-mode="create" style="cursor:pointer;font-weight:650;color:var(--accent-text)">Create an account</a></p>
+      <p class="center tiny faint" style="margin-top:22px">Demo: any email and a 6-character password.</p>`;
+  } else if(a.step===1){
+    body = `
+      <div class="steps"><i class="on"></i><i></i><i></i></div>
+      <h1 style="font-size:26px;margin-bottom:8px">Create your account</h1>
+      <p class="muted" style="margin-bottom:28px">We'll check whether ${esc(c.short)} already has a record for you.</p>
+      <div class="field"><label class="label">Email address</label>
+        <input class="input" id="a-email" type="email" value="${esc(a.email)}" placeholder="you@example.com" autocomplete="username"></div>
+      ${a.err?`<div class="err" style="margin:-10px 0 16px">${esc(a.err)}</div>`:''}
+      <button class="btn btn-accent btn-block" id="a-next1">Continue</button>
+      <p class="center sm muted" style="margin-top:20px">Already have an account?
+        <a data-mode="signin" style="cursor:pointer;font-weight:650;color:var(--accent-text)">Sign in</a></p>
+      <p class="center tiny faint" style="margin-top:22px">Try <b>andrew.schneider@example.com</b> for the “we found you” path,
+        or any other address for a new record.</p>`;
+  } else if(a.step===2){
+    body = `
+      <div class="steps"><i class="on"></i><i class="on"></i><i></i></div>
+      ${a.matched ? `
+        <div class="notice ok">
+          <div style="display:flex;align-items:center;gap:14px">
+            <div class="circ" style="background:#22C55E;color:#fff">${initials(ME.first+' '+ME.last)}</div>
+            <div><div style="font-weight:700">We found you</div>
+              <div class="sm muted">${esc(ME.first)} ${esc(ME.last)} · ${esc(ME.phone)}</div></div>
+          </div>
+          <p class="sm muted" style="margin-top:12px">Your household and group memberships will be linked automatically.</p>
+        </div>` : `
+        <div class="notice">
+          <div style="font-weight:700;margin-bottom:5px">New to ${esc(c.short)}?</div>
+          <p class="sm muted">We didn't find a record for that email, so we'll create one and a staff member will confirm it.</p>
+        </div>
+        <div class="field"><label class="label">First name</label><input class="input" id="a-first" value="${esc(a.first)}"></div>
+        <div class="field"><label class="label">Last name</label><input class="input" id="a-last" value="${esc(a.last)}"></div>`}
+      <div class="field"><label class="label">Create a password</label>
+        <input class="input" id="a-pwd" type="password" value="${esc(a.pwd)}" placeholder="At least 8 characters" autocomplete="new-password"></div>
+      <div class="field"><label class="label">Confirm password</label>
+        <input class="input" id="a-pwd2" type="password" value="${esc(a.pwd2)}" autocomplete="new-password"></div>
+      ${a.err?`<div class="err" style="margin:-10px 0 16px">${esc(a.err)}</div>`:''}
+      <button class="btn btn-accent btn-block" id="a-next2">Continue</button>
+      <button class="btn btn-text btn-block" id="a-back" style="margin-top:6px">Back</button>`;
+  } else {
+    body = `
+      <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+      <h1 style="font-size:26px;margin-bottom:8px">Verify your email</h1>
+      <p class="muted" style="margin-bottom:28px">We sent a 6-digit code to <b>${esc(a.email)}</b>.</p>
+      <div class="field">
+        <input class="input center" id="a-code" inputmode="numeric" maxlength="6" placeholder="000000"
+          style="letter-spacing:.45em;font-size:26px;font-weight:700;padding:18px 16px" value="${esc(a.code)}"></div>
+      ${a.err?`<div class="err" style="margin:-10px 0 16px">${esc(a.err)}</div>`:''}
+      <button class="btn btn-accent btn-block" id="a-finish">Create account</button>
+      <button class="btn btn-text btn-block" id="a-back" style="margin-top:6px">Back</button>
+      <p class="center tiny faint" style="margin-top:22px">Demo: any six digits.</p>`;
+  }
+
+  return `
+  <div class="onb"><div class="onb-in" style="padding-top:26px">
+    <button class="backbtn" id="a-changechurch">${icon('back',18)} Choose a different church</button>
+    <div style="display:flex;align-items:center;gap:14px;padding:18px 0 26px;border-bottom:1px solid var(--line);margin-bottom:30px">
+      <div class="circ" style="background:${c.color};color:#fff">${c.initials}</div>
+      <div><div style="font-weight:700;font-size:17px">${esc(c.name)}</div>
+        <div class="sm muted">${esc(c.city)} · ${esc(c.times)}</div></div>
+    </div>
+    ${body}
+    <p class="center tiny faint" style="margin-top:30px">Prototype only — nothing you type is sent anywhere or stored.</p>
+  </div></div>`;
+}
+
+/* ------------------------------- shell --------------------------------- */
+
+const NAV = [
+  { key:'home', label:'Home', ic:'home', title:'Home' },
+  { key:'family', label:'Family', ic:'users', title:'My Family' },
+  { key:'groups', label:'Groups', ic:'hands', title:'Groups' },
+  { key:'calendar', label:'Calendar', ic:'cal', title:MONTHS[7]+' 2026' },
+  { key:'forms', label:'Forms', ic:'form', title:'Forms' },
+];
+const TAB_OF = { home:'home', family:'family', groups:'groups', group:'groups',
+  calendar:'calendar', event:'calendar', forms:'forms', form:'forms', profile:'home', checkin:'home' };
+const TITLE_OF = { home:'Home', family:'My Family', groups:'Groups', group:'Group',
+  calendar:MONTHS[7]+' 2026', event:'Event', forms:'Forms', form:'Form', profile:'Account', checkin:'Check-In' };
+const IS_DETAIL = s => ['group','event','form','profile','checkin'].includes(s);
+
+function viewShell(inner, wide){
+  const tab = TAB_OF[state.screen];
+  const title = state.screen==='calendar' ? MONTHS[state.calMonth]+' '+state.calYear : TITLE_OF[state.screen];
+  return `
+    <header class="topbar"><div class="topbar-in">
+      <div>${ IS_DETAIL(state.screen)
+        ? `<button class="iconbtn" data-nav="${tab}" aria-label="Back">${icon('back',24)}</button>`
+        : `<button class="ava" data-nav="profile">${initials(state.user.first+' '+state.user.last)}</button>` }</div>
+      <div class="title">${esc(title)}</div>
+      <div class="right">
+        <button class="iconbtn" id="nudge-chat" aria-label="Messages">${icon('chat',22)}</button>
+        <button class="iconbtn" id="nudge-bell" aria-label="Notifications">${icon('bell',22)}</button>
+      </div>
+    </div></header>
+    <nav class="desknav"><div class="desknav-in">
+      ${NAV.map(n=>`<a data-nav="${n.key}" class="${tab===n.key?'on':''}">${esc(n.label)}</a>`).join('')}
+      <a data-nav="profile" style="margin-left:auto" class="${state.screen==='profile'?'on':''}">Account</a>
+    </div></nav>
+    <main class="fade"><div class="wrap${wide?' wide':''}">${inner}
+      <div class="flag">Prototype · mock data</div></div></main>
+    <nav class="tabs">
+      ${NAV.map(n=>`<button data-nav="${n.key}" class="${tab===n.key?'on':''}">${icon(n.ic,23)}<span>${esc(n.label)}</span></button>`).join('')}
+    </nav>`;
+}
+
+/* --------------------------- shared partials --------------------------- */
+
+function eventEntry(e, showDate){
+  const rel = relLabel(e.date);
+  const meta = showDate
+    ? `${longDate(e.date)}, ${e.time}` : e.time;
+  return `
+    <button class="entry" data-event="${e.id}">
+      <div class="t ${e.status==='Cancelled'?'off':''}">${esc(e.title)}</div>
+      <div class="m">${esc(meta)}${e.repeat?` <i>| ${esc(e.repeat)}</i>`:''}</div>
+      ${e.location?`<div class="loc">${icon('pin',14)}${esc(e.location)}</div>`:''}
+      ${(state.rsvps[e.id]||e.status==='Cancelled'||rel==='Today')?`<div style="margin-top:9px">
+        ${state.rsvps[e.id]?`<span class="tag a">${icon('check')} Going</span>`:''}
+        ${e.status==='Cancelled'?`<span class="tag bad">Cancelled</span>`:''}
+        ${rel==='Today'&&e.status!=='Cancelled'?`<span class="tag">Today</span>`:''}
+      </div>`:''}
+    </button>`;
+}
+
+/* -------------------------------- home --------------------------------- */
+
+function viewHome(){
+  const c = state.church;
+  const open = FORMS.filter(f=>f.status==='Published' && !state.submitted[f.id]);
+  const mine = GROUPS.filter(g=>state.joined[g.id]);
+  return `
+    <div class="banner">
+      <div class="mark">${c.initials}</div>
+      <div class="nm">${esc(c.short)}</div>
+      <div class="sub">${esc(c.denom==='Catholic'?'Catholic Parish':'Church')}</div>
+    </div>
+    <p class="welcome">${esc(c.welcome)}</p>
+
+    ${(()=>{ const today = todaysCheckIns(); if(!today.length) return '';
+      const done = today.filter(e=>state.checkins[e.id]).length;
+      return `
+      <div class="rule"></div>
+      <h2 class="sechead">Happening Today</h2>
+      <div class="feed">
+        ${today.map(e=>{ const ci=state.checkins[e.id];
+          return `<button class="entry" data-event="${e.id}">
+            <div class="t">${esc(e.title)}</div>
+            <div class="m">${esc(e.time)}</div>
+            <div class="loc">${icon('pin',14)}${esc(e.location)}</div>
+            <div style="margin-top:9px">${ci
+              ? `<span class="tag a">${icon('check')} Checked in · ${esc(ci.code)}</span>`
+              : `<span class="tag">Check-in open</span>`}</div>
+          </button>`;}).join('')}
+      </div>
+      <div class="center" style="padding-top:18px">
+        <button class="btn ${done?'btn-outline':'btn-accent'} btn-sm" data-nav="checkin">
+          ${done? 'View check-ins' : 'Check in'}</button></div>`; })()}
+
+    <div class="rule"></div>
+    <h2 class="sechead">Upcoming Events</h2>
+    <div class="feed">${upcoming(5).map(e=>eventEntry(e,true)).join('')}</div>
+    <div class="center" style="padding-top:18px"><button class="btn btn-outline btn-sm" data-nav="calendar">See full calendar</button></div>
+
+    ${open.length?`
+    <div class="rule"></div>
+    <h2 class="sechead">Open Signups</h2>
+    <div class="feed">
+      ${open.slice(0,3).map(f=>`
+        <button class="entry" data-form="${f.id}">
+          <div class="t">${esc(f.title)}</div>
+          <div class="m"><i>${f.due?'Closes '+esc(f.due):'No deadline'}</i></div>
+        </button>`).join('')}
+    </div>
+    <div class="center" style="padding-top:18px"><button class="btn btn-outline btn-sm" data-nav="forms">See all forms</button></div>`:''}
+
+    <div class="rule"></div>
+    <h2 class="sechead">Your Groups</h2>
+    <div class="feed">
+      ${mine.map(g=>`
+        <button class="entry" data-group="${g.id}">
+          <div class="t">${esc(g.name)}</div>
+          <div class="m">${esc(g.day)}s, ${esc(g.time)}</div>
+          <div class="loc">${icon('pin',14)}${esc(g.location)}</div>
+        </button>`).join('') || `<p class="muted center" style="padding:10px 0 4px">You haven't joined a group yet.</p>`}
+    </div>
+    <div class="center" style="padding-top:18px"><button class="btn btn-outline btn-sm" data-nav="groups">Find a group</button></div>
+
+    <div class="rule"></div>
+    <h2 class="sechead">${esc(HOUSEHOLD.name)}</h2>
+    <div style="display:flex;justify-content:center;gap:9px;flex-wrap:wrap">
+      ${HOUSEHOLD.members.map(m=>`<div class="circ tint" title="${esc(m.name)}">${initials(m.name)}</div>`).join('')}
+    </div>
+    <div class="center" style="padding-top:20px"><button class="btn btn-outline btn-sm" data-nav="family">View household</button></div>`;
+}
+
+/* ------------------------------- family -------------------------------- */
+
+function viewFamily(){
+  const q = state.dirQuery.trim().toLowerCase();
+  const dir = DIRECTORY.filter(h=>!q||(h.name+' '+h.city+' '+h.people.join(' ')).toLowerCase().includes(q));
+  return `
+    <div class="pagehead"><h1>${esc(HOUSEHOLD.name)}</h1><p>${esc(HOUSEHOLD.address)}</p></div>
+    <div class="feed" style="margin-top:6px">
+      ${HOUSEHOLD.members.map(m=>`
+        <button class="personrow" data-person="${m.id}">
+          <div class="circ ${m.me?'on':'tint'}">${initials(m.name)}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:650;font-size:16.5px">${esc(m.name)}</div>
+            <div class="sm muted">${esc(m.role)} · ${m.age} yrs${m.grade?' · '+esc(m.grade):''}</div>
+          </div>
+          <span class="faint">${icon('chev',18)}</span>
+        </button>`).join('')}
+    </div>
+    <div style="padding-top:20px"><button class="btn btn-outline btn-block" id="edit-household">Request a change</button></div>
+
+    <div class="rule"></div>
+    <h2 class="sechead">Privacy</h2>
+    <p class="center muted sm" style="margin:-12px 0 18px">What other members of ${esc(state.church.short)} can see.</p>
+    <div>
+      ${[['Show our household in the directory',true],['Share email addresses',true],
+         ['Share phone numbers',true],["Share children's names and ages",false]].map((r,i)=>`
+        <div class="kv"><span class="k">${esc(r[0])}</span>
+          <span class="v"><span class="tag ${r[1]?'a':''}">${r[1]?'On':'Off'}</span></span></div>`).join('')}
+    </div>
+
+    <div class="rule"></div>
+    <h2 class="sechead">Church Directory</h2>
+    <div class="searchbar">${icon('search',18)}
+      <input class="input" id="dirQ" placeholder="Search households" value="${esc(state.dirQuery)}"></div>
+    <div class="feed">
+      ${dir.map(h=>`
+        <div class="personrow" style="cursor:default">
+          <div class="circ">${initials(h.name)}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:650;font-size:16.5px">${esc(h.name)}</div>
+            <div class="sm muted">${esc(h.people.join(', '))}</div>
+            <div class="tiny faint" style="margin-top:3px">${h.shared?esc(h.city)+' · '+esc(h.phone):'Contact info private'}</div>
+          </div>
+        </div>`).join('') || `<p class="muted center" style="padding:22px 0">No households match that search.</p>`}
+    </div>
+    <p class="center tiny faint" style="margin-top:20px">Only households that opted in appear here.</p>`;
+}
+
+/* ---------------------------- check-in sheets -------------------------- */
+
+function sheetCheckin(eventId){
+  const e = EVENTS.find(x=>x.id===eventId);
+  const picked = HOUSEHOLD.members.filter(m=>state.checkinSel[m.id]);
+  return `
+    <div class="grab"></div>
+    <div style="margin-bottom:20px">
+      <h2 style="font-size:22px;margin-bottom:6px">Who's checking in?</h2>
+      <p class="muted sm">${esc(e.title)} · ${esc(e.time)}</p>
+    </div>
+    <div class="feed">
+      ${HOUSEHOLD.members.map(m=>{
+        const a = assignment(m), on = !!state.checkinSel[m.id];
+        return `<button class="personrow" data-cisel="${m.id}">
+          <div class="circ ${on?'on':'tint'}">${on?icon('check',18):initials(m.name)}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:650;font-size:16.5px">${esc(m.name)}</div>
+            <div class="sm muted">${esc(a.room)}${a.label?' · '+esc(a.place):''}</div>
+          </div>
+          <span class="tag ${on?'a':''}">${on?'Selected':'Tap to add'}</span>
+        </button>`;}).join('')}
+    </div>
+    <div style="padding-top:22px">
+      <button class="btn btn-accent btn-block" data-cigo="${e.id}" ${picked.length?'':'disabled'}>
+        ${picked.length ? `Check in ${picked.length} ${picked.length===1?'person':'people'}` : 'Select someone to check in'}
+      </button>
+      <button class="btn btn-text btn-block" data-sheet-close style="margin-top:4px">Cancel</button>
+    </div>`;
+}
+
+function sheetCheckinDone(eventId){
+  const e = EVENTS.find(x=>x.id===eventId), ci = state.checkins[eventId];
+  if(!ci) return '';
+  const kids = Object.keys(ci.people).filter(id=>ci.people[id].label);
+  return `
+    <div class="grab"></div>
+    <div class="center" style="margin-bottom:24px">
+      <div class="circ lg on" style="margin:0 auto 16px">${icon('check',26)}</div>
+      <h2 style="font-size:22px;margin-bottom:6px">Checked in</h2>
+      <p class="muted sm">${esc(e.title)} · ${esc(ci.at)}</p>
+    </div>
+    ${kids.length?`
+      <div class="codebox">
+        <div class="lbl">Security code</div>
+        <div class="code">${esc(ci.code)}</div>
+        <p class="tiny muted" style="margin-top:12px">
+          Show this at pickup. ${kids.length===1?'This child is':'These children are'} released only to someone with this code.</p>
+      </div>`:''}
+    <div class="feed">
+      ${Object.keys(ci.people).map(id=>{
+        const m = HOUSEHOLD.members.find(x=>x.id===id), p = ci.people[id];
+        return `<div class="personrow" style="cursor:default">
+          <div class="circ tint">${initials(m.name)}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:650;font-size:16.5px">${esc(m.name)}</div>
+            <div class="sm muted">${esc(p.room)} · ${esc(p.place)}</div>
+          </div>
+          ${p.label?`<span class="tag a">Label ${p.label}</span>`:`<span class="tag">${icon('check')} In</span>`}
+        </div>`;}).join('')}
+    </div>
+    <div style="padding-top:22px">
+      <button class="btn btn-outline btn-block" data-ciout="${e.id}">Check everyone out</button>
+      <button class="btn btn-text btn-block" data-sheet-close style="margin-top:4px">Done</button>
+    </div>`;
+}
+
+function sheetPerson(id){
+  const m = HOUSEHOLD.members.find(x=>x.id===id); if(!m) return '';
+  const rows = [['Age', m.age+' years old'],['Birthday', m.birthday],
+    m.grade?['Grade',m.grade]:null, m.email?['Email',m.email]:null, m.phone?['Phone',m.phone]:null].filter(Boolean);
+  return `
+    <div class="grab"></div>
+    <div class="center" style="margin-bottom:22px">
+      <div class="circ lg ${m.me?'on':'tint'}" style="margin:0 auto 14px">${initials(m.name)}</div>
+      <h2 style="font-size:22px">${esc(m.name)}</h2>
+      <p class="muted sm" style="margin-top:4px">${esc(m.role)}</p>
+    </div>
+    ${rows.map(r=>`<div class="kv"><span class="k">${esc(r[0])}</span><span class="v">${esc(r[1])}</span></div>`).join('')}
+    ${m.tags&&m.tags.length?`<div style="padding:20px 0 4px">
+      <div class="tiny faint" style="font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px">Involvement</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">${m.tags.map(t=>`<span class="tag a">${esc(t)}</span>`).join('')}</div></div>`:''}
+    <button class="btn btn-outline btn-block" data-sheet-close style="margin-top:22px">Close</button>`;
+}
+
+/* ------------------------------- groups -------------------------------- */
+
+function groupEntry(g){
+  return `
+    <button class="entry" data-group="${g.id}">
+      <div class="t">${esc(g.name)}</div>
+      <div class="m">${esc(g.day)}s, ${esc(g.time)} <i>| ${g.members} members</i></div>
+      <div class="loc">${icon('pin',14)}${esc(g.location)}</div>
+      ${(g.confidential||!g.open||state.joined[g.id])?`<div style="margin-top:9px">
+        ${state.joined[g.id]?`<span class="tag a">${icon('check')} Joined</span>`:''}
+        ${g.confidential?`<span class="tag">${icon('lock')} Confidential</span>`:''}
+        ${!g.open?`<span class="tag warn">Closed</span>`:''}</div>`:''}
+    </button>`;
+}
+
+function viewGroups(){
+  const types = ['All','Small group','Serving','Bible study','Support'];
+  const q = state.groupQuery.trim().toLowerCase();
+  const mine = GROUPS.filter(g=>state.joined[g.id]);
+  const rest = GROUPS.filter(g=>!state.joined[g.id])
+    .filter(g=>state.groupFilter==='All'||g.type===state.groupFilter)
+    .filter(g=>!q||(g.name+' '+g.desc+' '+g.day+' '+g.leader).toLowerCase().includes(q));
+  return `
+    <div class="pagehead"><h1>Groups</h1><p>Find a group by day, stage of life, or the way you want to serve.</p></div>
+    ${mine.length?`<h2 class="sechead" style="margin-top:24px">Your Groups</h2>
+      <div class="feed">${mine.map(groupEntry).join('')}</div><div class="rule"></div>`:'<div class="gap"></div>'}
+    <div class="searchbar">${icon('search',18)}
+      <input class="input" id="groupQ" placeholder="Search groups" value="${esc(state.groupQuery)}"></div>
+    <div class="pills">${types.map(t=>`<button class="pill ${state.groupFilter===t?'on':''}" data-gfilter="${esc(t)}">${esc(t)}</button>`).join('')}</div>
+    <div class="feed">${rest.map(groupEntry).join('') || `<p class="muted center" style="padding:30px 0">No groups match. Try clearing a filter.</p>`}</div>`;
+}
+
+function viewGroup(){
+  const g = GROUPS.find(x=>x.id===state.detailGroup); if(!g) return '';
+  const joined = !!state.joined[g.id];
+  return `
+    <div style="padding:18px 0 4px">
+      <h1 style="font-size:29px;margin-bottom:8px">${esc(g.name)}</h1>
+      <p class="muted">${esc(g.type)} · ${g.members} members</p>
+    </div>
+    <p style="padding:18px 0 6px;font-size:16.5px;line-height:1.55">${esc(g.desc)}</p>
+    <div style="padding-top:10px">
+      <div class="kv"><span class="k">Meets</span><span class="v">${esc(g.day)}s at ${esc(g.time)}</span></div>
+      <div class="kv"><span class="k">Location</span><span class="v">${esc(g.location)}</span></div>
+      <div class="kv"><span class="k">Led by</span><span class="v">${esc(g.leader)}</span></div>
+    </div>
+    <div style="padding-top:24px">
+      ${joined
+        ? `<button class="btn btn-outline btn-block" data-leave="${g.id}">Leave group</button>
+           <p class="center sm muted" style="margin-top:14px">${icon('check',15)} You're in this group</p>`
+        : g.open
+          ? `<button class="btn btn-accent btn-block" data-join="${g.id}">Request to join</button>`
+          : `<button class="btn btn-outline btn-block" disabled>Not accepting members right now</button>`}
+    </div>
+    <div class="rule"></div>
+    <h2 class="sechead">Members</h2>
+    ${g.confidential
+      ? `<p class="center muted" style="padding:6px 0 10px">${icon('lock',15)} Member names are hidden for confidential groups.</p>`
+      : `<div class="feed">${g.roster.map(n=>`
+          <div class="personrow" style="cursor:default">
+            <div class="circ sm ${n.startsWith('and ')?'':'tint'}">${n.startsWith('and ')?'+':initials(n)}</div>
+            <div style="flex:1"><span style="font-weight:600">${esc(n)}</span></div>
+            ${n===g.leader?`<span class="tag a">Leader</span>`:''}
+          </div>`).join('')}</div>`}`;
+}
+
+/* ------------------------------ calendar ------------------------------- */
+
+function viewCalendar(){
+  const y=state.calYear, m=state.calMonth;
+  const cats=['All','Worship','Fellowship','Serving','Youth','Kids','Leadership'];
+  const pass = e => state.calFilter==='All' || e.cat===state.calFilter;
+  const monthKey = `${y}-${String(m+1).padStart(2,'0')}`;
+  const pastMonth = monthKey < TODAY.slice(0,7);
+  const listed = EVENTS.filter(e=>e.date.startsWith(monthKey)&&pass(e))
+    .filter(e=>state.calDay ? e.date===state.calDay : (pastMonth || e.date>=TODAY))
+    .sort((a,b)=>a.date.localeCompare(b.date));
+
+  // agenda grouped by date
+  const groups=[]; let last=null;
+  listed.forEach(e=>{ if(e.date!==last){ groups.push({date:e.date, items:[]}); last=e.date; } groups[groups.length-1].items.push(e); });
+
+  let grid='';
+  if(state.calView==='grid'){
+    const first=new Date(Date.UTC(y,m,1)).getUTCDay();
+    const days=new Date(Date.UTC(y,m+1,0)).getUTCDate();
+    const prev=new Date(Date.UTC(y,m,0)).getUTCDate();
+    const cells=[];
+    for(let i=0;i<first;i++) cells.push({n:prev-first+1+i,out:true});
+    for(let d=1;d<=days;d++) cells.push({n:d,iso:`${monthKey}-${String(d).padStart(2,'0')}`});
+    while(cells.length%7) cells.push({n:cells.length%7,out:true});
+    grid = `<div class="cal" style="margin-bottom:10px">
+      ${['S','M','T','W','T','F','S'].map(d=>`<div class="dow">${d}</div>`).join('')}
+      ${cells.map(c=>{
+        if(c.out) return `<div class="day out"><span class="n">${c.n}</span></div>`;
+        const evs=EVENTS.filter(e=>e.date===c.iso&&pass(e));
+        const cls=['day',c.iso===TODAY?'today':'',state.calDay===c.iso?'sel':''].filter(Boolean).join(' ');
+        return `<button class="${cls}" data-day="${c.iso}"><span class="n">${c.n}</span>
+          <span class="dots">${evs.slice(0,3).map(()=>'<i></i>').join('')}</span></button>`;
+      }).join('')}
+    </div>`;
+  }
+
+  return `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0 6px">
+      <div style="display:flex;gap:2px">
+        <button class="iconbtn" data-cal="-1" aria-label="Previous month">${icon('back',20)}</button>
+        <button class="iconbtn" data-cal="1" aria-label="Next month">${icon('chev',20)}</button>
+      </div>
+      <button class="iconbtn" id="calview" aria-label="Toggle view">${icon(state.calView==='list'?'grid':'list',20)}</button>
+    </div>
+    <div class="pills">${cats.map(c=>`<button class="pill ${state.calFilter===c?'on':''}" data-cfilter="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+    ${grid}
+    ${state.calDay?`<div style="padding:6px 0 2px"><button class="btn btn-text" data-day="">Clear ${longDate(state.calDay)} filter</button></div>`:''}
+    <div class="feed">
+      ${groups.map(gr=>`
+        <div class="datehead">${esc(longDate(gr.date))}</div>
+        ${gr.items.map(e=>eventEntry(e,false)).join('')}`).join('')
+      || `<p class="muted center" style="padding:40px 0">Nothing scheduled with those filters.</p>`}
+    </div>`;
+}
+
+function checkInBlock(e){
+  const ci = state.checkins[e.id];
+  const open = checkInOpen(e);
+  const n = ci ? Object.keys(ci.people).length : 0;
+  return `
+    <div class="rule"></div>
+    <h2 class="sechead">Check-In</h2>
+    ${ci ? `
+      <div class="codebox" style="margin-bottom:20px">
+        <div class="lbl">${n} checked in · security code</div>
+        <div class="code">${esc(ci.code)}</div>
+      </div>
+      <button class="btn btn-outline btn-block" data-ciview="${e.id}">View check-in details</button>`
+    : open ? `
+      <p class="center muted" style="margin:-10px 0 20px">
+        Check in from here, then scan your code at the kiosk when you arrive.</p>
+      <button class="btn btn-accent btn-block" data-cistart="${e.id}">Check in my household</button>`
+    : `
+      <p class="center muted" style="margin:-10px 0 18px">
+        Check-in opens the morning of the event.</p>
+      <button class="btn btn-outline btn-block" disabled>Opens ${esc(dowName(e.date))}, ${esc(MONTHS[+e.date.split('-')[1]-1])} ${esc(dayNum(e.date))}</button>`}`;
+}
+
+function viewCheckin(){
+  const today = todaysCheckIns();
+  return `
+    <div class="pagehead"><h1>Check-In</h1><p>Everything at ${esc(state.church.short)} open for check-in today.</p></div>
+    <div class="gap-sm"></div>
+    <div class="feed">
+      ${today.map(e=>{
+        const ci = state.checkins[e.id];
+        const n = ci ? Object.keys(ci.people).length : 0;
+        return `<button class="entry" data-event="${e.id}">
+          <div class="t">${esc(e.title)}</div>
+          <div class="m">${esc(e.time)}</div>
+          <div class="loc">${icon('pin',14)}${esc(e.location)}</div>
+          <div style="margin-top:9px">${ci
+            ? `<span class="tag a">${icon('check')} ${n} checked in · ${esc(ci.code)}</span>`
+            : `<span class="tag">Open now</span>`}</div>
+        </button>`;}).join('')
+      || `<p class="muted center" style="padding:40px 0">Nothing is open for check-in today.</p>`}
+    </div>
+    <p class="center tiny faint" style="margin-top:26px">
+      Anyone under 18 gets a printed label and is released only to a guardian with the household's security code.</p>`;
+}
+
+function viewEvent(){
+  const e = EVENTS.find(x=>x.id===state.detailEvent); if(!e) return '';
+  const going = !!state.rsvps[e.id];
+  return `
+    <div style="padding:18px 0 4px">
+      <h1 style="font-size:29px;margin-bottom:10px" class="${e.status==='Cancelled'?'faint':''}">${esc(e.title)}</h1>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span class="tag">${esc(e.cat)}</span>
+        ${e.status==='Cancelled'?`<span class="tag bad">Cancelled</span>`:''}
+        ${going?`<span class="tag a">${icon('check')} Going</span>`:''}
+      </div>
+    </div>
+    <div style="padding-top:16px">
+      <div class="kv"><span class="k">Date</span><span class="v">${esc(longDate(e.date))}, ${e.date.slice(0,4)}</span></div>
+      <div class="kv"><span class="k">Time</span><span class="v">${esc(e.time)}</span></div>
+      ${e.repeat?`<div class="kv"><span class="k">Repeats</span><span class="v">${esc(e.repeat)}</span></div>`:''}
+      <div class="kv"><span class="k">Location</span><span class="v">${esc(e.location)}</span></div>
+    </div>
+    <p style="padding:22px 0 6px;font-size:16.5px;line-height:1.55">${esc(e.desc)}</p>
+    <div style="padding-top:16px">
+      ${e.status==='Cancelled' ? `<p class="center muted">This event was cancelled.</p>`
+        : e.rsvp ? (going
+            ? `<button class="btn btn-outline btn-block" data-unrsvp="${e.id}">Cancel RSVP</button>`
+            : `<button class="btn btn-accent btn-block" data-rsvp="${e.id}">RSVP for my household</button>`)
+        : !e.checkin ? `<p class="center muted sm">No RSVP needed — just show up.</p>` : ''}
+    </div>
+    ${canCheckIn(e) ? checkInBlock(e) : ''}
+    ${e.rsvp?`
+      <div class="rule"></div>
+      <h2 class="sechead">Who's Coming</h2>
+      <div class="feed">
+        ${HOUSEHOLD.members.map(m=>`
+          <div class="personrow" style="cursor:default">
+            <div class="circ sm ${going?'on':''}">${initials(m.name)}</div>
+            <div style="flex:1"><span style="font-weight:600">${esc(m.name)}</span></div>
+            <span class="tag ${going?'a':''}">${going?'Going':'Not yet'}</span>
+          </div>`).join('')}
+      </div>`:''}`;
+}
+
+/* -------------------------------- forms -------------------------------- */
+
+function formCard(f){
+  const done = state.submitted[f.id];
+  return `
+    <button class="scard" data-form="${f.id}">
+      <div class="art" style="background:linear-gradient(140deg, var(--accent), ${lighten(state.church.color,.35)})">${f.art}</div>
+      <div class="body">
+        <h3>${esc(f.title)}</h3>
+        <div class="meta">${esc(f.range)}</div>
+        <div class="foot">
+          ${done?`<span class="tag a">${icon('check')} Submitted ${esc(done.on||'just now')}</span>`
+                :f.featured?`<span class="tag warn">★ Featured</span>`:''}
+          ${!done&&f.due?`<span class="tag">Closes ${esc(f.due)}</span>`:''}
+        </div>
+      </div>
+    </button>`;
+}
+
+function viewForms(){
+  const open = FORMS.filter(f=>f.status==='Published' && !state.submitted[f.id]);
+  const done = FORMS.filter(f=>state.submitted[f.id]);
+  return `
+    <div class="pagehead"><h1>Forms</h1><p>Sign-ups, registrations, and record updates from ${esc(state.church.short)}.</p></div>
+    <div class="gap-sm"></div>
+    ${open.map(formCard).join('') || `<p class="muted center" style="padding:30px 0">You're all caught up.</p>`}
+    ${done.length?`<div class="rule"></div><h2 class="sechead">Submitted</h2>${done.map(formCard).join('')}`:''}
+    <p class="center tiny faint" style="margin-top:26px">
+      Your church builds these in ChurchPlannerPro. Answers flow back into your household record with staff approval.
+      Draft forms never appear here.</p>`;
+}
+
+function viewForm(){
+  const f = FORMS.find(x=>x.id===state.detailForm); if(!f) return '';
+  const sub = state.submitted[f.id];
+  if(sub) return `
+    <div class="center" style="padding:56px 0 0">
+      <div class="circ lg on" style="margin:0 auto 20px">${icon('check',26)}</div>
+      <h1 style="font-size:26px;margin-bottom:10px">Submitted</h1>
+      <p class="muted" style="margin-bottom:6px">${esc(f.title)}</p>
+      <p class="sm faint" style="margin-bottom:32px">Received ${esc(sub.on||'just now')}. Your church can see your response in ChurchPlannerPro.</p>
+      <button class="btn btn-outline" data-nav="forms">Back to forms</button>
+    </div>`;
+
+  const val = k => state.formValues[k]!==undefined ? state.formValues[k] : (f.fields.find(x=>x.k===k)?.prefill || '');
+  return `
+    <div style="padding:18px 0 4px">
+      <h1 style="font-size:28px;margin-bottom:10px">${esc(f.title)}</h1>
+      <p class="muted" style="font-size:16.5px">${esc(f.desc)}</p>
+      ${f.due?`<div style="margin-top:14px"><span class="tag">Closes ${esc(f.due)}</span></div>`:''}
+    </div>
+    <div class="rule" style="margin:24px 0 28px"></div>
+    <form id="theform">
+    ${f.fields.map(fl=>{
+      const err = state.formErr[fl.k]; let ctrl='';
+      if(fl.type==='text') ctrl=`<input class="input" name="${fl.k}" value="${esc(val(fl.k))}">`;
+      else if(fl.type==='textarea') ctrl=`<textarea class="textarea" name="${fl.k}">${esc(val(fl.k))}</textarea>`;
+      else if(fl.type==='select') ctrl=`<select class="select" name="${fl.k}"><option value="">Choose…</option>
+        ${fl.options.map(o=>`<option ${val(fl.k)===o?'selected':''}>${esc(o)}</option>`).join('')}</select>`;
+      else if(fl.type==='checkgroup') ctrl=fl.options.map(o=>`
+        <label class="checkrow"><input type="checkbox" name="${fl.k}" value="${esc(o)}"
+          ${(state.formValues[fl.k]||[]).includes(o)?'checked':''}><span>${esc(o)}</span></label>`).join('');
+      return `<div class="field">
+        <label class="label">${esc(fl.label)}${fl.required?' <span style="color:#F43F5E">*</span>':''}</label>
+        ${ctrl}${err?`<div class="err">${esc(err)}</div>`:''}
+        ${fl.prefill?`<div class="hint">Prefilled from your household record.</div>`:''}
+      </div>`;}).join('')}
+    <button class="btn btn-accent btn-block" id="submitform" type="button" style="margin-top:8px">Submit</button>
+    </form>`;
+}
+
+/* ------------------------------- account ------------------------------- */
+
+function viewProfile(){
+  const dark = state.theme==='dark';
+  return `
+    <div class="center" style="padding:26px 0 30px">
+      <div class="circ lg on" style="margin:0 auto 16px">${initials(state.user.first+' '+state.user.last)}</div>
+      <h1 style="font-size:25px">${esc(state.user.first)} ${esc(state.user.last)}</h1>
+      <p class="muted sm" style="margin-top:5px">${esc(state.user.email)}</p>
+    </div>
+    <div>
+      <div class="kv"><span class="k">Church</span><span class="v">${esc(state.church.name)}</span></div>
+      <div class="kv"><span class="k">Household</span><span class="v">${esc(HOUSEHOLD.name)}</span></div>
+      <div class="kv"><span class="k">Groups</span><span class="v">${GROUPS.filter(g=>state.joined[g.id]).length} joined</span></div>
+      <div class="kv"><span class="k">Password</span><span class="v">••••••••</span></div>
+    </div>
+    <div class="rule"></div>
+    <button class="menurow" id="theme"><span class="ic">${icon(dark?'sun':'moon',21)}</span>
+      Switch to ${dark?'light':'dark'} mode<span class="chev">${icon('chev',18)}</span></button>
+    <button class="menurow" data-nav="checkin"><span class="ic">${icon('checkcirc',21)}</span>
+      Check-In<span class="chev">${icon('chev',18)}</span></button>
+    <button class="menurow" data-nav="family"><span class="ic">${icon('users',21)}</span>
+      My household<span class="chev">${icon('chev',18)}</span></button>
+    <button class="menurow" data-nav="groups"><span class="ic">${icon('hands',21)}</span>
+      My groups<span class="chev">${icon('chev',18)}</span></button>
+    <div style="padding-top:30px"><button class="btn btn-outline btn-block" id="signout">Sign out</button></div>`;
+}
+
+/* ------------------------------- render -------------------------------- */
+
+function render(){
+  applyTheme();
+  let html;
+  if(state.screen==='find') html = viewFind();
+  else if(state.screen==='auth') html = viewAuth();
+  else {
+    const v = { home:viewHome, family:viewFamily, groups:viewGroups, group:viewGroup,
+      calendar:viewCalendar, event:viewEvent, forms:viewForms, form:viewForm,
+      profile:viewProfile, checkin:viewCheckin }[state.screen];
+    html = viewShell(v(), state.screen==='calendar');
+  }
+  if(state.sheet){
+    const s = state.sheet;
+    const body = s.type==='person' ? sheetPerson(s.id)
+      : s.type==='checkin' ? sheetCheckin(s.id)
+      : s.type==='checkin-done' ? sheetCheckinDone(s.id) : '';
+    html += `<div class="scrim" data-scrim><div class="sheet">${body}</div></div>`;
+  }
+  if(state.toast) html += `<div class="toastwrap"><div class="toast">${icon('check',16)}<span>${esc(state.toast)}</span></div></div>`;
+  $('#root').innerHTML = html;
+  wire();
+}
+
+function keepFocus(sel, key){
+  const el = $(sel); if(!el) return;
+  el.oninput = e => { state[key]=e.target.value; const p=e.target.selectionStart;
+    render(); const n=$(sel); if(n){ n.focus(); n.setSelectionRange(p,p); } };
+}
+
+function wire(){
+  keepFocus('#churchQ','churchQuery');
+  keepFocus('#dirQ','dirQuery');
+  keepFocus('#groupQ','groupQuery');
+
+  document.querySelectorAll('[data-church]').forEach(el=>el.onclick=()=>{
+    state.church = CHURCHES.find(c=>c.id===el.dataset.church);
+    state.auth = { mode:'create', step:1, email:'', pwd:'', pwd2:'', first:'', last:'', matched:false, code:'', err:'' };
+    go('auth');
+  });
+  document.querySelectorAll('[data-mode]').forEach(el=>el.onclick=()=>{
+    state.auth.mode=el.dataset.mode; state.auth.step=1; state.auth.err=''; render(); });
+  const cc=$('#a-changechurch'); if(cc) cc.onclick=()=>go('find');
+
+  const grab=()=>['email','pwd','pwd2','first','last','code'].forEach(k=>{ const el=$('#a-'+k); if(el) state.auth[k]=el.value; });
+
+  const n1=$('#a-next1'); if(n1) n1.onclick=()=>{ grab(); const a=state.auth;
+    if(!/^\S+@\S+\.\S+$/.test(a.email)){ a.err='Enter a valid email address.'; return render(); }
+    a.matched = a.email.trim().toLowerCase()===ME.email;
+    if(a.matched){ a.first=ME.first; a.last=ME.last; }
+    a.err=''; a.step=2; render(); };
+
+  const n2=$('#a-next2'); if(n2) n2.onclick=()=>{ grab(); const a=state.auth;
+    if(!a.matched && (!a.first.trim()||!a.last.trim())){ a.err='Enter your first and last name.'; return render(); }
+    if(a.pwd.length<8){ a.err='Password must be at least 8 characters.'; return render(); }
+    if(a.pwd!==a.pwd2){ a.err='Passwords do not match.'; return render(); }
+    a.err=''; a.step=3; render(); };
+
+  const fin=$('#a-finish'); if(fin) fin.onclick=()=>{ grab(); const a=state.auth;
+    if(!/^\d{6}$/.test(a.code)){ a.err='Enter the 6-digit code.'; return render(); }
+    state.user={ first:a.first||'Friend', last:a.last||'', email:a.email };
+    go('home'); toast('Welcome to '+state.church.short); };
+
+  const si=$('#a-signin'); if(si) si.onclick=()=>{ grab(); const a=state.auth;
+    if(!/^\S+@\S+\.\S+$/.test(a.email)){ a.err='Enter a valid email address.'; return render(); }
+    if(a.pwd.length<6){ a.err='Enter your password.'; return render(); }
+    state.user={ first:ME.first, last:ME.last, email:a.email };
+    go('home'); toast('Signed in'); };
+
+  const bk=$('#a-back'); if(bk) bk.onclick=()=>{ grab(); state.auth.step--; state.auth.err=''; render(); };
+
+  document.querySelectorAll('[data-nav]').forEach(el=>el.onclick=()=>go(el.dataset.nav));
+  document.querySelectorAll('[data-group]').forEach(el=>el.onclick=()=>go('group',{detailGroup:el.dataset.group}));
+  document.querySelectorAll('[data-event]').forEach(el=>el.onclick=()=>go('event',{detailEvent:el.dataset.event}));
+  document.querySelectorAll('[data-form]').forEach(el=>el.onclick=()=>go('form',{detailForm:el.dataset.form,formValues:{},formErr:{}}));
+  document.querySelectorAll('[data-person]').forEach(el=>el.onclick=()=>{ state.sheet={type:'person',id:el.dataset.person}; render(); });
+
+  // check-in
+  document.querySelectorAll('[data-cistart]').forEach(el=>el.onclick=()=>{
+    const id = el.dataset.cistart;
+    state.checkinSel = {};
+    HOUSEHOLD.members.forEach(m=>{ state.checkinSel[m.id] = m.me; });   // you, by default
+    state.sheet = { type:'checkin', id }; render();
+  });
+  document.querySelectorAll('[data-cisel]').forEach(el=>el.onclick=()=>{
+    const id = el.dataset.cisel;
+    state.checkinSel[id] = !state.checkinSel[id]; render();
+  });
+  document.querySelectorAll('[data-cigo]').forEach(el=>el.onclick=()=>{
+    const id = el.dataset.cigo, people = {};
+    let label = 1;
+    HOUSEHOLD.members.filter(m=>state.checkinSel[m.id]).forEach(m=>{
+      const a = assignment(m);
+      people[m.id] = { room:a.room, place:a.place, label:a.label ? label++ : null };
+    });
+    state.checkins[id] = { code:securityCode(id), at:'9:06am', people };
+    state.sheet = { type:'checkin-done', id }; render();
+    toast('Checked in');
+  });
+  document.querySelectorAll('[data-ciview]').forEach(el=>el.onclick=()=>{
+    state.sheet = { type:'checkin-done', id:el.dataset.ciview }; render();
+  });
+  document.querySelectorAll('[data-ciout]').forEach(el=>el.onclick=()=>{
+    delete state.checkins[el.dataset.ciout];
+    state.sheet=null; render(); toast('Checked out');
+  });
+  document.querySelectorAll('[data-gfilter]').forEach(el=>el.onclick=()=>{ state.groupFilter=el.dataset.gfilter; render(); });
+  document.querySelectorAll('[data-cfilter]').forEach(el=>el.onclick=()=>{ state.calFilter=el.dataset.cfilter; render(); });
+  document.querySelectorAll('[data-day]').forEach(el=>el.onclick=()=>{
+    const d=el.dataset.day; state.calDay=(!d||state.calDay===d)?null:d; render(); });
+  document.querySelectorAll('[data-cal]').forEach(el=>el.onclick=()=>{
+    let m=state.calMonth+Number(el.dataset.cal);
+    if(m<0){m=11;state.calYear--;} if(m>11){m=0;state.calYear++;}
+    state.calMonth=m; state.calDay=null; render(); });
+  const cv=$('#calview'); if(cv) cv.onclick=()=>{ state.calView = state.calView==='list'?'grid':'list'; render(); };
+
+  document.querySelectorAll('[data-join]').forEach(el=>el.onclick=()=>{
+    state.joined[el.dataset.join]=true; render(); toast('Request sent to the group leader'); });
+  document.querySelectorAll('[data-leave]').forEach(el=>el.onclick=()=>{
+    delete state.joined[el.dataset.leave]; render(); toast('You left the group'); });
+  document.querySelectorAll('[data-rsvp]').forEach(el=>el.onclick=()=>{
+    state.rsvps[el.dataset.rsvp]=true; render(); toast('RSVP sent for your household'); });
+  document.querySelectorAll('[data-unrsvp]').forEach(el=>el.onclick=()=>{
+    delete state.rsvps[el.dataset.unrsvp]; render(); toast('RSVP cancelled'); });
+
+  document.querySelectorAll('[data-sheet-close]').forEach(el=>el.onclick=()=>{ state.sheet=null; render(); });
+  const sc=document.querySelector('[data-scrim]');
+  if(sc) sc.onclick=e=>{ if(e.target===sc){ state.sheet=null; render(); } };
+
+  const form=$('#theform');
+  if(form){
+    const f = FORMS.find(x=>x.id===state.detailForm);
+    const harvest = () => {
+      const vals={};
+      f.fields.forEach(fl=>{
+        if(fl.type==='checkgroup') vals[fl.k]=[...form.querySelectorAll(`input[name="${fl.k}"]:checked`)].map(i=>i.value);
+        else vals[fl.k]=(form.querySelector(`[name="${fl.k}"]`)||{}).value||'';
+      });
+      return vals;
+    };
+    // Keep state in sync as the user types so no re-render can lose their work.
+    form.oninput = form.onchange = () => { state.formValues = harvest(); };
+    $('#submitform').onclick = () => {
+      const vals = harvest(), errs = {};
+      f.fields.forEach(fl=>{ if(fl.required && !String(vals[fl.k]).trim()) errs[fl.k]='This field is required.'; });
+      state.formValues=vals; state.formErr=errs;
+      if(Object.keys(errs).length) return render();
+      state.submitted[f.id]={on:'just now'}; render(); toast('Form submitted');
+    };
+  }
+
+  const th=$('#theme'); if(th) th.onclick=()=>{ state.theme = state.theme==='dark'?'light':'dark'; render(); };
+  const so=$('#signout'); if(so) so.onclick=()=>{ state.user=null; go('find',{churchQuery:''}); };
+  const eh=$('#edit-household'); if(eh) eh.onclick=()=>go('form',{detailForm:'f3',formValues:{},formErr:{}});
+  ['#nudge-chat','#nudge-bell'].forEach(s=>{ const el=$(s); if(el) el.onclick=()=>toast('Messaging and notifications are out of scope for the MVP'); });
+}
+
+render();
+
+</script>
+</body>
+</html>
