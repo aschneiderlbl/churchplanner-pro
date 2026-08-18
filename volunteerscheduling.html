@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChurchPlanner PRO — Volunteer Scheduling</title>
+<style>
+/* ============================================================
+   ChurchPlanner PRO — Volunteer Scheduling prototype
+   Design tokens
+   ============================================================ */
+:root{
+  /* neutrals */
+  --n0:#ffffff;
+  --n25:#fbfcfd;
+  --n50:#f5f7f9;
+  --n100:#eef1f5;
+  --n150:#e4e8ee;
+  --n200:#d8dee6;
+  --n300:#bcc5d1;
+  --n400:#8e99a8;
+  --n500:#6b7686;
+  --n600:#4e5765;
+  --n700:#374050;
+  --n800:#242c39;
+  --n900:#151b26;
+
+  /* admin chrome */
+  --sidebar:#1b2330;
+  --sidebar-hover:#252f3f;
+  --sidebar-active:#2f3b4d;
+
+  /* brand */
+  --green:#16a34a;
+  --green-600:#15803d;
+  --green-100:#dcfce7;
+  --indigo:#4f46e5;
+  --indigo-600:#4338ca;
+  --indigo-50:#eef2ff;
+  --indigo-100:#e0e7ff;
+
+  /* status */
+  --amber:#b45309;
+  --amber-bg:#fffbeb;
+  --amber-line:#fcd34d;
+  --red:#dc2626;
+  --red-bg:#fef2f2;
+  --red-line:#fecaca;
+  --blue:#2563eb;
+
+  --radius-sm:6px;
+  --radius:9px;
+  --radius-lg:14px;
+
+  --shadow-xs:0 1px 2px rgba(16,24,40,.06);
+  --shadow-sm:0 1px 3px rgba(16,24,40,.09), 0 1px 2px rgba(16,24,40,.05);
+  --shadow-md:0 6px 16px -4px rgba(16,24,40,.12), 0 2px 6px -2px rgba(16,24,40,.07);
+  --shadow-lg:0 20px 40px -12px rgba(16,24,40,.22), 0 6px 14px -6px rgba(16,24,40,.10);
+
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+
+/* role / team colors — tinted chip + solid accent bar */
+.c-blue   { --c:#2563eb; --c-bg:#eff5ff; --c-bd:#c7dbff; --c-tx:#1d4ed8; }
+.c-violet { --c:#7c3aed; --c-bg:#f5f1ff; --c-bd:#ddd0ff; --c-tx:#6d28d9; }
+.c-teal   { --c:#0d9488; --c-bg:#effbf9; --c-bd:#b8ece5; --c-tx:#0f766e; }
+.c-amber  { --c:#d97706; --c-bg:#fff8ec; --c-bd:#fbdda6; --c-tx:#b45309; }
+.c-rose   { --c:#e11d48; --c-bg:#fff1f4; --c-bd:#ffd0da; --c-tx:#be123c; }
+.c-lime   { --c:#4d7c0f; --c-bg:#f5faeb; --c-bd:#d5e8ae; --c-tx:#3f6212; }
+.c-cyan   { --c:#0284c7; --c-bg:#eff9ff; --c-bd:#bae2f8; --c-tx:#0369a1; }
+.c-slate  { --c:#475569; --c-bg:#f4f6f8; --c-bd:#d9e0e8; --c-tx:#334155; }
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family:var(--font); color:var(--n800);
+  background:var(--n100); font-size:14px; line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit; color:inherit; cursor:pointer}
+input,select,textarea{font:inherit; color:inherit}
+a{color:var(--indigo); text-decoration:none}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:var(--n200); border-radius:8px; border:3px solid transparent; background-clip:content-box}
+::-webkit-scrollbar-thumb:hover{background:var(--n300); background-clip:content-box}
+:focus-visible{outline:2px solid var(--indigo); outline-offset:2px; border-radius:4px}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 13px;
+  border-radius:var(--radius-sm); border:1px solid var(--n200); background:var(--n0);
+  font-size:13px; font-weight:600; color:var(--n700); white-space:nowrap;
+  box-shadow:var(--shadow-xs); transition:background .12s, border-color .12s, transform .05s;
+}
+.btn:hover{background:var(--n50); border-color:var(--n300)}
+.btn:active{transform:translateY(.5px)}
+.btn.sm{height:28px; padding:0 10px; font-size:12.5px; gap:5px}
+.btn.lg{height:40px; padding:0 18px; font-size:14px}
+.btn.primary{background:var(--green); border-color:var(--green); color:#fff; box-shadow:0 1px 2px rgba(22,163,74,.3)}
+.btn.primary:hover{background:var(--green-600); border-color:var(--green-600)}
+.btn.indigo{background:var(--indigo); border-color:var(--indigo); color:#fff}
+.btn.indigo:hover{background:var(--indigo-600); border-color:var(--indigo-600)}
+.btn.danger{color:var(--red); border-color:var(--red-line); background:var(--n0)}
+.btn.danger:hover{background:var(--red-bg)}
+.btn.ghost{border-color:transparent; background:transparent; box-shadow:none}
+.btn.ghost:hover{background:var(--n100)}
+.btn[disabled]{opacity:.45; pointer-events:none}
+.btn .badge{background:rgba(255,255,255,.25); border-radius:20px; padding:0 6px; font-size:11px; line-height:16px; height:16px}
+
+.icon-btn{
+  display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px;
+  border-radius:var(--radius-sm); border:1px solid transparent; background:transparent; color:var(--n500);
+}
+.icon-btn:hover{background:var(--n100); color:var(--n700)}
+
+/* ---------- misc atoms ---------- */
+.pill{display:inline-flex; align-items:center; gap:5px; height:22px; padding:0 9px; border-radius:20px; font-size:11.5px; font-weight:650; letter-spacing:.01em}
+.pill.ok{background:var(--green-100); color:var(--green-600)}
+.pill.warn{background:#fef3c7; color:var(--amber)}
+.pill.info{background:var(--indigo-100); color:var(--indigo-600)}
+.pill.muted{background:var(--n100); color:var(--n500)}
+.pill.dot::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor}
+
+.avatar{
+  width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
+  font-size:10.5px; font-weight:700; color:#fff; letter-spacing:.02em; flex:none;
+  box-shadow:0 0 0 2px var(--n0);
+}
+.avatar.sm{width:22px;height:22px;font-size:9.5px}
+.avatar.lg{width:38px;height:38px;font-size:14px}
+.avatar.xl{width:46px;height:46px;font-size:16px}
+.avatar.empty{background:var(--n0); color:var(--n400); border:1.5px dashed var(--n300); box-shadow:none; font-size:14px; font-weight:400}
+
+.stack{display:flex}
+.stack .avatar{margin-left:-7px}
+.stack .avatar:first-child{margin-left:0}
+
+.muted{color:var(--n500)}
+.tiny{font-size:12px}
+.mono-num{font-variant-numeric:tabular-nums}
+
+/* ============================================================
+   APP SHELLS
+   ============================================================ */
+.app{display:none; height:100vh; overflow:hidden}
+.app.active{display:flex}
+
+/* ---------- admin sidebar ---------- */
+.sidebar{
+  width:210px; flex:none; background:var(--sidebar); color:#c3cbd8;
+  display:flex; flex-direction:column; padding:0; overflow-y:auto;
+}
+.sidebar .brand{
+  padding:16px 16px 14px; font-size:14px; font-weight:700; color:#fff; letter-spacing:-.01em;
+  display:flex; align-items:center; gap:8px;
+}
+.brand-mark{width:20px;height:20px;border-radius:5px;background:linear-gradient(135deg,#22c55e,#0d9488);display:inline-block}
+.nav-section{padding:10px 12px 4px; font-size:10px; letter-spacing:.13em; color:#66748c; font-weight:700}
+.nav-item{
+  display:flex; align-items:center; gap:9px; padding:7px 12px; margin:1px 8px; border-radius:var(--radius-sm);
+  font-size:13px; color:#c3cbd8; border:none; background:none; width:calc(100% - 16px); text-align:left;
+}
+.nav-item:hover{background:var(--sidebar-hover); color:#fff}
+.nav-item.active{background:var(--sidebar-active); color:#fff; font-weight:600}
+.nav-item .ic{width:16px; text-align:center; font-size:13px; opacity:.9}
+.nav-item .nav-tag{margin-left:auto; background:rgba(255,255,255,.12); color:#c3cbd8; font-size:9.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; border-radius:4px; padding:1px 5px}
+.nav-item .nav-count{margin-left:auto; background:var(--green); color:#fff; font-size:10.5px; font-weight:700; border-radius:20px; padding:1px 6px}
+.sidebar-foot{margin-top:auto; padding:12px; border-top:1px solid rgba(255,255,255,.07); display:flex; gap:9px; align-items:center}
+.sidebar-foot .who{font-size:12px; color:#fff; font-weight:600}
+.sidebar-foot .who small{display:block; color:#7b8798; font-weight:400; font-size:11px}
+
+/* ---------- main column ---------- */
+.main{flex:1; display:flex; flex-direction:column; min-width:0; background:var(--n50)}
+.topbar{
+  height:52px; flex:none; background:var(--n0); border-bottom:1px solid var(--n150);
+  display:flex; align-items:center; gap:12px; padding:0 18px;
+}
+.topbar h1{font-size:15px; font-weight:700; margin:0; letter-spacing:-.01em}
+.topbar .spacer{flex:1}
+.topbar .who{display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--n600)}
+
+.content{flex:1; overflow:auto; display:flex; min-height:0}
+
+/* ---------- filter rail ---------- */
+.rail{
+  width:216px; flex:none; border-right:1px solid var(--n150); background:var(--n0);
+  padding:16px 14px; overflow-y:auto;
+}
+.rail h3{font-size:10.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--n400); margin:0 0 8px; font-weight:700}
+.rail-group{margin-bottom:20px}
+.field{display:block; margin-bottom:10px}
+.field label{display:block; font-size:12px; font-weight:600; color:var(--n600); margin-bottom:5px}
+.select, .input, .textarea{
+  width:100%; height:34px; padding:0 10px; border:1px solid var(--n200); border-radius:var(--radius-sm);
+  background:var(--n0); font-size:13px; color:var(--n800); box-shadow:var(--shadow-xs);
+}
+.select{appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2.5 4.5L6 8l3.5-3.5' fill='none' stroke='%236b7686' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>"); background-repeat:no-repeat; background-position:right 9px center; padding-right:26px}
+.textarea{height:auto; padding:8px 10px; min-height:70px; resize:vertical}
+.input:focus,.select:focus,.textarea:focus{outline:none; border-color:var(--indigo); box-shadow:0 0 0 3px var(--indigo-50)}
+.check{display:flex; align-items:flex-start; gap:8px; font-size:12.5px; color:var(--n700); padding:5px 0; cursor:pointer}
+.check input{margin:2px 0 0; accent-color:var(--indigo); width:14px; height:14px; flex:none}
+.legend-row{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--n600); padding:3px 0}
+.legend-swatch{width:11px;height:11px;border-radius:3px;flex:none}
+
+/* ---------- schedule pane ---------- */
+.pane{flex:1; min-width:0; display:flex; flex-direction:column}
+.pane-head{padding:16px 20px 0; background:var(--n50)}
+.week-bar{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:14px}
+.week-nav{display:flex; align-items:center; border:1px solid var(--n200); border-radius:var(--radius-sm); background:var(--n0); box-shadow:var(--shadow-xs); overflow:hidden}
+.week-nav button{width:32px; height:32px; border:none; background:none; color:var(--n500); display:flex; align-items:center; justify-content:center}
+.week-nav button:hover{background:var(--n100); color:var(--n800)}
+.week-nav .divider{width:1px; height:18px; background:var(--n150)}
+.week-label{font-size:16px; font-weight:700; letter-spacing:-.015em; margin:0 4px}
+.seg{display:inline-flex; background:var(--n100); border-radius:var(--radius-sm); padding:2px}
+.seg button{border:none; background:none; height:28px; padding:0 12px; font-size:12.5px; font-weight:600; color:var(--n500); border-radius:5px}
+.seg button.on{background:var(--n0); color:var(--n800); box-shadow:var(--shadow-xs)}
+
+/* stat tiles */
+.stats{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-bottom:14px}
+.stat{
+  background:var(--n0); border:1px solid var(--n150); border-radius:var(--radius); padding:11px 13px;
+  box-shadow:var(--shadow-xs); position:relative; overflow:hidden;
+}
+.stat .k{font-size:11px; font-weight:650; color:var(--n500); letter-spacing:.02em; display:flex; align-items:center; gap:6px}
+.stat .v{font-size:23px; font-weight:750; letter-spacing:-.03em; margin-top:3px; line-height:1.1; font-variant-numeric:tabular-nums}
+.stat .sub{font-size:11.5px; color:var(--n400); margin-top:1px}
+.stat.alert{background:var(--amber-bg); border-color:var(--amber-line)}
+.stat.alert .v{color:var(--amber)}
+.stat.alert .k{color:var(--amber)}
+.stat .bar{height:4px; border-radius:4px; background:var(--n100); margin-top:8px; overflow:hidden}
+.stat .bar span{display:block; height:100%; background:var(--green); border-radius:4px; transition:width .5s cubic-bezier(.2,.8,.2,1)}
+
+/* ---------- the grid ---------- */
+.grid-wrap{flex:1; overflow:auto; padding:0 20px 24px; min-height:0}
+.grid{
+  display:grid; grid-template-columns:188px repeat(7, minmax(136px,1fr));
+  background:var(--n150); border:1px solid var(--n150); border-radius:var(--radius-lg);
+  overflow:hidden; box-shadow:var(--shadow-sm); min-width:1080px;
+}
+.gh{
+  position:sticky; top:0; z-index:6; background:var(--n0); padding:9px 12px;
+  border-bottom:1px solid var(--n150); box-shadow:0 1px 0 var(--n150);
+}
+.gh.corner{z-index:8; left:0; position:sticky; display:flex; align-items:center; font-size:11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--n400); border-right:1px solid var(--n150)}
+.gh .dow{font-size:11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--n400)}
+.gh .dnum{font-size:17px; font-weight:700; letter-spacing:-.02em; color:var(--n800); display:flex; align-items:center; gap:7px}
+.gh.today .dow{color:var(--indigo)}
+.gh.today .dnum{color:var(--indigo)}
+.gh.today .dnum::after{content:"Today"; font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; background:var(--indigo-100); color:var(--indigo-600); padding:2px 6px; border-radius:20px}
+.gh .need{font-size:11px; color:var(--n400); margin-top:1px}
+.gh .need b{color:var(--amber)}
+
+.rowlabel{
+  position:sticky; left:0; z-index:5; background:var(--n0); padding:11px 12px; border-right:1px solid var(--n150);
+  border-bottom:1px solid var(--n150); display:flex; gap:9px; align-items:flex-start;
+}
+.rowlabel .swatch{width:4px; align-self:stretch; border-radius:3px; background:var(--c,#94a3b8); flex:none; min-height:26px}
+.rowlabel .nm{font-size:13px; font-weight:650; letter-spacing:-.005em; color:var(--n800)}
+.rowlabel .mt{font-size:11.5px; color:var(--n400); margin-top:1px}
+.cell{background:var(--n0); border-bottom:1px solid var(--n150); border-left:1px solid var(--n150); padding:6px; min-height:68px; display:flex; flex-direction:column; gap:6px; position:relative}
+.cell.wknd{background:var(--n25)}
+.cell.past{background:repeating-linear-gradient(135deg,var(--n25),var(--n25) 6px,var(--n50) 6px,var(--n50) 12px)}
+.cell:hover .cell-add{opacity:1}
+.cell-add{
+  position:absolute; inset:auto 7px 7px auto; width:22px; height:22px; border-radius:5px; border:1px dashed var(--n300);
+  background:var(--n0); color:var(--n400); display:flex; align-items:center; justify-content:center; font-size:14px;
+  opacity:0; transition:opacity .12s; line-height:1;
+}
+.cell-add:hover{border-color:var(--indigo); color:var(--indigo); background:var(--indigo-50)}
+
+.section-row{
+  grid-column:1 / -1; background:var(--n100); padding:6px 14px; font-size:10.5px; font-weight:750;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--n500); border-bottom:1px solid var(--n150);
+  position:sticky; left:0;
+}
+
+/* shift chip */
+.chip{
+  width:100%; text-align:left; border:1px solid var(--c-bd,var(--n200)); background:var(--c-bg,var(--n50));
+  border-left:3px solid var(--c,var(--n400)); border-radius:var(--radius-sm); padding:6px 8px;
+  display:flex; flex-direction:column; gap:5px; transition:box-shadow .12s, transform .06s, border-color .12s;
+  position:relative;
+}
+.chip:hover{box-shadow:var(--shadow-md); transform:translateY(-1px); z-index:2}
+.chip .t{font-size:12px; font-weight:700; color:var(--c-tx,var(--n700)); letter-spacing:-.01em; display:flex; align-items:center; gap:5px}
+.chip .t .role{font-weight:600; color:var(--n500); font-size:11px}
+.chip .foot{display:flex; align-items:center; justify-content:space-between; gap:6px}
+.chip .fill{font-size:11px; font-weight:700; color:var(--n500); font-variant-numeric:tabular-nums; white-space:nowrap}
+.chip.short{border-style:dashed; background:var(--amber-bg); border-color:var(--amber-line); border-left-color:#f59e0b}
+.chip.short .fill{color:var(--amber)}
+.chip.full .fill{color:var(--green-600)}
+.chip .flag{position:absolute; top:-5px; right:-5px; width:14px;height:14px;border-radius:50%; background:var(--indigo); color:#fff; font-size:9px; display:flex; align-items:center; justify-content:center; font-weight:700; box-shadow:0 0 0 2px var(--n0)}
+.chip.draft::after{content:""; position:absolute; inset:0; border-radius:4px; pointer-events:none}
+
+.openrow .rowlabel{background:var(--green-100); border-bottom-color:#bbf7d0}
+.openrow .rowlabel .nm{color:var(--green-600)}
+.openrow .cell{background:#f6fdf8; border-bottom-color:#dcfce7}
+.chip.open{background:var(--n0); border:1px dashed var(--green); border-left:3px solid var(--green); color:var(--green-600);
+  flex-direction:row; align-items:center; justify-content:space-between; gap:6px; padding:5px 7px}
+.chip.open .t{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block; font-size:11.5px}
+.chip.open .t b{font-weight:750}
+.more-open{border:none; background:none; color:var(--green-600); font-size:11.5px; font-weight:700; padding:2px; text-align:left}
+.more-open:hover{text-decoration:underline}
+.chip.open .t{color:var(--green-600)}
+.chip.open .fill{color:var(--green-600)}
+.chip.open:hover{background:var(--green-100)}
+
+.empty-note{grid-column:1/-1; background:var(--n0); padding:34px; text-align:center; color:var(--n400); font-size:13px}
+
+/* ---------- right drawer ---------- */
+.scrim{position:fixed; inset:0; background:rgba(21,27,38,.42); opacity:0; pointer-events:none; transition:opacity .18s; z-index:40; backdrop-filter:blur(1px)}
+.scrim.on{opacity:1; pointer-events:auto}
+.drawer{
+  position:fixed; top:0; right:0; bottom:0; width:400px; background:var(--n0); z-index:50;
+  box-shadow:var(--shadow-lg); transform:translateX(102%); transition:transform .24s cubic-bezier(.22,.8,.24,1);
+  display:flex; flex-direction:column;
+}
+.drawer.on{transform:none}
+.drawer-head{padding:16px 18px 14px; border-bottom:1px solid var(--n150); display:flex; gap:10px; align-items:flex-start}
+.drawer-head h2{margin:0; font-size:16px; font-weight:700; letter-spacing:-.02em}
+.drawer-head .sub{font-size:12.5px; color:var(--n500); margin-top:2px}
+.drawer-body{flex:1; overflow-y:auto; padding:16px 18px}
+.drawer-foot{padding:12px 18px; border-top:1px solid var(--n150); display:flex; gap:8px; background:var(--n25)}
+.dsec{margin-bottom:20px}
+.dsec > h4{font-size:10.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--n400); margin:0 0 9px; font-weight:700; display:flex; align-items:center; justify-content:space-between}
+.kv{display:flex; justify-content:space-between; gap:12px; padding:6px 0; border-bottom:1px solid var(--n100); font-size:13px}
+.kv:last-child{border-bottom:none}
+.kv .k{color:var(--n500)}
+.kv .v{font-weight:600; text-align:right}
+
+.person{
+  display:flex; align-items:center; gap:10px; padding:8px; border:1px solid var(--n150); border-radius:var(--radius-sm);
+  margin-bottom:7px; background:var(--n0); transition:border-color .12s, background .12s;
+}
+.person:hover{border-color:var(--n300)}
+.person .nm{font-size:13px; font-weight:600; line-height:1.25}
+.person .mt{font-size:11.5px; color:var(--n400)}
+.person .right{margin-left:auto; display:flex; gap:6px; align-items:center}
+.person.slot{border-style:dashed; background:var(--n25)}
+.person.pickable{cursor:pointer}
+.person.pickable:hover{border-color:var(--indigo); background:var(--indigo-50)}
+.person.chosen{border-color:var(--indigo); background:var(--indigo-50); box-shadow:0 0 0 2px var(--indigo-50)}
+
+/* ---------- modal ---------- */
+.modal-wrap{position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center; padding:24px}
+.modal-wrap.on{display:flex}
+.modal{
+  background:var(--n0); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); width:560px; max-width:100%;
+  max-height:88vh; display:flex; flex-direction:column; animation:pop .18s cubic-bezier(.2,.9,.3,1.1);
+}
+.modal.wide{width:680px}
+@keyframes pop{from{opacity:0; transform:translateY(10px) scale(.985)} to{opacity:1; transform:none}}
+.modal-head{padding:18px 20px 14px; border-bottom:1px solid var(--n150); display:flex; align-items:flex-start; gap:12px}
+.modal-head h2{margin:0; font-size:17px; font-weight:700; letter-spacing:-.02em}
+.modal-head .sub{font-size:12.5px; color:var(--n500); margin-top:3px}
+.modal-body{padding:18px 20px; overflow-y:auto}
+.modal-foot{padding:14px 20px; border-top:1px solid var(--n150); display:flex; gap:8px; justify-content:flex-end; background:var(--n25); border-radius:0 0 var(--radius-lg) var(--radius-lg)}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.row3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px}
+.hint{font-size:11.5px; color:var(--n400); margin-top:5px}
+.divide{height:1px; background:var(--n150); margin:16px 0}
+
+.daypick{display:flex; gap:6px}
+.daypick button{width:34px; height:34px; border-radius:50%; border:1px solid var(--n200); background:var(--n0); font-size:12px; font-weight:600; color:var(--n500)}
+.daypick button.on{background:var(--indigo); border-color:var(--indigo); color:#fff}
+
+.callout{
+  border:1px solid var(--indigo-100); background:var(--indigo-50); border-radius:var(--radius); padding:11px 13px;
+  font-size:12.5px; color:var(--indigo-600); display:flex; gap:9px; align-items:flex-start;
+}
+.callout.warn{border-color:var(--amber-line); background:var(--amber-bg); color:var(--amber)}
+.callout.plain{border-color:var(--n150); background:var(--n50); color:var(--n600)}
+
+/* toggle */
+.switch{position:relative; display:inline-flex; align-items:center; gap:10px; cursor:pointer}
+.switch input{position:absolute; opacity:0; width:0; height:0}
+.track{width:38px; height:22px; border-radius:20px; background:var(--n300); position:relative; transition:background .16s; flex:none}
+.track::after{content:""; position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:var(--shadow-sm); transition:transform .16s}
+.switch input:checked + .track{background:var(--green)}
+.switch input:checked + .track::after{transform:translateX(16px)}
+
+/* ---------- toasts ---------- */
+.toasts{position:fixed; bottom:22px; left:50%; transform:translateX(-50%); z-index:90; display:flex; flex-direction:column; gap:8px; align-items:center}
+.toast{
+  background:var(--n900); color:#fff; padding:10px 15px; border-radius:22px; font-size:13px; font-weight:550;
+  box-shadow:var(--shadow-lg); display:flex; align-items:center; gap:9px; animation:up .22s cubic-bezier(.2,.9,.3,1.1);
+  max-width:min(560px,92vw);
+}
+.toast .ok{color:#4ade80; font-weight:700}
+@keyframes up{from{opacity:0; transform:translateY(12px)} to{opacity:1; transform:none}}
+
+/* ---------- requests panel (admin) ---------- */
+.reqcard{border:1px solid var(--n150); border-radius:var(--radius); background:var(--n0); padding:12px; margin-bottom:10px; box-shadow:var(--shadow-xs)}
+.reqcard .top{display:flex; gap:9px; align-items:center; margin-bottom:9px}
+.reqcard .top .nm{font-size:13px; font-weight:650}
+.reqcard .top .mt{font-size:11.5px; color:var(--n400)}
+.reqcard .swapline{display:flex; align-items:center; gap:9px; margin:9px 0}
+.minichip{
+  flex:1; min-width:0; border:1px solid var(--c-bd,var(--n200)); background:var(--c-bg,var(--n50)); border-left:3px solid var(--c,var(--n400));
+  border-radius:var(--radius-sm); padding:6px 9px;
+}
+.minichip .d{font-size:11px; color:var(--n500); font-weight:600; text-transform:uppercase; letter-spacing:.05em}
+.minichip .t{font-size:12.5px; font-weight:700; color:var(--c-tx,var(--n800))}
+.minichip .w{font-size:11.5px; color:var(--n500)}
+.swaparrow{color:var(--n300); font-size:16px; flex:none}
+.reqcard .acts{display:flex; gap:7px; justify-content:flex-end; margin-top:10px}
+
+/* ============================================================
+   MEMBER APP
+   ============================================================ */
+#member{flex-direction:column; background:var(--n50)}
+.mtop{height:48px; flex:none; background:var(--n0); border-bottom:1px solid var(--n150); display:flex; align-items:center; gap:6px; padding:0 20px}
+.mtop .logo{font-size:13.5px; font-weight:750; letter-spacing:-.02em; margin-right:14px}
+.mtop .logo span{color:var(--indigo)}
+.mtab{height:30px; padding:0 12px; border-radius:var(--radius-sm); border:none; background:none; font-size:13px; font-weight:600; color:var(--n500)}
+.mtab:hover{background:var(--n100); color:var(--n800)}
+.mtab.on{background:var(--indigo-50); color:var(--indigo-600)}
+.mtop .spacer{flex:1}
+.mtop .who{font-size:12px; color:var(--n500); display:flex; align-items:center; gap:8px}
+
+.mbody{flex:1; overflow-y:auto}
+.mwrap{max-width:1120px; margin:0 auto; padding:26px 20px 60px}
+.mhead h1{font-size:24px; font-weight:750; letter-spacing:-.03em; margin:0}
+.mhead p{color:var(--n500); margin:4px 0 0; font-size:13.5px}
+.mstats{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:18px 0 26px}
+
+.msec{margin-bottom:28px}
+.msec-head{display:flex; align-items:center; gap:10px; margin-bottom:11px}
+.msec-head h2{font-size:15px; font-weight:700; letter-spacing:-.015em; margin:0}
+.msec-head .spacer{flex:1}
+
+.card{background:var(--n0); border:1px solid var(--n150); border-radius:var(--radius); box-shadow:var(--shadow-xs)}
+
+.shiftcard{
+  display:flex; align-items:center; gap:14px; padding:12px 14px; border:1px solid var(--n150);
+  border-radius:var(--radius); background:var(--n0); margin-bottom:9px; box-shadow:var(--shadow-xs);
+  transition:box-shadow .14s, border-color .14s, transform .06s;
+}
+.shiftcard:hover{box-shadow:var(--shadow-md); border-color:var(--n200)}
+.datechip{
+  width:52px; flex:none; text-align:center; border-radius:var(--radius-sm); overflow:hidden; border:1px solid var(--c-bd,var(--n200));
+}
+.datechip .m{background:var(--c,var(--n400)); color:#fff; font-size:9.5px; font-weight:750; letter-spacing:.09em; padding:2px 0; text-transform:uppercase}
+.datechip .d{background:var(--n0); font-size:19px; font-weight:750; color:var(--n800); line-height:1.25; padding:2px 0; letter-spacing:-.02em}
+.shiftcard .info{min-width:0; flex:1}
+.shiftcard .ttl{font-size:14px; font-weight:700; letter-spacing:-.01em; display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.shiftcard .meta{font-size:12.5px; color:var(--n500); margin-top:2px; display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+.shiftcard .meta .sep{color:var(--n300)}
+.shiftcard .acts{display:flex; gap:7px; flex:none}
+.shiftcard.openshift{border-color:#bbf7d0; background:linear-gradient(180deg,#f7fdf9,#fff)}
+.shiftcard.pending{border-color:var(--amber-line); background:var(--amber-bg)}
+
+.openbanner{
+  display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:var(--radius) var(--radius) 0 0;
+  background:var(--green-100); border:1px solid #bbf7d0; border-bottom:none; font-size:12.5px; color:var(--green-600); font-weight:600;
+}
+.emptystate{border:1px dashed var(--n200); border-radius:var(--radius); padding:28px; text-align:center; color:var(--n400); font-size:13px; background:var(--n25)}
+
+/* prototype switcher */
+.protoswitch{
+  position:fixed; left:50%; bottom:18px; transform:translateX(-50%); z-index:80;
+  background:rgba(21,27,38,.94); border-radius:24px; padding:4px; display:flex; gap:2px;
+  box-shadow:var(--shadow-lg); backdrop-filter:blur(8px);
+}
+.protoswitch button{border:none; background:none; color:#a8b3c4; font-size:12.5px; font-weight:650; padding:6px 15px; border-radius:20px}
+.protoswitch button.on{background:#fff; color:var(--n900)}
+.protoswitch .lbl{color:#67728a; font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:0 10px 0 12px; display:flex; align-items:center}
+
+
+/* ---------- member schedule ---------- */
+.mseg{display:inline-flex; background:var(--n100); border-radius:var(--radius-sm); padding:3px}
+.mseg button{border:none; background:none; height:30px; padding:0 14px; font-size:13px; font-weight:650; color:var(--n500); border-radius:6px; display:inline-flex; align-items:center; gap:6px}
+.mseg button.on{background:var(--n0); color:var(--indigo-600); box-shadow:var(--shadow-xs)}
+.mseg .n{background:var(--n200); color:var(--n600); font-size:10.5px; font-weight:700; border-radius:20px; padding:0 5px; line-height:15px}
+.mseg button.on .n{background:var(--indigo); color:#fff}
+.dayhead{display:flex; align-items:baseline; gap:9px; margin:18px 0 9px}
+.dayhead h3{margin:0; font-size:13.5px; font-weight:750; letter-spacing:-.01em}
+.mhead-bar{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:14px}
+.mgridwrap{overflow-x:auto; padding-bottom:8px}
+.grid.member{grid-template-columns:170px repeat(7,minmax(124px,1fr)); min-width:960px}
+.chip.mine{border-color:var(--indigo); background:#f3f4ff}
+.chip.mine .t{color:var(--indigo-600)}
+.chip.mine .fill{color:var(--indigo-600)}
+.you-tag{background:var(--indigo); color:#fff; font-size:8.5px; font-weight:800; letter-spacing:.06em; padding:0 5px; border-radius:20px; line-height:14px; vertical-align:1px}
+
+/* ---------- groups page ---------- */
+.page-title{font-size:26px; font-weight:750; letter-spacing:-.03em; margin:0 0 14px}
+.groupgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:18px; max-width:1080px}
+.groupcard{background:var(--n0); border:1px solid var(--n150); border-radius:var(--radius-lg); box-shadow:var(--shadow-xs); overflow:hidden}
+.groupcard .gc-head{padding:18px 20px 16px}
+.groupcard .gc-name{font-size:17px; font-weight:700; letter-spacing:-.02em}
+.groupcard .gc-sub{font-size:13px; color:var(--n500); margin:6px 0 14px}
+.groupcard .gc-acts{display:flex; gap:8px}
+.groupcard .gc-vol{border-top:1px solid var(--n150); background:var(--n25); padding:13px 20px 15px}
+.gc-vol-lbl{font-size:13px; font-weight:650; color:var(--n700)}
+.gc-times{display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:12px; color:var(--n500); margin:10px 0 4px}
+.gc-off{font-size:12px; color:var(--n400); margin-top:8px}
+.groupcard .check{font-size:12.5px}
+
+@media (max-width:1100px){
+  .rail{display:none}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= ADMIN APP ================= -->
+<div class="app active" id="admin">
+  <aside class="sidebar">
+    <div class="brand"><i class="brand-mark"></i> ChurchPlanner PRO</div>
+    <button class="nav-item" onclick="adminPage('people')"><span class="ic">👥</span> People</button>
+    <button class="nav-item"><span class="ic">✅</span> Member approval</button>
+    <button class="nav-item"><span class="ic">📋</span> Forms</button>
+    <button class="nav-item" id="navGroups" onclick="adminPage('groups')"><span class="ic">🏷️</span> Groups</button>
+    <button class="nav-item active" id="navVolunteers" onclick="adminPage('volunteers')"><span class="ic">🗓️</span> Volunteers <span class="nav-count" id="navReqCount">3</span></button>
+    <button class="nav-item"><span class="ic">💬</span> Ask Chat</button>
+    <button class="nav-item"><span class="ic">📅</span> Calendar</button>
+    <button class="nav-item"><span class="ic">📈</span> Reporting</button>
+    <button class="nav-item"><span class="ic">⚡</span> Workflows</button>
+    <button class="nav-item"><span class="ic">🗂️</span> Tasks</button>
+    <button class="nav-item"><span class="ic">💵</span> Finances</button>
+    <button class="nav-item"><span class="ic">📁</span> Files <span class="nav-tag">New</span></button>
+    <button class="nav-item"><span class="ic">📣</span> Campaigns</button>
+    <div class="nav-section">Operations</div>
+    <button class="nav-item"><span class="ic">⚙️</span> Settings</button>
+    <button class="nav-item"><span class="ic">🏢</span> Vendors</button>
+    <button class="nav-item" style="opacity:.45"><span class="ic">🔗</span> Integrations <span class="nav-tag">Soon</span></button>
+    <div class="sidebar-foot">
+      <span class="avatar" style="background:#0d9488">PR</span>
+      <span class="who">Prairie Ridge Church<small>Andrew Schneider · Admin</small></span>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h1 id="adminTitle">Volunteers</h1>
+      <span class="pill muted" id="draftPill" style="display:none"></span>
+      <div class="spacer"></div>
+      <button class="btn sm" id="reqBtn" onclick="openRequests()">🔁 Requests <span class="pill warn" id="reqPill" style="height:18px;padding:0 7px">3</span></button>
+      <div class="who"><span class="avatar sm" style="background:#4f46e5">AS</span> andrew.schneider839@gmail.com</div>
+    </div>
+
+    <div class="content">
+      <!-- ---------- Volunteers ---------- -->
+      <div class="pane" id="pageVolunteers">
+        <div class="pane-head">
+          <div class="week-bar">
+            <div class="week-nav">
+              <button onclick="shiftWeek(-1)" title="Previous week">‹</button>
+              <span class="divider"></span>
+              <button onclick="shiftWeek(1)" title="Next week">›</button>
+            </div>
+            <button class="btn sm" onclick="goToday()">Today</button>
+            <span class="week-label" id="weekLabel"></span>
+            <div style="flex:1"></div>
+            <button class="btn sm" onclick="openNewShift()">＋ Add shift</button>
+            <button class="btn primary sm" id="publishBtn" onclick="publish()">Publish &amp; notify <span class="badge" id="publishCount">0</span></button>
+          </div>
+          <div class="stats" id="stats"></div>
+        </div>
+        <div class="grid-wrap">
+          <div class="grid" id="grid"></div>
+        </div>
+      </div>
+
+      <!-- ---------- Groups ---------- -->
+      <div class="pane" id="pageGroups" style="display:none">
+        <div class="grid-wrap" style="padding-top:18px">
+          <div id="groupsPage"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MEMBER APP ================= -->
+<div class="app" id="member">
+  <div class="mtop">
+    <div class="logo">ChurchPlanner<span>PRO</span></div>
+    <button class="mtab">Home</button>
+    <button class="mtab">Events</button>
+    <button class="mtab">Campaigns</button>
+    <button class="mtab">Giving</button>
+    <button class="mtab on">Volunteer</button>
+    <button class="mtab">Files</button>
+    <div class="spacer"></div>
+    <div class="who"><span class="avatar sm" style="background:#0d9488">KH</span> kevin.holm73@mailinator.com <a href="#" onclick="return false">Sign out</a></div>
+  </div>
+  <div class="mbody">
+    <div class="mwrap">
+      <div id="mcontent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SHARED CHROME ================= -->
+<div class="scrim" id="scrim" onclick="closeAll()"></div>
+
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div style="flex:1;min-width:0">
+      <h2 id="drawerTitle">Shift</h2>
+      <div class="sub" id="drawerSub"></div>
+    </div>
+    <button class="icon-btn" onclick="closeAll()">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot" id="drawerFoot"></div>
+</aside>
+
+<div class="modal-wrap" id="modalWrap">
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <div style="flex:1;min-width:0">
+        <h2 id="modalTitle">Title</h2>
+        <div class="sub" id="modalSub"></div>
+      </div>
+      <button class="icon-btn" onclick="closeAll()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<div class="protoswitch">
+  <span class="lbl">Prototype</span>
+  <button class="on" id="swAdmin" onclick="showApp('admin')">Admin app</button>
+  <button id="swMember" onclick="showApp('member')">Member app · Kevin</button>
+</div>
+<script>
+/* ============================================================
+   Prototype data
+   ============================================================ */
+const TODAY = new Date(2026, 7, 18);              // Tue Aug 18, 2026
+const ME = 'kevin';                                // member app persona
+
+const AREAS = [
+  {id:'weekend', name:'Weekend Services'},
+  {id:'kids',    name:'Kids & Students'},
+  {id:'care',    name:'Care & Operations'},
+];
+
+const GROUPS = [
+  {id:'ushers',     area:'weekend', name:'Ushers',               color:'c-blue',   enabled:true,  approve:true,  pickup:true},
+  {id:'greeters',   area:'weekend', name:'Greeters',             color:'c-violet', enabled:true,  approve:false, pickup:true},
+  {id:'worship',    area:'weekend', name:'Worship Team',         color:'c-rose',   enabled:true,  approve:true,  pickup:false},
+  {id:'av',         area:'weekend', name:'A/V + Livestream',     color:'c-cyan',   enabled:true,  approve:true,  pickup:true},
+  {id:'nursery',    area:'kids',    name:'Nursery (0–2)',        color:'c-amber',  enabled:true,  approve:true,  pickup:true},
+  {id:'kidschurch', area:'kids',    name:'Kids Church (K–5)',    color:'c-teal',   enabled:true,  approve:true,  pickup:true},
+  {id:'youth',      area:'kids',    name:'Youth Night Leaders',  color:'c-lime',   enabled:true,  approve:false, pickup:true},
+  {id:'coffee',     area:'care',    name:'Coffee & Hospitality', color:'c-slate',  enabled:true,  approve:false, pickup:true},
+  {id:'parking',    area:'care',    name:'Parking Team',         color:'c-blue',   enabled:true,  approve:false, pickup:true},
+  {id:'meals',      area:'care',    name:'Meal Train',           color:'c-rose',   enabled:false, approve:false, pickup:true},
+];
+
+const MEMBERS = [
+  {id:'kevin',     n:'Kevin Holm',          c:'#0d9488', g:['ushers','coffee','parking']},
+  {id:'edward',    n:'Edward Adams',        c:'#2563eb', g:['ushers','parking','av']},
+  {id:'emma',      n:'Emma Adams',          c:'#7c3aed', g:['worship','greeters']},
+  {id:'barbara',   n:'Barbara Sandberg',    c:'#e11d48', g:['nursery','kidschurch']},
+  {id:'anna',      n:'Anna Adams',          c:'#d97706', g:['nursery','greeters']},
+  {id:'alex',      n:'Alexander Engstrom',  c:'#0284c7', g:['ushers','parking']},
+  {id:'susan',     n:'Susan Engstrom',      c:'#4d7c0f', g:['coffee','greeters']},
+  {id:'sarah',     n:'Sarah Wright',        c:'#db2777', g:['coffee','kidschurch']},
+  {id:'mark',      n:'Mark Schultz',        c:'#475569', g:['worship','av']},
+  {id:'ashley',    n:'Ashley Mitchell',     c:'#8b5cf6', g:['kidschurch','youth']},
+  {id:'emily',     n:'Emily Adams',         c:'#059669', g:['worship','youth']},
+  {id:'jack',      n:'Jack Baker',          c:'#b45309', g:['parking','ushers']},
+  {id:'patricia',  n:'Patricia Swanson',    c:'#0369a1', g:['nursery','coffee']},
+  {id:'joseph',    n:'Joseph Lopez',        c:'#16a34a', g:['av','youth']},
+  {id:'samantha',  n:'Samantha Hill',       c:'#be123c', g:['kidschurch','greeters']},
+];
+
+/* recurring rules used to seed the schedule */
+const RULES = [
+  {g:'ushers',     dow:0, slots:[[540,630,2],[660,750,2]],  label:'Sunday service'},
+  {g:'greeters',   dow:0, slots:[[525,615,3],[645,735,3]],  label:'Sunday service'},
+  {g:'worship',    dow:4, slots:[[1140,1230,3]],            label:'Thursday rehearsal'},
+  {g:'worship',    dow:0, slots:[[480,750,3]],              label:'Sunday service'},
+  {g:'av',         dow:0, slots:[[510,750,2]],              label:'Sunday service'},
+  {g:'nursery',    dow:0, slots:[[540,630,3],[660,750,3]],  label:'Sunday service'},
+  {g:'kidschurch', dow:0, slots:[[540,630,4],[660,750,4]],  label:'Sunday service'},
+  {g:'youth',      dow:3, slots:[[1110,1230,3]],            label:'Wednesday youth night'},
+  {g:'coffee',     dow:0, slots:[[510,750,2]],              label:'Sunday service'},
+  {g:'parking',    dow:0, slots:[[510,690,2]],              label:'Sunday service'},
+];
+
+/* ============================================================
+   Small helpers
+   ============================================================ */
+const $  = s => document.querySelector(s);
+const el = (t,c,h)=>{const n=document.createElement(t); if(c)n.className=c; if(h!=null)n.innerHTML=h; return n;};
+const group = id => GROUPS.find(g=>g.id===id);
+const member = id => MEMBERS.find(m=>m.id===id);
+const initials = n => n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DOWFULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function hash(s){let x=2166136261; for(let i=0;i<s.length;i++){x^=s.charCodeAt(i); x=Math.imul(x,16777619);} return (x>>>0);}
+function addDays(d,n){const x=new Date(d); x.setDate(x.getDate()+n); return x;}
+function startOfWeek(d){const x=new Date(d); x.setDate(x.getDate()-x.getDay()); x.setHours(0,0,0,0); return x;}
+function key(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function parseKey(k){const [y,m,d]=k.split('-').map(Number); return new Date(y,m-1,d);}
+function t12(m){const h=Math.floor(m/60), mm=m%60; const ap=h>=12?'p':'a'; let hh=h%12; if(hh===0)hh=12; return hh+(mm?':'+String(mm).padStart(2,'0'):'')+ap;}
+function t12full(m){const h=Math.floor(m/60), mm=m%60; const ap=h>=12?'PM':'AM'; let hh=h%12; if(hh===0)hh=12; return hh+':'+String(mm).padStart(2,'0')+' '+ap;}
+function range(s,e){return t12(s)+'–'+t12(e);}
+function longDate(k){const d=parseKey(k); return DOW[d.getDay()]+', '+MON[d.getMonth()]+' '+d.getDate();}
+function isPast(k){return parseKey(k) < new Date(TODAY.getFullYear(),TODAY.getMonth(),TODAY.getDate());}
+function avatar(id,cls){const m=member(id); return `<span class="avatar ${cls||''}" style="background:${m.c}" title="${m.n}">${initials(m.n)}</span>`;}
+
+/* ============================================================
+   Seed the schedule
+   ============================================================ */
+let SHIFTS = [];
+(function seed(){
+  const from = addDays(startOfWeek(TODAY), -7);
+  for(let i=0;i<35;i++){
+    const d = addDays(from,i), k = key(d);
+    RULES.forEach(r=>{
+      if(d.getDay()!==r.dow) return;
+      r.slots.forEach((sl,si)=>{
+        const id = r.g+'-'+k+'-'+si;
+        const eligible = MEMBERS.filter(m=>m.g.includes(r.g)).map(m=>m.id);
+        const need = sl[2];
+        const seedN = hash(id);
+        const short = (seedN%100) < 26 ? 1 : ((seedN%100) < 33 ? 2 : 0);
+        let take = Math.max(0, Math.min(eligible.length, need - short));
+        const startAt = seedN % Math.max(1,eligible.length);
+        const ppl = [];
+        for(let j=0;j<take;j++) ppl.push(eligible[(startAt+j)%eligible.length]);
+        const roster=[...new Set(ppl)];
+        SHIFTS.push({id, gid:r.g, date:k, s:sl[0], e:sl[1], need, ppl:roster,
+                     conf: roster.filter(p=>hash(id+p)%100<62),
+                     label:r.label, repeat:'Weekly on '+DOWFULL[r.dow]+'s',
+                     published:true, note:'', openedBy:null});
+      });
+    });
+  }
+})();
+
+const S = id => SHIFTS.find(x=>x.id===id);
+function fill(sh){return {open: Math.max(0, sh.need - sh.ppl.length)};}
+
+/* --- narrative overrides so the demo tells a story --- */
+function force(id, ppl, conf){const sh=S(id); if(sh){ sh.ppl=ppl; sh.conf=conf||[]; }}
+const NW = key(addDays(startOfWeek(TODAY),7));        // Sun Aug 23
+const NW2 = key(addDays(startOfWeek(TODAY),14));      // Sun Aug 30
+const NW3 = key(addDays(startOfWeek(TODAY),21));      // Sun Sep 6
+force('ushers-'+NW+'-0',  ['kevin','edward'], ['edward']);
+force('ushers-'+NW+'-1',  ['alex']);                   // 1 of 2 — open slot
+force('parking-'+NW+'-0', ['jack']);                   // 1 of 2
+force('coffee-'+NW2+'-0', ['kevin','susan'], ['kevin','susan']);
+force('ushers-'+NW3+'-1', ['kevin','jack'], ['jack']);
+force('nursery-'+NW+'-1', ['anna','patricia']);        // 2 of 3 — open slot
+(function(){const sh=S('nursery-'+NW+'-1'); if(sh){sh.openedBy='barbara';}})();
+(function(){const sh=S('ushers-'+NW+'-1'); if(sh){sh.published=false;}})();
+(function(){const sh=S('av-'+NW+'-0'); if(sh){sh.ppl=['mark']; sh.published=false;}})();
+
+/* ============================================================
+   Requests
+   ============================================================ */
+let REQUESTS = [
+  { id:'r1', type:'swap', status:'pending_admin', from:'emma', to:'mark',
+    fromShift:'worship-'+NW+'-0', toShift:'worship-'+NW2+'-0',
+    note:'Out of town for my niece’s wedding.' },
+  { id:'r2', type:'drop', status:'pending_admin', from:'barbara',
+    fromShift:'nursery-'+NW+'-1', note:'Recovering from surgery — back in September.' },
+  { id:'r3', type:'swap', status:'pending_member', from:'alex', to:ME,
+    fromShift:'ushers-'+NW3+'-1', toShift:'ushers-'+NW+'-0',
+    note:'Any chance you can take the late service on Sep 6? I’ll cover your 9am on the 23rd.' },
+];
+
+/* ============================================================
+   UI state
+   ============================================================ */
+let state = { week: addDays(startOfWeek(TODAY),7), app:'admin', page:'volunteers', drawerShift:null, tmp:{},
+               mweek: addDays(startOfWeek(TODAY),7), mview:'mine' };
+
+function showApp(a){
+  state.app=a;
+  $('#admin').classList.toggle('active', a==='admin');
+  $('#member').classList.toggle('active', a==='member');
+  $('#swAdmin').classList.toggle('on', a==='admin');
+  $('#swMember').classList.toggle('on', a==='member');
+  closeAll();
+  render();
+}
+
+function toast(msg, ok){
+  const t = el('div','toast', (ok?'<span class="ok">✓</span> ':'')+msg);
+  $('#toasts').appendChild(t);
+  setTimeout(()=>{t.style.transition='opacity .3s, transform .3s'; t.style.opacity='0'; t.style.transform='translateY(8px)'; setTimeout(()=>t.remove(),300);}, 3400);
+}
+
+function closeAll(){
+  $('#scrim').classList.remove('on');
+  $('#drawer').classList.remove('on');
+  $('#modalWrap').classList.remove('on');
+  state.drawerShift=null; state.tmp={};
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeAll(); });
+
+function openModal(title, sub, body, foot, wide){
+  $('#modalTitle').textContent=title;
+  $('#modalSub').innerHTML=sub||'';
+  $('#modalBody').innerHTML=body;
+  $('#modalFoot').innerHTML=foot||'';
+  $('#modal').classList.toggle('wide', !!wide);
+  $('#modalWrap').classList.add('on');
+  $('#scrim').classList.add('on');
+}
+function openDrawer(title, sub, body, foot){
+  $('#drawerTitle').textContent=title;
+  $('#drawerSub').innerHTML=sub||'';
+  $('#drawerBody').innerHTML=body;
+  $('#drawerFoot').innerHTML=foot||'';
+  $('#drawer').classList.add('on');
+  $('#scrim').classList.add('on');
+}
+
+/* ============================================================
+   ADMIN — pages
+   ============================================================ */
+function adminPage(p){
+  if(p==='people'){ toast('People is out of scope for this prototype.'); return; }
+  state.page = p;
+  $('#pageVolunteers').style.display = p==='volunteers'? '' : 'none';
+  $('#pageGroups').style.display    = p==='groups'? '' : 'none';
+  $('#navVolunteers').classList.toggle('active', p==='volunteers');
+  $('#navGroups').classList.toggle('active', p==='groups');
+  $('#adminTitle').textContent = p==='groups'? 'Groups' : 'Volunteers';
+  $('#reqBtn').style.display = p==='volunteers'? '' : 'none';
+  $('#draftPill').style.display = p==='volunteers' && SHIFTS.some(s=>!s.published)? 'inline-flex':'none';
+  render();
+}
+
+/* ============================================================
+   ADMIN — week grid
+   ============================================================ */
+function shiftWeek(n){ state.week = addDays(state.week, n*7); render(); }
+function goToday(){ state.week = startOfWeek(TODAY); render(); }
+
+function weekDays(){ return Array.from({length:7},(_,i)=>addDays(state.week,i)); }
+function visibleShifts(){
+  const days = weekDays().map(key);
+  return SHIFTS.filter(sh=>days.includes(sh.date) && group(sh.gid).enabled);
+}
+
+function render(){
+  if(state.app==='admin'){
+    if(state.page==='groups') renderGroupsPage(); else renderAdmin();
+  } else {
+    renderMember();
+  }
+  const pendingAdmin = REQUESTS.filter(r=>r.status==='pending_admin').length;
+  $('#reqPill').textContent = pendingAdmin;
+  $('#reqPill').style.display = pendingAdmin? '' : 'none';
+  $('#navReqCount').textContent = pendingAdmin;
+  $('#navReqCount').style.display = pendingAdmin? '' : 'none';
+}
+
+function renderAdmin(){
+  const days = weekDays();
+  const a=days[0], b=days[6];
+  const sameMonth = a.getMonth()===b.getMonth();
+  $('#weekLabel').textContent = MON[a.getMonth()]+' '+a.getDate()+' – '+(sameMonth?'':MON[b.getMonth()]+' ')+b.getDate()+', '+b.getFullYear();
+
+  const vis = visibleShifts();
+  const totalSlots = vis.reduce((n,s)=>n+s.need,0);
+  const filled = vis.reduce((n,s)=>n+Math.min(s.need,s.ppl.length),0);
+  const open = totalSlots-filled;
+  const shortShifts = vis.filter(s=>fill(s).open>0).length;
+  const pct = totalSlots? Math.round(filled/totalSlots*100):100;
+  const pendingAdmin = REQUESTS.filter(r=>r.status==='pending_admin').length;
+
+  $('#stats').innerHTML = `
+    <div class="stat">
+      <div class="k">Coverage</div>
+      <div class="v">${pct}<span style="font-size:14px;font-weight:600;color:var(--n400)">%</span></div>
+      <div class="sub">${filled} of ${totalSlots} slots filled</div>
+      <div class="bar"><span style="width:${pct}%;background:${pct>=95?'var(--green)':pct>=80?'#f59e0b':'#ef4444'}"></span></div>
+    </div>
+    <div class="stat ${open?'alert':''}">
+      <div class="k">Open slots</div>
+      <div class="v">${open}</div>
+      <div class="sub">${shortShifts} shift${shortShifts===1?'':'s'} still need volunteers</div>
+    </div>
+    <div class="stat">
+      <div class="k">Shifts scheduled</div>
+      <div class="v">${vis.length}</div>
+      <div class="sub">${new Set(vis.map(s=>s.gid)).size} groups this week</div>
+    </div>
+    <div class="stat">
+      <div class="k">Swaps &amp; drops</div>
+      <div class="v">${pendingAdmin}</div>
+      <div class="sub">${pendingAdmin? '<a href="#" onclick="openRequests();return false">Review requests →</a>' : 'Nothing waiting on you'}</div>
+    </div>`;
+
+  const draftCount = SHIFTS.filter(s=>!s.published).length;
+  $('#publishCount').textContent = draftCount;
+  $('#publishBtn').disabled = draftCount===0;
+  const dp = $('#draftPill');
+  dp.style.display = draftCount? 'inline-flex':'none';
+  dp.className='pill info dot'; dp.textContent = draftCount+' unpublished change'+(draftCount===1?'':'s');
+
+  buildGrid($('#grid'), days, vis, GROUPS.filter(g=>g.enabled), {admin:true});
+}
+
+/* ------------------------------------------------------------
+   Shared week grid — used by both the admin and the member app
+   ------------------------------------------------------------ */
+function buildGrid(g, days, vis, groups, opt){
+  opt = opt||{};
+  g.innerHTML='';
+  g.appendChild(el('div','gh corner','Group'));
+  days.forEach(d=>{
+    const k=key(d);
+    const ds = vis.filter(s=>s.date===k);
+    const dOpen = ds.reduce((n,s)=>n+fill(s).open,0);
+    const mineToday = !opt.admin && ds.some(s=>s.ppl.includes(ME));
+    const h = el('div','gh'+(k===key(TODAY)?' today':''));
+    h.innerHTML = `<div class="dow">${DOW[d.getDay()]}</div>
+      <div class="dnum">${d.getDate()}</div>
+      <div class="need">${mineToday? '<b style="color:var(--indigo)">you’re on</b>' : (ds.length? (dOpen? '<b>'+dOpen+' open</b>' : 'fully staffed') : '—')}</div>`;
+    g.appendChild(h);
+  });
+
+  /* open shifts row, pinned to the top */
+  const openShifts = vis.filter(s=>fill(s).open>0 && !isPast(s.date) &&
+      (opt.admin || (group(s.gid).pickup && !s.ppl.includes(ME))));
+  if(openShifts.length){
+    const lab = el('div','rowlabel');
+    lab.style.background='var(--green-100)'; lab.style.borderBottomColor='#bbf7d0';
+    lab.innerHTML = `<i class="swatch" style="background:var(--green)"></i>
+      <div><div class="nm" style="color:var(--green-600)">Open shifts</div>
+      <div class="mt">${openShifts.reduce((n,s)=>n+fill(s).open,0)} slots need volunteers</div></div>`;
+    g.appendChild(lab);
+    days.forEach(d=>{
+      const k=key(d);
+      const c = el('div','cell'+(isPast(k)?' past':''));
+      c.style.background='#f6fdf8'; c.style.borderBottomColor='#dcfce7';
+      const list = openShifts.filter(s=>s.date===k).sort((x,y)=>x.s-y.s);
+      list.slice(0,3).forEach(s=>c.appendChild(openChip(s, opt)));
+      if(list.length>3){
+        const more = el('button','more-open','+ '+(list.length-3)+' more');
+        more.onclick=()=>openDayList(k, opt);
+        c.appendChild(more);
+      }
+      g.appendChild(c);
+    });
+  }
+
+  /* one row per group */
+  const shown = groups.filter(gr => opt.admin? vis.some(s=>s.gid===gr.id) : true);
+  shown.forEach(gr=>{
+    const lab = el('div','rowlabel '+gr.color);
+    const gs = vis.filter(s=>s.gid===gr.id);
+    const gopen = gs.reduce((n,s)=>n+fill(s).open,0);
+    const mem = MEMBERS.filter(m=>m.g.includes(gr.id)).length;
+    lab.innerHTML = `<i class="swatch"></i>
+      <div style="min-width:0"><div class="nm">${gr.name}</div>
+      <div class="mt">${mem} volunteers${gopen? ' · <span style="color:var(--amber);font-weight:600">'+gopen+' open</span>':''}</div></div>`;
+    g.appendChild(lab);
+    days.forEach(d=>{
+      const k=key(d);
+      const c = el('div','cell'+(isPast(k)?' past':''));
+      gs.filter(s=>s.date===k).sort((x,y)=>x.s-y.s).forEach(s=>c.appendChild(chip(s, opt)));
+      if(opt.admin){
+        const add = el('button','cell-add','＋');
+        add.title='Add a shift'; add.onclick=(ev)=>{ev.stopPropagation(); openNewShift(gr.id,k);};
+        c.appendChild(add);
+      }
+      g.appendChild(c);
+    });
+  });
+
+  if(!shown.length) g.appendChild(el('div','empty-note','No groups have volunteer scheduling turned on yet.'));
+}
+
+function chip(sh, opt){
+  const gr = group(sh.gid), f=fill(sh);
+  const isMine = !opt.admin && sh.ppl.includes(ME);
+  const b = el('button','chip '+gr.color+(isMine?' mine':'')+(f.open?' short':' full'));
+  const stack = sh.ppl.slice(0,4).map(id=>avatar(id,'sm')).join('') +
+    (sh.ppl.length>4? `<span class="avatar sm" style="background:var(--n400)">+${sh.ppl.length-4}</span>`:'') +
+    (f.open? Array.from({length:Math.min(f.open,3)}).map(()=>'<span class="avatar sm empty">+</span>').join(''):'');
+  b.innerHTML = `<div class="t">${range(sh.s,sh.e)} ${isMine?'<span class="you-tag">YOU</span>':''}</div>
+    <div class="foot"><div class="stack">${stack}</div><span class="fill">${sh.ppl.length}/${sh.need}</span></div>
+    ${(opt.admin && !sh.published)?'<span class="flag" title="Unpublished">•</span>':''}`;
+  b.title = gr.name+' · '+longDate(sh.date)+' · '+t12full(sh.s)+' – '+t12full(sh.e);
+  b.onclick = ()=> opt.admin? openShiftDrawer(sh.id) : memberShiftDrawer(sh.id);
+  return b;
+}
+
+function openChip(sh, opt){
+  const f=fill(sh), gr=group(sh.gid);
+  const b = el('button','chip open');
+  b.title = gr.name+' · '+longDate(sh.date)+' · '+range(sh.s,sh.e)+(sh.openedBy? ' · dropped by '+member(sh.openedBy).n : '');
+  b.innerHTML = `<span class="t"><b>${t12(sh.s)}</b> ${gr.name}</span><span class="fill">${f.open}</span>`;
+  b.onclick = ()=> opt.admin? openShiftDrawer(sh.id) : memberShiftDrawer(sh.id);
+  return b;
+}
+
+function openDayList(k, opt){
+  const list = visibleShifts().filter(s=>s.date===k && fill(s).open>0).sort((a,b)=>a.s-b.s);
+  openModal('Open shifts', longDate(k)+' · '+list.reduce((n,s)=>n+fill(s).open,0)+' slots need volunteers',
+    list.map(s=>`<button class="person pickable" style="width:100%;text-align:left" onclick="closeAll();${opt.admin?'openShiftDrawer':'memberShiftDrawer'}('${s.id}')">
+        <span class="legend-swatch ${group(s.gid).color}" style="background:var(--c);width:8px;height:30px;border-radius:4px"></span>
+        <div style="min-width:0"><div class="nm">${group(s.gid).name}</div><div class="mt">${t12full(s.s)} – ${t12full(s.e)}${s.openedBy? ' · dropped by '+member(s.openedBy).n:''}</div></div>
+        <div class="right"><span class="pill warn">${fill(s).open} open</span></div></button>`).join(''),
+    `<button class="btn" onclick="closeAll()">Close</button>`);
+}
+</script>
+<script>
+/* ============================================================
+   ADMIN — shift drawer
+   ============================================================ */
+function openShiftDrawer(id){
+  const sh=S(id); if(!sh) return;
+  state.drawerShift=id;
+  const gr=group(sh.gid), f=fill(sh);
+  const eligible = MEMBERS.filter(m=>m.g.includes(sh.gid));
+
+  const assigned = sh.ppl.map(pid=>{
+    const m=member(pid);
+    const conflict = SHIFTS.some(o=>o.id!==sh.id && o.date===sh.date && o.ppl.includes(pid) && o.s<sh.e && o.e>sh.s);
+    return `<div class="person">
+      ${avatar(pid)}
+      <div style="min-width:0">
+        <div class="nm">${m.n}</div>
+        <div class="mt">${conflict? '<span style="color:var(--red)">⚠ Double-booked this hour</span>' : 'Scheduled'}</div>
+      </div>
+      <div class="right">
+        <button class="btn sm ghost" title="Message" onclick="toast('A reminder was sent to ${m.n.split(' ')[0]}.',1)">✉</button>
+        <button class="btn sm danger" onclick="unassign('${sh.id}','${pid}')">Remove</button>
+      </div></div>`;
+  }).join('');
+
+  const slots = Array.from({length:f.open}).map(()=>`
+    <div class="person slot">
+      <span class="avatar empty">+</span>
+      <div><div class="nm" style="color:var(--n500)">Open slot</div>
+      <div class="mt">${sh.openedBy? 'Dropped by '+member(sh.openedBy).n : 'Not yet filled'}</div></div>
+      <div class="right"><button class="btn sm indigo" onclick="openAssign('${sh.id}')">Assign</button></div>
+    </div>`).join('');
+
+  const body = `
+    <div class="dsec">
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px">
+        <span class="pill ${f.open?'warn':'ok'} dot">${f.open? f.open+' slot'+(f.open===1?'':'s')+' open' : 'Fully staffed'}</span>
+        ${sh.published? '<span class="pill muted">Published</span>' : '<span class="pill info dot">Unpublished</span>'}
+        ${gr.approve? '<span class="pill muted">Swaps need approval</span>':''}
+      </div>
+      <div class="kv"><span class="k">Date</span><span class="v">${longDate(sh.date)}, ${parseKey(sh.date).getFullYear()}</span></div>
+      <div class="kv"><span class="k">Time</span><span class="v">${t12full(sh.s)} – ${t12full(sh.e)}</span></div>
+      <div class="kv"><span class="k">Volunteers needed</span><span class="v">${sh.need}</span></div>
+      <div class="kv"><span class="k">Repeats</span><span class="v">${sh.repeat}</span></div>
+      <div class="kv"><span class="k">Occasion</span><span class="v">${sh.label}</span></div>
+    </div>
+
+    <div class="dsec">
+      <h4>Scheduled <span class="muted" style="letter-spacing:0;text-transform:none;font-weight:600">${sh.ppl.length} of ${sh.need}</span></h4>
+      ${assigned || '<div class="emptystate" style="padding:16px">Nobody scheduled yet.</div>'}
+      ${slots}
+    </div>
+
+    <div class="dsec">
+      <h4>Notes for volunteers</h4>
+      <textarea class="textarea" placeholder="e.g. Arrive 15 minutes early, meet at the welcome desk." onchange="setNote('${sh.id}',this.value)">${sh.note||''}</textarea>
+    </div>
+
+    <div class="dsec">
+      <h4>Eligible &amp; available</h4>
+      <div class="callout plain">${eligible.length} people are in ${gr.name}. ${f.open? 'Post this to open shifts and anyone eligible can claim it from their phone.':'Everyone is covered.'}</div>
+    </div>`;
+
+  const foot = `
+    <button class="btn danger" onclick="deleteShift('${sh.id}')">Delete</button>
+    <div style="flex:1"></div>
+    ${f.open? `<button class="btn" onclick="notifyOpen('${sh.id}')">Notify group</button>`:''}
+    <button class="btn indigo" onclick="closeAll()">Done</button>`;
+
+  openDrawer(gr.name, `${longDate(sh.date)} · ${t12full(sh.s)} – ${t12full(sh.e)}`, body, foot);
+}
+
+function setNote(id,v){ const sh=S(id); sh.note=v; sh.published=false; render(); }
+function unassign(id,pid){
+  const sh=S(id); sh.ppl=sh.ppl.filter(p=>p!==pid); sh.published=false;
+  toast(member(pid).n+' was removed and the slot is now open.',1);
+  render(); openShiftDrawer(id);
+}
+function notifyOpen(id){
+  const sh=S(id), gr=group(sh.gid);
+  const n = MEMBERS.filter(m=>m.g.includes(sh.gid) && !sh.ppl.includes(m.id)).length;
+  toast(`Sent to ${n} ${gr.name} volunteers — “${fill(sh).open} spot open ${longDate(sh.date)}”.`,1);
+}
+function deleteShift(id){
+  const sh=S(id);
+  SHIFTS = SHIFTS.filter(x=>x.id!==id);
+  toast('Shift deleted.'); closeAll(); render();
+}
+
+function openAssign(id){
+  const sh=S(id), gr=group(sh.gid);
+  const eligible = MEMBERS.filter(m=>m.g.includes(sh.gid) && !sh.ppl.includes(m.id));
+  const rows = eligible.map(m=>{
+    const busy = SHIFTS.some(o=>o.date===sh.date && o.ppl.includes(m.id) && o.s<sh.e && o.e>sh.s);
+    const count = SHIFTS.filter(o=>o.ppl.includes(m.id) && parseKey(o.date)>=TODAY).length;
+    return `<button class="person pickable" style="width:100%" onclick="assign('${sh.id}','${m.id}')" ${busy?'disabled style="opacity:.5;width:100%"':''}>
+      ${avatar(m.id)}
+      <div style="text-align:left;min-width:0">
+        <div class="nm">${m.n}</div>
+        <div class="mt">${busy? '⚠ Already serving at this time' : count+' upcoming shift'+(count===1?'':'s')}</div>
+      </div>
+      <div class="right"><span class="pill ${busy?'muted':'info'}">${busy?'Conflict':'Add'}</span></div>
+    </button>`;
+  }).join('');
+  openModal('Assign a volunteer',
+    `${gr.name} · ${longDate(sh.date)} · ${range(sh.s,sh.e)}`,
+    `<input class="input" placeholder="Search ${gr.name} volunteers…" oninput="filterPeople(this.value)" style="margin-bottom:12px">
+     <div id="peopleList">${rows || '<div class="emptystate">Everyone in this group is already scheduled.</div>'}</div>
+     <div class="divide"></div>
+     <div class="callout">Only people in <b>${gr.name}</b> are shown. Add someone to the group first to schedule them here.</div>`,
+    `<button class="btn" onclick="openShiftDrawer('${sh.id}')">Cancel</button>`);
+}
+function filterPeople(q){
+  q=q.toLowerCase();
+  [...document.querySelectorAll('#peopleList .person')].forEach(p=>{
+    p.style.display = p.textContent.toLowerCase().includes(q)? '' : 'none';
+  });
+}
+function assign(id,pid){
+  const sh=S(id); sh.ppl.push(pid); sh.published=false; sh.openedBy=null;
+  toast(member(pid).n+' was added to '+group(sh.gid).name+' on '+longDate(sh.date)+'.',1);
+  render(); openShiftDrawer(id);
+}
+
+/* ============================================================
+   ADMIN — new shift
+   ============================================================ */
+function openNewShift(gid, date){
+  const gopts = GROUPS.filter(g=>g.enabled).map(g=>`<option value="${g.id}" ${g.id===gid?'selected':''}>${g.name}</option>`).join('');
+  const d = date || key(addDays(state.week,0));
+  openModal('Add a shift','Repeating shifts create the whole series at once.',`
+    <div class="field"><label>Group</label><select class="select" id="nsGroup">${gopts}</select>
+      <div class="hint">Only groups with volunteer scheduling turned on appear here.</div></div>
+    <div class="row3">
+      <div class="field"><label>Date</label><input class="input" type="date" id="nsDate" value="${d}"></div>
+      <div class="field"><label>Start</label><input class="input" type="time" id="nsStart" value="09:00"></div>
+      <div class="field"><label>End</label><input class="input" type="time" id="nsEnd" value="10:30"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Volunteers needed</label><input class="input" type="number" id="nsNeed" value="2" min="1" max="20"></div>
+      <div class="field"><label>Occasion</label><input class="input" id="nsLabel" value="Sunday service"></div>
+    </div>
+    <div class="divide"></div>
+    <div class="field"><label>Repeat</label>
+      <select class="select" id="nsRepeat" onchange="document.getElementById('nsRepeatOpts').style.display=this.value==='none'?'none':''">
+        <option value="none">Does not repeat</option>
+        <option value="weekly" selected>Weekly</option>
+        <option value="biweekly">Every other week</option>
+        <option value="monthly">Monthly</option>
+      </select>
+    </div>
+    <div id="nsRepeatOpts">
+      <div class="field"><label>On these days</label>
+        <div class="daypick" id="nsDays">${DOW.map((d,i)=>`<button type="button" onclick="this.classList.toggle('on')" class="${i===0?'on':''}" data-d="${i}">${d[0]}</button>`).join('')}</div>
+      </div>
+      <div class="field"><label>Create ahead</label>
+        <select class="select" id="nsCount"><option value="4">4 weeks</option><option value="8" selected>8 weeks</option><option value="13">13 weeks (a quarter)</option></select>
+      </div>
+    </div>
+    <div class="divide"></div>
+    <label class="switch" style="margin-bottom:10px"><input type="checkbox" id="nsOpen" checked><span class="track"></span>
+      <span><b style="font-size:13px">Let volunteers claim empty slots</b><br><span class="hint">Unfilled slots show up as open shifts in the member app.</span></span></label>
+    <label class="switch"><input type="checkbox" id="nsNotify" checked><span class="track"></span>
+      <span><b style="font-size:13px">Notify the group when published</b><br><span class="hint">Nothing is sent until you hit Publish &amp; notify.</span></span></label>
+  `,
+  `<button class="btn" onclick="closeAll()">Cancel</button>
+   <button class="btn primary" onclick="createShift()">Create shifts</button>`);
+}
+
+function createShift(){
+  const gid=$('#nsGroup').value;
+  const d0=$('#nsDate').value;
+  const [sh1,sm1]=$('#nsStart').value.split(':').map(Number);
+  const [sh2,sm2]=$('#nsEnd').value.split(':').map(Number);
+  const s=sh1*60+sm1, e=sh2*60+sm2;
+  const need=parseInt($('#nsNeed').value||'1',10);
+  const label=$('#nsLabel').value||'Service';
+  const rep=$('#nsRepeat').value;
+  const days=[...document.querySelectorAll('#nsDays button.on')].map(b=>+b.dataset.d);
+  const weeks= rep==='none'? 1 : parseInt($('#nsCount').value,10);
+  const step = rep==='biweekly'?2 : rep==='monthly'?4 : 1;
+
+  let made=0;
+  const base=parseKey(d0);
+  if(rep==='none'){
+    pushShift(gid,key(base),s,e,need,label,'Does not repeat'); made++;
+  } else {
+    const wk0=startOfWeek(base);
+    for(let w=0; w<weeks; w+=step){
+      days.forEach(dd=>{
+        const dt=addDays(wk0, w*7+dd);
+        if(dt<base) return;
+        pushShift(gid,key(dt),s,e,need,label, rep==='weekly'?'Weekly on '+DOWFULL[dd]+'s':rep==='biweekly'?'Every other '+DOWFULL[dd]:'Monthly on '+DOWFULL[dd]);
+        made++;
+      });
+    }
+  }
+  closeAll(); render();
+  toast(made+' shift'+(made===1?'':'s')+' added as drafts — publish when you’re ready.',1);
+}
+function pushShift(gid,dk,s,e,need,label,repeat){
+  SHIFTS.push({id:gid+'-'+dk+'-'+Math.random().toString(36).slice(2,6), gid, date:dk, s, e, need, ppl:[], conf:[], label, repeat, published:false, note:'', openedBy:null});
+}
+
+/* ============================================================
+   ADMIN — publish
+   ============================================================ */
+function publish(){
+  const drafts=SHIFTS.filter(s=>!s.published);
+  if(!drafts.length) return;
+  const people=new Set(); drafts.forEach(s=>s.ppl.forEach(p=>people.add(p)));
+  const openCount=drafts.reduce((n,s)=>n+fill(s).open,0);
+  openModal('Publish & notify', `${drafts.length} change${drafts.length===1?'':'s'} will go live`, `
+    <div class="callout" style="margin-bottom:14px">
+      <span>📣</span>
+      <div>Volunteers only see shifts after you publish. Nothing has been sent yet.</div>
+    </div>
+    <div class="kv"><span class="k">Shifts publishing</span><span class="v">${drafts.length}</span></div>
+    <div class="kv"><span class="k">Volunteers notified</span><span class="v">${people.size}</span></div>
+    <div class="kv"><span class="k">Open slots announced</span><span class="v">${openCount}</span></div>
+    <div class="divide"></div>
+    <label class="check"><input type="checkbox" checked> Email volunteers their new shifts</label>
+    <label class="check"><input type="checkbox" checked> Push notification in the member app</label>
+    <label class="check"><input type="checkbox"> Text message (SMS)</label>
+    <div class="field" style="margin-top:14px"><label>Add a note (optional)</label>
+      <textarea class="textarea" placeholder="Thanks for serving this month — communion Sunday means an extra usher.">Schedule for the next few weeks is up. Grab an open spot if you can!</textarea></div>
+  `, `<button class="btn" onclick="closeAll()">Cancel</button>
+      <button class="btn primary" onclick="doPublish()">Publish &amp; notify ${people.size} people</button>`);
+}
+function doPublish(){
+  const n=SHIFTS.filter(s=>!s.published).length;
+  SHIFTS.forEach(s=>s.published=true);
+  closeAll(); render();
+  toast(n+' shift'+(n===1?'':'s')+' published — volunteers have been notified.',1);
+}
+
+/* ============================================================
+   ADMIN — Groups page (volunteer scheduling lives on the group)
+   ============================================================ */
+function renderGroupsPage(){
+  const wrap = $('#groupsPage');
+  let html = `<h2 class="page-title">Groups</h2>
+    <button class="btn primary" style="margin-bottom:22px" onclick="toast('New group form would open here.')">+ New Group</button>
+    <div class="groupgrid">`;
+
+  GROUPS.forEach(g=>{
+    const n = MEMBERS.filter(m=>m.g.includes(g.id)).length;
+    const rule = RULES.filter(r=>r.g===g.id);
+    const times = rule.length? rule.map(r=>DOW[r.dow]+' '+r.slots.map(s=>t12(s[0])).join(', ')).join('  ·  ') : 'No shift times set yet';
+    html += `<div class="groupcard">
+      <div class="gc-head">
+        <div class="gc-name">${g.name}</div>
+        <div class="gc-sub">${n} members ·</div>
+        <div class="gc-acts">
+          <button class="btn sm" onclick="toast('Group members would open here.')">Members</button>
+          <button class="btn sm danger" onclick="toast('Delete confirmation would open here.')">Delete</button>
+        </div>
+      </div>
+      <div class="gc-vol">
+        <label class="switch">
+          <input type="checkbox" ${g.enabled?'checked':''} onchange="toggleGroup('${g.id}',this.checked)"><span class="track"></span>
+          <span class="gc-vol-lbl">Volunteer scheduling</span>
+        </label>
+        ${g.enabled? `
+          <div class="gc-times">${times}
+            <button class="btn sm" style="margin-left:auto" onclick="openNewShift('${g.id}')">Set shift times</button></div>
+          <label class="check"><input type="checkbox" ${g.pickup?'checked':''} onchange="setGroupOpt('${g.id}','pickup',this.checked)"> Members can claim open shifts</label>
+          <label class="check"><input type="checkbox" ${g.approve?'checked':''} onchange="setGroupOpt('${g.id}','approve',this.checked)"> Swaps and drops need staff approval</label>`
+        : `<div class="gc-off">Turn this on to put ${g.name} on the volunteer schedule.</div>`}
+      </div>
+    </div>`;
+  });
+
+  wrap.innerHTML = html + `</div>`;
+}
+function toggleGroup(id,on){
+  group(id).enabled=on; renderGroupsPage();
+  toast(group(id).name+(on?' is now on the volunteer schedule.':' was removed from the volunteer schedule.'), on?1:0);
+}
+function setGroupOpt(id,k,v){ group(id)[k]=v; renderGroupsPage(); }
+
+/* ============================================================
+   ADMIN — swap / drop approvals
+   ============================================================ */
+function reqCard(r, forAdmin){
+  const from=member(r.from), fs=S(r.fromShift), gr=group(fs.gid);
+  const ts = r.toShift? S(r.toShift) : null;
+  const to = r.to? member(r.to) : null;
+  const mini = (sh,who)=>`<div class="minichip ${group(sh.gid).color}">
+      <div class="d">${longDate(sh.date)}</div>
+      <div class="t">${range(sh.s,sh.e)} · ${group(sh.gid).name}</div>
+      <div class="w">${who}</div></div>`;
+  return `<div class="reqcard">
+    <div class="top">
+      ${avatar(r.from,'lg')}
+      <div style="flex:1;min-width:0">
+        <div class="nm">${from.n} ${r.type==='swap'? 'wants to swap' : 'wants to drop a shift'}</div>
+        <div class="mt">${gr.name} · requested 2 days ago</div>
+      </div>
+      <span class="pill ${r.type==='swap'?'info':'warn'}">${r.type==='swap'?'Swap':'Drop'}</span>
+    </div>
+    ${r.type==='swap'
+      ? `<div class="swapline">${mini(fs, from.n)}<span class="swaparrow">⇄</span>${mini(ts, to? to.n : 'Open')}</div>`
+      : `<div class="swapline">${mini(fs, from.n)}<span class="swaparrow">→</span>
+          <div class="minichip" style="--c:#16a34a;--c-bg:#f0fdf4;--c-bd:#bbf7d0;--c-tx:#15803d">
+            <div class="d">Becomes</div><div class="t">Open shift</div><div class="w">Anyone in ${gr.name} can claim</div></div></div>`}
+    ${r.note? `<div class="callout plain" style="margin-top:8px">“${r.note}”</div>`:''}
+    <div class="acts">
+      <button class="btn sm" onclick="declineReq('${r.id}')">Decline</button>
+      <button class="btn sm primary" onclick="approveReq('${r.id}')">Approve</button>
+    </div>
+  </div>`;
+}
+
+function openRequests(){
+  const rs = REQUESTS.filter(r=>r.status==='pending_admin');
+  openModal('Swap & drop requests', rs.length? rs.length+' waiting on your approval' : 'All caught up',
+    rs.length? rs.map(r=>reqCard(r,true)).join('') :
+      '<div class="emptystate">🎉 No requests right now.<br><span class="tiny">Approved swaps update the schedule automatically.</span></div>',
+    `<button class="btn" onclick="closeAll()">Close</button>`, true);
+}
+
+function approveReq(id){
+  const r=REQUESTS.find(x=>x.id===id); if(!r) return;
+  const fs=S(r.fromShift);
+  if(r.type==='swap'){
+    const ts=S(r.toShift);
+    fs.ppl=fs.ppl.filter(p=>p!==r.from); if(r.to) fs.ppl.push(r.to);
+    if(ts){ ts.ppl=ts.ppl.filter(p=>p!==r.to); ts.ppl.push(r.from); }
+    toast('Swap approved — '+member(r.from).n.split(' ')[0]+' and '+member(r.to).n.split(' ')[0]+' have been notified.',1);
+  } else {
+    fs.ppl=fs.ppl.filter(p=>p!==r.from); fs.openedBy=r.from;
+    toast('Drop approved — the shift is now open for anyone in '+group(fs.gid).name+'.',1);
+  }
+  REQUESTS=REQUESTS.filter(x=>x.id!==id);
+  render(); openRequests();
+}
+function declineReq(id){
+  const r=REQUESTS.find(x=>x.id===id);
+  REQUESTS=REQUESTS.filter(x=>x.id!==id);
+  toast('Request declined — '+member(r.from).n.split(' ')[0]+' was notified.');
+  render(); openRequests();
+}
+</script>
+<script>
+/* ============================================================
+   MEMBER APP — the same weekly schedule as the admin,
+   scoped to the groups you belong to, open shifts on top.
+   ============================================================ */
+const myGroups = () => member(ME).g;
+const mDays = () => Array.from({length:7},(_,i)=>addDays(state.mweek,i));
+const upcoming = () => SHIFTS.filter(s=>s.ppl.includes(ME) && s.published && !isPast(s.date))
+                            .sort((a,b)=> a.date.localeCompare(b.date) || a.s-b.s);
+const openForMe = () => SHIFTS.filter(s=>
+      myGroups().includes(s.gid) && group(s.gid).pickup && group(s.gid).enabled &&
+      s.published && !isPast(s.date) && fill(s).open>0 && !s.ppl.includes(ME));
+const myPending = sid => REQUESTS.find(r=>
+      (r.from===ME && r.fromShift===sid) ||
+      (r.to===ME && (r.toShift===sid || r.fromShift===sid) && r.status==='pending_admin'));
+
+function dateChip(sh){
+  const d=parseKey(sh.date), gr=group(sh.gid);
+  return `<div class="datechip ${gr.color}"><div class="m">${DOW[d.getDay()]}</div><div class="d">${d.getDate()}</div></div>`;
+}
+function mShiftWeek(n){ state.mweek=addDays(state.mweek,n*7); renderMember(); }
+function mToday(){ state.mweek=startOfWeek(TODAY); renderMember(); }
+
+/* ============================================================
+   render
+   ============================================================ */
+function mSetView(v){ state.mview=v; renderMember(); }
+
+function renderMember(){
+  const up=upcoming(), op=openForMe();
+  const inbox = REQUESTS.filter(r=>r.status==='pending_member' && r.to===ME);
+  const days=mDays(), a=days[0], b=days[6];
+  const sameMonth=a.getMonth()===b.getMonth();
+  const weekLabel = MON[a.getMonth()]+' '+a.getDate()+' – '+(sameMonth?'':MON[b.getMonth()]+' ')+b.getDate()+', '+b.getFullYear();
+  const wk = SHIFTS.filter(s=>s.ppl.includes(ME) && s.published && days.map(key).includes(s.date))
+                   .sort((x,y)=>x.date.localeCompare(y.date)||x.s-y.s);
+
+  let html = `<div class="mhead" style="margin-bottom:18px">
+      <h1>Volunteer</h1>
+      <p>${up.length? `You’re serving ${up.length} upcoming shift${up.length===1?'':'s'}` : 'You’re not scheduled for anything yet'}${op.length? ` · ${op.length} open shift${op.length===1?'':'s'} your groups still need filled` : ''}.</p>
+    </div>`;
+
+  /* swap requests waiting on me */
+  inbox.forEach(r=>{
+    const from=member(r.from), theirs=S(r.fromShift), myShift=S(r.toShift);
+    html += `<div class="card" style="padding:14px;margin-bottom:16px;border-color:var(--amber-line);background:var(--amber-bg)">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">
+        ${avatar(r.from,'lg')}
+        <div><div style="font-weight:700">${from.n} wants to swap with you</div>
+        <div class="tiny muted">${group(theirs.gid).name}</div></div>
+        <div style="flex:1"></div><span class="pill warn">Swap request</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center">
+        <div class="card ${group(theirs.gid).color}" style="padding:10px;border-left:3px solid var(--c)">
+          <div class="tiny muted" style="font-weight:700;text-transform:uppercase;letter-spacing:.06em">You would take</div>
+          <div style="font-weight:700;font-size:13.5px;margin-top:2px">${longDate(theirs.date)} · ${range(theirs.s,theirs.e)}</div>
+          <div class="tiny muted">${group(theirs.gid).name}</div></div>
+        <div class="swaparrow" style="font-size:20px">⇄</div>
+        <div class="card ${group(myShift.gid).color}" style="padding:10px;border-left:3px solid var(--c)">
+          <div class="tiny muted" style="font-weight:700;text-transform:uppercase;letter-spacing:.06em">They would take</div>
+          <div style="font-weight:700;font-size:13.5px;margin-top:2px">${longDate(myShift.date)} · ${range(myShift.s,myShift.e)}</div>
+          <div class="tiny muted">${group(myShift.gid).name}</div></div>
+      </div>
+      ${r.note? `<div class="callout plain" style="margin-top:12px">“${r.note}”</div>`:''}
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button class="btn" onclick="respondSwap('${r.id}',false)">Decline</button>
+        <button class="btn primary" onclick="respondSwap('${r.id}',true)">Accept swap</button>
+      </div></div>`;
+  });
+
+  /* toolbar */
+  html += `<div class="mhead-bar">
+      <div class="mseg">
+        <button class="${state.mview==='mine'?'on':''}" onclick="mSetView('mine')">My shifts</button>
+        <button class="${state.mview==='all'?'on':''}" onclick="mSetView('all')">All shifts</button>
+        <button class="${state.mview==='open'?'on':''}" onclick="mSetView('open')">Open shifts ${op.length?`<span class="n">${op.length}</span>`:''}</button>
+      </div>
+      <div style="flex:1"></div>
+      ${state.mview!=='open'? `
+        <div class="week-nav">
+          <button onclick="mShiftWeek(-1)" title="Previous week">‹</button>
+          <span class="divider"></span>
+          <button onclick="mShiftWeek(1)" title="Next week">›</button>
+        </div>
+        <button class="btn sm" onclick="mToday()">Today</button>
+        <span style="font-size:13.5px;font-weight:700;letter-spacing:-.01em">${weekLabel}</span>`:''}
+    </div>`;
+
+  if(state.mview==='mine'){
+    if(!wk.length){
+      html += `<div class="emptystate" style="margin-bottom:30px">Nothing scheduled for you this week — check <b>Open shifts</b>.</div>`;
+    } else {
+      let last=null;
+      wk.forEach(sh=>{
+        if(sh.date!==last){ last=sh.date;
+          html += `<div class="dayhead"><h3>${longDate(sh.date)}</h3>${key(TODAY)===sh.date?'<span class="pill info">Today</span>':''}</div>`; }
+        html += myShiftCard(sh);
+      });
+      html += `<div style="height:24px"></div>`;
+    }
+  }
+
+  if(state.mview==='all'){
+    html += `<div class="mgridwrap"><div class="grid member" id="mgrid"></div></div>
+      <div class="tiny muted" style="margin:10px 0 30px">The whole church schedule. Your shifts are marked <span class="you-tag">YOU</span> — tap any shift to see who’s serving, pick it up, swap or drop it.</div>`;
+  }
+
+  if(state.mview==='open'){
+    if(!op.length){
+      html += `<div class="emptystate" style="margin-bottom:30px">Every shift in your groups is covered. 🙌</div>`;
+    } else {
+      html += `<div class="callout" style="margin-bottom:6px"><span>⚡</span>
+        <div>Shifts your groups still need filled. First to claim gets it — no approval needed.</div></div>`;
+      let last=null;
+      op.slice().sort((x,y)=>x.date.localeCompare(y.date)||x.s-y.s).forEach(sh=>{
+        if(sh.date!==last){ last=sh.date; html += `<div class="dayhead"><h3>${longDate(sh.date)}</h3></div>`; }
+        const gr=group(sh.gid), f=fill(sh);
+        html += `<div class="shiftcard openshift">
+          ${dateChip(sh)}
+          <div class="info">
+            <div class="ttl">${gr.name}
+              <span class="pill ok">${f.open} spot${f.open===1?'':'s'} open</span>
+              ${sh.openedBy? `<span class="pill muted">Dropped by ${member(sh.openedBy).n.split(' ')[0]}</span>`:''}</div>
+            <div class="meta">${t12full(sh.s)} – ${t12full(sh.e)} <span class="sep">·</span> ${sh.label}
+              <span class="sep">·</span> ${sh.ppl.length? 'Serving with '+sh.ppl.map(p=>member(p).n.split(' ')[0]).join(', ') : 'Nobody signed up yet'}</div>
+          </div>
+          <div class="acts"><button class="btn primary sm" onclick="openPickup('${sh.id}')">Pick up shift</button></div>
+        </div>`;
+      });
+      html += `<div style="height:24px"></div>`;
+    }
+  }
+
+  $('#mcontent').innerHTML = html;
+
+  if(state.mview==='all'){
+    const vis = SHIFTS.filter(s=>s.published && days.map(key).includes(s.date) && group(s.gid).enabled);
+    buildGrid(document.getElementById('mgrid'), days, vis, GROUPS.filter(g=>g.enabled), {admin:false});
+  }
+}
+
+function myShiftCard(sh){
+  const gr=group(sh.gid), pend=myPending(sh.id), f=fill(sh);
+  const others = sh.ppl.filter(p=>p!==ME);
+  const past = isPast(sh.date);
+  return `<div class="shiftcard ${pend?'pending':''}" ${past?'style="opacity:.6"':''}>
+    ${dateChip(sh)}
+    <div class="info">
+      <div class="ttl">${gr.name}
+        ${pend? `<span class="pill warn dot">${pend.status==='pending_admin' && pend.to===ME ? 'Waiting on staff approval' : (pend.type==='swap'?'Swap requested':'Drop requested')}</span>`:''}
+        ${f.open? `<span class="pill warn">${f.open} still needed</span>`:''}</div>
+      <div class="meta">${t12full(sh.s)} – ${t12full(sh.e)} <span class="sep">·</span> ${sh.label}
+        ${others.length? `<span class="sep">·</span> <span class="stack" style="display:inline-flex;vertical-align:middle">${others.map(p=>avatar(p,'sm')).join('')}</span> ${others.map(p=>member(p).n.split(' ')[0]).join(', ')}`:''}</div>
+      ${sh.note? `<div class="tiny muted" style="margin-top:4px">📌 ${sh.note}</div>`:''}
+    </div>
+    <div class="acts">
+      ${past? '<span class="pill muted">Served</span>' :
+        pend
+          ? (pend.from===ME
+              ? `<button class="btn sm" onclick="cancelReq('${pend.id}')">Cancel request</button>`
+              : `<button class="btn sm" disabled>Pending</button>`)
+          : `<button class="btn sm" onclick="openSwap('${sh.id}')">Swap</button>
+             <button class="btn sm" onclick="openDrop('${sh.id}')">Drop</button>`}
+    </div>
+  </div>`;
+}
+
+/* ============================================================
+   Member shift drawer
+   ============================================================ */
+function memberShiftDrawer(id){
+  const sh=S(id), gr=group(sh.gid), f=fill(sh), isMine=sh.ppl.includes(ME);
+  const pend=myPending(id), past=isPast(sh.date);
+  const canClaim = f.open>0 && gr.pickup && myGroups().includes(gr.id) && !past && !isMine;
+
+  const roster = sh.ppl.map(p=>`<div class="person">
+      ${avatar(p)}
+      <div style="min-width:0"><div class="nm">${member(p).n}${p===ME?' <span class="you-tag">YOU</span>':''}</div>
+      <div class="mt">Scheduled</div></div>
+    </div>`).join('') || '<div class="emptystate" style="padding:16px">Nobody signed up yet.</div>';
+
+  const slots = Array.from({length:f.open}).map(()=>`
+    <div class="person slot">
+      <span class="avatar empty">+</span>
+      <div><div class="nm" style="color:var(--n500)">Open slot</div>
+      <div class="mt">${sh.openedBy? 'Dropped by '+member(sh.openedBy).n : (gr.pickup? 'Anyone in the group can claim it':'Staff will fill this')}</div></div>
+    </div>`).join('');
+
+  const body = `
+    <div class="dsec">
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px">
+        ${isMine? '<span class="pill info dot">You’re scheduled</span>':''}
+        <span class="pill ${f.open?'warn':'ok'} dot">${f.open? f.open+' spot'+(f.open===1?'':'s')+' open':'Fully staffed'}</span>
+        ${past? '<span class="pill muted">Past</span>':''}
+      </div>
+      <div class="kv"><span class="k">Date</span><span class="v">${longDate(sh.date)}, ${parseKey(sh.date).getFullYear()}</span></div>
+      <div class="kv"><span class="k">Time</span><span class="v">${t12full(sh.s)} – ${t12full(sh.e)}</span></div>
+      <div class="kv"><span class="k">Arrive by</span><span class="v">${t12full(sh.s-15)}</span></div>
+      <div class="kv"><span class="k">Occasion</span><span class="v">${sh.label}</span></div>
+    </div>
+    <div class="dsec"><h4>Who’s serving <span class="muted" style="letter-spacing:0;text-transform:none;font-weight:600">${sh.ppl.length} of ${sh.need}</span></h4>
+      ${roster}${slots}</div>
+    ${sh.note? `<div class="dsec"><h4>Notes from staff</h4><div class="callout plain">📌 ${sh.note}</div></div>`:''}`;
+
+  let foot = `<div style="flex:1"></div><button class="btn" onclick="closeAll()">Close</button>`;
+  if(isMine && !past && !pend){
+    foot = `<div style="flex:1"></div>
+      <button class="btn" onclick="openSwap('${sh.id}')">Swap</button>
+      <button class="btn danger" onclick="openDrop('${sh.id}')">Drop</button>`;
+  } else if(canClaim){
+    foot = `<div style="flex:1"></div><button class="btn" onclick="closeAll()">Close</button>
+      <button class="btn primary" onclick="openPickup('${sh.id}')">Pick up shift</button>`;
+  } else if(pend){
+    foot = `<span class="pill warn dot" style="align-self:center">${pend.from===ME? 'Request pending' : 'Waiting on staff'}</span>
+      <div style="flex:1"></div>
+      ${pend.from===ME? `<button class="btn" onclick="cancelReq('${pend.id}')">Cancel request</button>`:''}
+      <button class="btn" onclick="closeAll()">Close</button>`;
+  }
+  openDrawer(gr.name, `${longDate(sh.date)} · ${t12full(sh.s)} – ${t12full(sh.e)}`, body, foot);
+}
+
+/* ============================================================
+   pick up
+   ============================================================ */
+function openPickup(id){
+  const sh=S(id), gr=group(sh.gid), f=fill(sh);
+  const conflict = SHIFTS.find(o=>o.date===sh.date && o.ppl.includes(ME) && o.s<sh.e && o.e>sh.s);
+  openModal('Pick up this shift', gr.name, `
+    <div class="shiftcard openshift" style="margin:0 0 14px">
+      ${dateChip(sh)}
+      <div class="info"><div class="ttl">${gr.name}</div>
+      <div class="meta">${longDate(sh.date)} <span class="sep">·</span> ${t12full(sh.s)} – ${t12full(sh.e)}</div></div>
+      <span class="pill ok">${f.open} open</span>
+    </div>
+    ${conflict? `<div class="callout warn" style="margin-bottom:12px"><span>⚠</span><div>You’re already serving with <b>${group(conflict.gid).name}</b> at ${range(conflict.s,conflict.e)} that day.</div></div>`:''}
+    <div class="kv"><span class="k">Serving with</span><span class="v">${sh.ppl.length? sh.ppl.map(p=>member(p).n).join(', ') : 'Nobody yet'}</span></div>
+    <div class="kv"><span class="k">Arrive by</span><span class="v">${t12full(sh.s-15)}</span></div>
+    <div class="kv"><span class="k">Approval needed</span><span class="v">No — first come, first served</span></div>
+    ${sh.note? `<div class="callout plain" style="margin-top:12px">📌 ${sh.note}</div>`:''}
+  `, `<button class="btn" onclick="closeAll()">Cancel</button>
+      <button class="btn primary" onclick="pickup('${sh.id}')">Yes, I’ll take it</button>`);
+}
+function pickup(id){
+  const sh=S(id); sh.ppl.push(ME); if(fill(sh).open===0) sh.openedBy=null;
+  closeAll(); render();
+  toast('You’re on the schedule for '+group(sh.gid).name+', '+longDate(sh.date)+'.',1);
+}
+
+/* ============================================================
+   drop
+   ============================================================ */
+function openDrop(id){
+  const sh=S(id), gr=group(sh.gid);
+  const others = MEMBERS.filter(m=>m.g.includes(sh.gid) && m.id!==ME && !sh.ppl.includes(m.id));
+  openModal('Drop this shift', `${gr.name} · ${longDate(sh.date)} · ${range(sh.s,sh.e)}`, `
+    <div class="field"><label>What should happen to it?</label>
+      <label class="check"><input type="radio" name="dropMode" value="open" checked>
+        <span><b>Release it to open shifts</b><br><span class="hint">Anyone in ${gr.name} can claim it. It shows at the top of the schedule right away.</span></span></label>
+      <label class="check"><input type="radio" name="dropMode" value="ask">
+        <span><b>Ask specific people to cover</b><br><span class="hint">Send it to a few volunteers first; if nobody takes it, it opens up.</span></span></label>
+    </div>
+    <div class="field"><label>Reason (optional — staff can see this)</label>
+      <textarea class="textarea" id="dropNote" placeholder="Out of town that weekend."></textarea></div>
+    ${gr.approve
+      ? `<div class="callout warn"><span>⏳</span><div>${gr.name} drops are reviewed by a staff member before the shift opens up.</div></div>`
+      : `<div class="callout"><span>⚡</span><div>This opens up immediately and ${others.length} ${gr.name} volunteers get a notification.</div></div>`}
+  `, `<button class="btn" onclick="closeAll()">Never mind</button>
+      <button class="btn danger" onclick="doDrop('${sh.id}')">Drop shift</button>`);
+}
+function doDrop(id){
+  const sh=S(id), gr=group(sh.gid);
+  const note=($('#dropNote')&&$('#dropNote').value)||'';
+  if(gr.approve){
+    REQUESTS.push({id:'r'+Math.random().toString(36).slice(2,6), type:'drop', status:'pending_admin', from:ME, fromShift:id, note});
+    closeAll(); render();
+    toast('Drop request sent to a staff member for approval.',1);
+  } else {
+    sh.ppl=sh.ppl.filter(p=>p!==ME); sh.openedBy=ME;
+    closeAll(); render();
+    toast('Shift dropped — it’s now at the top of the schedule as an open shift.',1);
+  }
+}
+
+/* ============================================================
+   swap
+   ============================================================ */
+function openSwap(id){
+  const sh=S(id), gr=group(sh.gid);
+  const others = upcoming().filter(o=>o.id!==id);
+  const candidates = MEMBERS.filter(m=>m.g.includes(sh.gid) && m.id!==ME);
+  openModal('Swap this shift', `${gr.name} · ${longDate(sh.date)} · ${range(sh.s,sh.e)}`, `
+    <div class="dsec"><h4>You give up</h4>
+      <div class="shiftcard" style="margin:0">${dateChip(sh)}
+        <div class="info"><div class="ttl">${gr.name}</div>
+        <div class="meta">${longDate(sh.date)} <span class="sep">·</span> ${t12full(sh.s)} – ${t12full(sh.e)}</div></div></div>
+    </div>
+    <div class="dsec"><h4>You take in return</h4>
+      <div id="swapPick">
+        ${others.map(o=>`<button class="person pickable" style="width:100%;text-align:left" data-sid="${o.id}" onclick="pickSwap(this)">
+            <span class="legend-swatch ${group(o.gid).color}" style="background:var(--c);width:8px;height:30px;border-radius:4px"></span>
+            <div style="min-width:0"><div class="nm">${longDate(o.date)} · ${range(o.s,o.e)}</div>
+            <div class="mt">${group(o.gid).name}</div></div>
+            <div class="right"><span class="pill muted">Offer</span></div></button>`).join('')}
+        <button class="person pickable chosen" style="width:100%;text-align:left" data-sid="any" onclick="pickSwap(this)">
+          <span class="avatar empty">?</span>
+          <div style="min-width:0"><div class="nm">Anything they’ve got</div>
+          <div class="mt">Let them pick a shift to give you</div></div>
+          <div class="right"><span class="pill muted">Offer</span></div></button>
+      </div>
+    </div>
+    <div class="dsec"><h4>Send to</h4>
+      <select class="select" id="swapTo">
+        <option value="all">Everyone in ${gr.name} (${candidates.length} people)</option>
+        ${candidates.map(m=>`<option value="${m.id}">${m.n}</option>`).join('')}
+      </select>
+      <div class="hint">First person to accept gets it. ${gr.approve? 'A staff member confirms the swap afterwards.':'The swap happens as soon as they accept.'}</div>
+    </div>
+    <div class="field"><label>Message (optional)</label>
+      <textarea class="textarea" id="swapNote" placeholder="I have a family thing that morning — happy to take one of yours."></textarea></div>
+  `, `<button class="btn" onclick="closeAll()">Cancel</button>
+      <button class="btn indigo" onclick="doSwap('${sh.id}')">Send swap request</button>`, true);
+}
+function pickSwap(btn){
+  [...document.querySelectorAll('#swapPick .person')].forEach(p=>p.classList.remove('chosen'));
+  btn.classList.add('chosen');
+}
+function doSwap(id){
+  const sh=S(id), gr=group(sh.gid);
+  const to=$('#swapTo').value;
+  const note=($('#swapNote')&&$('#swapNote').value)||'';
+  const picked=document.querySelector('#swapPick .person.chosen');
+  const want = picked? picked.dataset.sid : 'any';
+  REQUESTS.push({id:'r'+Math.random().toString(36).slice(2,6), type:'swap',
+    status:'pending_member', from:ME, to: to==='all'? null : to,
+    fromShift:id, toShift: want==='any'? null : want, note});
+  closeAll(); render();
+  toast(to==='all'
+    ? `Swap request sent to ${MEMBERS.filter(m=>m.g.includes(sh.gid)&&m.id!==ME).length} ${gr.name} volunteers.`
+    : `Swap request sent to ${member(to).n}.`, 1);
+}
+function cancelReq(id){
+  REQUESTS=REQUESTS.filter(r=>r.id!==id);
+  closeAll(); render(); toast('Request cancelled.');
+}
+
+function respondSwap(id, accept){
+  const r=REQUESTS.find(x=>x.id===id); if(!r) return;
+  const theirs=S(r.fromShift), mineShift=S(r.toShift), gr=group(theirs.gid);
+  if(!accept){
+    REQUESTS=REQUESTS.filter(x=>x.id!==id);
+    render(); toast('Declined — '+member(r.from).n.split(' ')[0]+' was notified.');
+    return;
+  }
+  if(gr.approve){
+    r.status='pending_admin'; r.to=ME;
+    render(); toast('Accepted! Waiting on staff approval before the schedule updates.',1);
+  } else {
+    theirs.ppl=theirs.ppl.filter(p=>p!==r.from); theirs.ppl.push(ME);
+    if(mineShift){ mineShift.ppl=mineShift.ppl.filter(p=>p!==ME); mineShift.ppl.push(r.from); }
+    REQUESTS=REQUESTS.filter(x=>x.id!==id);
+    render(); toast('Swapped! Your schedule has been updated.',1);
+  }
+}
+
+/* ============================================================
+   boot
+   ============================================================ */
+render();
+</script>
+</body>
+</html>
