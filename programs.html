@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChurchPlannerPRO — Attendance v1</title>
+<style>
+:root{
+ --bg:#f9fafb;--panel:#fff;--line:#e5e7eb;--line2:#d1d5db;
+ --ink:#111827;--ink2:#4b5563;--muted:#9ca3af;
+ --green:#22a05c;--green2:#1c8a4e;--gpb:#dcfce7;--gpt:#166534;
+ --indigo:#4f46e5;--isoft:#eef2ff;--blue:#2563eb;
+ --rpb:#fee2e2;--rpt:#991b1b;--apb:#fef3c7;--apt:#92400e;--bpb:#dbeafe;--bpt:#1e40af;
+ --f:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:var(--f);background:#eef1f5;color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+h1,h2,h3,h4,h5{margin:0;line-height:1.25;letter-spacing:-.015em}
+a{color:var(--blue);text-decoration:none}
+
+.pbar{position:sticky;top:0;z-index:60;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 18px;height:50px}
+.pbar b{font-size:13.5px}.pbar b span{opacity:.5;font-weight:400;margin-left:8px}
+.ptabs{display:flex;gap:2px;margin-left:auto}
+.ptabs button{padding:6px 13px;border-radius:7px;font-size:13px;color:#6b7280}
+.ptabs button:hover{background:#f3f4f6;color:var(--ink)}
+.ptabs button[aria-selected="true"]{background:#e5e7eb;color:var(--ink);font-weight:600}
+.pnote{background:#fffbeb;border-bottom:1px solid #fde68a;color:#92400e;padding:7px 20px;font-size:12.5px}
+.pnote b{color:#78350f}
+.view{display:none}.view.on{display:block}
+
+/* admin */
+.app{display:flex;min-height:calc(100vh - 80px);background:var(--bg)}
+.side{width:222px;flex:0 0 222px;background:#fff;border-right:1px solid var(--line);padding:0 12px 16px;display:flex;flex-direction:column}
+.side .lg{font-weight:700;font-size:15px;padding:19px 10px 20px}
+.side a{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:7px;color:var(--ink2);font-size:13.5px;cursor:pointer;margin-bottom:1px}
+.side a:hover{background:#f3f4f6;color:var(--ink)}
+.side a.on{background:#eef2f7;color:var(--ink);font-weight:600}
+.side a .ic{width:17px;text-align:center;font-size:13px}
+.side .sec{font-size:10px;letter-spacing:.14em;color:var(--muted);padding:20px 10px 7px;font-weight:700;display:flex;align-items:center;gap:8px}
+.side .sec:before,.side .sec:after{content:"";height:1px;background:var(--line);flex:1}
+.side .ft{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);display:flex;align-items:center;gap:9px}
+.side .ft .sq{width:24px;height:24px;border-radius:6px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px}
+.side .ft b{display:block;font-size:12.5px}.side .ft span{color:var(--muted);font-size:11.5px}
+.main{flex:1;min-width:0}
+.abar{height:52px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 26px;background:var(--bg)}
+.abar h2{font-size:15px;font-weight:600}
+.abar .usr{margin-left:auto;display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--ink2)}
+.abar .av{width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px}
+.ac{padding:26px;max-width:1000px}
+
+.hd{margin-bottom:20px;display:flex;align-items:flex-start;gap:14px}
+.hd h1{font-size:25px;letter-spacing:-.03em}
+.hd p{margin:6px 0 0;color:var(--ink2);font-size:13.5px;max-width:64ch}
+.hd .sp{margin-left:auto}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:7px;font-size:13.5px;font-weight:600;border:1px solid transparent}
+.g{background:var(--green);color:#fff}.g:hover{background:var(--green2)}
+.o{background:#fff;border-color:var(--line2);color:var(--ink2)}.o:hover{color:var(--ink)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:9px}
+.ch{padding:13px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.ch h3{font-size:14px}.ch .sp{margin-left:auto}
+.cp{padding:18px 20px}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:2.5px 8px;border-radius:5px;white-space:nowrap}
+.pg{background:var(--gpb);color:var(--gpt)}.pr{background:var(--rpb);color:var(--rpt)}
+.pa{background:var(--apb);color:var(--apt)}.pb{background:var(--bpb);color:var(--bpt)}
+.pn{background:#f3f4f6;color:var(--ink2)}
+.new{background:var(--gpb);color:#15803d;font-size:9.5px;letter-spacing:.05em;padding:2px 6px;border-radius:4px;font-weight:700}
+.mut{color:var(--muted)}.s{font-size:12.5px}
+.hr{height:1px;background:var(--line);margin:18px 0}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;padding:10px 18px;border-bottom:1px solid var(--line)}
+td{padding:11px 18px;border-bottom:1px solid var(--line);font-size:13.5px}
+tr:last-child td{border-bottom:none}
+.av{width:28px;height:28px;border-radius:50%;background:var(--line);color:var(--ink2);display:inline-flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;flex:0 0 28px}
+.who{display:flex;align-items:center;gap:10px}.who b{font-weight:600}
+.fld{margin-bottom:15px}
+.fld label{display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;color:var(--ink2)}
+.fld input,.fld select{width:100%;padding:8px 11px;border:1px solid var(--line2);border-radius:7px;font:inherit;font-size:13.5px;background:#fff;color:var(--ink)}
+.fld .h{font-size:12px;color:var(--muted);margin-top:5px}
+.fld.hot label{color:#15803d}
+.fld.hot input,.fld.hot select{border-color:var(--green);box-shadow:0 0 0 3px rgba(34,160,92,.10)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.tog{position:relative;display:inline-block;width:40px;height:22px;flex:0 0 40px}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tog .sl{position:absolute;inset:0;background:var(--line2);border-radius:22px;transition:.15s}
+.tog .sl:before{content:"";position:absolute;width:18px;height:18px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.tog input:checked+.sl{background:var(--green)}
+.tog input:checked+.sl:before{transform:translateX(18px)}
+.trow{display:flex;align-items:flex-start;gap:13px;padding:14px 0}
+.trow .tx b{font-size:13.5px;font-weight:600;display:block}
+.trow .tx span{font-size:12.5px;color:var(--ink2)}
+.note{border-left:3px solid var(--blue);background:#eff6ff;padding:12px 15px;border-radius:0 7px 7px 0;font-size:13px;color:#1e40af}
+.note.gr{border-color:var(--green);background:#f0fdf4;color:#166534}
+.note b{color:#0f172a;font-weight:700}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.tabs button{padding:9px 15px 11px;font-size:13.5px;color:var(--ink2);border-bottom:2px solid transparent}
+.tabs button.on{color:var(--ink);font-weight:600;border-color:var(--green)}
+.sess{border-bottom:1px solid var(--line);cursor:pointer}
+.sess:last-child{border-bottom:none}
+.sess:hover{background:#fafbfc}
+.sess.open{background:#fafbfc}
+.sr{display:flex;align-items:center;gap:16px;padding:13px 20px}
+.sd{width:150px;flex:0 0 150px}
+.sd b{font-weight:600;font-size:13.5px;display:block}
+.sd span{font-size:12px;color:var(--muted)}
+.sc{width:150px;flex:0 0 150px;font-size:13.5px}
+.sc b{font-weight:600;font-size:15px}
+.sa{flex:1;display:flex;align-items:center;gap:-4px;min-width:0}
+.sa .av{width:26px;height:26px;flex:0 0 26px;margin-right:-6px;border:2px solid var(--panel);font-size:9.5px}
+.sa .more{margin-left:14px;font-size:12px;color:var(--muted);white-space:nowrap}
+.chev{color:var(--muted);font-size:12px}
+.sx{padding:0 20px 16px 186px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel);border-radius:20px;padding:3px 11px 3px 3px;font-size:12.5px}
+.chips .chip .av{width:20px;height:20px;flex:0 0 20px;font-size:9px}
+.chips .chip.mut{padding:5px 11px;color:var(--muted)}
+.parts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.parts a{display:flex;align-items:center;gap:7px;padding:8px 12px;border:1px solid var(--line);background:var(--panel);border-radius:8px;font-size:13px;color:var(--ink);cursor:pointer}
+.parts a:hover{border-color:var(--green)}
+.parts a b{font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.stat{display:flex;gap:26px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.stat div .v{font-size:24px;font-weight:600;letter-spacing:-.03em}
+.stat div .l{font-size:12px;color:var(--ink2)}
+.code{font-family:ui-monospace,Menlo,monospace;font-weight:700;letter-spacing:.09em;color:var(--indigo)}
+
+/* member */
+.stage{background:#eef1f5;padding:26px;min-height:calc(100vh - 80px)}
+.row{display:flex;gap:22px;flex-wrap:wrap;justify-content:center}
+.bdg{display:inline-block;background:var(--indigo);color:#fff;font-size:9px;font-weight:700;font-style:normal;border-radius:9px;padding:1px 5px;margin-left:4px;vertical-align:1px}
+.rsec{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6b7280;margin:16px 0 8px}
+.mgrp{flex:0 0 100%;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);margin:6px 0 -4px;display:flex;align-items:center;gap:10px}
+.mgrp:before,.mgrp:after{content:"";height:1px;background:var(--line2);flex:1}
+.mgrp span{font-weight:600;letter-spacing:0;text-transform:none;color:var(--muted)}
+.col{width:330px}.cap{color:var(--ink2);font-size:12.5px;text-align:center;margin-bottom:9px;font-weight:600}
+.phone{width:330px;height:600px;background:var(--bg);border-radius:30px;border:9px solid #cbd5e1;box-shadow:0 14px 40px rgba(15,23,42,.18);overflow:hidden;display:flex;flex-direction:column}
+.st{height:24px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 15px;font-size:10px;color:var(--ink2);font-weight:600;flex:0 0 24px}
+.nv{background:#fff;border-bottom:1px solid var(--line);padding:9px 13px;flex:0 0 auto}
+.nv .t{display:flex;align-items:center;margin-bottom:8px}
+.nv .bd{color:var(--indigo);font-weight:700;font-size:13.5px}
+.nv .out{margin-left:auto;color:var(--indigo);font-size:11px}
+.nv .lk{display:flex;gap:1px}
+.nv .lk span{font-size:11px;padding:3px 5px;border-radius:6px;color:var(--ink2);white-space:nowrap}
+.nv .lk span.on{background:var(--isoft);color:var(--indigo);font-weight:600}
+.bd2{flex:1;overflow-y:auto;padding:18px 15px}
+.bd2 h1{font-size:20px;margin-bottom:4px}
+.bd2 .sub{color:var(--ink2);font-size:12.5px;margin-bottom:15px}
+.mc{background:#fff;border:1px solid var(--line);border-radius:8px;padding:15px;margin-bottom:12px}
+.ev{padding:12px 0;border-bottom:1px solid var(--line)}
+.ev:last-child{border-bottom:none}
+.ev b{font-size:13px;display:block}.ev .d{color:var(--indigo);font-size:12px;margin-top:1px}
+.mb{display:block;width:100%;text-align:center;padding:10px;border-radius:7px;font-weight:600;font-size:13.5px;background:var(--indigo);color:#fff;margin-top:10px}
+.mb.gh{background:#fff;border:1px solid var(--line2);color:var(--ink2)}
+.mb:disabled{opacity:.45}
+.kid{display:flex;align-items:center;gap:11px;padding:11px;border:1.5px solid var(--line);border-radius:9px;margin-bottom:9px;background:#fff;cursor:pointer;width:100%;text-align:left;color:inherit}
+.kid.sel{border-color:var(--indigo);background:var(--isoft)}
+.kid .ck{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--line2);flex:0 0 20px;background:#fff;position:relative}
+.kid.sel .ck{background:var(--indigo);border-color:var(--indigo)}
+.kid.sel .ck:after{content:"";position:absolute;left:6.5px;top:3px;width:5px;height:10px;border:2px solid #fff;border-top:0;border-left:0;transform:rotate(42deg)}
+.mav{width:28px;height:28px;border-radius:50%;background:var(--isoft);color:var(--indigo);display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;flex:0 0 28px}
+.kid b{font-size:13px;display:block}.kid span{font-size:11.5px;color:var(--ink2)}
+.mp{display:inline-block;font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:4px}
+.mpg{background:#dcfce7;color:#166534}.mpr{background:#fee2e2;color:#991b1b}
+.bigcode{font-size:38px;font-weight:700;letter-spacing:.18em;color:var(--indigo);text-align:center;padding:12px 0 4px;font-family:ui-monospace,Menlo,monospace}
+
+/* scope doc */
+.doc{max-width:800px;margin:0 auto;padding:32px 26px 90px;background:var(--bg);min-height:calc(100vh - 80px)}
+.doc h2{font-size:20px;margin:34px 0 11px}
+.doc h2:first-child{margin-top:0}
+.doc p{margin:0 0 12px;color:var(--ink2);font-size:14px}
+.doc ul{margin:0 0 14px;padding-left:20px;color:var(--ink2);font-size:14px}
+.doc li{margin-bottom:7px}
+.doc strong{color:var(--ink);font-weight:600}
+.box{background:#fff;border:1px solid var(--line);border-radius:9px;padding:20px 22px;margin-bottom:16px}
+.box h3{font-size:15.5px;margin-bottom:10px}
+.cut{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13.5px;align-items:flex-start}
+.cut:last-child{border-bottom:none}
+.cut .w{width:66px;flex:0 0 66px}
+.cut b{font-weight:600;display:block}
+.cut span{color:var(--ink2);font-size:12.5px}
+@media(max-width:980px){.two{grid-template-columns:1fr}.side{width:60px;flex:0 0 60px}.side a .lb,.side .lg,.side .ft,.side .sec{display:none}}
+</style>
+</head>
+<body>
+
+<header class="pbar">
+ <b>Attendance v1 <span>the smallest thing that closes your six steps</span></b>
+ <nav class="ptabs" id="tabs">
+  <button data-v="admin" aria-selected="true">Admin</button>
+  <button data-v="member" aria-selected="false">Member</button>
+  <button data-v="scope" aria-selected="false">Scope</button>
+ </nav>
+</header>
+<div class="pnote">Everything green-flagged <b>NEW</b> is the entire build. Two new nav items total: <b>Programs</b> for admins, <b>Register</b> for members.</div>
+
+<section class="view on" data-v="admin"><div class="app">
+ <aside class="side" id="side"></aside>
+ <div class="main">
+  <div class="abar"><h2 id="atitle">Calendar</h2><div class="usr"><span class="av">A</span> andrew.schneider639@gmail.com</div></div>
+  <div class="ac" id="ac"></div>
+ </div>
+</div></section>
+
+<section class="view" data-v="member"><div class="stage"><div class="row" id="mrow"></div></div></section>
+<section class="view" data-v="scope"><div class="doc" id="doc"></div></section>
+
+<script>
+const ini=n=>n.split(" ").map(x=>x[0]).join("").slice(0,2);
+const SESS=[{d:"Sun, Aug 17",t:"9:30 AM",n:41},{d:"Sun, Aug 10",t:"9:30 AM",n:44},{d:"Sun, Aug 3",t:"9:30 AM",n:43},
+ {d:"Sun, Jul 27",t:"9:30 AM",n:29},{d:"Sun, Jul 20",t:"9:30 AM",n:45},{d:"Sun, Jul 13",t:"9:30 AM",n:41},
+ {d:"Sun, Jul 6",t:"9:30 AM",n:44},{d:"Sun, Jun 29",t:"9:30 AM",n:38}];
+const ROSTER=[
+ {n:"Ava Mitchell",p:[1,1,1,1,0,1,1,1]},{n:"Noah Mitchell",p:[1,1,0,1,0,1,1,1]},
+ {n:"Liam Carter",p:[1,1,1,1,1,1,1,0]},{n:"Sofia Ramirez",p:[0,1,1,1,1,1,0,1]},
+ {n:"Maya Okonkwo",p:[1,1,1,1,1,1,1,1]},{n:"Zoe Fischer",p:[1,1,1,0,0,0,0,0]},
+ {n:"Caleb Nguyen",p:[0,0,1,1,1,1,1,0]},{n:"Ethan Brooks",p:[1,0,0,1,1,0,1,1]}];
+let openSess=0;
+const NAV=[["👥","People","people"],["✅","Member approval","people"],["✦","Programs","a-programs","new"],
+["💬","Ask Chat","people"],["📅","Calendar","a-event"],["📊","Reporting","people"],["⚡","Workflows","people"],
+["⏰","Tasks","people"],["💰","Finances","people"],["📁","Files","people"],["🎁","Campaigns","people"]];
+const BLOCKS=[["💛","Groups","a-groups"],["📝","Forms","a-form"]];
+const OPS=[["⚙️","Settings","people"],["🏛️","Vendors","people"],["🔗","Integrations","people"]];
+let sc="a-programs", etab="checkins";
+
+function side(){
+ const it=([ic,lb,id,bd])=>`<a class="${sc===id?'on':''}" data-go="${id}"><span class="ic">${ic}</span><span class="lb">${lb}</span>${bd?`<span class="new" style="margin-left:auto">NEW</span>`:''}</a>`;
+ return `<div class="lg">ChurchPlanner PRO</div>${NAV.map(it).join("")}
+ <div class="sec">BUILDING BLOCKS</div>${BLOCKS.map(it).join("")}
+ <div class="sec">OPERATIONS</div>${OPS.map(it).join("")}
+ <div class="ft"><span class="sq">P</span><div><b>Prairie Ridge Church</b><span>Andrew Schneider</span></div></div>`;
+}
+function go(id){sc=SC[id]?id:'a-event';render();window.scrollTo(0,0);}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-go]');if(t){e.preventDefault();go(t.dataset.go);}});
+document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+ document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.dataset.v===b.dataset.v));window.scrollTo(0,0);});
+
+const SC={};
+const T={'a-event':'Calendar','a-form':'Forms','people':'People','a-groups':'Groups','a-programs':'Programs','a-group':'Programs','a-wiz':'Programs'};
+
+SC['people']=()=>`<div class="hd"><div><h1>What changes</h1><p>People, Workflows, Reporting and the rest are untouched. Four screens do change — the first two are the whole functional build, the last two are the Programs layer sitting on top.</p></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:20px">
+<button class="card cp" data-go="a-event" style="text-align:left;cursor:pointer"><h3 style="font-size:14px;margin-bottom:6px">📅 Calendar → an event <span class="new">2 NEW FIELDS</span></h3><div class="s mut">A group link and an attendance toggle.</div></button>
+<button class="card cp" data-go="a-form" style="text-align:left;cursor:pointer"><h3 style="font-size:14px;margin-bottom:6px">📝 Forms → a form <span class="new">1 NEW FIELD</span></h3><div class="s mut">On submit, add the person to a group.</div></button></div>
+<h3 style="font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:11px">The Programs layer — no schema, no new object</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:13px">
+<button class="card cp" data-go="a-programs" style="text-align:left;cursor:pointer"><h3 style="font-size:14px;margin-bottom:6px">✦ Programs <span class="new">NEW TAB</span></h3><div class="s mut">List + detail page gathering the group, form and schedule.</div></button>
+<button class="card cp" data-go="a-wiz" style="text-align:left;cursor:pointer"><h3 style="font-size:14px;margin-bottom:6px">✦ Set up a program <span class="new">NEW WIZARD</span></h3><div class="s mut">Four existing create calls, in sequence.</div></button></div>`;
+
+SC['a-programs']=()=>`
+<div class="hd"><div><h1>Programs</h1><p>A program is a group, a registration form and a schedule, set up together and reported on together.</p></div>
+<div style="margin-left:auto"></div><button class="btn g" data-go="a-wiz">+ New Program</button></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:13px">
+ <button class="card cp" data-go="a-group" style="text-align:left;cursor:pointer">
+  <h3 style="font-size:15px;margin-bottom:5px">Sunday School</h3>
+  <div class="s mut" style="margin-bottom:11px">54 registered · Sundays 9:30 AM · 42 avg. present</div>
+  <div style="display:flex;gap:7px"><span class="pill pg">Attendance on</span><span class="pill pb">Form published</span></div></button>
+ <div class="card cp"><h3 style="font-size:15px;margin-bottom:5px">Wednesday Youth</h3>
+  <div class="s mut" style="margin-bottom:11px">31 registered · Wednesdays 6:30 PM · 24 avg. present</div>
+  <div style="display:flex;gap:7px"><span class="pill pg">Attendance on</span><span class="pill pb">Form published</span></div></div>
+</div>`;
+
+SC['a-groups']=()=>`
+<div class="hd"><div><h1>Groups</h1><p>Lists of people. Some stand alone; some are the members behind a program or a volunteer team.</p></div>
+<div style="margin-left:auto"></div><button class="btn o">+ New Group</button></div>
+<div class="card"><table><thead><tr><th>Group</th><th>Members</th><th>Used by</th></tr></thead><tbody>
+ <tr><td><b style="font-weight:600">Sunday School</b></td><td>54</td><td><a data-go="a-group">Sunday School program →</a></td></tr>
+ <tr><td><b style="font-weight:600">Wednesday Youth</b></td><td>31</td><td><a>Wednesday Youth program →</a></td></tr>
+ <tr><td><b style="font-weight:600">Nursery Care</b></td><td>3</td><td><span class="mut">Volunteer team</span> <a class="s" data-go="a-wiz" style="margin-left:8px">+ Add a schedule</a></td></tr>
+ <tr><td><b style="font-weight:600">Ushers</b></td><td>6</td><td><span class="mut">Volunteer team</span> <a class="s" data-go="a-wiz" style="margin-left:8px">+ Add a schedule</a></td></tr>
+</tbody></table></div>
+<div class="note gr" style="margin-top:16px"><b>The graduation path.</b> Any group becomes a program by getting a schedule — no migration, nothing was set up wrong. That's why an admin can't pick incorrectly at create time: both doors lead somewhere recoverable.</div>
+<div class="note" style="margin-top:13px"><b>Why this moved down.</b> Once Programs exists, most admins rarely come here — the program page shows who's registered. Groups stays for standalone rosters and for anyone who wants the raw object. It was never a destination; it was a building block all along.</div>`;
+
+SC['a-group']=()=>`
+<div class="hd"><div><h1>Sunday School</h1><p>Sundays 9:30 AM · led by Rachel Okoye · 8 sessions held, 42 average present</p></div>
+<div style="margin-left:auto"></div><button class="btn o" data-go="a-programs">← Programs</button><button class="btn o">Settings</button></div>
+
+<div class="parts">
+ <a data-go="a-groups"><b>Group</b> Sunday School <span class="pill pn">54 members</span></a>
+ <a data-go="a-form"><b>Form</b> Sunday School Registration <span class="pill pb">Published</span></a>
+ <a data-go="a-event"><b>Event</b> Weekly, 9:30 AM <span class="pill pg">Attendance on</span></a>
+</div>
+
+<div class="card"><div class="ch"><h3>Sessions</h3><div class="sp"></div>
+ <a class="s" style="cursor:pointer">7 have never attended &rarr;</a></div>
+ <div>
+ ${SESS.map((w,i)=>{
+   const idx=7-i, present=ROSTER.filter(k=>k.p[idx]===1), open=openSess===i;
+   return `<div class="sess ${open?'open':''}" onclick="openSess=${open?-1:i};render()">
+     <div class="sr">
+      <div class="sd"><b>${w.d}</b><span>${w.t}</span></div>
+      <div class="sc"><b>${w.n}</b> <span class="mut">of 54 present</span></div>
+      <div class="sa">${present.slice(0,6).map(k=>`<span class="av" title="${k.n}">${ini(k.n)}</span>`).join("")}
+       <span class="more">+${w.n-Math.min(6,present.length)} more</span></div>
+      <span class="chev">${open?'▾':'▸'}</span>
+     </div>
+     ${open?`<div class="sx">
+       <div class="s mut" style="margin-bottom:8px">Checked in</div>
+       <div class="chips">${present.map(k=>`<span class="chip"><span class="av">${ini(k.n)}</span>${k.n}</span>`).join("")}
+        <span class="chip mut">+${w.n-present.length} more</span></div>
+      </div>`:``}
+   </div>`}).join("")}
+ </div>
+</div>
+
+<div class="note" style="margin-top:16px"><b>The page is the sessions.</b> Three links to the parts, then one row per Sunday with who was there. That is what a children's director actually opens this page to see.</div>`;
+
+let ws=1, wg=1;
+SC['a-wiz']=()=>{
+ const st=["Who's in it","Registration","Schedule"];
+ const B=[()=>`<h3 style="margin-bottom:5px">Who's in it</h3>
+  <p class="s mut" style="margin:0 0 14px">Every program needs a group. Make a new one or point at one you already have.</p>
+  <div style="display:flex;gap:0;border:1px solid var(--line2);border-radius:7px;overflow:hidden;margin-bottom:18px;max-width:380px">
+   <button onclick="wg=1;render()" style="flex:1;padding:8px;font-size:13px;font-weight:600;${wg===1?'background:var(--green);color:#fff':'background:#fff;color:var(--ink2)'}">Create a new group</button>
+   <button onclick="wg=2;render()" style="flex:1;padding:8px;font-size:13px;font-weight:600;border-left:1px solid var(--line2);${wg===2?'background:var(--green);color:#fff':'background:#fff;color:var(--ink2)'}">Use an existing group</button>
+  </div>
+  ${wg===1?`
+  <div style="border:1px dashed var(--line2);border-radius:8px;padding:16px;background:#fafbfc">
+   <div class="s" style="font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px">Shared component · same as New Group</div>
+   <div class="fld"><label>Group Name</label><input value="Sunday School"></div>
+   <div class="fld"><label>Description</label><input value="Weekly classes for kids age 4–11"></div>
+   <div class="fld" style="margin:0"><label>Leader</label><input placeholder="Optional" value="Rachel Okoye"></div>
+  </div>
+  <div class="note gr" style="margin-top:16px"><b>Identical to your New Group modal</b> — same three fields, same <code>POST /groups</code>. Render it in a modal from Groups, render it inline here. One component, one endpoint, two entry points. The name you type becomes both the group's name and the program's; never ask twice.</div>`
+  :`
+  <div class="fld"><label>Group</label><select><option>Nursery Care · 3 members</option><option>Ushers · 6 members</option><option>Wednesday Youth · 31 members</option></select>
+   <div class="h">The escape hatch for a roster that already exists. Everything after this step is the same.</div></div>
+  <div class="fld" style="margin:0"><label>Program name</label><input value="Nursery Care"><div class="h">Defaults to the group's name. Only diverges if you want it to.</div></div>
+  <div class="note" style="margin-top:16px"><b>This is also the graduation path.</b> A plain group becomes a program by getting a schedule — whether you come through this wizard or click <b>Add a schedule</b> on the group itself. Same destination, nothing to migrate.</div>`}`,
+ ()=>`<h3 style="margin-bottom:5px">Registration</h3>
+  <p class="s mut" style="margin:0 0 15px">Creates a form and points it at the group from step 1.</p>
+  <div class="fld"><label>Form name</label><input value="Sunday School Registration"></div>
+  <div class="fld"><label>Start from</label><select><option>Kids registration (name, birthdate, grade, allergies, guardian)</option><option>Simple sign-up (name, email)</option><option>Blank form</option></select><div class="h">A starter field set, not a new feature — it's a default payload for the form you already create.</div></div>
+  <div class="fld" style="margin:0"><label>Publish now?</label><select><option>Yes, publish</option><option>Save as draft</option></select></div>`,
+ ()=>`<h3 style="margin-bottom:5px">Schedule</h3>
+  <p class="s mut" style="margin:0 0 15px">Creates the event, points it at the group, and turns attendance on.</p>
+  <div class="two"><div class="fld"><label>Day</label><select><option>Every Sunday</option><option>Every Wednesday</option><option>Doesn't repeat</option></select></div>
+  <div class="fld"><label>Time</label><input value="9:30 AM"></div></div>
+  <div class="two"><div class="fld"><label>Starts</label><input value="Sun, Sep 7, 2026"></div>
+  <div class="fld"><label>Ends</label><input value="Sun, May 24, 2027"></div></div>
+  <div class="trow" style="border-top:1px solid var(--line);padding-top:15px">
+   <label class="tog"><input type="checkbox" checked><span class="sl"></span></label>
+   <div class="tx"><b>Track attendance</b><span>Members can mark themselves and their family present.</span></div></div>`][ws-1];
+ return `
+<div class="hd"><div><h1>Set up a program</h1><p>Three screens, four calls to endpoints you already have. Nothing new is created in the database that couldn't be created by hand today.</p></div></div>
+<div class="tabs" style="margin-bottom:20px">${st.map((s,i)=>`<button class="${ws===i+1?'on':''}" onclick="ws=${i+1};render()">${i+1<ws?'✓ ':''}${s}</button>`).join("")}</div>
+<div style="display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start">
+ <div class="card cp">${B()}
+  <div class="hr"></div>
+  <div style="display:flex;gap:9px">${ws>1?`<button class="btn o" onclick="ws--;render()">Back</button>`:``}<div style="margin-left:auto"></div>
+  ${ws<3?`<button class="btn g" onclick="ws++;render()">Continue</button>`:`<button class="btn g" data-go="a-group" onclick="ws=1">Create program</button>`}</div>
+ </div>
+ <div class="card cp">
+  <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin-bottom:12px">Calls it will make</div>
+  ${[[1,"POST /groups","Sunday School"],[2,"POST /forms","+ join_group_id"],[3,"POST /events","+ group_id, attendance on"],[3,"Recurrence","34 Sundays"]]
+   .map(([n,a,b])=>`<div style="display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line)">
+   <span style="width:17px;height:17px;border-radius:50%;flex:0 0 17px;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:${ws>=n?'var(--green)':'var(--line)'};color:${ws>=n?'#fff':'var(--muted)'}">${ws>=n?'✓':n}</span>
+   <div style="font-size:12.5px"><b style="font-weight:600;font-family:ui-monospace,Menlo,monospace;font-size:12px;display:block;margin-bottom:2px">${a}</b><span class="mut">${b}</span></div></div>`).join("")}
+  <div class="hr" style="margin:13px 0"></div>
+  <div class="s mut">Every object lands in Groups, Forms and Calendar as an ordinary record. Delete any of them and the rest keep working.</div>
+ </div>
+</div>`;};
+
+SC['a-event']=()=>`
+<div class="hd"><div><h1>Sunday School</h1><p>Sunday, August 23, 2026 · 9:30 AM · repeats weekly</p></div>
+<div class="hd sp" style="margin-left:auto"></div><button class="btn o">Edit</button></div>
+
+<div class="tabs">
+ <button class="${etab==='details'?'on':''}" onclick="etab='details';render()">Details</button>
+ <button class="${etab==='checkins'?'on':''}" onclick="etab='checkins';render()">Attendance <span class="new" style="margin-left:5px">NEW</span></button>
+</div>
+
+${etab==='details'?`
+<div class="card cp" style="max-width:620px">
+ <div class="fld"><label>Event name</label><input value="Sunday School"></div>
+ <div class="two">
+  <div class="fld"><label>Date</label><input value="Sun, Aug 23, 2026"></div>
+  <div class="fld"><label>Time</label><input value="9:30 AM"></div>
+ </div>
+ <div class="two">
+  <div class="fld"><label>Repeats</label><select><option>Weekly</option><option>Never</option></select></div>
+  <div class="fld"><label>Status</label><select><option>Open</option><option>Scheduled</option><option>Completed</option><option>Cancelled</option></select></div>
+ </div>
+ <div class="hr"></div>
+ <div class="fld hot"><label>Who is this for? <span class="new">NEW</span></label>
+  <select><option>Sunday School</option><option>— No group —</option><option>Nursery Care</option><option>Ushers</option></select>
+  <div class="h">Optional. Links the event to a group you already have. This one dropdown is the entire "stitching" story — the group's members are the expected attendance list.</div></div>
+ <div class="trow" style="border-top:1px solid var(--line);padding-top:16px">
+  <label class="tog"><input type="checkbox" checked><span class="sl"></span></label>
+  <div class="tx"><b>Track attendance <span class="new">NEW</span></b><span>Members of the linked group can mark themselves and their household present from the member app, starting 30 minutes before. Applies to every occurrence of this repeating event.</span></div>
+ </div>
+</div>
+<div class="note gr" style="margin-top:16px;max-width:620px"><b>That's the whole admin build.</b> One dropdown and one toggle on a page you already have. No new object to design, migrate, or explain.</div>
+`:`
+<div class="card" style="max-width:720px">
+ <div class="stat">
+  <div><div class="v">54</div><div class="l">Registered</div></div>
+  <div><div class="v" style="color:var(--green)">23</div><div class="l">Present</div></div>
+  <div><div class="v mut">31</div><div class="l">Not marked</div></div>
+ </div>
+ <table><thead><tr><th>Child</th><th>Marked by</th><th>Time</th><th style="width:90px"></th></tr></thead><tbody>
+ ${[["Ava Mitchell","Sarah Mitchell","9:14 AM"],["Noah Mitchell","Sarah Mitchell","9:14 AM"],
+    ["Sofia Ramirez","Ana Ramirez","9:21 AM"],["Zoe Fischer","Dan Fischer","9:23 AM"],
+    ["Liam Carter","Priya Carter","9:26 AM"]]
+  .map(([n,b,t])=>`<tr><td><div class="who"><span class="av">${ini(n)}</span><b>${n}</b></div></td><td class="mut">${b}</td><td class="mut">${t}</td><td><span class="pill pg">Present</span></td></tr>`).join("")}
+ ${[["Ethan Brooks"],["Ruth Adeyemi"]].map(([n])=>`<tr><td><div class="who"><span class="av">${ini(n)}</span><b>${n}</b></div></td><td class="mut" colspan="2">—</td><td><button class="btn o" style="padding:3px 9px;font-size:12px">Mark present</button></td></tr>`).join("")}
+ </tbody></table>
+</div>
+<div class="note" style="margin-top:16px;max-width:720px"><b>Your step 6.</b> Registered and present are the same list in two states. Nothing to reconcile, no report to build — one query against the group and the attendance rows. Staff can tap anyone in from this page too, so it doubles as the volunteer's roster on a phone.</div>
+`}`;
+
+SC['a-form']=()=>`
+<div class="hd"><div><h1>Sunday School Registration</h1><p>Published · 12 responses</p></div></div>
+<div class="card cp" style="max-width:620px">
+ <div class="fld"><label>Name</label><input value="Sunday School Registration"></div>
+ <div class="fld"><label>Status</label><select><option>Published</option><option>Draft</option></select></div>
+ <div class="hr"></div>
+ <div class="fld hot" style="margin:0"><label>On submit, add the person to a group <span class="new">NEW</span></label>
+  <select><option>Sunday School</option><option>— Don't add to a group —</option><option>Nursery Care</option><option>Ushers</option></select>
+  <div class="h">Optional. Turns a form response into a roster entry automatically, instead of an admin copying names across two screens.</div></div>
+</div>
+<div class="note gr" style="margin-top:16px;max-width:620px"><b>This is the second half of the stitching.</b> Form → group here, group → event on the other screen. Two dropdowns and the three primitives you already shipped are connected — with no new abstraction sitting on top of them.</div>`;
+
+/* member */
+let sel=[0,1],done=false;
+function tk(i){sel=sel.includes(i)?sel.filter(x=>x!==i):[...sel,i];render();}
+function rs(){done=false;sel=[0,1];render();}
+const K=[{n:"Ava Mitchell",g:"2nd grade",a:"Peanut allergy"},{n:"Noah Mitchell",g:"Kindergarten",a:""},{n:"Ellie Mitchell",g:"Nursery",a:""}];
+
+function ph(cap,tab,body,back){
+ const lk=["Home","Register","Events","Giving","More"];
+ return `<div class="col"><div class="cap">${cap}</div><div class="phone">
+ <div class="st"><span>9:12</span><span>▮▮▮ ᯤ ▰</span></div>
+ <div class="nv"><div class="t"><span class="bd">${back?'‹ ':''}ChurchPlannerPRO</span><span class="out">Sign out</span></div>
+ <div class="lk">${lk.map(l=>`<span class="${l===tab?'on':''}">${l}${l==='Register'?'<i class="bdg">3</i>':''}</span>`).join("")}</div></div>
+ <div class="bd2">${body}</div></div></div>`;
+}
+let sg=[0], claimed=false;
+function tg(i){sg=sg.includes(i)?sg.filter(x=>x!==i):[...sg,i];render();}
+
+function member(){
+ const home=ph("1 · Home",'Home',`
+  <h1>Welcome</h1><div class="sub">Here's what's happening at your church.</div>
+  <div class="mc" style="border-color:var(--indigo);border-width:1.5px">
+   <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px"><h5 style="flex:1">3 things need you</h5><span class="mp" style="background:var(--isoft);color:var(--indigo)">Register</span></div>
+   <div class="mu" style="font-size:12px">1 open usher shift · Sunday School registration · 1 form</div>
+   <button class="mb gh">Open Register →</button></div>
+  <div class="mc"><h5>Campaigns</h5><div class="mu" style="margin:6px 0 10px">No active campaigns right now.</div><span class="mlink">See all campaigns →</span></div>
+  <div class="mc" style="background:var(--isoft);border-color:#c7d2fe"><div style="font-size:12px;color:#3730a3"><b>"Forms for you" goes away.</b> It becomes one section inside Register, alongside shifts and programs — so there's one answer to "what can I sign up for?" instead of three scattered ones.</div></div>`);
+
+ const reg=ph("2 · Register — one place to opt in",'Register',`
+  <h1>Register</h1><div class="sub">Everything you can sign up for, in one place.</div>
+
+  <div class="rsec">Volunteer shifts</div>
+  <div class="mc" style="padding:13px">
+   <div style="display:flex;align-items:center;gap:9px"><div style="flex:1">
+    <b style="font-size:13px">Ushers · 11a–12:30p</b><div class="mu" style="font-size:11.5px">Sun, Aug 23 · 1 of 2 filled</div></div>
+    ${claimed?`<span class="mp mpg">You${String.fromCharCode(39)}re on</span>`:`<button class="mp" onclick="claimed=true;render()" style="background:var(--indigo);color:#fff;padding:6px 11px;font-size:11.5px">Sign up</button>`}</div></div>
+  <div class="mc" style="padding:13px">
+   <div style="display:flex;align-items:center;gap:9px"><div style="flex:1">
+    <b style="font-size:13px">Greeters · 8:45–10:15a</b><div class="mu" style="font-size:11.5px">Sun, Aug 30 · 2 of 3 filled</div></div>
+    <button class="mp" style="background:var(--indigo);color:#fff;padding:6px 11px;font-size:11.5px">Sign up</button></div></div>
+
+  <div class="rsec">Programs</div>
+  <div class="mc" style="padding:13px">
+   <div style="display:flex;align-items:center;gap:9px"><div style="flex:1">
+    <b style="font-size:13px">Sunday School</b><div class="mu" style="font-size:11.5px">Sundays 9:30 AM · ages 4–11</div></div>
+    <button class="mp" style="background:var(--indigo);color:#fff;padding:6px 11px;font-size:11.5px">Register</button></div></div>
+  <div class="mc" style="padding:13px;opacity:.6">
+   <div style="display:flex;align-items:center;gap:9px"><div style="flex:1">
+    <b style="font-size:13px">Wednesday Youth</b><div class="mu" style="font-size:11.5px">Ellie is registered</div></div>
+    <span class="mp mpg">Registered</span></div></div>
+
+  <div class="rsec">Forms</div>
+  <div class="mc" style="padding:13px"><b style="font-size:13px">Update your household info</b>
+   <div class="mu" style="font-size:11.5px">Annual check · takes a minute</div></div>
+
+  <div class="mc" style="background:var(--isoft);border-color:#c7d2fe;margin-top:14px"><div style="font-size:12px;color:#3730a3">Sections named for the admin-side objects — <b>Volunteer shifts, Programs, Forms</b>. Same words on both sides of the app.</div></div>`,true);
+
+ const frm=ph("3 · A program still opens its form",'Register',`
+  <h1 style="font-size:19px">Sunday School Registration</h1><div class="sub">Sundays 9:30 AM · ages 4–11</div>
+  <div class="mc">
+   <div class="s" style="font-weight:600;margin-bottom:7px">Who is this for? <span class="mp mpg" style="margin-left:4px">NEW</span></div>
+   ${K.map((k,i)=>`<button class="kid ${sg.includes(i)?'sel':''}" onclick="tg(${i})" style="margin-bottom:7px"><span class="ck"></span><span class="mav">${ini(k.n)}</span>
+    <div style="flex:1"><b>${k.n}</b><span>${k.g}</span></div></button>`).join("")}
+   <div class="mu" style="font-size:11.5px">One submission each. Pulled from your family.</div></div>
+  <div class="mc">
+   ${[["Grade entering","2nd grade"],["Allergies &amp; medical notes","Peanut allergy — carries an EpiPen."]]
+    .map(([l,v])=>`<div style="margin-bottom:11px"><div class="s" style="font-weight:600;margin-bottom:4px">${l}</div><div style="padding:8px 10px;border:1px solid var(--line2);border-radius:7px;font-size:12.5px">${v}</div></div>`).join("")}
+  </div>
+  <button class="mb">Submit${sg.length>1?` · ${sg.length} children`:''}</button>
+  <div class="mc" style="background:var(--isoft);border-color:#c7d2fe;margin-top:12px"><div style="font-size:12px;color:#3730a3">Register is a <b>directory</b>, not a new flow. Tapping a program still opens its linked form.</div></div>`,true);
+
+ const sub=ph("4 · Submitted",'Register',`
+  <div class="mc" style="text-align:center;border-color:#22c55e;border-width:1.5px">
+   <div style="font-size:28px">🎉</div><h5 style="margin-top:8px;font-size:14.5px">Registration received</h5>
+   <div class="mut s" style="margin-top:3px">Sunday School · starts Sun, Sep 7</div></div>
+  <div class="mc"><div class="s" style="font-weight:600;margin-bottom:7px">What happens now</div>
+   <div class="mu" style="font-size:12px;margin-bottom:6px">• Ava is on the Sunday School list.</div>
+   <div class="mu" style="font-size:12px;margin-bottom:6px">• Each session shows up under Events.</div>
+   <div class="mu" style="font-size:12px">• On Sunday you${String.fromCharCode(39)}ll see a <b>We${String.fromCharCode(39)}re here</b> button.</div></div>
+  <div class="mc" style="background:var(--isoft);border-color:#c7d2fe"><div style="font-size:12px;color:#3730a3">Register hands off to Events. <b>Opting in and turning up stay separate</b> — which is what the badge count depends on.</div></div>`);
+
+ const ev=ph("5 · Events — showing up is separate",'Events',`
+  <h1>Upcoming events</h1><div class="sub">Everything happening at your church.</div>
+  <div class="mc" style="padding:0 15px">
+   <div class="ev" style="padding:14px 0"><b>Sunday School</b><div class="d">Sunday, August 23, 2026 · 9:30 AM</div>
+    <button class="mb" onclick="rs()">We're here</button></div>
+   <div class="ev" style="padding:14px 0"><b>Lunch Bunch</b><div class="d">Thursday, August 27, 2026 · 12:00 PM</div></div>
+   <div class="ev" style="padding:14px 0"><b>Worship</b><div class="d">Sunday, August 23, 2026 · 8:00 AM</div></div>
+   <div class="ev" style="padding:14px 0"><b>Bible study</b><div class="d">Saturday, August 29, 2026 · 8:00 AM</div></div>
+  </div>
+  <div class="mc" style="background:var(--isoft);border-color:#c7d2fe"><div style="font-size:12px;color:#3730a3"><b>Attendance needs no new page at all</b> — just a button on events you're eligible for. Registration lives in Forms, attendance lives on Events. The member app gains no tab.</div></div>`);
+
+ const pick=ph("6 · Who's here?",'Events',`
+  <h1 style="font-size:19px">We're here</h1><div class="sub">Sunday School · Sun, Aug 23 · 9:30 AM</div>
+  ${K.map((k,i)=>`<button class="kid ${sel.includes(i)?'sel':''}" onclick="tk(${i})"><span class="ck"></span><span class="mav">${ini(k.n)}</span>
+   <div style="flex:1"><b>${k.n}</b><span>${k.g}</span>${k.a?`<div style="margin-top:4px"><span class="mp mpr">⚠ ${k.a}</span></div>`:``}</div></button>`).join("")}
+  <button class="mb" ${sel.length?`onclick="done=true;render()"`:`disabled`}>${sel.length?`Mark ${sel.length} present`:'Select someone'}</button>
+  <div class="mc" style="background:var(--isoft);border-color:#c7d2fe;margin-top:12px"><div style="font-size:12px;color:#3730a3">The list is <b>your family ∩ the linked group</b> — both objects you already have. No new relationship to model. One join.</div></div>`,true);
+
+ const fin=ph("7 · Done",'Events',`
+  <div class="mc" style="text-align:center;border-color:#22c55e;border-width:1.5px">
+   <div style="font-size:30px">✅</div><h5 style="margin-top:8px;font-size:15px">${sel.length||2} marked present</h5>
+   <div class="mut s" style="margin-top:2px">9:14 AM · Sunday School</div></div>
+  ${["Ava Mitchell","Noah Mitchell","Ellie Mitchell"].slice(0,sel.length||2).map(n=>
+   `<div class="mc" style="padding:11px;display:flex;align-items:center;gap:10px"><span class="mav">${ini(n)}</span>
+    <div style="flex:1"><b style="font-size:12.5px">${n}</b></div><span class="mp mpg">Present</span></div>`).join("")}
+  <button class="mb gh" onclick="rs()">Start over</button>
+  <div class="mc" style="background:var(--isoft);border-color:#c7d2fe"><div style="font-size:12px;color:#3730a3">No code, no receipt, nothing to show at the door. This screen just confirms the record. That's the honest shape of an attendance feature.</div></div>`);
+ return `<div class="mgrp">Register <span>— opting in</span></div>`+home+reg+frm+sub+`<div class="mgrp">Showing up <span>— Events, unchanged</span></div>`+ev+pick+fin;
+}
+
+function doc(){return `
+<h2>What I cut, and why</h2>
+<p>My first pass invented a <strong>Program</strong> object with templates, a setup wizard, milestones, sacramental records and its own nav item. That's the right destination. It is the wrong v1 — it asks you to design and migrate a new top-level abstraction before you have a single church using check-in.</p>
+<p>So this version adds <strong>no new object and no new nav item</strong>. It adds two dropdowns, one toggle, one button and two screens. Groups, Forms and Calendar do the work; they just get to point at each other now.</p>
+
+<div class="box"><h3>The entire v1 build</h3>
+<div class="cut"><span class="w"><span class="pill pb">Data</span></span><div><b>events.group_id</b><span>Nullable link to an existing group.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pb">Data</span></span><div><b>events.attendance_enabled</b><span>Boolean on the event (inherited by every occurrence of a repeat).</span></div></div>
+<div class="cut"><span class="w"><span class="pill pb">Data</span></span><div><b>forms.join_group_id</b><span>Nullable. On submit, add the submitter to this group.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pb">Data</span></span><div><b>attendance table</b><span>occurrence, person, marked_by, time. Four columns.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pg">Free</span></span><div><b>Families</b><span>Already exists. The member list is family ∩ group — a join, not a migration.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pb">Data</span></span><div><b>programs table</b><span>id, name, group_id, form_id, event_id. A join record, added because Programs gets its own tab.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">Admin</span></span><div><b>Two fields on the event form</b><span>Group dropdown, attendance toggle.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">Admin</span></span><div><b>One field on the form editor</b><span>Add-to-group dropdown.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">Admin</span></span><div><b>An Attendance tab on the event</b><span>Three counts, one table, a Mark present button.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">Admin</span></span><div><b>Programs tab + wizard</b><span>List, detail page, 3-step wizard. Groups and Forms move to Building blocks.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">Member</span></span><div><b>Attendance: one button + 2 screens</b><span>Pick who's here, confirm.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">Member</span></span><div><b>Register tab</b><span>Directory of shifts, programs and forms, plus a badge count. Routes to existing flows.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pa">Forms &#9888;</span></span><div><b>&quot;Who is this for?&quot; on forms</b><span>Optional person field defaulting to the family. Without it, rosters fill with parents.</span></div></div>
+</div>
+
+<h2>Register — one member-side door</h2>
+<p>Three things a member can opt into — <strong>volunteer shifts</strong>, <strong>program registrations</strong>, and <strong>forms</strong> — were surfacing in three different places, or in the case of shifts and programs, barely surfacing at all. One tab collects them.</p>
+<ul>
+ <li><strong>It is a directory, not a new flow.</strong> Tapping a program still opens its linked form. Tapping a shift still hits volunteer scheduling. Register routes; it does not re-implement.</li>
+ <li><strong>Sections are named for the admin-side objects</strong> — Volunteer shifts, Programs, Forms. Same words on both sides of the app, which is the vocabulary rule doing its job.</li>
+ <li><strong>The badge is the feature.</strong> A count of things awaiting you is what makes anyone open the tab twice. Without it this is a page nobody visits.</li>
+ <li><strong>"Forms for you" comes off the member home</strong> and becomes the third section. One answer to "what can I sign up for?" instead of three scattered ones.</li>
+</ul>
+<p><strong>Register and Events stay separate on purpose.</strong> Opting in and turning up are different acts on different days — and the badge count only means something if it empties when you have decided, not when you have attended.</p>
+<div class="box" style="background:#fffbeb;border-color:#fde68a">
+<h3 style="color:#78350f">Two things to check before building</h3>
+<p style="margin:0 0 10px;color:#92400e"><b>Does member-side shift signup already exist?</b> Your volunteer scheduling demo has a member view, so Register may be aggregating a surface you already shipped rather than building one. That changes the estimate a lot.</p>
+<p style="margin:0;color:#92400e"><b>Not every form is a registration.</b> A household-info update or a survey is not something you "register" for. The section headers carry the meaning, so the tab name can stay a verb — but if the Forms section fills with things that are not sign-ups, the name starts lying and <i>Sign up</i> or <i>Get involved</i> become better.</p>
+</div>
+<p>The one remaining gap from the form path is unchanged: a form submission attaches to whoever submitted it, so forms need an optional <strong>"Who is this for?"</strong> person field defaulting to the family. Without it, <code>join_group_id</code> adds the parent and every Sunday School roster fills with adults.</p>
+
+<h2>Vocabulary — one word, one place</h2>
+<p>Groups, Programs and Volunteers all involve people and a calendar, so the fastest way to keep them distinct is to never let a word appear in two of them. This does more work than any amount of explanation.</p>
+<div class="card" style="margin-bottom:16px"><table>
+<thead><tr><th></th><th>Groups</th><th>Programs</th><th>Volunteers</th></tr></thead><tbody>
+<tr><td class="mut">the people are</td><td><b>members</b></td><td><b>registered</b></td><td><b>scheduled</b></td></tr>
+<tr><td class="mut">the list is called</td><td>the group</td><td><b>registrations</b></td><td><b>the roster</b></td></tr>
+<tr><td class="mut">the dated thing is</td><td class="mut">—</td><td>a <b>session</b></td><td>a <b>shift</b></td></tr>
+<tr><td class="mut">the metric is</td><td>member count</td><td><b>attendance</b></td><td><b>coverage</b></td></tr>
+<tr><td class="mut">the action is</td><td>add / remove</td><td><b>mark present</b></td><td><b>assign &amp; publish</b></td></tr>
+</tbody></table></div>
+<p><strong>Roster belongs to Volunteers.</strong> Programs use <em>registered</em> and <em>registrations</em> — which is already the verb in the sign-up flow, and which says precisely the thing the product is built to surface: registered is not the same as present.</p>
+<div class="box" style="background:#fffbeb;border-color:#fde68a">
+<h3 style="color:#78350f">One collision left to settle</h3>
+<p style="margin:0;color:#92400e">On the volunteer side, does <em>roster</em> mean the pool of people on the team, or the published assignments for a given week? Pick the pool — you already say "Publish &amp; notify" and "Shifts scheduled," so the dated output is the <b>schedule</b> and the standing list is the <b>roster</b>. Two words, two jobs.</p>
+</div>
+
+<h2>Programs as a tab, and what that costs</h2>
+<p>Promoting Programs to top-level and pushing Groups and Forms into a <strong>Building blocks</strong> tray is a real IA position, and I think it's the right one: it puts the thing an admin <em>runs</em> above the things an admin <em>assembles</em>. It also uses a pattern your sidebar already has — a labelled section below a divider, same as Operations.</p>
+<p>But a tab changes one thing. A page hanging off Groups could fake it with a join. A tab needs its own list and its own URL, and faking that with <code>groups.is_program</code> puts a permanent ceiling on the concept — one program could never have two groups.</p>
+<div class="box"><h3>So: one small table</h3>
+<p style="margin:0 0 10px"><code>programs(id, name, group_id, form_id, event_id)</code></p>
+<p style="margin:0">Three nullable foreign keys and a name. It's a join record, not an owner — the group, form and event stay ordinary records you can open and edit and delete, and the program just remembers which three they are. That's roughly a day of schema, and it removes the ceiling.</p></div>
+<p>Everything else from the no-object version survives intact: the wizard is still four calls to endpoints you already have, and the program page is still mostly a query and a layout.</p>
+
+<h2>Two notes on the nav</h2>
+<p><strong>Demoting Groups is safe. Demoting Forms is the one to watch.</strong> Once Programs exists, most admins genuinely never open Groups — the program page shows the roster — so it belongs in the tray. Forms is different: it's a headline feature on your marketing site, and plenty of forms have nothing to do with programs (usher signup, member updates, event RSVPs). Burying it is a bigger bet. Worth watching whether form creation drops after the move.</p>
+<p><strong>"Building blocks" is a placeholder.</strong> It's honest but a bit engineer-ish for a church admin. <em>Setup</em>, <em>Library</em> and <em>Manage</em> are all candidates. Whatever you pick, it should read as "things you configure once" so nobody goes hunting for it during a Sunday morning.</p>
+
+<h2>The only unknown left</h2>
+<p>Attendance attaches to a <strong>specific occurrence</strong> of a repeating event. If your calendar stores occurrences as rows, this is nothing. If it computes them on the fly from a recurrence rule, you need occurrence identity before any attendance row has something to point at — and that's plumbing, not a feature, so it won't feel like progress while you're doing it.</p>
+<p>It's the one thing in this scope that could be bigger than everything else combined. Worth checking before you commit to a date.</p>
+
+<h2>One note on Families, for later</h2>
+<p>Family membership is peer-to-peer — anyone in the family can mark anyone else present. For attendance that's exactly right, and it's why this build is now so cheap.</p>
+<p>It stops being enough the day you add pickup codes. Then you need <em>directed</em> permission (this adult may collect this child) and a list that reaches past the family — grandparents, nannies, carpools. Don't build that now. Just know that Families gets you all the way to attendance and not one step further, so the v1.1 security work is a real project rather than a flag.</p>
+
+<h2>Cut, and when it comes back</h2>
+<div class="box">
+<div class="cut"><span class="w"><span class="pill pa">v1.1</span></span><div><b>Pickup security codes</b><span>The upgrade path from attendance to real child check-in. Cut for launch — it's what the whole positioning below turns on.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">v1.1</span></span><div><b>Authorized pickup beyond the family</b><span>Grandparents, nannies, carpools. Families covers attendance; it doesn't cover this.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">v1.1</span></span><div><b>Check-out</b><span>Logging who collected the child. Only meaningful once codes exist.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">v1.1</span></span><div><b>Teacher/volunteer roster view</b><span>v1 leans on the admin Attendance tab, which works fine on a phone.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">v1.1</span></span><div><b>Walk-in visitors</b><span>Real, but not on day one. Staff can add the person, then check them in.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">v1.1</span></span><div><b>Attendance history &amp; the week-by-week grid</b><span>The data accrues from day one; the view can wait.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">v2</span></span><div><b>Programs object, templates, setup wizard</b><span>Build it after you've watched ten churches set this up by hand and seen what they actually repeat.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">v2</span></span><div><b>Milestones, sacraments, permanent records</b><span>Still the most defensible idea in the earlier draft. Still not a launch feature.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">v2</span></span><div><b>A Programs / Kids Ministry nav item</b><span>Shipping a nav tab before the feature has users is backwards. Earn it.</span></div></div>
+<div class="cut"><span class="w"><span class="pill pn">Later</span></span><div><b>Label printing, ratio warnings, rooms and classes, emergency texting, Ask Chat integration</b><span>All of it is Planning Center parity. None of it is why someone would try you.</span></div></div>
+</div>
+
+<h2>What dropping the code changes</h2>
+<p>The build gets simpler — one fewer column, one fewer screen element. The <em>positioning</em> changes more than the code does, and that's the part to get right.</p>
+<p><strong>You're now selling attendance, and attendance sells to a different person.</strong> Child check-in sells to a children's director on a safety argument. Attendance sells to a pastor or an executive pastor on a "do we actually know who shows up" argument. Different buyer, different demo, different landing page. That's fine — arguably better, because the attendance buyer already exists in every church you'd sell to, and it's a broader use case than kids.</p>
+<div class="box" style="background:#fffbeb;border-color:#fde68a">
+<h3 style="color:#78350f">Say this</h3>
+<p style="margin:0 0 8px;color:#92400e">"Know who actually showed up. Flip on attendance for any event, and members mark themselves and their family present from their phone. It flows straight back to the profile and the group."</p>
+<h3 style="color:#78350f;margin-top:14px">Don't say this</h3>
+<p style="margin:0;color:#92400e">Anything using the words "check-in," "secure," or "child safety." The moment a children's director hears check-in, they'll ask how pickup is verified, and the honest answer today is "it isn't." Over-claiming here is the one way this feature can actively lose you a deal.</p>
+</div>
+<p>The upgrade is small and obvious when you want it: add three random letters to the attendance row and render them in two places. Nothing in this v1 blocks it. But sell what you built.</p>
+
+<h2>One consequence worth noticing</h2>
+<p>Without the safety story, the kids use case stops being special — Sunday School is now just one group among choir, Bible study, ushers and small groups. That's a decent trade for a launch: you get a feature every church can use on day one instead of one that only matters to churches with a children's ministry big enough to worry about pickup.</p>
+<p>Which also means the earlier Kids Ministry / Programs nav question answers itself for now: <strong>don't</strong>. Attendance is a property of events, it applies to every ministry equally, and it has no home of its own.</p>
+`;}
+
+function render(){
+ document.getElementById('side').innerHTML=side();
+ document.getElementById('ac').innerHTML=SC[sc]();
+ document.getElementById('atitle').textContent=T[sc]||'Calendar';
+ document.getElementById('mrow').innerHTML=member();
+ document.getElementById('doc').innerHTML=doc();
+}
+render();
+</script>
+</body>
+</html>
