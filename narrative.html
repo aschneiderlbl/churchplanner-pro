@@ -1,1 +1,670 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Church software should reduce administration—not create more of it. See how ChurchPlannerPro organizes technology around the work churches need to accomplish.">
+  <title>Run Your Church. Not Your Software. | ChurchPlannerPro</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17261f;
+      --muted: #56635d;
+      --green: #246047;
+      --green-dark: #194634;
+      --sage: #eaf2ec;
+      --cream: #faf8f2;
+      --white: #ffffff;
+      --line: #dbe4dd;
+      --gold: #d3a647;
+      --shadow: 0 18px 50px rgba(23, 38, 31, .08);
+    }
 
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 18px;
+      line-height: 1.72;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: var(--green); }
+
+    a:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .site-header {
+      border-bottom: 1px solid rgba(23, 38, 31, .10);
+      background: rgba(250, 248, 242, .94);
+    }
+
+    .nav {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      color: var(--ink);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      text-decoration: none;
+    }
+
+    .nav-link {
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 96px 20px 88px;
+      background:
+        radial-gradient(
+          circle at 84% 15%,
+          rgba(211, 166, 71, .20),
+          transparent 24rem
+        ),
+        linear-gradient(145deg, #f2f6ef 0%, var(--cream) 58%);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -110px;
+      bottom: -170px;
+      width: 430px;
+      height: 430px;
+      border: 1px solid rgba(36, 96, 71, .16);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 55px rgba(36, 96, 71, .04),
+        0 0 0 110px rgba(36, 96, 71, .03);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(900px, 100%);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--green);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      line-height: 1.14;
+      letter-spacing: -.035em;
+    }
+
+    h1 {
+      max-width: 850px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(48px, 8vw, 82px);
+      font-weight: 600;
+    }
+
+    .dek {
+      max-width: 730px;
+      margin: 30px 0 0;
+      color: var(--muted);
+      font-size: clamp(20px, 2.5vw, 25px);
+      line-height: 1.55;
+    }
+
+    .meta {
+      margin: 30px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .article-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 730px) 250px;
+      gap: 80px;
+      justify-content: center;
+      padding: 80px 0 100px;
+    }
+
+    article > p:first-of-type {
+      margin-top: 0;
+      font-size: 22px;
+      line-height: 1.65;
+    }
+
+    article p {
+      margin: 0 0 25px;
+    }
+
+    h2 {
+      margin: 64px 0 24px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 600;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .pullquote {
+      margin: 52px 0;
+      padding: 30px 0 30px 30px;
+      border-left: 5px solid var(--gold);
+      color: var(--green-dark);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(27px, 4vw, 38px);
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin: 34px 0 42px;
+    }
+
+    .work-card {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--white);
+      box-shadow: 0 8px 25px rgba(23, 38, 31, .04);
+    }
+
+    .work-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .principles {
+      margin: 36px 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .principles li {
+      position: relative;
+      margin: 0 0 18px;
+      padding: 0 0 18px 34px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .principles li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .aside {
+      align-self: start;
+      position: sticky;
+      top: 30px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .aside p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .aside a {
+      display: block;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .aside a:last-child {
+      border: 0;
+    }
+
+    .aside a:hover {
+      color: var(--green);
+    }
+
+    .cta {
+      margin: 64px 0 0;
+      padding: clamp(32px, 6vw, 58px);
+      border-radius: 22px;
+      background: var(--green-dark);
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .cta h2 {
+      margin: 0 0 18px;
+      font-size: clamp(32px, 5vw, 46px);
+    }
+
+    .cta p {
+      max-width: 570px;
+      margin: 0 0 26px;
+      color: #dce9e1;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 13px 20px;
+      border-radius: 10px;
+      background: var(--white);
+      color: var(--green-dark);
+      font-size: 16px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    footer {
+      padding: 34px 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .article-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .aside {
+        position: static;
+        order: -1;
+      }
+
+      .aside nav {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 18px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        font-size: 17px;
+      }
+
+      .hero {
+        padding: 68px 20px 64px;
+      }
+
+      .article-layout {
+        padding: 56px 0 72px;
+      }
+
+      .work-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .aside nav {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-link {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary navigation">
+      <a
+        class="brand"
+        href="#top"
+        aria-label="ChurchPlannerPro home"
+      >ChurchPlannerPro</a>
+
+      <a class="nav-link" href="#a-better-model">A better model</a>
+    </nav>
+  </header>
+
+  <header class="hero" id="top">
+    <div class="hero-inner">
+      <p class="eyebrow">Church operations</p>
+
+      <h1>Run your church.<br>Not your software.</h1>
+
+      <p class="dek">
+        Churches have more technology than ever. So why are pastors,
+        staff and volunteers still spending so much time making it all work?
+      </p>
+
+      <p class="meta">
+        <time datetime="2026-09-02">September 2, 2026</time>
+        &nbsp;·&nbsp; 7 minute read
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <div class="article-layout">
+      <article>
+        <p>
+          There is software for nearly every part of church life: people,
+          giving, groups, events, registrations, volunteers, communications
+          and accounting. Each tool promises to make something easier. Yet
+          inside many churches, the administrative load keeps growing.
+        </p>
+
+        <p>
+          Someone still has to configure the tools, keep the data current,
+          connect one system to another and turn a collection of features
+          into the processes a church actually needs. The software may be
+          doing more, but so are the people responsible for it.
+        </p>
+
+        <p>
+          That points to a simple problem: church software has largely been
+          organized around what technology can do, not around what churches
+          need to get done.
+        </p>
+
+        <blockquote class="pullquote">
+          Church software should reduce administration, not create more of it.
+        </blockquote>
+
+        <section id="more-tools">
+          <h2>More tools are not the same as less work</h2>
+
+          <p>
+            A feature is only useful when it becomes part of a working
+            process. A volunteer database does not fill the schedule. A
+            registration form does not organize Sunday school. A giving
+            report does not reconcile the books. Each outcome depends on
+            several steps, multiple sources of information and timely
+            follow-up.
+          </p>
+
+          <p>
+            Traditional platforms give churches the building blocks and
+            leave staff to assemble them. That work often spills into
+            spreadsheets, inboxes and the institutional memory of the one
+            person who knows how everything fits together.
+          </p>
+
+          <p>
+            The result is familiar: duplicate data entry, volunteers chased
+            by text message, reports compared by hand, records that slowly
+            fall out of date and processes that stop working when a key
+            person is away.
+          </p>
+        </section>
+
+        <section id="a-better-model">
+          <h2>Start with the outcome</h2>
+
+          <p>
+            ChurchPlannerPro takes a different approach. Instead of beginning
+            with a menu of modules, it begins with a practical question:
+            <strong>What are you trying to get done?</strong>
+          </p>
+
+          <p>
+            That changes how church technology is designed. The goal is not
+            simply to digitize one task. It is to bring the necessary
+            software, integrations, automation and support together around
+            a complete outcome.
+          </p>
+
+          <div
+            class="work-grid"
+            aria-label="Examples of church operations"
+          >
+            <section class="work-card">
+              <h3>Volunteer scheduling</h3>
+              <p>
+                Publish shifts and let volunteers pick up, swap or drop
+                assignments without making a staff member coordinate every
+                change.
+              </p>
+            </section>
+
+            <section class="work-card">
+              <h3>Programs</h3>
+              <p>
+                Run Sunday school, confirmation or VBS across registration,
+                groups, communication, attendance and check-in.
+              </p>
+            </section>
+
+            <section class="work-card">
+              <h3>Member management</h3>
+              <p>
+                Keep people, households, groups, interactions and church
+                records connected and current.
+              </p>
+            </section>
+
+            <section class="work-card">
+              <h3>Giving and reconciliation</h3>
+              <p>
+                Bring giving and financial information together so reporting
+                and reconciliation require less manual work.
+              </p>
+            </section>
+
+            <section class="work-card">
+              <h3>Communications</h3>
+              <p>
+                Coordinate newsletters, announcements and member
+                communication using accurate church data.
+              </p>
+            </section>
+
+            <section class="work-card">
+              <h3>Events and registrations</h3>
+              <p>
+                Manage registration, attendance, communication and follow-up
+                as one process instead of several disconnected tasks.
+              </p>
+            </section>
+          </div>
+
+          <p>
+            The distinction matters. A church does not need twelve products
+            and a diagram to understand how to schedule volunteers. It needs
+            volunteer scheduling to work. It should not have to connect
+            people, groups, calendars, forms, check-ins and messages just to
+            run Sunday school. It needs to run Sunday school.
+          </p>
+        </section>
+
+        <section id="fits-your-church">
+          <h2>Technology should fit the church</h2>
+
+          <p>
+            No two churches operate in exactly the same way. Their ministries,
+            traditions, staffing, terminology and responsibilities differ.
+            Software should accommodate those realities instead of forcing
+            every church into the same process.
+          </p>
+
+          <p>
+            That means workflows configured around the church, forms that
+            collect the right information and automations that remove
+            recurring work. It also means members can handle more routine
+            actions themselves—from event registration to volunteer schedule
+            changes—without every request passing through the church office.
+          </p>
+
+          <ul class="principles">
+            <li>
+              <strong>Complete outcomes instead of isolated features.</strong>
+              The pieces work together around the job the church needs to
+              finish.
+            </li>
+
+            <li>
+              <strong>Automation instead of repeated administration.</strong>
+              Updates, communication and follow-up happen without another
+              item on someone’s list.
+            </li>
+
+            <li>
+              <strong>Member self-service instead of staff bottlenecks.</strong>
+              People can take action directly when it makes sense.
+            </li>
+
+            <li>
+              <strong>Workflows built around the church.</strong>
+              The technology supports how the ministry operates in practice.
+            </li>
+          </ul>
+        </section>
+
+        <section id="work-together">
+          <h2>Your existing systems can work together</h2>
+
+          <p>
+            Improving church operations should not require replacing every
+            tool at once. Some systems may already work well. Others may hold
+            years of important data. A forced, all-at-once transition can
+            create more work—the very thing better technology is supposed to
+            remove.
+          </p>
+
+          <p>
+            ChurchPlannerPro can connect with the systems a church chooses to
+            keep, coordinating information and reducing duplicate entry. Over
+            time, a church can simplify its technology stack where doing so
+            makes sense. The path forward can be practical and gradual rather
+            than disruptive.
+          </p>
+        </section>
+
+        <section id="service-matters">
+          <h2>Software alone is not the whole answer</h2>
+
+          <p>
+            Even good technology needs thoughtful implementation. Data has to
+            be cleaned. Systems have to be connected. Workflows have to
+            reflect real responsibilities. People need help through the
+            transition.
+          </p>
+
+          <p>
+            ChurchPlannerPro pairs technology with hands-on support for
+            migration, setup, data cleanup and recurring administration.
+            Churches should not need an internal software administrator to
+            benefit from church management technology. They need a partner
+            who can help make the system work—and keep it working.
+          </p>
+
+          <p>
+            This is not service added around the edge of the product. It is
+            part of the operating model. Because the measure of success is
+            not how many features a church receives. It is how much
+            administrative work the church no longer has to carry.
+          </p>
+        </section>
+
+        <section id="ministry">
+          <h2>Make room for ministry</h2>
+
+          <p>
+            Administration will always be part of running a church. Schedules
+            need to be filled, records maintained, gifts reconciled, events
+            communicated and people followed up with. The aim is not to
+            pretend that work disappears. It is to stop asking pastors, staff
+            and volunteers to do work the right system can coordinate for
+            them.
+          </p>
+
+          <p>
+            Church management software has spent years adding more features
+            for churches to administer. The next step is to turn those
+            features, integrations and workflows into outcomes churches can
+            depend on.
+          </p>
+
+          <p>
+            When technology recedes into the background, staff can spend less
+            time running software—and more time serving people.
+          </p>
+        </section>
+
+        <aside class="cta" aria-labelledby="cta-title">
+          <h2 id="cta-title">
+            What could your church stop administering?
+          </h2>
+
+          <p>
+            See how ChurchPlannerPro can connect your systems, shape workflows
+            around your church and reduce the work behind your ministry.
+          </p>
+
+          <a
+            class="button"
+            href="mailto:hello@churchplannerpro.com?subject=ChurchPlannerPro%20conversation"
+          >Start a conversation</a>
+        </aside>
+      </article>
+
+      <aside class="aside" aria-label="Article contents">
+        <p><strong>In this article</strong></p>
+
+        <nav aria-label="Table of contents">
+          <a href="#more-tools">More tools, more work</a>
+          <a href="#a-better-model">Start with the outcome</a>
+          <a href="#fits-your-church">Built around your church</a>
+          <a href="#work-together">Connected systems</a>
+          <a href="#service-matters">Software plus service</a>
+          <a href="#ministry">Make room for ministry</a>
+        </nav>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <p>
+      &copy; 2026 ChurchPlannerPro. Run your church. Not your software.
+    </p>
+  </footer>
+</body>
+</html>
