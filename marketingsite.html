@@ -378,7 +378,22 @@ p+p{margin-top:18px;}
 .doc-toc{border:1px solid var(--line);border-radius:var(--r-card);padding:24px 28px;background:var(--card);margin-bottom:32px;}
 .doc-toc h2{font-size:13px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;}
 .doc-toc li+li{margin-top:8px;}
+.doc-toc-list{margin:0;padding:0;list-style:none;}
+.doc-toc-list li{font-size:15px;line-height:24px;display:flex;gap:2px;}
+/* The clause number is muted and gets a fixed column so titles line up whether
+   the number is one digit or two. It sits outside the anchor in the contents
+   list, so it reads as the marker rather than as part of the link. */
+.doc-num{
+  color:var(--muted);font-variant-numeric:tabular-nums;font-weight:500;
+  flex:none;min-width:1.55em;
+}
+.doc-card h2 .doc-num{display:inline-block;font-weight:400;min-width:1.9em;}
 .doc-updated{font-size:13.5px;color:var(--muted);margin-top:14px;}
+/* Anchors land below the top edge rather than flush against it. */
+.doc-card h2[id]{scroll-margin-top:24px;}
+/* Legal documents run as headed paragraphs rather than the security page's
+   bulleted claims, so the first paragraph sits tight under its heading. */
+.doc-card h2+p{margin-top:0;}
 
 /* ============================================================
    Tablet 768–1023 (§5)
@@ -1997,7 +2012,7 @@ p+p{margin-top:18px;}
         </ul>
       </div>
 
-      <p class="small prose" style="margin-top:28px;">See our <a href="https://churchplannerpro.com/legal/privacy">Privacy Policy</a> and <a href="https://churchplannerpro.com/legal/terms">Terms of Use</a>. Questions about any of this go straight to me &mdash; <a href="mailto:andrew@churchplannerpro.com">andrew@churchplannerpro.com</a>.</p>
+      <p class="small prose" style="margin-top:28px;">See our <a href="#privacy">Privacy Policy</a> and <a href="#terms">Terms of Use</a>. Questions about any of this go straight to me &mdash; <a href="mailto:andrew@churchplannerpro.com">andrew@churchplannerpro.com</a>.</p>
     </div>
   </div>
 </section>
@@ -2451,6 +2466,119 @@ p+p{margin-top:18px;}
 
 
 </div>
+<div class="proto-page" id="page-terms" data-path="/legal/terms">
+<main id="main-terms">
+<section class="section">
+  <div class="container">
+    <div class="doc">
+      <h1 class="hero-title">
+        <span class="search-line">ChurchPlannerPro terms of service</span>
+        <span class="claim"><span class="bd">Terms of Service</span></span>
+      </h1>
+      <p class="doc-updated">Last updated: May 14, 2026</p>
+
+      <nav class="doc-toc" aria-label="On this page" style="margin-top:36px;">
+        <h2>On this page</h2>
+        <ol class="doc-toc-list">
+          <li><span class="doc-num">1.</span><a class="inline" href="#terms/acceptance">Acceptance of Terms</a></li>
+          <li><span class="doc-num">2.</span><a class="inline" href="#terms/service">Description of Service</a></li>
+          <li><span class="doc-num">3.</span><a class="inline" href="#terms/accounts">User Accounts</a></li>
+          <li><span class="doc-num">4.</span><a class="inline" href="#terms/data-ownership">Data Ownership</a></li>
+          <li><span class="doc-num">5.</span><a class="inline" href="#terms/acceptable-use">Acceptable Use</a></li>
+          <li><span class="doc-num">6.</span><a class="inline" href="#terms/warranties">Disclaimer of Warranties</a></li>
+          <li><span class="doc-num">7.</span><a class="inline" href="#terms/liability">Limitation of Liability</a></li>
+          <li><span class="doc-num">8.</span><a class="inline" href="#terms/changes">Changes to Terms</a></li>
+          <li><span class="doc-num">9.</span><a class="inline" href="#terms/contact">Contact</a></li>
+        </ol>
+      </nav>
+
+      <div class="doc-card">
+        <h2 id="acceptance"><span class="doc-num">1.</span>Acceptance of Terms</h2>
+        <p>By accessing or using ChurchPlannerPro, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our platform.</p>
+        <h2 id="service"><span class="doc-num">2.</span>Description of Service</h2>
+        <p>ChurchPlannerPro provides a church management platform including member tracking, form management, workflow automation, calendar, and AI-assisted administrative tools.</p>
+        <h2 id="accounts"><span class="doc-num">3.</span>User Accounts</h2>
+        <p>You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use.</p>
+        <h2 id="data-ownership"><span class="doc-num">4.</span>Data Ownership</h2>
+        <p>You retain ownership of all data you submit to ChurchPlannerPro. We do not claim any ownership rights over your church&rsquo;s data.</p>
+        <h2 id="acceptable-use"><span class="doc-num">5.</span>Acceptable Use</h2>
+        <p>You agree to use ChurchPlannerPro only for lawful church administration purposes. You may not use our platform for any illegal activity or to violate the rights of others.</p>
+        <h2 id="warranties"><span class="doc-num">6.</span>Disclaimer of Warranties</h2>
+        <p>ChurchPlannerPro is provided &ldquo;as is&rdquo; and &ldquo;as available&rdquo; without warranties of any kind, either express or implied, including but not limited to implied warranties of merchantability, fitness for a particular purpose, or non-infringement.</p>
+        <h2 id="liability"><span class="doc-num">7.</span>Limitation of Liability</h2>
+        <p>In no event shall ChurchPlannerPro be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of the platform.</p>
+        <h2 id="changes"><span class="doc-num">8.</span>Changes to Terms</h2>
+        <p>We reserve the right to modify these terms at any time. We will notify users of significant changes via email or through the platform. Continued use after changes constitutes acceptance of the new terms.</p>
+        <h2 id="contact"><span class="doc-num">9.</span>Contact</h2>
+        <p>For questions about these Terms, please contact us at <a class="inline" href="mailto:hello@churchplannerpro.com">hello@churchplannerpro.com</a>.</p>
+      </div>
+
+      <p class="small prose" style="margin-top:28px;">See our <a href="#privacy">Privacy Policy</a> and our <a href="#security">Security</a> page. Questions about any of this go straight to me &mdash; <a href="mailto:andrew@churchplannerpro.com">andrew@churchplannerpro.com</a>.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+
+</div>
+<div class="proto-page" id="page-privacy" data-path="/legal/privacy">
+<main id="main-privacy">
+<section class="section">
+  <div class="container">
+    <div class="doc">
+      <h1 class="hero-title">
+        <span class="search-line">ChurchPlannerPro privacy policy</span>
+        <span class="claim"><span class="bd">Privacy Policy</span></span>
+      </h1>
+      <p class="doc-updated">Last updated: May 14, 2026</p>
+
+      <nav class="doc-toc" aria-label="On this page" style="margin-top:36px;">
+        <h2>On this page</h2>
+        <ol class="doc-toc-list">
+          <li><span class="doc-num">1.</span><a class="inline" href="#privacy/collect">Information We Collect</a></li>
+          <li><span class="doc-num">2.</span><a class="inline" href="#privacy/use">How We Use Your Information</a></li>
+          <li><span class="doc-num">3.</span><a class="inline" href="#privacy/sharing">Information Sharing</a></li>
+          <li><span class="doc-num">4.</span><a class="inline" href="#privacy/security">Data Security</a></li>
+          <li><span class="doc-num">5.</span><a class="inline" href="#privacy/rights">Your Rights</a></li>
+          <li><span class="doc-num">6.</span><a class="inline" href="#privacy/cookies">Cookies and Tracking</a></li>
+          <li><span class="doc-num">7.</span><a class="inline" href="#privacy/children">Children&rsquo;s Privacy</a></li>
+          <li><span class="doc-num">8.</span><a class="inline" href="#privacy/retention">Data Retention</a></li>
+          <li><span class="doc-num">9.</span><a class="inline" href="#privacy/policy-changes">Changes to Policy</a></li>
+          <li><span class="doc-num">10.</span><a class="inline" href="#privacy/contact">Contact</a></li>
+        </ol>
+      </nav>
+
+      <div class="doc-card">
+        <h2 id="collect"><span class="doc-num">1.</span>Information We Collect</h2>
+        <p>We collect information you provide directly, including: name, email address, church name, and any other information you choose to submit through forms, member profiles, or communications with our platform.</p>
+        <h2 id="use"><span class="doc-num">2.</span>How We Use Your Information</h2>
+        <p>We use your information to: provide and improve our services, process transactions, communicate with you about your account, ensure platform security, and comply with legal obligations.</p>
+        <h2 id="sharing"><span class="doc-num">3.</span>Information Sharing</h2>
+        <p>We do not sell, trade, or rent your personal information to third parties. We may share information with service providers who assist us in operating our platform, subject to confidentiality obligations.</p>
+        <h2 id="security"><span class="doc-num">4.</span>Data Security</h2>
+        <p>We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.</p>
+        <h2 id="rights"><span class="doc-num">5.</span>Your Rights</h2>
+        <p>You have the right to access, correct, or delete your personal information. You may also request a portable copy of your data or object to certain processing activities.</p>
+        <h2 id="cookies"><span class="doc-num">6.</span>Cookies and Tracking</h2>
+        <p>We use cookies and similar technologies to maintain session state, authenticate users, and understand how you interact with our platform. You may control cookies through your browser settings.</p>
+        <h2 id="children"><span class="doc-num">7.</span>Children&rsquo;s Privacy</h2>
+        <p>ChurchPlannerPro is not intended for use by children under 13. We do not knowingly collect personal information from children under 13.</p>
+        <h2 id="retention"><span class="doc-num">8.</span>Data Retention</h2>
+        <p>We retain your information for as long as your account is active or as needed to provide services. Upon account deletion, we will delete or anonymize your data within a reasonable period.</p>
+        <h2 id="policy-changes"><span class="doc-num">9.</span>Changes to Policy</h2>
+        <p>We may update this Privacy Policy from time to time. We will notify you of significant changes via email or through the platform. Your continued use after changes constitutes acceptance of the updated policy.</p>
+        <h2 id="contact"><span class="doc-num">10.</span>Contact</h2>
+        <p>For questions about this Privacy Policy, please contact us at <a class="inline" href="mailto:hello@churchplannerpro.com">hello@churchplannerpro.com</a>.</p>
+      </div>
+
+      <p class="small prose" style="margin-top:28px;">See our <a href="#terms">Terms of Service</a> and our <a href="#security">Security</a> page. Questions about any of this go straight to me &mdash; <a href="mailto:andrew@churchplannerpro.com">andrew@churchplannerpro.com</a>.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+
+</div>
 <footer class="site-footer">
   <div class="container">
     <div class="footer-panel">
@@ -2486,8 +2614,8 @@ p+p{margin-top:18px;}
         <div class="footer-col" data-open="false">
           <h2>Legal</h2>
           <ul>
-            <li><a href="https://churchplannerpro.com/legal/terms">Terms</a></li>
-            <li><a href="https://churchplannerpro.com/legal/privacy">Privacy</a></li>
+            <li><a href="#terms">Terms</a></li>
+            <li><a href="#privacy">Privacy</a></li>
           </ul>
         </div>
       </div>
