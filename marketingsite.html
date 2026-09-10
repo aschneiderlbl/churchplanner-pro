@@ -380,20 +380,6 @@ p+p{margin-top:18px;}
 .doc-toc li+li{margin-top:8px;}
 .doc-updated{font-size:13.5px;color:var(--muted);margin-top:14px;}
 
-/* ---------- Consent bar (§11) ---------- */
-.consent{
-  position:fixed;left:0;right:0;bottom:0;z-index:70;
-  background:var(--card);border-top:1px solid var(--line);
-  padding:16px var(--gutter);
-}
-.consent-inner{
-  max-width:var(--container);margin:0 auto;
-  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
-}
-.consent p{font-size:14px;line-height:22px;margin:0;flex:1 1 380px;}
-.consent .consent-actions{display:flex;gap:12px;margin-left:auto;}
-.consent[hidden]{display:none;}
-
 /* ============================================================
    Tablet 768–1023 (§5)
    ============================================================ */
@@ -469,16 +455,13 @@ p+p{margin-top:18px;}
   .footer-col[data-open="true"] ul{display:block;}
   .footer-col a,.footer-col h2{min-height:44px;}
   .footer-brand{padding-bottom:28px;}
-  .consent-inner{gap:14px;}
-  .consent .consent-actions{width:100%;}
-  .consent .btn{flex:1;}
 }
 
 /* ============================================================
    Print (§11) — an administrator printing this for a council meeting
    ============================================================ */
 @media print{
-  header,.site-nav,.drawer,.cta-band,.btn,.signup,.consent,.site-footer .footer-col,
+  header,.site-nav,.drawer,.cta-band,.btn,.signup,.site-footer .footer-col,
   .nav-toggle{display:none !important;}
   body{background:#fff;color:#000;font-size:11pt;}
   .card,.panel,.footer-panel,.doc-card,.shot{
@@ -2516,16 +2499,6 @@ p+p{margin-top:18px;}
   </div>
 </footer>
 
-<div class="consent" id="consent" hidden>
-  <div class="consent-inner">
-    <p>We use Google Analytics to see which pages help churches decide. No advertising, no third-party tracking. <a class="inline" href="https://churchplannerpro.com/legal/privacy">Privacy</a></p>
-    <div class="consent-actions">
-      <button class="btn btn--quiet" data-consent="decline">Decline</button>
-      <button class="btn btn--green" data-consent="accept">Accept</button>
-    </div>
-  </div>
-</div>
-
 
 
 
@@ -2602,15 +2575,18 @@ p+p{margin-top:18px;}
     });
   });
 
-  /* ---------- Consent, then analytics (§11) ----------
-     Decline must actually decline: GA is never loaded without consent,
-     and it is never in the head. */
+  /* ---------- Analytics ----------
+     The consent bar is gone by decision, so GA loads on every page view.
+     It still loads from here rather than the head — injecting it after the
+     page has parsed keeps it off the critical path.
+
+     Two things follow from having no bar, both outside this file: the privacy
+     policy has to disclose Google Analytics, and visitors from the EU or UK
+     have no way to refuse it. See the README. */
   /* ChurchPlannerPro web stream 13234166011, property 518236825. */
   var GA_ID = 'G-SVJ7ZLCSJY';
-  var KEY = 'cpp-consent';
-  var bar = document.getElementById('consent');
 
-  function loadAnalytics() {
+  (function loadAnalytics() {
     if (!GA_ID || GA_ID === 'G-XXXXXXXXXX') return;
     var s = document.createElement('script');
     s.async = true;
@@ -2619,27 +2595,8 @@ p+p{margin-top:18px;}
     window.dataLayer = window.dataLayer || [];
     window.gtag = function () { window.dataLayer.push(arguments); };
     window.gtag('js', new Date());
-    window.gtag('config', GA_ID, { anonymize_ip: true });
-  }
-
-  var stored = null;
-  try { stored = localStorage.getItem(KEY); } catch (e) { stored = null; }
-
-  if (stored === 'accept') {
-    loadAnalytics();
-  } else if (stored !== 'decline' && bar) {
-    bar.hidden = false;
-  }
-
-  if (bar) {
-    bar.addEventListener('click', function (e) {
-      var choice = e.target.getAttribute('data-consent');
-      if (!choice) return;
-      try { localStorage.setItem(KEY, choice); } catch (err) {}
-      bar.hidden = true;
-      if (choice === 'accept') loadAnalytics();
-    });
-  }
+    window.gtag('config', GA_ID);
+  })();
 })();
 
 
