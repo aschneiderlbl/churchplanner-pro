@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +9,7 @@
 
   <meta
     name="description"
-    content="Compare ChurchPlannerPro vs. Planning Center and learn why some churches may prefer church management software organized around outcomes instead of separate products."
+    content="Compare ChurchPlannerPro vs. Planning Center and learn why churches may prefer church management software organized around outcomes instead of separate products."
   />
 
   <style>
@@ -23,7 +24,6 @@
       --muted: #66706a;
       --border: #dde4df;
       --border-dark: #ccd7d0;
-      --accent: #dff0e7;
       --max-width: 760px;
       --wide-width: 1040px;
     }
@@ -132,21 +132,9 @@
       letter-spacing: -0.02em;
     }
 
-    article strong {
-      font-weight: 700;
-    }
-
     .lead {
       font-size: 21px;
       line-height: 1.65;
-    }
-
-    .article-divider {
-      width: 80px;
-      height: 2px;
-      margin: 64px auto;
-      background: var(--border-dark);
-      border: 0;
     }
 
     .callout {
@@ -255,6 +243,12 @@
       color: var(--green-dark);
     }
 
+    .price-emphasis {
+      color: var(--green-dark);
+      font-size: 19px;
+      font-weight: 800;
+    }
+
     .thoughts {
       margin: 34px 0;
       padding-left: 0;
@@ -299,6 +293,70 @@
       font-size: 27px;
       font-weight: 750;
       letter-spacing: -0.02em;
+    }
+
+    .outcomes-block {
+      width: min(900px, calc(100vw - 48px));
+      margin-left: 50%;
+      transform: translateX(-50%);
+      margin-top: 42px;
+      margin-bottom: 48px;
+      padding: 44px;
+      background: var(--green-dark);
+      color: var(--white);
+      border-radius: 22px;
+    }
+
+    .outcomes-block-label {
+      margin-bottom: 10px;
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .outcomes-block h3 {
+      max-width: 600px;
+      margin: 0 0 30px;
+      color: var(--white);
+      font-size: 31px;
+      line-height: 1.2;
+    }
+
+    .outcomes-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 36px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .outcomes-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 15px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    .outcomes-list li::before {
+      content: "✓";
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      margin-top: 1px;
+      background: var(--white);
+      color: var(--green-dark);
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 900;
     }
 
     .check-section {
@@ -402,6 +460,18 @@
         min-width: 700px;
       }
 
+      .outcomes-block {
+        padding: 32px 24px;
+      }
+
+      .outcomes-list {
+        grid-template-columns: 1fr;
+      }
+
+      .outcomes-block h3 {
+        font-size: 28px;
+      }
+
       .cta {
         padding: 40px 24px;
       }
@@ -435,7 +505,6 @@
         <span>10 min read</span>
       </div>
     </header>
-
 
     <article>
 
@@ -495,8 +564,8 @@
 
       <p>
         Both platforms can help churches manage many of the same day-to-day
-        operations. The difference is largely in how those capabilities are
-        organized and how much work your church wants to do to configure them.
+        operations. The difference is in how those capabilities are organized,
+        how they're priced and how much work your church wants to do to configure them.
       </p>
 
       <div class="comparison-wrap">
@@ -511,6 +580,18 @@
             </thead>
 
             <tbody>
+              <tr>
+                <td>Pricing</td>
+                <td>
+                  <span class="price-emphasis">$500/year</span><br />
+                  One flat price for the entire platform
+                </td>
+                <td>
+                  <strong>More expensive for comparable functionality</strong><br />
+                  Pricing varies based on the products and usage your church selects
+                </td>
+              </tr>
+
               <tr>
                 <td>Approach</td>
                 <td>Organized around church outcomes</td>
@@ -563,6 +644,27 @@
       </div>
 
       <p>
+        There's also a significant difference in how the two platforms are priced.
+        ChurchPlannerPro is <strong>$500 per year for the entire platform</strong>.
+      </p>
+
+      <p>
+        Planning Center prices its products based on the products and usage your
+        church needs. For churches looking for comparable functionality across
+        people, volunteers, registrations, programs, giving and other areas,
+        Planning Center is more expensive.
+      </p>
+
+      <div class="callout">
+        <div class="callout-title">Simple pricing</div>
+        <p>
+          <strong>
+            ChurchPlannerPro is $500/year. One price for the entire platform.
+          </strong>
+        </p>
+      </div>
+
+      <p>
         Planning Center may be the better choice for a church that wants a mature
         ecosystem of specialized products and has staff who want to configure those
         products around their church.
@@ -606,6 +708,26 @@
       </div>
 
 
+      <div class="outcomes-block">
+        <div class="outcomes-block-label">ChurchPlannerPro outcomes</div>
+
+        <h3>
+          The things your church actually needs to get done.
+        </h3>
+
+        <ul class="outcomes-list">
+          <li>Every volunteer shift is filled</li>
+          <li>Sunday school and VBS run smoothly</li>
+          <li>Financials reconcile every month</li>
+          <li>Accurate giving statements, ready on time</li>
+          <li>Members know what's happening</li>
+          <li>Stay on budget</li>
+          <li>Member needs get answered quickly</li>
+          <li>Know what needs your attention</li>
+        </ul>
+      </div>
+
+
       <h2>Take volunteer scheduling as an example</h2>
 
       <p>
@@ -625,7 +747,7 @@
         <span class="arrow">↓</span>
 
         <div class="result">
-          Volunteer Scheduling
+          Every Volunteer Shift Is Filled
         </div>
       </div>
 
@@ -659,8 +781,7 @@
 
         <p>
           <strong>
-            The goal isn't better volunteer management software. It's a filled
-            volunteer schedule with less administrative work.
+            Every volunteer shift is filled, with less administrative work.
           </strong>
         </p>
       </div>
@@ -687,7 +808,7 @@
         <span class="arrow">↓</span>
 
         <div class="result">
-          Sunday School Program
+          Sunday School and VBS Run Smoothly
         </div>
       </div>
 
@@ -712,12 +833,8 @@
       </p>
 
       <p>
-        The same approach can work for confirmation, Bible studies, youth programs,
-        small groups and other ministries.
-      </p>
-
-      <p>
-        You manage the program. ChurchPlannerPro handles the pieces underneath it.
+        The same approach can work for VBS, confirmation, Bible studies, youth
+        programs, small groups and other ministries.
       </p>
 
 
@@ -729,8 +846,8 @@
 
       <p>
         It needs to know whether donations were recorded correctly, whether the
-        systems agree, whether deposits reconcile and whether the treasurer can get
-        the reports they need.
+        systems agree, whether deposits reconcile and whether giving statements
+        will be accurate and ready when they're needed.
       </p>
 
       <p>
@@ -741,11 +858,18 @@
 
       <p>
         ChurchPlannerPro is designed to bring that information together and make
-        the <strong>reconciliation</strong> the focus.
+        the outcomes the focus.
       </p>
 
-      <div class="pull-quote">
-        The goal isn't more financial software. It's getting the financial work done.
+      <div class="callout">
+        <div class="callout-title">Financial outcomes</div>
+
+        <p>
+          <strong>
+            Financials reconcile every month. Accurate giving statements are
+            ready on time. Your church stays on budget.
+          </strong>
+        </p>
       </div>
 
 
@@ -777,6 +901,7 @@
 
       <div class="callout">
         <div class="callout-title">A different premise</div>
+
         <p>
           <strong>
             For many churches, simplicity is more valuable than configurability.
@@ -808,7 +933,7 @@
       </p>
 
       <p>
-        ChurchPlannerPro is designed to connect with the tools your church already uses.
+        ChurchPlannerPro is designed to work with the tools your church already uses.
       </p>
 
       <div class="outcome-strip">
@@ -820,9 +945,8 @@
       </div>
 
       <p>
-        That allows us to bring information together, clean up the underlying data
-        and reduce the amount of manual work required to keep different systems
-        synchronized.
+        We can help audit and clean the data, bring information together and reduce
+        the manual work required to keep different systems synchronized.
       </p>
 
 
@@ -833,9 +957,9 @@
       </p>
 
       <p>
-        Then someone has to migrate member records, clean up duplicates, fix outdated
-        information, configure the new system, connect other software, recreate
-        processes, train staff and get members using it.
+        Then someone has to migrate member records, audit and clean the data,
+        remove duplicates, fix outdated information, configure the new system,
+        connect other software, recreate processes, train staff and get members using it.
       </p>
 
       <p>
@@ -853,9 +977,9 @@
 
       <p>
         We'll learn how your church currently operates, understand the systems
-        you're using, help migrate and clean your data, connect the tools you want
-        to keep and configure ChurchPlannerPro around the work your church needs
-        to accomplish.
+        you're using, help migrate, audit and clean your data, connect the tools you
+        want to keep and configure ChurchPlannerPro around the work your church
+        needs to accomplish.
       </p>
 
       <div class="callout">
@@ -870,10 +994,6 @@
 
 
       <h2>Sometimes software isn't actually the problem</h2>
-
-      <p>
-        We've also realized something else while talking with churches.
-      </p>
 
       <p>
         Sometimes the problem isn't that the church has the wrong software.
@@ -903,10 +1023,10 @@
       </p>
 
       <p>
-        The administrator can help keep member information current, manage calendars
+        Your administrator can help keep member information current, manage events
         and registrations, coordinate volunteer schedules, prepare communications,
-        manage forms and follow-up, assist with reconciliation and keep different
-        church systems synchronized.
+        manage forms and follow-up, run reports and reconciliation, clean up data
+        and handle recurring administrative work.
       </p>
 
       <div class="pull-quote">
@@ -937,14 +1057,19 @@
         <h3>ChurchPlannerPro may be the better fit if:</h3>
 
         <ul>
-          <li>You want one system organized around church operations.</li>
+          <li>You want one flat price of $500/year for the entire platform.</li>
+          <li>You want one system organized around church outcomes.</li>
           <li>You want fewer products and workflows to configure.</li>
-          <li>You want volunteer pickup, swaps and drops built into the member experience.</li>
-          <li>You want to manage programs like Sunday school as a complete workflow.</li>
-          <li>You want to connect existing systems instead of replacing everything immediately.</li>
-          <li>You need help migrating and cleaning up church data.</li>
-          <li>You want hands-on implementation.</li>
-          <li>You want the option to add administrative help.</li>
+          <li>You want every volunteer shift filled with less staff coordination.</li>
+          <li>You want Sunday school and VBS to run smoothly as complete programs.</li>
+          <li>You want financials reconciled every month.</li>
+          <li>You want accurate giving statements ready on time.</li>
+          <li>You want members to know what's happening.</li>
+          <li>You want to stay on budget.</li>
+          <li>You want member needs answered quickly.</li>
+          <li>You want to know what needs your attention.</li>
+          <li>You need help migrating, auditing or cleaning up church data.</li>
+          <li>You want hands-on implementation or administrative help.</li>
         </ul>
       </div>
 
@@ -982,22 +1107,28 @@
       </p>
 
       <p>
-        Tell us what you're trying to accomplish.
+        Instead, the software should help produce the outcomes your church actually
+        cares about.
       </p>
 
-      <div class="outcome-strip">
-        Fill the volunteer schedule.
-        <span>•</span>
-        Run Sunday school.
-        <span>•</span>
-        Reconcile giving.
-        <span>•</span>
-        Communicate with members.
+      <div class="outcomes-block">
+        <div class="outcomes-block-label">The goal</div>
+
+        <h3>
+          Church operations that run smoothly without everything depending on the administrator.
+        </h3>
+
+        <ul class="outcomes-list">
+          <li>Every volunteer shift is filled</li>
+          <li>Sunday school and VBS run smoothly</li>
+          <li>Financials reconcile every month</li>
+          <li>Accurate giving statements, ready on time</li>
+          <li>Members know what's happening</li>
+          <li>Stay on budget</li>
+          <li>Member needs get answered quickly</li>
+          <li>Know what needs your attention</li>
+        </ul>
       </div>
-
-      <p>
-        We'll bring together the people, systems and workflows required to make it happen.
-      </p>
 
       <p>
         Because the goal isn't to give your church more software.
@@ -1012,8 +1143,8 @@
         <h2>See if ChurchPlannerPro is right for your church</h2>
 
         <p>
-          Tell us how your church operates today. We'll show you how ChurchPlannerPro
-          can simplify the work behind it.
+          Get the entire ChurchPlannerPro platform for $500/year and let us help
+          simplify the work behind running your church.
         </p>
 
         <a href="/demo">Request a demo →</a>
@@ -1025,3 +1156,4 @@
 
 </body>
 </html>
+```
