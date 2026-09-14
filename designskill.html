@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChurchPlannerPro — unified design system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0F172A; --navy-soft:#1E293B; --slate:#334155;
+  --bg:#F8FAFC; --bg-soft:#F1F5F9; --surface:#FFFFFF;
+  --border:#E5E7EB; --border-strong:#D1D5DB;
+  --text:#0F172A; --text-2:#475569; --text-muted:#94A3B8;
+  --on-dark:#FFFFFF; --on-dark-muted:#94A3B8;
+  --green:#15803D; --green-hover:#166534; --green-tint:#DCFCE7; --green-deep:#166534;
+  --indigo:#4F46E5; --indigo-hover:#4338CA; --indigo-tint:#EEF2FF; --indigo-deep:#3730A3;
+  --blue:#2563EB; --blue-tint:#DBEAFE; --blue-deep:#1E40AF;
+  --amber:#B45309; --amber-tint:#FEF3C7; --amber-deep:#92400E; --amber-dot:#F59E0B;
+  --red:#DC2626; --red-tint:#FEE2E2; --red-deep:#991B1B;
+  --slate-tint:#F1F5F9; --slate-deep:#334155;
+  --r-btn:6px; --r-input:8px; --r-card:12px; --r-modal:14px;
+  --sh-sm:0 1px 2px rgba(15,23,42,.04);
+  --sh-md:0 4px 12px rgba(15,23,42,.06),0 1px 3px rgba(15,23,42,.04);
+  --sh-lg:0 12px 32px rgba(15,23,42,.08),0 4px 12px rgba(15,23,42,.05);
+  --sidebar:250px; --topbar:62px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+svg{display:block}
+.ic{width:18px;height:18px;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;fill:none;flex:none}
+.ic-sm{width:15px;height:15px}.ic-xl{width:26px;height:26px}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;text-align:left}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--indigo);outline-offset:2px;border-radius:3px}
+
+/* prototype bar */
+.proto{position:sticky;top:0;z-index:200;background:#111827;color:#E5E7EB;padding:10px 20px;display:flex;align-items:center;gap:16px;font-size:13px;border-bottom:1px solid #1F2937}
+.proto strong{color:#fff;font-weight:600}
+.proto .sep{color:#4B5563}
+.proto .right{margin-left:auto;font-size:12.5px;color:#9CA3AF}
+
+/* shell */
+.app{display:flex}
+.side{width:var(--sidebar);flex:none;background:var(--navy);color:var(--on-dark);display:flex;flex-direction:column;position:sticky;top:var(--proto,44px);height:calc(100vh - var(--proto,44px));z-index:80}
+.brand{padding:19px 18px 15px;font-size:16.5px;font-weight:700;letter-spacing:-.2px}
+.brand em{font-style:normal;font-weight:500;opacity:.72}
+.nav{flex:1;overflow-y:auto;padding:0 11px 12px}
+.nav::-webkit-scrollbar{width:6px}.nav::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
+.nav-label{font-size:10.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--on-dark-muted);padding:12px 9px 5px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:8px 9px;border-radius:8px;font-size:14px;font-weight:500;color:var(--on-dark-muted);width:100%;transition:.12s}
+.nav-item:hover{background:rgba(30,41,59,.85);color:#E2E8F0}
+.nav-item.active{background:var(--navy-soft);color:#fff}
+.nav-item.ds{color:#A5B4FC}
+.nav-item.ds.active{background:#312E81;color:#fff}
+.nav-item .cnt{margin-left:auto;font-size:11px;font-weight:600;background:var(--amber-tint);color:var(--amber-deep);border-radius:999px;padding:1px 7px}
+.nav-item .tag{margin-left:auto;font-size:9.5px;font-weight:600;letter-spacing:.05em;background:var(--green-tint);color:var(--green-deep);border-radius:999px;padding:2px 6px}
+.side-foot{border-top:1px solid rgba(148,163,184,.16);padding:13px 17px;display:flex;align-items:center;gap:10px}
+.avatar{width:31px;height:31px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:12.5px;font-weight:600;flex:none}
+.avatar.sm{width:26px;height:26px;font-size:10.5px}
+.avatar.lg{width:36px;height:36px;font-size:13px}
+.side-foot .ch{font-size:13px;font-weight:600;color:#fff}
+.side-foot .usr{font-size:11.5px;color:var(--on-dark-muted)}
+.main{flex:1;min-width:0}
+
+/* top bar — title lives here, once */
+.top{height:var(--topbar);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:18px;padding:0 22px;position:sticky;top:var(--proto,44px);z-index:60}
+.top h1{font-size:19.5px;font-weight:700;letter-spacing:-.2px;white-space:nowrap}
+.search-top{flex:1;max-width:440px;position:relative}
+.search-top .ic{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-muted)}
+.search-top input{width:100%;padding:8px 12px 8px 36px;border:1px solid var(--border-strong);border-radius:var(--r-input);font:inherit;font-size:14px;background:var(--bg);color:var(--text)}
+.search-top input::placeholder{color:var(--text-muted)}
+.search-top input:focus{outline:none;border-color:var(--indigo);background:#fff;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:9px}
+.icon-btn{width:34px;height:34px;border-radius:var(--r-btn);display:grid;place-items:center;color:var(--text-2);position:relative}
+.icon-btn:hover{background:var(--bg-soft);color:var(--text)}
+.dotbadge{position:absolute;top:2px;right:2px;min-width:16px;height:16px;border-radius:999px;background:var(--amber-dot);color:#3B2A05;font-size:10px;font-weight:700;display:grid;place-items:center;padding:0 4px;box-shadow:0 0 0 2px #fff}
+.acct{display:flex;align-items:center;gap:8px;padding:4px 8px 4px 4px;border-radius:999px}
+.acct:hover{background:var(--bg-soft)}
+.acct span{font-size:13px;color:var(--text-2)}
+
+/* ===== COMPONENTS ===== */
+.content{padding:24px 30px 60px;max-width:1400px}
+
+/* page head: subhead + actions. no second H1. */
+.phead{display:flex;align-items:flex-start;gap:24px;margin-bottom:20px}
+.phead p{color:var(--text-2);font-size:15px;max-width:64ch}
+.phead .acts{margin-left:auto;display:flex;gap:9px;flex:none}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:var(--r-btn);font-size:14px;font-weight:600;white-space:nowrap;transition:.12s}
+.btn-primary{background:var(--green);color:#fff}
+.btn-primary:hover{background:var(--green-hover)}
+.btn-secondary{background:var(--surface);border:1px solid var(--border-strong);color:var(--text)}
+.btn-secondary:hover{background:var(--bg-soft)}
+.btn-ghost{color:var(--text-2)}
+.btn-ghost:hover{background:var(--bg-soft);color:var(--text)}
+.btn-danger{color:var(--red)}
+.btn-danger:hover{background:var(--red-tint)}
+.btn-sm{padding:6px 11px;font-size:13px}
+
+/* switchers — three components, three jobs */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:22px}
+.tabs button{padding:10px 14px;font-size:14px;font-weight:600;color:var(--text-2);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button:hover{color:var(--text)}
+.tabs button.on{color:var(--indigo);border-bottom-color:var(--indigo)}
+.seg{display:inline-flex;background:var(--bg-soft);border:1px solid var(--border-strong);border-radius:var(--r-input);padding:2px;gap:2px}
+.seg button{padding:5px 13px;border-radius:6px;font-size:13px;font-weight:600;color:var(--text-2)}
+.seg button.on{background:var(--surface);color:var(--text);box-shadow:var(--sh-sm)}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{padding:5px 12px;border-radius:999px;border:1px solid var(--border-strong);background:#fff;font-size:12.5px;font-weight:500;color:var(--text-2)}
+.chip:hover{background:var(--bg-soft)}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* toolbar */
+.toolbar{display:flex;align-items:center;gap:11px;margin-bottom:16px;flex-wrap:wrap}
+.search{position:relative;width:280px}
+.search .ic{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-muted)}
+.search input{width:100%;padding:8px 12px 8px 34px;border:1px solid var(--border-strong);border-radius:var(--r-input);font:inherit;font-size:14px;background:#fff;color:var(--text)}
+.search input::placeholder{color:var(--text-muted)}
+.search input:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+
+/* badges — one component, six meanings */
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;letter-spacing:.02em;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.b-live{background:var(--green-tint);color:var(--green-deep)}
+.b-draft{background:var(--slate-tint);color:var(--slate-deep)}
+.b-attn{background:var(--amber-tint);color:var(--amber-deep)}
+.b-info{background:var(--blue-tint);color:var(--blue-deep)}
+.b-stop{background:var(--red-tint);color:var(--red-deep)}
+.b-done{background:#E2E8F0;color:#334155}
+
+/* cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--sh-sm)}
+.card-pad{padding:20px}
+.card-h{padding:16px 20px;border-bottom:1px solid var(--border);font-size:16px;font-weight:600}
+.card-f{padding:14px 20px;border-top:1px solid var(--border);background:#FCFDFE;border-radius:0 0 var(--r-card) var(--r-card);display:flex;justify-content:flex-end;gap:9px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.g4{grid-template-columns:repeat(4,1fr)}
+
+/* stat tiles — max 4, one row */
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);padding:16px 18px;box-shadow:var(--sh-sm)}
+.stat .k{font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-2);margin-bottom:7px}
+.stat .v{font-size:27px;font-weight:700;letter-spacing:-.5px;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat .d{font-size:12.5px;margin-top:5px;color:var(--text-muted);font-weight:500}
+.stat .d .up{color:var(--green-deep);font-weight:600}
+.stat .d .dn{color:var(--red-deep);font-weight:600}
+
+/* tables */
+.tblw{border:1px solid var(--border);border-radius:var(--r-card);overflow:hidden;box-shadow:var(--sh-sm);background:#fff}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--bg-soft);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-2);padding:10px 15px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
+thead th.num{text-align:right}
+tbody td{padding:13px 15px;border-bottom:1px solid var(--border);font-size:14px;color:var(--text-2);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#FCFDFE}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.t-link{font-size:14px;font-weight:600;color:var(--text)}
+.t-link:hover{color:var(--indigo);text-decoration:underline}
+.t-sub{font-size:12.5px;color:var(--text-muted);margin-top:2px}
+.t-num{color:var(--indigo);font-weight:600;font-variant-numeric:tabular-nums}
+.t-num:hover{text-decoration:underline}
+.t-none{color:var(--text-muted)}
+td.act{width:48px;text-align:right}
+
+/* menu */
+.rowmenu{position:relative;display:inline-block}
+.menu{position:absolute;right:0;top:calc(100% + 6px);background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh-lg);min-width:190px;padding:5px;z-index:70;display:none}
+.menu.open{display:block}
+.menu button{display:flex;align-items:center;gap:9px;width:100%;padding:8px 10px;border-radius:6px;font-size:13.5px;color:var(--text)}
+.menu button:hover{background:var(--bg-soft)}
+.menu button.danger{color:var(--red)}
+.menu button.danger:hover{background:var(--red-tint)}
+.menu hr{border:none;border-top:1px solid var(--border);margin:5px 0}
+
+/* empty state — one component */
+.empty{border:1px dashed var(--border-strong);border-radius:var(--r-card);background:#FCFDFE;padding:38px 26px;text-align:center}
+.empty .ic-xl{color:var(--text-muted);margin:0 auto 13px}
+.empty h3{font-size:16px;font-weight:600;margin-bottom:6px}
+.empty p{font-size:14px;color:var(--text-2);max-width:46ch;margin:0 auto 17px}
+
+/* forms */
+.field{margin-bottom:17px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:7px}
+.field label .opt{font-weight:400;color:var(--text-muted)}
+.field input,.field select,.field textarea{width:100%;padding:9px 12px;border:1px solid var(--border-strong);border-radius:var(--r-input);font:inherit;font-size:14.5px;color:var(--text);background:#fff}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.field .help{font-size:12.5px;color:var(--text-muted);margin-top:6px}
+.check{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--border)}
+.check:last-child{border-bottom:none}
+.check input{width:17px;height:17px;margin-top:2px;accent-color:var(--indigo);flex:none}
+.check .lbl{font-size:14px;color:var(--text)}
+.check .sub{font-size:12.5px;color:var(--text-muted);margin-top:2px}
+.rowline{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);font-size:14px}
+.rowline:last-child{border-bottom:none}
+
+/* chart */
+.chart{position:relative;padding:14px 0 0 46px}
+.chart .grid-l{position:absolute;left:46px;right:0;border-top:1px dashed var(--border);font-size:0}
+.chart .ylab{position:absolute;left:0;font-size:11px;color:var(--text-muted);font-variant-numeric:tabular-nums;transform:translateY(-50%)}
+.bars{display:flex;align-items:flex-end;gap:9px;height:170px;position:relative;border-bottom:1px solid var(--border-strong)}
+.bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;position:relative}
+.bar .fill{background:var(--green);border-radius:3px 3px 0 0;min-height:2px;transition:.2s}
+.bar .track{background:var(--bg-soft);border-radius:3px 3px 0 0;height:3px}
+.xlabs{display:flex;gap:9px;margin-top:7px}
+.xlabs div{flex:1;text-align:center;font-size:11.5px;color:var(--text-muted)}
+
+/* master-detail */
+.md{display:grid;grid-template-columns:288px 1fr;gap:18px;align-items:start}
+.mdlist{background:#fff;border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--sh-sm);overflow:hidden;max-height:600px;display:flex;flex-direction:column}
+.mdlist .s{padding:11px;border-bottom:1px solid var(--border)}
+.mdlist .s .search{width:100%}
+.mdrows{overflow-y:auto}
+.mdrow{display:flex;align-items:center;gap:10px;padding:10px 13px;border-bottom:1px solid var(--border);width:100%}
+.mdrow:hover{background:var(--bg-soft)}
+.mdrow.on{background:var(--indigo-tint)}
+.mdrow .nm{font-size:14px;font-weight:600;color:var(--text)}
+.mdrow .em{font-size:12px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mdrow .txt{min-width:0}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:9px 20px;font-size:14px}
+.dl dt{color:var(--text-2)}
+.dl dd{color:var(--text);font-weight:500}
+.dl dd.none{color:var(--text-muted);font-weight:400}
+.sec-l{font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-2);margin:22px 0 11px}
+.sec-l:first-child{margin-top:0}
+
+/* calendar */
+.cal{border:1px solid var(--border);border-radius:var(--r-card);overflow:hidden;background:#fff;box-shadow:var(--sh-sm)}
+.dows{display:grid;grid-template-columns:repeat(7,1fr);background:var(--bg-soft);border-bottom:1px solid var(--border)}
+.dows div{padding:8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-2);text-align:center}
+.weeks{display:grid;grid-template-columns:repeat(7,1fr)}
+.cell{min-height:96px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:6px}
+.cell:nth-child(7n){border-right:none}
+.weeks>.cell:nth-last-child(-n+7){border-bottom:none}
+.cell.out{background:#FCFDFE}.cell.out .dn{color:var(--text-muted)}
+.dn{font-size:12px;font-weight:600;color:var(--text-2);text-align:right;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.cell.today .dn{display:inline-flex;float:right;background:var(--amber-dot);color:#3B2A05;width:21px;height:21px;border-radius:50%;align-items:center;justify-content:center;font-size:11.5px}
+.ev{display:flex;align-items:center;gap:5px;padding:2px 4px;border-radius:4px;font-size:11.5px;width:100%;margin-bottom:2px;line-height:1.35}
+.ev:hover{background:var(--bg-soft)}
+.ev .d{width:7px;height:7px;border-radius:50%;flex:none}
+.ev .tm{color:var(--text-muted);font-variant-numeric:tabular-nums;flex:none}
+.ev .nm{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+.ev.canc .nm{text-decoration:line-through;color:var(--text-muted);font-weight:500}
+.ev.done .nm{color:var(--text-2);font-weight:500}
+.legend{display:flex;gap:15px;flex-wrap:wrap;margin-left:auto}
+.leg{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--text-2);font-weight:500}
+.dot{width:8px;height:8px;border-radius:50%;flex:none}
+
+/* chat */
+.chatwrap{display:grid;grid-template-columns:1fr 262px;gap:18px;align-items:start}
+.sugg-g{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:17px}
+.sugg{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh-sm)}
+.sugg:hover{border-color:var(--indigo);box-shadow:var(--sh-md)}
+.sugg .ic{color:var(--indigo);margin-top:1px}
+.sugg span{font-size:13.5px;font-weight:500}
+.thread{background:#fff;border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--sh-sm);display:flex;flex-direction:column}
+.tbody{padding:18px;display:flex;flex-direction:column;gap:15px;min-height:230px}
+.msg{display:flex;gap:10px;max-width:80%}
+.msg.me{margin-left:auto;flex-direction:row-reverse}
+.bub{background:var(--bg-soft);border:1px solid var(--border);border-radius:12px;padding:10px 13px;font-size:14px;color:var(--text)}
+.msg.me .bub{background:var(--indigo-tint);border-color:#DDD6FE}
+.ai{width:28px;height:28px;border-radius:50%;background:var(--indigo);color:#fff;display:grid;place-items:center;flex:none}
+.ai .ic{width:15px;height:15px}
+.srcs{margin-top:9px;padding-top:9px;border-top:1px solid var(--border-strong);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.srcs .l{font-size:11.5px;color:var(--text-muted);font-weight:500}
+.src{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--indigo);background:#fff;border:1px solid var(--border-strong);border-radius:999px;padding:3px 9px}
+.src:hover{background:var(--indigo-tint)}
+.disc{display:flex;gap:8px;padding:10px 14px;background:var(--amber-tint);border-top:1px solid var(--border);font-size:12.5px;color:var(--amber-deep)}
+.disc .ic{margin-top:1px;flex:none}
+.comp{border-top:1px solid var(--border);padding:11px;display:flex;gap:9px}
+.comp textarea{flex:1;border:1px solid var(--border-strong);border-radius:var(--r-input);padding:10px 12px;font:inherit;font-size:14px;resize:none;height:42px}
+.comp textarea:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.send{width:42px;height:42px;border-radius:var(--r-btn);background:var(--green);color:#fff;display:grid;place-items:center;flex:none}
+.send:hover{background:var(--green-hover)}
+.hist{background:#fff;border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--sh-sm);overflow:hidden}
+.hist-h{display:flex;align-items:center;padding:11px 14px;border-bottom:1px solid var(--border)}
+.hist-h span{font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-2)}
+.hist-h button{margin-left:auto;font-size:13px;font-weight:600;color:var(--indigo)}
+.hist-g{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);padding:11px 14px 4px}
+.hist-i{display:block;width:100%;padding:7px 14px;font-size:13.5px}
+.hist-i:hover{background:var(--bg-soft)}
+.hist-i b{display:block;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-i i{font-style:normal;font-size:11.5px;color:var(--text-muted)}
+
+/* ===== design-system page ===== */
+.ds-intro{background:linear-gradient(0deg,#fff,#fff);border:1px solid var(--border);border-left:3px solid var(--indigo);border-radius:var(--r-card);padding:20px 22px;margin-bottom:26px;box-shadow:var(--sh-sm)}
+.ds-intro h2{font-size:19px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.ds-intro p{font-size:14.5px;color:var(--text-2);max-width:78ch}
+.ds-counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-top:18px}
+.ds-count{background:var(--bg-soft);border-radius:9px;padding:12px 14px}
+.ds-count b{display:block;font-size:23px;font-weight:700;color:var(--indigo);font-variant-numeric:tabular-nums;line-height:1.1}
+.ds-count span{font-size:12.5px;color:var(--text-2);display:block;margin-top:3px}
+.spec{background:#fff;border:1px solid var(--border);border-radius:var(--r-card);margin-bottom:20px;box-shadow:var(--sh-sm);overflow:hidden}
+.spec-h{padding:15px 20px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.spec-h h3{font-size:16px;font-weight:600}
+.spec-h .repl{font-size:12px;font-weight:600;color:var(--red-deep);background:var(--red-tint);border-radius:999px;padding:2px 9px}
+.spec-h .rule{margin-left:auto;font-size:13px;color:var(--text-2);flex-basis:100%;margin-top:4px}
+.spec-b{padding:20px;background:#FCFDFE}
+.spec-b.plain{background:#fff}
+.demo{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.was{padding:13px 20px;border-top:1px solid var(--border);background:#fff;font-size:13px;color:var(--text-2);display:flex;gap:9px;align-items:flex-start}
+.was b{color:var(--red-deep);font-weight:600;flex:none}
+.maptbl{width:100%;font-size:13.5px;border-collapse:collapse}
+.maptbl td{padding:7px 0;border-bottom:1px solid var(--border);vertical-align:middle}
+.maptbl tr:last-child td{border-bottom:none}
+.maptbl td:first-child{width:150px}
+.maptbl td:last-child{color:var(--text-2)}
+
+@media(max-width:1100px){.chatwrap,.md{grid-template-columns:1fr}.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.side{display:none}.content{padding:18px 15px 40px}}
+</style>
+</head>
+<body>
+
+<svg style="display:none" aria-hidden="true">
+<symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+<symbol id="i-usercheck" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></symbol>
+<symbol id="i-clip" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4M12 16h4M8 11h.01M8 16h.01"/></symbol>
+<symbol id="i-groups" viewBox="0 0 24 24"><path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/><path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></symbol>
+<symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+<symbol id="i-mega" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+<symbol id="i-building" viewBox="0 0 24 24"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4M10 10h4M10 14h4M10 18h4"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M12 22v-5"/><path d="M9 8V2M15 8V2"/><path d="M18 8v3a6 6 0 0 1-12 0V8Z"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-inbox" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></symbol>
+<symbol id="i-more" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+<symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+<symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 17l9 5 9-5"/></symbol>
+</svg>
+
+<div class="proto">
+  <strong>ChurchPlannerPro</strong><span class="sep">·</span>every module on one design system
+  <span class="right">Start with <b style="color:#A5B4FC">Design system</b>, then click any module to see it applied</span>
+</div>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand">ChurchPlanner<em> PRO</em></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <div class="avatar">P</div>
+      <div><div class="ch">Prairie Ridge Church</div><div class="usr">Andrew Schneider</div></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <h1 id="ptitle">Design system</h1>
+      <div class="search-top">
+        <svg class="ic"><use href="#i-search"/></svg>
+        <input placeholder="Search people, events, forms, giving…" aria-label="Search">
+      </div>
+      <div class="top-right">
+        <button class="icon-btn" onclick="go('approvals')" title="Member approval — 3 waiting" aria-label="Member approval, 3 waiting">
+          <svg class="ic"><use href="#i-inbox"/></svg><span class="dotbadge">3</span>
+        </button>
+        <button class="icon-btn" aria-label="Notifications"><svg class="ic"><use href="#i-bell"/></svg></button>
+        <button class="acct"><div class="avatar sm">A</div><span>andrew.schneider639@gmail.com</span></button>
+      </div>
+    </header>
+    <main class="content" id="content"></main>
+  </div>
+</div>
+
+<script>
+/* ---------------- nav ---------------- */
+var NAV=[
+  {g:'Prototype',items:[{k:'ds',n:'Design system',i:'i-layers',ds:1}]},
+  {g:'Assistant',items:[{k:'ask',n:'Ask Chat',i:'i-spark'}]},
+  {g:'People',items:[{k:'people',n:'People',i:'i-users'},{k:'approvals',n:'Member approval',i:'i-usercheck',cnt:3},{k:'groups',n:'Groups',i:'i-groups'}]},
+  {g:'Engage',items:[{k:'forms',n:'Forms',i:'i-clip'},{k:'campaigns',n:'Campaigns',i:'i-mega'},{k:'files',n:'Files',i:'i-folder',tag:'NEW'}]},
+  {g:'Operate',items:[{k:'calendar',n:'Calendar',i:'i-cal'},{k:'tasks',n:'Tasks',i:'i-check'},{k:'workflows',n:'Workflows',i:'i-zap'}]},
+  {g:'Money',items:[{k:'finances',n:'Finances',i:'i-wallet'},{k:'reporting',n:'Reporting',i:'i-chart'}]},
+  {g:'Operations',items:[{k:'settings',n:'Settings',i:'i-settings'},{k:'vendors',n:'Vendors',i:'i-building'},{k:'integrations',n:'Integrations',i:'i-plug'}]}
+];
+var cur='ds';
+function renderNav(){
+  document.getElementById('nav').innerHTML=NAV.map(function(g){
+    return '<div class="nav-label">'+g.g+'</div>'+g.items.map(function(it){
+      var right = it.cnt?'<span class="cnt">'+it.cnt+'</span>' : (it.tag?'<span class="tag">'+it.tag+'</span>':'');
+      return '<button class="nav-item'+(it.ds?' ds':'')+(it.k===cur?' active':'')+'" onclick="go(\''+it.k+'\')">'+
+        '<svg class="ic"><use href="#'+it.i+'"/></svg>'+it.n+right+'</button>';
+    }).join('');
+  }).join('');
+}
+function label(k){var r='';NAV.forEach(function(g){g.items.forEach(function(i){if(i.k===k)r=i.n})});return r}
+function go(k){cur=k;renderNav();document.getElementById('ptitle').textContent=label(k);
+  document.getElementById('content').innerHTML=PAGES[k]?PAGES[k]():stub(k);closeMenus();window.scrollTo(0,0)}
+function closeMenus(){document.querySelectorAll('.menu.open').forEach(function(m){m.classList.remove('open')})}
+function menu(b,e){e.stopPropagation();var m=b.nextElementSibling,w=m.classList.contains('open');closeMenus();if(!w)m.classList.add('open')}
+document.addEventListener('click',closeMenus);
+
+/* ---------------- helpers ---------------- */
+function head(sub,acts){return '<div class="phead"><p>'+sub+'</p>'+(acts?'<div class="acts">'+acts+'</div>':'')+'</div>'}
+function pbtn(t){return '<button class="btn btn-primary"><svg class="ic ic-sm"><use href="#i-plus"/></svg>'+t+'</button>'}
+function sbtn(t,ic){return '<button class="btn btn-secondary">'+(ic?'<svg class="ic ic-sm"><use href="#'+ic+'"/></svg>':'')+t+'</button>'}
+function search(ph){return '<div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg><input placeholder="'+ph+'"></div>'}
+function rowmenu(items){
+  return '<div class="rowmenu"><button class="icon-btn" onclick="menu(this,event)" aria-label="Row actions"><svg class="ic"><use href="#i-more"/></svg></button><div class="menu">'+
+    items.map(function(i){return i==='-'?'<hr>':'<button class="'+(i[2]?'danger':'')+'"><svg class="ic ic-sm"><use href="#'+i[1]+'"/></svg>'+i[0]+'</button>'}).join('')+'</div></div>';
+}
+function empty(icon,title,body,action){
+  return '<div class="empty"><svg class="ic ic-xl"><use href="#'+icon+'"/></svg><h3>'+title+'</h3><p>'+body+'</p>'+(action?pbtn(action):'')+'</div>';
+}
+function stub(k){return head('This module uses the same header, toolbar, table, badge and empty-state components shown on the Design system page.','')+
+  empty('i-layers',label(k),'Not rebuilt in this prototype — it inherits the shared components rather than defining its own.','')}
+
+/* ---------------- pages ---------------- */
+var PAGES={};
+
+PAGES.ds=function(){
+  return ''+
+  '<div class="ds-intro"><h2>One system, applied to every module</h2>'+
+  '<p>Fifteen screens were audited. The components below each replace a set of one-off treatments that had drifted apart — same job, different markup, on different pages. Every module in this sidebar is rebuilt on them; click through to see the result.</p>'+
+  '<div class="ds-counts">'+
+    '<div class="ds-count"><b>6</b><span>status treatments → 1 badge</span></div>'+
+    '<div class="ds-count"><b>5</b><span>empty states → 1 component</span></div>'+
+    '<div class="ds-count"><b>4</b><span>search inputs → 1</span></div>'+
+    '<div class="ds-count"><b>4</b><span>create verbs → 1 rule</span></div>'+
+    '<div class="ds-count"><b>14</b><span>duplicated page titles → 0</span></div>'+
+  '</div></div>'+
+
+  spec('Page header','Every page','Top bar carries the title. Content opens with a one-sentence subhead and the primary action on the right. No second H1.',
+    '<div class="phead" style="margin:0"><p>Volunteer teams, small groups, and ministries.</p><div class="acts">'+sbtn('Export')+pbtn('New group')+'</div></div>',
+    'Title printed twice on all 14 pages. Subhead on 8 of 14. Tasks put its subhead to the right of the H1. Page title differed from the nav label on Tasks ("Scheduled tasks") and Reporting ("Reporting Dashboard").')+
+
+  spec('Buttons','4 verbs → 1 rule','<b>New &lt;thing&gt;</b> creates a record. <b>Import / Upload / Export</b> move files. Sentence case. One primary per region; destructive is never a sibling of a safe action.',
+    '<div class="demo">'+pbtn('New group')+sbtn('Import CSV','i-up')+'<button class="btn btn-ghost">Cancel</button><button class="btn btn-danger"><svg class="ic ic-sm"><use href="#i-trash"/></svg>Delete group</button></div>',
+    '"+ New Event", "+ Create form", "+ Add Vendor", "+ Upload file" — four verbs, two casings. Import CSV was a bordered button on Finances and bare text on People. Delete sat flush beside Members on the Groups card.')+
+
+  spec('Three switchers, three jobs','3 components','Tabs switch <b>sections of one page</b>. Segmented switches <b>the view of one dataset</b>. Chips <b>narrow a set</b>. Never swap them.',
+    '<div style="display:flex;flex-direction:column;gap:16px">'+
+      '<div><div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:7px">TABS — sections</div>'+
+      '<div class="tabs" style="margin:0"><button class="on">Bank</button><button>Donations</button><button>Budget</button></div></div>'+
+      '<div><div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:7px">SEGMENTED — view</div>'+
+      '<div class="seg"><button class="on">Month</button><button>Week</button><button>Day</button><button>List</button></div></div>'+
+      '<div><div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:7px">CHIPS — filter</div>'+
+      '<div class="chips"><button class="chip on">All</button><button class="chip">Active</button><button class="chip">Inactive</button></div></div>'+
+    '</div>',
+    'All three already existed but the mapping was accidental: green underline tabs on Settings/Finances/People, a dark segmented control on Calendar, bordered rectangles on Vendors. Tab active state moved from green to indigo so green stays exclusively "commits a change".')+
+
+  spec('Status badge','6 treatments → 1','One pill. Six meanings, fixed. Status is never plain coloured text and never bare uppercase.',
+    '<table class="maptbl">'+
+    badgerow('b-live','Published','Live, active, approved')+
+    badgerow('b-draft','Draft','Not yet live, inactive')+
+    badgerow('b-attn','Pending','Needs a person to act')+
+    badgerow('b-info','Weekly','Scheduled or informational')+
+    badgerow('b-stop','Cancelled','Stopped, failed, disconnected')+
+    badgerow('b-done','Archived','Finished, no longer in play')+
+    '</table>',
+    'Green pill (Forms), yellow pill (Campaigns DRAFT), bare uppercase grey (Campaigns ARCHIVED — same column), purple pill (Tasks Weekly), plain green text (Tasks Active), plain grey text (Settings Disconnected).')+
+
+  spec('Empty state','5 treatments → 1','Icon, what belongs here, one sentence on what to do, and the action. Copy never quotes a button label back at the reader.',
+    empty('i-building','No vendors yet','Add the contractors and suppliers your church works with, so work orders and invoices have somewhere to attach.','New vendor'),
+    'Centred card (Vendors), centred card ×2 with copy quoting the button (Files), bare unboxed text (Workflows), left-aligned full-width box (Member approval), a table row (Finances). None offered an action.')+
+
+  spec('Table','Mixed → 1','Identifying column is the link. Counts link to what they count. Numbers right-aligned and tabular. Money always carries symbol and two decimals. One overflow menu, far right.',
+    '<div class="tblw"><table><thead><tr><th style="width:44%">Form</th><th>Status</th><th class="num">Responses</th><th>Created</th><th></th></tr></thead><tbody>'+
+    '<tr><td><a class="t-link" href="#" onclick="return false">Usher Signup for Sunday</a><div class="t-sub">Sign up to be an usher this Sunday.</div></td>'+
+    '<td><span class="badge b-live">Published</span></td><td class="num"><a class="t-num" href="#" onclick="return false">2</a></td><td>Aug 7, 2026</td>'+
+    '<td class="act">'+rowmenu([['Copy share link','i-link'],['Edit form','i-edit'],'-',['Archive form','i-trash',1]])+'</td></tr>'+
+    '</tbody></table></div>',
+    'Link colour was blue on Forms and indigo on Campaigns. Row actions were Pause|Edit|Delete text links on Tasks, an "Open" button on Campaigns, and nothing at all on Forms. The created date was the only link on the Forms table; the name and the response count were dead text.')+
+
+  spec('Stat tiles','8 per page → 4 max','Label above, figure below, delta carries the colour. Never colour the figure itself. One row, four maximum — past that it stops being a summary.',
+    '<div class="grid g4">'+
+      stat('Total members','142','<span class="up">+6</span> in the last 30 days')+
+      stat('Avg Sunday attendance','96','<span class="up">+4.3%</span> this quarter')+
+      stat('Giving YTD','$312,480','<span class="up">+6.2%</span> vs. last year')+
+      stat('Pending approvals','3','oldest waiting 4 days')+
+    '</div>',
+    'Reporting carried 8 tiles across two rows with two different internal layouts. Finances rendered $0.00 in giant green and red. Colouring the figure means a large negative number and a large positive one shout equally loudly.')+
+
+  spec('Search','4 inputs → 1','Bordered, 8px radius, leading magnifier, placeholder names what is being searched. Lives in a toolbar row above the content.',
+    '<div class="toolbar" style="margin:0">'+search('Search forms…')+'<button class="btn btn-secondary btn-sm">All statuses</button></div>',
+    'Bordered with an inset icon (Forms), bordered with no icon (Vendors), bordered with a permanent outline ring (Files), and borderless with only a bottom rule (People).')+
+
+  spec('Chart','Broken → readable','Axis, gridlines, and a scale. Zero months render as an empty track sitting on the baseline, not a hairline that reads as a rendering fault.',
+    chart(),
+    'The Giving by Month chart had no axis, no gridlines and no scale, so twelve $0 months rendered as twelve thin green lines — indistinguishable from a broken component.')+
+
+  spec('Content rules','Naming','Page title equals the nav label. One name for the assistant. Empty values say what is missing, never "--".',
+    '<table class="maptbl">'+
+    '<tr><td><span class="badge b-stop">Fix</span></td><td>Settings reads "Personalize ChurchPlannerPro for <b>Christ Lutheran</b>" while every other surface says Prairie Ridge Church.</td></tr>'+
+    '<tr><td><span class="badge b-stop">Fix</span></td><td>The assistant is <b>Aaron</b> in Settings and Workflows copy, <b>Ask Chat</b> in the nav, and <code>/admin/ask-aaron</code> in the URL.</td></tr>'+
+    '<tr><td><span class="badge b-attn">Fix</span></td><td>People renders a raw <code>--</code> for every empty field, including in the header beside the member name.</td></tr>'+
+    '<tr><td><span class="badge b-attn">Fix</span></td><td>Groups renders <code>3 members ·</code> with an orphan separator and nothing after it.</td></tr>'+
+    '</table>','');
+};
+
+function spec(title,repl,rule,demo,was){
+  return '<div class="spec"><div class="spec-h"><h3>'+title+'</h3>'+(repl?'<span class="repl">'+repl+'</span>':'')+
+    '<div class="rule">'+rule+'</div></div><div class="spec-b">'+demo+'</div>'+
+    (was?'<div class="was"><b>Was</b><span>'+was+'</span></div>':'')+'</div>';
+}
+function badgerow(c,t,d){return '<tr><td><span class="badge '+c+'">'+t+'</span></td><td>'+d+'</td></tr>'}
+function stat(k,v,d){return '<div class="stat"><div class="k">'+k+'</div><div class="v">'+v+'</div>'+(d?'<div class="d">'+d+'</div>':'')+'</div>'}
+
+function chart(){
+  var m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var v=[38200,35900,41100,37400,33800,31200,48312,29050,0,0,0,0];
+  var max=50000;
+  var bars=v.map(function(x){
+    if(!x) return '<div class="bar"><div class="track"></div></div>';
+    return '<div class="bar"><div class="fill" style="height:'+Math.round(x/max*100)+'%"></div></div>';
+  }).join('');
+  var lines=[0,25,50,75,100].map(function(p){var y=p/100*170+24;
+    return '<div class="grid-l" style="bottom:'+y+'px"></div><div class="ylab" style="bottom:'+y+'px">$'+(max*p/100/1000)+'k</div>';
+  }).join('');
+  return '<div class="card card-pad"><div style="font-size:15px;font-weight:600;margin-bottom:4px">Giving by month</div>'+
+    '<div style="font-size:13px;color:var(--text-2);margin-bottom:14px">2026 to date · September onward not yet recorded</div>'+
+    '<div class="chart">'+lines+'<div class="bars">'+bars+'</div><div class="xlabs">'+m.map(function(x){return '<div>'+x+'</div>'}).join('')+'</div></div></div>';
+}
+
+/* ---- module pages ---- */
+PAGES.calendar=function(){
+  var ev={2:['Worship','done','8a'],3:['Grief Group','done','3p'],6:['Lunch Bunch','done','12p'],8:['Bible study','done','8a'],
+    9:['Worship','done','8a'],10:['Grief Group','done','3p'],13:['Lunch Bunch','done','12p'],15:['Bible study','done','8a'],
+    16:['Worship','done','8a'],17:['Grief Group','done','3p'],19:['Confirmation','canc','6p'],20:['Lunch Bunch','sched','12p'],
+    22:['Bible study','open','8a'],23:['Worship','open','8a'],24:['Grief Group','sched','3p'],26:['Confirmation','sched','6p'],
+    27:['Lunch Bunch','sched','12p'],29:['Bible study','open','8a'],30:['Worship','open','8a'],31:['Grief Group','sched','3p']};
+  var C={done:'#0F172A',sched:'#2563EB',open:'#22C55E',canc:'#DC2626'};
+  var cells='';
+  for(var i=-5;i<=31;i++){
+    if(i<1){cells+='<div class="cell out"><div class="dn">'+(31+i)+'</div></div>';continue}
+    var e=ev[i]?'<button class="ev '+ev[i][1]+'"><span class="d" style="background:'+C[ev[i][1]]+'"></span><span class="tm">'+ev[i][2]+'</span><span class="nm">'+ev[i][0]+'</span></button>':'';
+    cells+='<div class="cell'+(i===20?' today':'')+'"><div class="dn">'+i+'</div>'+e+'</div>';
+  }
+  return head('Worship, groups, and facility bookings for Prairie Ridge Church.',sbtn('Export')+pbtn('New event'))+
+    '<div class="toolbar">'+
+      '<button class="icon-btn" style="border:1px solid var(--border-strong);background:#fff"><svg class="ic"><use href="#i-left"/></svg></button>'+
+      '<button class="icon-btn" style="border:1px solid var(--border-strong);background:#fff"><svg class="ic"><use href="#i-right"/></svg></button>'+
+      '<button class="btn btn-secondary btn-sm">Today</button>'+
+      '<div style="font-size:18px;font-weight:700;letter-spacing:-.2px;margin-left:5px">August 2026</div>'+
+      '<div class="seg" style="margin-left:14px"><button class="on">Month</button><button>Week</button><button>Day</button><button>List</button></div>'+
+      '<div class="legend">'+
+        '<span class="leg"><span class="dot" style="background:#2563EB"></span>Scheduled</span>'+
+        '<span class="leg"><span class="dot" style="background:#22C55E"></span>Needs volunteers</span>'+
+        '<span class="leg"><span class="dot" style="background:#DC2626"></span>Cancelled</span>'+
+        '<span class="leg"><span class="dot" style="background:#0F172A"></span>Completed</span>'+
+      '</div></div>'+
+    '<div class="toolbar"><div class="chips"><button class="chip on">All events</button><button class="chip">Worship</button><button class="chip">Groups</button><button class="chip">Facility bookings</button><button class="chip">Needs volunteers</button></div></div>'+
+    '<div class="cal"><div class="dows"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div><div class="weeks">'+cells+'</div></div>';
+};
+
+PAGES.people=function(){
+  var ppl=[['Carol Martin','carol.martin51@mailinator.com','CM','#15803D'],['Carolyn Erickson','carolyn.erickson32@mailinator.com','CE','#4F46E5'],
+    ['Elizabeth King','elizabeth.king55@mailinator.com','EK','#B45309'],['Angela Erickson','angela.erickson66@mailinator.com','AE','#0F766E'],
+    ['Ronald Carlson','ronald.carlson20@mailinator.com','RC','#7C3AED'],['Mary Hoffman','mary.hoffman77@mailinator.com','MH','#DC2626'],
+    ['Stephen Wright','stephen.wright60@mailinator.com','SW','#15803D'],['Jessica Anderson','jessica.anderson88@mailinator.com','JA','#4F46E5']];
+  return head('Members and families at Prairie Ridge Church.',sbtn('Import CSV','i-up')+pbtn('New member'))+
+    '<div class="tabs"><button class="on">Members</button><button>Families</button></div>'+
+    '<div class="md"><div class="mdlist"><div class="s">'+search('Search members…')+'</div><div class="mdrows">'+
+      ppl.map(function(p,i){return '<button class="mdrow'+(i===0?' on':'')+'"><div class="avatar sm" style="background:'+p[3]+'">'+p[2]+'</div>'+
+        '<div class="txt"><div class="nm">'+p[0]+'</div><div class="em">'+p[1]+'</div></div></button>'}).join('')+
+      '</div></div>'+
+      '<div class="card"><div style="padding:20px;display:flex;align-items:center;gap:13px;border-bottom:1px solid var(--border)">'+
+        '<div class="avatar lg">CM</div><div><div style="font-size:19px;font-weight:700;letter-spacing:-.2px">Carol Martin</div>'+
+        '<div style="margin-top:3px"><span class="badge b-live">Active</span> <span style="font-size:13px;color:var(--text-2);margin-left:5px">Member since Mar 2008</span></div></div>'+
+        '<div style="margin-left:auto;display:flex;gap:8px">'+sbtn('Edit')+rowmenu([['Message member','i-mega'],['Add to group','i-groups'],'-',['Delete member','i-trash',1]])+'</div></div>'+
+      '<div class="card-pad">'+
+        '<div class="sec-l">Contact</div><dl class="dl">'+
+          '<dt>Email</dt><dd>carol.martin51@mailinator.com</dd>'+
+          '<dt>Phone</dt><dd>(651) 555-8517</dd>'+
+          '<dt>Address</dt><dd class="none">Not on file</dd></dl>'+
+        '<div class="sec-l">Key dates</div><dl class="dl">'+
+          '<dt>Membership</dt><dd>16 March 2008</dd>'+
+          '<dt>Birthdate</dt><dd class="none">Not on file</dd>'+
+          '<dt>Baptism</dt><dd class="none">Not on file</dd>'+
+          '<dt>Confirmation</dt><dd class="none">Not on file</dd></dl>'+
+        '<div class="sec-l">Groups</div><div style="display:flex;gap:7px;flex-wrap:wrap"><span class="badge b-info">Hospitality</span><span class="badge b-info">Bible study</span></div>'+
+        '<div class="sec-l">Notes</div><p style="font-size:14px;color:var(--text-muted)">No notes yet.</p>'+
+      '</div></div></div>';
+};
+
+PAGES.approvals=function(){
+  var q=[['Grace Oyelaran','goyelaran@example.org','GO','Registered 4 days ago'],['Daniel Whitfield','dwhitfield@example.org','DW','Registered 2 days ago'],['Priya Raman','praman@example.org','PR','Registered yesterday']];
+  return head('People who registered at your church and are waiting for your review.',sbtn('Reject all')+pbtn('Approve all'))+
+    '<div class="tblw"><table><thead><tr><th style="width:38%">Name</th><th>Email</th><th>Status</th><th>Registered</th><th></th></tr></thead><tbody>'+
+    q.map(function(p){return '<tr><td><div style="display:flex;align-items:center;gap:10px"><div class="avatar sm" style="background:#4F46E5">'+p[2]+'</div>'+
+      '<a class="t-link" href="#" onclick="return false">'+p[0]+'</a></div></td><td>'+p[1]+'</td><td><span class="badge b-attn">Pending</span></td><td>'+p[3]+'</td>'+
+      '<td class="act">'+rowmenu([['Approve','i-check'],['View registration','i-clip'],'-',['Reject','i-trash',1]])+'</td></tr>'}).join('')+
+    '</tbody></table></div>';
+};
+
+PAGES.groups=function(){
+  var g=[['Nursery Care','Volunteers caring for infants and toddlers during the 8am and 10am services.','Denise Roth','DR','#4F46E5','3 members'],
+    ['Ushers','Greeting, seating, and collection for Sunday morning worship.','Tom Kessler','TK','#B45309','6 members'],
+    ['Hospitality','Coffee, refreshments, and the welcome table between services.',null,null,null,'4 members']];
+  return head('Volunteer teams, small groups, and ministries.',sbtn('Export')+pbtn('New group'))+
+    '<div class="toolbar">'+search('Search groups…')+'<div class="chips"><button class="chip on">All</button><button class="chip">Volunteer teams</button><button class="chip">Small groups</button></div></div>'+
+    '<div class="grid g3">'+g.map(function(x){
+      return '<div class="card card-pad"><div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px">'+
+        '<h3 style="font-size:16px;font-weight:600">'+x[0]+'</h3><div style="margin-left:auto">'+
+        rowmenu([['View members','i-users'],['Edit group','i-edit'],['Message group','i-mega'],'-',['Delete group','i-trash',1]])+'</div></div>'+
+        '<p style="font-size:13.5px;color:var(--text-2);margin-bottom:14px;min-height:40px">'+x[1]+'</p>'+
+        '<div style="display:flex;align-items:center;gap:9px;padding-top:12px;border-top:1px solid var(--border)">'+
+        (x[2]?'<div class="avatar sm" style="background:'+x[4]+'">'+x[3]+'</div><div style="font-size:13px;color:var(--text-2)">Led by <b style="color:var(--text)">'+x[2]+'</b></div>'
+             :'<span class="badge b-attn">No leader yet</span>')+
+        '<div style="margin-left:auto;font-size:12.5px;color:var(--text-muted)">'+x[5]+'</div></div></div>';
+    }).join('')+'</div>';
+};
+
+PAGES.forms=function(){
+  var f=[['Usher Signup for Sunday','Sign up to be an usher this Sunday.','b-live','Published','2','Aug 7, 2026'],
+    ['Baptism Request','Families requesting a baptism date.','b-live','Published','7','Jul 22, 2026'],
+    ['Fall Stewardship Pledge','Annual giving commitment for the 2027 budget year.','b-draft','Draft',null,'Aug 18, 2026']];
+  return head('Build forms for sign-ups, sacrament records, and member updates.',pbtn('New form'))+
+    '<div class="toolbar">'+search('Search forms…')+'<div class="chips"><button class="chip on">All</button><button class="chip">Published</button><button class="chip">Draft</button></div></div>'+
+    '<div class="tblw"><table><thead><tr><th style="width:44%">Form</th><th>Status</th><th class="num">Responses</th><th>Created</th><th></th></tr></thead><tbody>'+
+    f.map(function(x){return '<tr><td><a class="t-link" href="#" onclick="return false">'+x[0]+'</a><div class="t-sub">'+x[1]+'</div></td>'+
+      '<td><span class="badge '+x[2]+'">'+x[3]+'</span></td>'+
+      '<td class="num">'+(x[4]?'<a class="t-num" href="#" onclick="return false">'+x[4]+'</a>':'<span class="t-none">None yet</span>')+'</td>'+
+      '<td>'+x[5]+'</td><td class="act">'+rowmenu(x[4]?[['Copy share link','i-link'],['Edit form','i-edit'],['Duplicate','i-copy'],'-',['Archive form','i-trash',1]]:[['Edit form','i-edit'],['Duplicate','i-copy'],'-',['Delete draft','i-trash',1]])+'</td></tr>'}).join('')+
+    '</tbody></table></div>';
+};
+
+PAGES.campaigns=function(){
+  var c=[['New HVAC Fund','Replacing the sanctuary heating and cooling system.','$850,000','$127,400','b-live','Active'],
+    ['Christmas Giving','Year-end appeal for the general fund.','$60,000','$0','b-draft','Draft'],
+    ['New HVAC','Superseded by the 2026 fund.','$85,000','$85,000','b-done','Archived']];
+  return head('Fundraising campaigns your church can share.',pbtn('New campaign'))+
+    '<div class="toolbar">'+search('Search campaigns…')+'<div class="chips"><button class="chip on">All</button><button class="chip">Active</button><button class="chip">Draft</button><button class="chip">Archived</button></div></div>'+
+    '<div class="tblw"><table><thead><tr><th style="width:40%">Campaign</th><th class="num">Goal</th><th class="num">Raised</th><th>Status</th><th></th></tr></thead><tbody>'+
+    c.map(function(x){return '<tr><td><a class="t-link" href="#" onclick="return false">'+x[0]+'</a><div class="t-sub">'+x[1]+'</div></td>'+
+      '<td class="num">'+x[2]+'</td><td class="num">'+(x[3]==='$0'?'<span class="t-none">$0</span>':'<b style="color:var(--text)">'+x[3]+'</b>')+'</td>'+
+      '<td><span class="badge '+x[4]+'">'+x[5]+'</span></td>'+
+      '<td class="act">'+rowmenu([['Copy share link','i-link'],['Edit campaign','i-edit'],'-',['Archive campaign','i-trash',1]])+'</td></tr>'}).join('')+
+    '</tbody></table></div>';
+};
+
+PAGES.tasks=function(){
+  var t=[['Send usher signup form','Andrew Schneider','Weekly','Thu, Aug 27 · 8:00 AM','b-live','Active'],
+    ['Post weekly bulletin','Denise Roth','Weekly','Sat, Aug 22 · 6:00 PM','b-live','Active'],
+    ['Monthly giving statements','Ruth Ahn','Monthly','Tue, Sep 1 · 9:00 AM','b-draft','Paused']];
+  return head('Recurring jobs with an owner and a schedule.',pbtn('New task'))+
+    '<div class="tblw"><table><thead><tr><th style="width:34%">Task</th><th>Assigned to</th><th>Schedule</th><th>Next run</th><th>Status</th><th></th></tr></thead><tbody>'+
+    t.map(function(x){return '<tr><td><a class="t-link" href="#" onclick="return false">'+x[0]+'</a></td><td>'+x[1]+'</td>'+
+      '<td><span class="badge b-info">'+x[2]+'</span></td><td>'+x[3]+'</td><td><span class="badge '+x[4]+'">'+x[5]+'</span></td>'+
+      '<td class="act">'+rowmenu([[x[5]==='Active'?'Pause task':'Resume task','i-pause'],['Edit task','i-edit'],'-',['Delete task','i-trash',1]])+'</td></tr>'}).join('')+
+    '</tbody></table></div>';
+};
+
+PAGES.workflows=function(){
+  return head('Automated sequences Ask Chat runs on your behalf when a form, event, or expense triggers them.',pbtn('New workflow'))+
+    empty('i-zap','No workflows yet','Chain a few steps together — when someone submits the usher form, add them to the Ushers group and email the coordinator.','New workflow');
+};
+
+PAGES.vendors=function(){
+  return head('Contractors, suppliers, and the work orders attached to them.',pbtn('New vendor'))+
+    '<div class="toolbar">'+search('Search by name or specialty…')+'<div class="chips"><button class="chip on">All</button><button class="chip">Active</button><button class="chip">Inactive</button></div></div>'+
+    empty('i-building','No vendors yet','Add the contractors and suppliers your church works with, so work orders and invoices have somewhere to attach.','New vendor');
+};
+
+PAGES.files=function(){
+  return head('Church documents, reachable from forms, workflows, and communication.',sbtn('New folder')+pbtn('Upload file'))+
+    '<div class="toolbar">'+search('Search files and folders…')+'</div>'+
+    empty('i-folder','Nothing stored yet','Upload bylaws, board minutes, insurance certificates, and anything else the office needs to find again in two years.','Upload file');
+};
+
+PAGES.finances=function(){
+  var tx=[['Aug 16, 2026','Sunday offering','General fund','$4,182.00','b-live','Cleared','Operating'],
+    ['Aug 12, 2026','Reyes, M. — online','General fund','$250.00','b-live','Cleared','Operating'],
+    ['Aug 9, 2026','Sunday offering','General fund','$3,908.50','b-live','Cleared','Operating'],
+    ['Aug 5, 2026','Kessler, T. — online','Building fund','$1,000.00','b-attn','Pending','Operating'],
+    ['Aug 3, 2026','Nordic HVAC — deposit','Building fund','−$12,500.00','b-live','Cleared','Operating']];
+  return head('Giving, accounts, budgets, and reconciliation.',sbtn('Import CSV','i-up')+pbtn('New transaction'))+
+    '<div class="tabs"><button class="on">Bank</button><button>Donations</button><button>Budget</button></div>'+
+    '<div class="grid g4" style="margin-bottom:20px">'+
+      stat('Operating balance','$500,000.00','checking · reconciled Aug 16')+
+      stat('Income, month to date','$8,340.50','<span class="up">+12.4%</span> vs. July')+
+      stat('Expenses, month to date','$12,500.00','<span class="dn">+220%</span> — HVAC deposit')+
+      stat('Net change, month to date','−$4,159.50','one-off capital spend')+
+    '</div>'+
+    '<div class="toolbar">'+search('Search transactions…')+'<button class="btn btn-secondary btn-sm">All accounts</button><button class="btn btn-secondary btn-sm">August 2026</button></div>'+
+    '<div class="tblw"><table><thead><tr><th>Date</th><th style="width:30%">Description</th><th>Fund</th><th class="num">Amount</th><th>Status</th><th></th></tr></thead><tbody>'+
+    tx.map(function(x){return '<tr><td>'+x[0]+'</td><td><a class="t-link" href="#" onclick="return false">'+x[1]+'</a></td><td>'+x[2]+'</td>'+
+      '<td class="num"><b style="color:var(--text)">'+x[3]+'</b></td><td><span class="badge '+x[4]+'">'+x[5]+'</span></td>'+
+      '<td class="act">'+rowmenu([['Edit transaction','i-edit'],['Attach receipt','i-clip'],'-',['Delete transaction','i-trash',1]])+'</td></tr>'}).join('')+
+    '</tbody></table></div>';
+};
+
+PAGES.reporting=function(){
+  return head('At-a-glance health of the church. Figures update nightly.',sbtn('Export PDF')+sbtn('Export CSV'))+
+    '<div class="grid g4" style="margin-bottom:20px">'+
+      stat('Total members','142','<span class="up">+6</span> in the last 30 days')+
+      stat('Avg Sunday attendance','96','<span class="up">+4.3%</span> this quarter')+
+      stat('Giving YTD','$312,480','<span class="up">+6.2%</span> vs. last year')+
+      stat('Pending approvals','3','oldest waiting 4 days')+
+    '</div>'+
+    chart()+
+    '<div style="height:20px"></div>'+
+    '<div class="card"><div class="card-h">Form activity</div>'+
+    '<table><thead><tr><th style="width:50%">Form</th><th class="num">Responses</th><th>Last submitted</th></tr></thead><tbody>'+
+    '<tr><td><a class="t-link" href="#" onclick="return false">Baptism Request</a></td><td class="num"><a class="t-num" href="#" onclick="return false">7</a></td><td>Aug 14, 2026</td></tr>'+
+    '<tr><td><a class="t-link" href="#" onclick="return false">Usher Signup for Sunday</a></td><td class="num"><a class="t-num" href="#" onclick="return false">2</a></td><td>Aug 7, 2026</td></tr>'+
+    '</tbody></table></div>';
+};
+
+PAGES.settings=function(){
+  return head('Personalize ChurchPlannerPro for Prairie Ridge Church.','')+
+    '<div class="tabs"><button class="on">Church profile</button><button>Users</button><button>Export</button></div>'+
+    '<div class="grid g2" style="align-items:start">'+
+      '<div class="card"><div class="card-h">Church profile</div><div class="card-pad">'+
+        '<div class="field"><label for="cn">Church name</label><input id="cn" value="Prairie Ridge Church"></div>'+
+        '<div class="field"><label for="an">Administrator name</label><input id="an" value="Andrew Schneider"></div>'+
+      '</div><div class="card-f">'+sbtn('Cancel')+'<button class="btn btn-primary">Save profile</button></div></div>'+
+
+      '<div class="card"><div class="card-h">Ask Chat preferences</div><div class="card-pad">'+
+        '<div class="check"><input type="checkbox" id="c1" checked><div><div class="lbl">Ask before sending email</div><div class="sub">Ask Chat drafts the message and waits for your approval.</div></div></div>'+
+        '<div class="check"><input type="checkbox" id="c2" checked><div><div class="lbl">Ask before updating a member profile</div><div class="sub">Form responses are held for review instead of writing straight through.</div></div></div>'+
+      '</div><div class="card-f">'+sbtn('Cancel')+'<button class="btn btn-primary">Save preferences</button></div></div>'+
+
+      '<div class="card"><div class="card-h">Connections</div><div class="card-pad">'+
+        '<div class="rowline"><div><div style="font-weight:500">Gmail</div><div style="font-size:12.5px;color:var(--text-muted)">Send email as the church office</div></div>'+
+        '<div style="display:flex;align-items:center;gap:10px"><span class="badge b-stop">Not connected</span>'+sbtn('Connect')+'</div></div>'+
+        '<div class="rowline"><div><div style="font-weight:500">Stripe</div><div style="font-size:12.5px;color:var(--text-muted)">Accept donations on campaign pages</div></div>'+
+        '<div style="display:flex;align-items:center;gap:10px"><span class="badge b-stop">Not connected</span>'+sbtn('Connect')+'</div></div>'+
+        '<div class="rowline"><div><div style="font-weight:500">IconCMO</div><div style="font-size:12.5px;color:var(--text-muted)">Export member and giving records</div></div>'+
+        '<div style="display:flex;align-items:center;gap:10px"><span class="badge b-live">Connected</span>'+sbtn('Manage')+'</div></div>'+
+      '</div></div>'+
+    '</div>';
+};
+
+PAGES.ask=function(){
+  return head('Ask about your church data, or have it handle a task for you.','')+
+  '<div class="chatwrap"><div>'+
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-2)">'+
+      '<svg class="ic ic-sm"><use href="#i-spark"/></svg>Try asking</div>'+
+    '<div class="sugg-g">'+
+      ['How much did we receive last month?|i-wallet','Who hasn\'t given this year?|i-users','Who\'s serving this Sunday?|i-cal','Summarize the usher signup responses|i-clip']
+      .map(function(s){var p=s.split('|');return '<button class="sugg"><svg class="ic"><use href="#'+p[1]+'"/></svg><span>'+p[0]+'</span></button>'}).join('')+
+    '</div>'+
+    '<div class="thread"><div class="tbody">'+
+      '<div class="msg"><div class="ai"><svg class="ic"><use href="#i-spark"/></svg></div>'+
+        '<div class="bub">Ask me anything about Prairie Ridge Church — giving, attendance, members, forms. I can also add members, schedule events, and build forms if you\'d like.</div></div>'+
+      '<div class="msg me"><div class="avatar sm">A</div><div class="bub">How much did we receive last month?</div></div>'+
+      '<div class="msg"><div class="ai"><svg class="ic"><use href="#i-spark"/></svg></div>'+
+        '<div class="bub">Prairie Ridge received <b>$48,312.75</b> in July 2026 across 214 gifts from 138 households. That\'s up <b>6.2%</b> on July 2025 (<b>$45,483.00</b>).'+
+        '<div class="srcs"><span class="l">From</span>'+
+        '<a class="src" href="#" onclick="return false"><svg class="ic ic-sm"><use href="#i-wallet"/></svg>214 gifts · July 2026</a>'+
+        '<a class="src" href="#" onclick="return false"><svg class="ic ic-sm"><use href="#i-chart"/></svg>Giving comparison</a></div></div></div>'+
+    '</div>'+
+    '<div class="disc"><svg class="ic ic-sm"><use href="#i-info"/></svg><div>AI assistant — it can be wrong. Check figures against the linked records before reporting them. It only sees data your role can access; giving detail is hidden from users without Finances permission.</div></div>'+
+    '<div class="comp"><textarea placeholder="Ask about giving, attendance, members, events…" aria-label="Message"></textarea>'+
+      '<button class="send" aria-label="Send"><svg class="ic"><use href="#i-send"/></svg></button></div>'+
+    '</div><p style="margin-top:9px;font-size:12.5px;color:var(--text-muted)">Enter to send · Shift + Enter for a new line</p>'+
+  '</div>'+
+  '<aside class="hist"><div class="hist-h"><span>History</span><button>+ New</button></div>'+
+    '<div class="hist-g">This week</div>'+
+    '<button class="hist-i"><b>What is our budget?</b><i>Mon, Aug 17</i></button>'+
+    '<button class="hist-i"><b>Who has given?</b><i>Tue, Aug 11</i></button>'+
+    '<div class="hist-g">Earlier this month</div>'+
+    '<button class="hist-i"><b>Can you summarize responses to the usher form?</b><i>Aug 10</i></button>'+
+    '<button class="hist-i"><b>Pull all the emails for these members</b><i>Aug 7</i></button>'+
+  '</aside></div>';
+};
+
+PAGES.integrations=function(){
+  return head('Connect the tools your church already uses. Managed from Settings once connected.','')+
+    empty('i-plug','Integrations are coming','QuickBooks, Vanco, Gmail and bank feeds will appear here. Connections you can make today live under Settings.','');
+};
+
+function sizeProto(){document.documentElement.style.setProperty('--proto',document.querySelector('.proto').offsetHeight+'px')}
+addEventListener('resize',sizeProto); sizeProto();
+renderNav(); go('ds');
+</script>
+</body>
+</html>
