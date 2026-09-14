@@ -6,7 +6,7 @@
 <title>ChurchPlannerPro — unified design system</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --navy:#0F172A; --navy-soft:#1E293B; --slate:#334155;
@@ -20,7 +20,10 @@
   --amber:#B45309; --amber-tint:#FEF3C7; --amber-deep:#92400E; --amber-dot:#F59E0B;
   --red:#DC2626; --red-tint:#FEE2E2; --red-deep:#991B1B;
   --slate-tint:#F1F5F9; --slate-deep:#334155;
-  --r-btn:6px; --r-input:8px; --r-card:12px; --r-modal:14px;
+  /* crosses the app boundary — doc §12 */
+  --brand-ink:#0B1220; --brand-green:#12603A;
+  --display:Outfit,Inter,-apple-system,sans-serif;
+  --r-btn:8px; --r-input:8px; --r-card:12px; --r-modal:14px;
   --sh-sm:0 1px 2px rgba(15,23,42,.04);
   --sh-md:0 4px 12px rgba(15,23,42,.06),0 1px 3px rgba(15,23,42,.04);
   --sh-lg:0 12px 32px rgba(15,23,42,.08),0 4px 12px rgba(15,23,42,.05);
@@ -34,6 +37,9 @@ svg{display:block}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;text-align:left}
 a{color:inherit;text-decoration:none}
 :focus-visible{outline:2px solid var(--indigo);outline-offset:2px;border-radius:3px}
+/* the entire motion system — doc §6 */
+.btn,.nav-item,.chip,.tabs button,.seg button,.sugg,.mdrow,.menu button,a{transition:background-color .15s ease,border-color .15s ease,color .15s ease,text-decoration-thickness .15s ease}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 /* prototype bar */
 .proto{position:sticky;top:0;z-index:200;background:#111827;color:#E5E7EB;padding:10px 20px;display:flex;align-items:center;gap:16px;font-size:13px;border-bottom:1px solid #1F2937}
@@ -44,12 +50,14 @@ a{color:inherit;text-decoration:none}
 /* shell */
 .app{display:flex}
 .side{width:var(--sidebar);flex:none;background:var(--navy);color:var(--on-dark);display:flex;flex-direction:column;position:sticky;top:var(--proto,44px);height:calc(100vh - var(--proto,44px));z-index:80}
-.brand{padding:19px 18px 15px;font-size:16.5px;font-weight:700;letter-spacing:-.2px}
-.brand em{font-style:normal;font-weight:500;opacity:.72}
+.brand{padding:19px 18px 15px;font-family:var(--display);font-size:18px;letter-spacing:-.2px;color:#fff;line-height:1}
+.brand .c{font-weight:700}
+.brand .p{font-weight:300}
+.brand .pro{font-weight:700;font-size:.6em;letter-spacing:.06em;margin-left:.2em;display:inline-block;transform:translateY(-.44em)}
 .nav{flex:1;overflow-y:auto;padding:0 11px 12px}
 .nav::-webkit-scrollbar{width:6px}.nav::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
 .nav-label{font-size:10.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--on-dark-muted);padding:12px 9px 5px}
-.nav-item{display:flex;align-items:center;gap:11px;padding:8px 9px;border-radius:8px;font-size:14px;font-weight:500;color:var(--on-dark-muted);width:100%;transition:.12s}
+.nav-item{display:flex;align-items:center;gap:11px;padding:8px 9px;border-radius:8px;font-size:14px;font-weight:500;color:var(--on-dark-muted);width:100%;transition:background-color .15s ease,border-color .15s ease,color .15s ease}
 .nav-item:hover{background:rgba(30,41,59,.85);color:#E2E8F0}
 .nav-item.active{background:var(--navy-soft);color:#fff}
 .nav-item.ds{color:#A5B4FC}
@@ -89,7 +97,7 @@ a{color:inherit;text-decoration:none}
 .phead .acts{margin-left:auto;display:flex;gap:9px;flex:none}
 
 /* buttons */
-.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:var(--r-btn);font-size:14px;font-weight:600;white-space:nowrap;transition:.12s}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:var(--r-btn);font-size:14px;font-weight:600;white-space:nowrap;transition:background-color .15s ease,border-color .15s ease,color .15s ease}
 .btn-primary{background:var(--green);color:#fff}
 .btn-primary:hover{background:var(--green-hover)}
 .btn-secondary{background:var(--surface);border:1px solid var(--border-strong);color:var(--text)}
@@ -286,7 +294,7 @@ td.act{width:48px;text-align:right}
 .hist-i i{font-style:normal;font-size:11.5px;color:var(--text-muted)}
 
 /* ===== design-system page ===== */
-.ds-intro{background:linear-gradient(0deg,#fff,#fff);border:1px solid var(--border);border-left:3px solid var(--indigo);border-radius:var(--r-card);padding:20px 22px;margin-bottom:26px;box-shadow:var(--sh-sm)}
+.ds-intro{background:#fff;border:1px solid var(--border);border-left:3px solid var(--indigo);border-radius:var(--r-card);padding:20px 22px;margin-bottom:26px;box-shadow:var(--sh-sm)}
 .ds-intro h2{font-size:19px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
 .ds-intro p{font-size:14.5px;color:var(--text-2);max-width:78ch}
 .ds-counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-top:18px}
@@ -356,7 +364,7 @@ td.act{width:48px;text-align:right}
 
 <div class="app">
   <aside class="side">
-    <div class="brand">ChurchPlanner<em> PRO</em></div>
+    <div class="brand"><span class="c">Church</span><span class="p">Planner</span><span class="pro">PRO</span></div>
     <nav class="nav" id="nav"></nav>
     <div class="side-foot">
       <div class="avatar">P</div>
@@ -506,7 +514,30 @@ PAGES.ds=function(){
     '<tr><td><span class="badge b-stop">Fix</span></td><td>The assistant is <b>Aaron</b> in Settings and Workflows copy, <b>Ask Chat</b> in the nav, and <code>/admin/ask-aaron</code> in the URL.</td></tr>'+
     '<tr><td><span class="badge b-attn">Fix</span></td><td>People renders a raw <code>--</code> for every empty field, including in the header beside the member name.</td></tr>'+
     '<tr><td><span class="badge b-attn">Fix</span></td><td>Groups renders <code>3 members ·</code> with an orphan separator and nothing after it.</td></tr>'+
-    '</table>','');
+    '</table>','')+
+
+  spec('The app boundary','Website guidelines §12','The marketing site and the product are deliberately different. Five things cross; everything else stays on its own side. This panel exists because the guidelines name this as the rule most likely to get &ldquo;fixed&rdquo; by someone being helpful.',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">'+
+      '<div><div style="font-size:12px;font-weight:600;color:var(--green-deep);margin-bottom:9px;letter-spacing:.05em">CROSSES — matched here</div>'+
+      '<table class="maptbl">'+
+      '<tr><td style="width:auto"><b>Wordmark + its ink</b></td><td>Church bold · Planner light · PRO raised, in Outfit. <code>#0B1220</code> on light grounds, white on ink or green.</td></tr>'+
+      '<tr><td><b>Meaning of green</b></td><td>Marks the thing you act on. Nothing decorative.</td></tr>'+
+      '<tr><td><b>Inter</b></td><td>Body face for the entire product. Outfit is display-only and enters here for the wordmark alone.</td></tr>'+
+      '<tr><td><b>8px / 12px</b></td><td>Commit radius on buttons and inputs; 12px on cards.</td></tr>'+
+      '<tr><td><b>Plain language</b></td><td>Outcomes, not module names. Controls are sentence case, verb first, four words maximum.</td></tr>'+
+      '</table></div>'+
+      '<div><div style="font-size:12px;font-weight:600;color:var(--red-deep);margin-bottom:9px;letter-spacing:.05em">DOES NOT CROSS — left alone</div>'+
+      '<table class="maptbl">'+
+      '<tr><td style="width:auto"><b>Ground</b></td><td><code>#F8FAFC</code> here · <code>#FAF7F2</code> on the site.</td></tr>'+
+      '<tr><td><b>Green hex</b></td><td><code>#15803D</code> here · <code>#12603A</code> on the site.</td></tr>'+
+      '<tr><td><b>Neutrals</b></td><td>Cool here, warm there.</td></tr>'+
+      '<tr><td><b>Indigo <code>#4F46E5</code></b></td><td>App-only by the guidelines. Tabs, links, selection.</td></tr>'+
+      '<tr><td><b>Badges, sidebar, patterns</b></td><td>Every in-product pattern on this page.</td></tr>'+
+      '</table></div>'+
+    '</div>'+
+    '<p style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-size:13.5px;color:var(--text-2)">'+
+    'A tool someone works in for three hours wants a cool, recessive ground that does not fatigue. A page someone reads for ninety seconds wants warmth. Making them identical would compromise both.</p>',
+    'The product tokens the guidelines mark <code>do not sync</code> — <code>--app-bg:#F8FAFC</code>, <code>--app-green:#15803D</code>, <code>--app-indigo:#4F46E5</code> — were already what this system used. What changed: the wordmark lockup, the commit radius (6px → 8px), the motion system (150ms + a reduced-motion block), and one no-op gradient declaration.');
 };
 
 function spec(title,repl,rule,demo,was){
