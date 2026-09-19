@@ -1,670 +1,404 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Church software should reduce administration—not create more of it. See how ChurchPlannerPro organizes technology around the work churches need to accomplish.">
-  <title>Run Your Church. Not Your Software. | ChurchPlannerPro</title>
-  <style>
-    :root {
-      color-scheme: light;
-      --ink: #17261f;
-      --muted: #56635d;
-      --green: #246047;
-      --green-dark: #194634;
-      --sage: #eaf2ec;
-      --cream: #faf8f2;
-      --white: #ffffff;
-      --line: #dbe4dd;
-      --gold: #d3a647;
-      --shadow: 0 18px 50px rgba(23, 38, 31, .08);
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      background: var(--cream);
-      color: var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system,
-        BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 18px;
-      line-height: 1.72;
-      text-rendering: optimizeLegibility;
-    }
-
-    a { color: var(--green); }
-
-    a:focus-visible {
-      outline: 3px solid var(--gold);
-      outline-offset: 4px;
-    }
-
-    .site-header {
-      border-bottom: 1px solid rgba(23, 38, 31, .10);
-      background: rgba(250, 248, 242, .94);
-    }
-
-    .nav {
-      width: min(1120px, calc(100% - 40px));
-      margin: 0 auto;
-      min-height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .brand {
-      color: var(--ink);
-      font-weight: 800;
-      letter-spacing: -.03em;
-      text-decoration: none;
-    }
-
-    .nav-link {
-      font-size: 15px;
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: 96px 20px 88px;
-      background:
-        radial-gradient(
-          circle at 84% 15%,
-          rgba(211, 166, 71, .20),
-          transparent 24rem
-        ),
-        linear-gradient(145deg, #f2f6ef 0%, var(--cream) 58%);
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      right: -110px;
-      bottom: -170px;
-      width: 430px;
-      height: 430px;
-      border: 1px solid rgba(36, 96, 71, .16);
-      border-radius: 50%;
-      box-shadow:
-        0 0 0 55px rgba(36, 96, 71, .04),
-        0 0 0 110px rgba(36, 96, 71, .03);
-      pointer-events: none;
-    }
-
-    .hero-inner {
-      position: relative;
-      z-index: 1;
-      width: min(900px, 100%);
-      margin: 0 auto;
-    }
-
-    .eyebrow {
-      margin: 0 0 18px;
-      color: var(--green);
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-
-    h1,
-    h2,
-    h3 {
-      line-height: 1.14;
-      letter-spacing: -.035em;
-    }
-
-    h1 {
-      max-width: 850px;
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(48px, 8vw, 82px);
-      font-weight: 600;
-    }
-
-    .dek {
-      max-width: 730px;
-      margin: 30px 0 0;
-      color: var(--muted);
-      font-size: clamp(20px, 2.5vw, 25px);
-      line-height: 1.55;
-    }
-
-    .meta {
-      margin: 30px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 650;
-    }
-
-    main {
-      width: min(1120px, calc(100% - 40px));
-      margin: 0 auto;
-    }
-
-    .article-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 730px) 250px;
-      gap: 80px;
-      justify-content: center;
-      padding: 80px 0 100px;
-    }
-
-    article > p:first-of-type {
-      margin-top: 0;
-      font-size: 22px;
-      line-height: 1.65;
-    }
-
-    article p {
-      margin: 0 0 25px;
-    }
-
-    h2 {
-      margin: 64px 0 24px;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(32px, 4vw, 44px);
-      font-weight: 600;
-    }
-
-    h3 {
-      margin: 0 0 10px;
-      font-size: 20px;
-    }
-
-    .pullquote {
-      margin: 52px 0;
-      padding: 30px 0 30px 30px;
-      border-left: 5px solid var(--gold);
-      color: var(--green-dark);
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(27px, 4vw, 38px);
-      font-weight: 600;
-      line-height: 1.3;
-    }
-
-    .work-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-      margin: 34px 0 42px;
-    }
-
-    .work-card {
-      padding: 24px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: var(--white);
-      box-shadow: 0 8px 25px rgba(23, 38, 31, .04);
-    }
-
-    .work-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.6;
-    }
-
-    .principles {
-      margin: 36px 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .principles li {
-      position: relative;
-      margin: 0 0 18px;
-      padding: 0 0 18px 34px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .principles li::before {
-      content: "✓";
-      position: absolute;
-      left: 0;
-      color: var(--green);
-      font-weight: 900;
-    }
-
-    .aside {
-      align-self: start;
-      position: sticky;
-      top: 30px;
-      padding: 24px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: var(--white);
-      box-shadow: var(--shadow);
-    }
-
-    .aside p {
-      margin: 0 0 12px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .aside a {
-      display: block;
-      padding: 9px 0;
-      border-bottom: 1px solid var(--line);
-      color: var(--ink);
-      font-size: 14px;
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    .aside a:last-child {
-      border: 0;
-    }
-
-    .aside a:hover {
-      color: var(--green);
-    }
-
-    .cta {
-      margin: 64px 0 0;
-      padding: clamp(32px, 6vw, 58px);
-      border-radius: 22px;
-      background: var(--green-dark);
-      color: var(--white);
-      box-shadow: var(--shadow);
-    }
-
-    .cta h2 {
-      margin: 0 0 18px;
-      font-size: clamp(32px, 5vw, 46px);
-    }
-
-    .cta p {
-      max-width: 570px;
-      margin: 0 0 26px;
-      color: #dce9e1;
-    }
-
-    .button {
-      display: inline-block;
-      padding: 13px 20px;
-      border-radius: 10px;
-      background: var(--white);
-      color: var(--green-dark);
-      font-size: 16px;
-      font-weight: 800;
-      text-decoration: none;
-    }
-
-    footer {
-      padding: 34px 20px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      text-align: center;
-      font-size: 14px;
-    }
-
-    @media (max-width: 860px) {
-      .article-layout {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-
-      .aside {
-        position: static;
-        order: -1;
-      }
-
-      .aside nav {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        column-gap: 18px;
-      }
-    }
-
-    @media (max-width: 560px) {
-      body {
-        font-size: 17px;
-      }
-
-      .hero {
-        padding: 68px 20px 64px;
-      }
-
-      .article-layout {
-        padding: 56px 0 72px;
-      }
-
-      .work-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .aside nav {
-        grid-template-columns: 1fr;
-      }
-
-      .nav-link {
-        display: none;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header class="site-header">
-    <nav class="nav" aria-label="Primary navigation">
-      <a
-        class="brand"
-        href="#top"
-        aria-label="ChurchPlannerPro home"
-      >ChurchPlannerPro</a>
-
-      <a class="nav-link" href="#a-better-model">A better model</a>
-    </nav>
-  </header>
-
-  <header class="hero" id="top">
-    <div class="hero-inner">
-      <p class="eyebrow">Church operations</p>
-
-      <h1>Run your church.<br>Not your software.</h1>
-
-      <p class="dek">
-        Churches have more technology than ever. So why are pastors,
-        staff and volunteers still spending so much time making it all work?
-      </p>
-
-      <p class="meta">
-        <time datetime="2026-09-02">September 2, 2026</time>
-        &nbsp;·&nbsp; 7 minute read
-      </p>
-    </div>
-  </header>
-
-  <main>
-    <div class="article-layout">
-      <article>
-        <p>
-          There is software for nearly every part of church life: people,
-          giving, groups, events, registrations, volunteers, communications
-          and accounting. Each tool promises to make something easier. Yet
-          inside many churches, the administrative load keeps growing.
-        </p>
-
-        <p>
-          Someone still has to configure the tools, keep the data current,
-          connect one system to another and turn a collection of features
-          into the processes a church actually needs. The software may be
-          doing more, but so are the people responsible for it.
-        </p>
-
-        <p>
-          That points to a simple problem: church software has largely been
-          organized around what technology can do, not around what churches
-          need to get done.
-        </p>
-
-        <blockquote class="pullquote">
-          Church software should reduce administration, not create more of it.
-        </blockquote>
-
-        <section id="more-tools">
-          <h2>More tools are not the same as less work</h2>
-
-          <p>
-            A feature is only useful when it becomes part of a working
-            process. A volunteer database does not fill the schedule. A
-            registration form does not organize Sunday school. A giving
-            report does not reconcile the books. Each outcome depends on
-            several steps, multiple sources of information and timely
-            follow-up.
-          </p>
-
-          <p>
-            Traditional platforms give churches the building blocks and
-            leave staff to assemble them. That work often spills into
-            spreadsheets, inboxes and the institutional memory of the one
-            person who knows how everything fits together.
-          </p>
-
-          <p>
-            The result is familiar: duplicate data entry, volunteers chased
-            by text message, reports compared by hand, records that slowly
-            fall out of date and processes that stop working when a key
-            person is away.
-          </p>
-        </section>
-
-        <section id="a-better-model">
-          <h2>Start with the outcome</h2>
-
-          <p>
-            ChurchPlannerPro takes a different approach. Instead of beginning
-            with a menu of modules, it begins with a practical question:
-            <strong>What are you trying to get done?</strong>
-          </p>
-
-          <p>
-            That changes how church technology is designed. The goal is not
-            simply to digitize one task. It is to bring the necessary
-            software, integrations, automation and support together around
-            a complete outcome.
-          </p>
-
-          <div
-            class="work-grid"
-            aria-label="Examples of church operations"
-          >
-            <section class="work-card">
-              <h3>Volunteer scheduling</h3>
-              <p>
-                Publish shifts and let volunteers pick up, swap or drop
-                assignments without making a staff member coordinate every
-                change.
-              </p>
-            </section>
-
-            <section class="work-card">
-              <h3>Programs</h3>
-              <p>
-                Run Sunday school, confirmation or VBS across registration,
-                groups, communication, attendance and check-in.
-              </p>
-            </section>
-
-            <section class="work-card">
-              <h3>Member management</h3>
-              <p>
-                Keep people, households, groups, interactions and church
-                records connected and current.
-              </p>
-            </section>
-
-            <section class="work-card">
-              <h3>Giving and reconciliation</h3>
-              <p>
-                Bring giving and financial information together so reporting
-                and reconciliation require less manual work.
-              </p>
-            </section>
-
-            <section class="work-card">
-              <h3>Communications</h3>
-              <p>
-                Coordinate newsletters, announcements and member
-                communication using accurate church data.
-              </p>
-            </section>
-
-            <section class="work-card">
-              <h3>Events and registrations</h3>
-              <p>
-                Manage registration, attendance, communication and follow-up
-                as one process instead of several disconnected tasks.
-              </p>
-            </section>
-          </div>
-
-          <p>
-            The distinction matters. A church does not need twelve products
-            and a diagram to understand how to schedule volunteers. It needs
-            volunteer scheduling to work. It should not have to connect
-            people, groups, calendars, forms, check-ins and messages just to
-            run Sunday school. It needs to run Sunday school.
-          </p>
-        </section>
-
-        <section id="fits-your-church">
-          <h2>Technology should fit the church</h2>
-
-          <p>
-            No two churches operate in exactly the same way. Their ministries,
-            traditions, staffing, terminology and responsibilities differ.
-            Software should accommodate those realities instead of forcing
-            every church into the same process.
-          </p>
-
-          <p>
-            That means workflows configured around the church, forms that
-            collect the right information and automations that remove
-            recurring work. It also means members can handle more routine
-            actions themselves—from event registration to volunteer schedule
-            changes—without every request passing through the church office.
-          </p>
-
-          <ul class="principles">
-            <li>
-              <strong>Complete outcomes instead of isolated features.</strong>
-              The pieces work together around the job the church needs to
-              finish.
-            </li>
-
-            <li>
-              <strong>Automation instead of repeated administration.</strong>
-              Updates, communication and follow-up happen without another
-              item on someone’s list.
-            </li>
-
-            <li>
-              <strong>Member self-service instead of staff bottlenecks.</strong>
-              People can take action directly when it makes sense.
-            </li>
-
-            <li>
-              <strong>Workflows built around the church.</strong>
-              The technology supports how the ministry operates in practice.
-            </li>
-          </ul>
-        </section>
-
-        <section id="work-together">
-          <h2>Your existing systems can work together</h2>
-
-          <p>
-            Improving church operations should not require replacing every
-            tool at once. Some systems may already work well. Others may hold
-            years of important data. A forced, all-at-once transition can
-            create more work—the very thing better technology is supposed to
-            remove.
-          </p>
-
-          <p>
-            ChurchPlannerPro can connect with the systems a church chooses to
-            keep, coordinating information and reducing duplicate entry. Over
-            time, a church can simplify its technology stack where doing so
-            makes sense. The path forward can be practical and gradual rather
-            than disruptive.
-          </p>
-        </section>
-
-        <section id="service-matters">
-          <h2>Software alone is not the whole answer</h2>
-
-          <p>
-            Even good technology needs thoughtful implementation. Data has to
-            be cleaned. Systems have to be connected. Workflows have to
-            reflect real responsibilities. People need help through the
-            transition.
-          </p>
-
-          <p>
-            ChurchPlannerPro pairs technology with hands-on support for
-            migration, setup, data cleanup and recurring administration.
-            Churches should not need an internal software administrator to
-            benefit from church management technology. They need a partner
-            who can help make the system work—and keep it working.
-          </p>
-
-          <p>
-            This is not service added around the edge of the product. It is
-            part of the operating model. Because the measure of success is
-            not how many features a church receives. It is how much
-            administrative work the church no longer has to carry.
-          </p>
-        </section>
-
-        <section id="ministry">
-          <h2>Make room for ministry</h2>
-
-          <p>
-            Administration will always be part of running a church. Schedules
-            need to be filled, records maintained, gifts reconciled, events
-            communicated and people followed up with. The aim is not to
-            pretend that work disappears. It is to stop asking pastors, staff
-            and volunteers to do work the right system can coordinate for
-            them.
-          </p>
-
-          <p>
-            Church management software has spent years adding more features
-            for churches to administer. The next step is to turn those
-            features, integrations and workflows into outcomes churches can
-            depend on.
-          </p>
-
-          <p>
-            When technology recedes into the background, staff can spend less
-            time running software—and more time serving people.
-          </p>
-        </section>
-
-        <aside class="cta" aria-labelledby="cta-title">
-          <h2 id="cta-title">
-            What could your church stop administering?
-          </h2>
-
-          <p>
-            See how ChurchPlannerPro can connect your systems, shape workflows
-            around your church and reduce the work behind your ministry.
-          </p>
-
-          <a
-            class="button"
-            href="mailto:hello@churchplannerpro.com?subject=ChurchPlannerPro%20conversation"
-          >Start a conversation</a>
-        </aside>
-      </article>
-
-      <aside class="aside" aria-label="Article contents">
-        <p><strong>In this article</strong></p>
-
-        <nav aria-label="Table of contents">
-          <a href="#more-tools">More tools, more work</a>
-          <a href="#a-better-model">Start with the outcome</a>
-          <a href="#fits-your-church">Built around your church</a>
-          <a href="#work-together">Connected systems</a>
-          <a href="#service-matters">Software plus service</a>
-          <a href="#ministry">Make room for ministry</a>
-        </nav>
-      </aside>
-    </div>
-  </main>
-
-  <footer>
-    <p>
-      &copy; 2026 ChurchPlannerPro. Run your church. Not your software.
-    </p>
-  </footer>
-</body>
-</html>
+ChurchPlannerPro Strategic Narrative Framework
+1. Brand and Market Context
+Churches have more software than ever.
+There are tools for people, giving, groups, events, registrations, volunteers, communications, accounting and nearly every other part of church operations.
+But adding software has not eliminated the administrative work required to run a church.
+Staff still maintain data, connect systems, chase volunteers, follow up on forms, reconcile finances, prepare communications and figure out what needs their attention.
+At the same time, church software has become increasingly complicated. More modules. More configuration. More pricing tiers. More features that many small and midsize churches simply do not need.
+ChurchPlannerPro is built around a simple promise:
+Automate your church operations.
+Everything we do starts there.
+Instead of simply giving churches more tools to manage their work, ChurchPlannerPro uses software, integrations and automation to reduce the amount of administrative work the church has to do.
+And we believe churches deserve great software that is affordable and straightforward.
+Everything you need. Nothing you don’t.
+One platform. One affordable price. Everything included.
+The result is less time spent on church operations and more time for what is most important to your church.
+2. Ideal Customer Profile
+ChurchPlannerPro is built primarily for small and midsize churches that do not have large administrative teams.
+Typically:
+- Roughly 100–1,000 members
+- Limited dedicated administrative staff
+- Pastors, staff or volunteers spending significant time on administrative work
+- Multiple systems, spreadsheets or manual processes
+- Repetitive work that happens every week, month or year
+- Limited time to configure and maintain complicated software
+- A desire to keep some existing systems while making them work better together
+- A need for capable software at a price that makes sense for a church
+- A preference for the software they actually need rather than a large collection of modules and features
+These churches do not need more software to administer.
+They need software that helps automate the administration.
+3. Brand Promise
+Automate your church operations.
+This is the ChurchPlannerPro brand promise.
+Everything we do should help fulfill it.
+Every feature should help automate work.
+Every integration should help automate work.
+Every workflow should help automate work.
+Every product decision should ultimately answer:
+How does this help automate church operations?
+Automation does not mean removing people from the church.
+It means removing repetitive administrative work so people have more time for what is most important to their church.
+4. Product Philosophy
+Everything you need. Nothing you don’t.
+More software is not necessarily better software.
+ChurchPlannerPro is intentionally built around what small and midsize churches actually need to run their operations.
+We do not want to build features simply so we can have a longer feature list.
+We do not want churches navigating dozens of modules they rarely use.
+And we do not want complexity to become a reason churches need additional staff just to administer their software.
+ChurchPlannerPro should provide the capabilities churches need, bring those capabilities together into complete workflows and automate as much of the work as possible.
+That means:
+- The church operations you actually need
+- Complete workflows instead of disconnected features
+- Less configuration
+- Less complexity
+- No unnecessary bells and whistles
+- No paying for functionality you do not need
+- One affordable price for the entire platform
+The goal is not to build church software with the most features.
+The goal is to give churches everything they need, nothing they don’t, and automate as much of the work as possible.
+5. Core Belief
+Church software should do more of the work.
+The first generation of church software digitized administration.
+Paper directories became databases.
+Signup sheets became online forms.
+Printed schedules became scheduling software.
+Giving records became digital reports.
+Those were important improvements.
+But the church is still responsible for much of the underlying work.
+Someone still has to update the database.
+Someone still has to chase the volunteer.
+Someone still has to follow up on the form.
+Someone still has to reconcile the financials.
+Someone still has to notice what fell through the cracks.
+ChurchPlannerPro believes the next generation of church software should go further.
+It should automate church operations.
+6. Core Customer Tension
+Churches buy software to reduce administrative work.
+But too often, software simply changes where the work happens.
+Instead of maintaining paper records, staff maintain software.
+Instead of manually creating signup sheets, staff configure forms.
+Instead of manually creating schedules, staff operate scheduling tools.
+Instead of reconciling paper reports, staff reconcile digital reports.
+The work became digital.
+It did not disappear.
+Meanwhile, software itself has become another thing churches have to manage.
+More modules. More configuration. More usage tiers. More pricing decisions.
+Small and midsize churches are often paying for complexity they do not need while still doing too much of the work themselves.
+Churches need technology that removes work rather than simply reorganizing it.
+7. Villain
+Administrative work that software should be doing for you.
+The problem is not technology itself.
+The problem is stopping at digitization.
+A volunteer scheduling tool is useful.
+But the outcome is not having scheduling software.
+The outcome is having every volunteer shift filled.
+A giving system is useful.
+But the outcome is not having another financial dashboard.
+The outcome is having the financials reconcile every month and accurate giving statements ready on time.
+A member database is useful.
+But the outcome is not storing records.
+The outcome is having accurate information when the church needs it.
+ChurchPlannerPro is designed around moving from:
+“Here’s a tool to help you do the work.”
+to:
+“ChurchPlannerPro helps handle the work.”
+8. Desired Transformation
+ChurchPlannerPro helps churches move:
+- From manual administration to automated operations
+- From software that organizes work to software that does more of the work
+- From features and modules to outcomes
+- From disconnected systems to coordinated workflows
+- From manually keeping systems in sync to connected data
+- From chasing volunteers to automated scheduling and member self-service
+- From manually following up to automatic workflows
+- From messy records to clean, maintained data
+- From repetitive reconciliation to automated financial workflows
+- From remembering everything that needs to happen to knowing what needs your attention
+- From unnecessary software complexity to everything you need and nothing you don’t
+- From complicated software pricing to one affordable price for everything
+Desired outcome: Automate the routine work of running the church so staff and volunteers have more time for what is most important to their church.
+9. Category and Product Hierarchy
+Category Position
+ChurchPlannerPro is a church automation platform.
+Its purpose is simple:
+Automate your church operations.
+ChurchPlannerPro combines church management software, integrations and automation to reduce the work required to operate a church.
+The Automation Layer
+ChurchPlannerPro can operate as the church’s primary management platform, but it does not require a church to replace every system it already uses.
+It can connect with existing tools and become an automation layer across church operations.
+That can include systems such as:
+- Planning Center
+- Pushpay
+- IconCMO
+- Vanco
+- QuickBooks
+- Google Workspace
+- Microsoft 365
+- Banking data
+- Spreadsheets
+The important question is not how many integrations ChurchPlannerPro has.
+It is:
+What can we automate because these systems are connected?
+Core Outcomes
+ChurchPlannerPro organizes the product around what churches need to accomplish:
+- Every volunteer shift is filled
+- Sunday school and VBS run smoothly
+- Financials reconcile every month
+- Accurate year-end giving statements are ready on time
+- Members know what’s happening
+- Stay on budget
+- Member needs get answered quickly
+- Know what needs your attention
+Features, integrations and workflows exist to produce these outcomes.
+The outcome matters more than the feature.
+Software + Service
+Sometimes software can automate the work.
+Sometimes a person is still needed.
+ChurchPlannerPro can provide hands-on support for work such as:
+- Migration
+- Data cleanup
+- Integration setup
+- Workflow configuration
+- Member record maintenance
+- Events and registrations
+- Volunteer coordination
+- Communications
+- Forms and follow-up
+- Reports and reconciliation
+- Recurring administrative tasks
+The goal remains the same:
+Reduce the administrative burden on the church.
+10. Positioning
+Tagline
+Automate your church operations.
+This is the primary ChurchPlannerPro expression and should anchor the website, sales materials, product story and brand.
+Primary Positioning Statement
+ChurchPlannerPro helps small and midsize churches automate their operations by connecting their systems, organizing software around outcomes and automating the repetitive work required to run a church.
+Product Philosophy
+Everything you need. Nothing you don’t.
+ChurchPlannerPro provides the capabilities churches need to run their operations without unnecessary features, complexity or cost.
+Customer Benefit
+More time for what is most important to your church.
+ChurchPlannerPro should not decide what is most important for a church.
+For one church, that may mean caring for members.
+For another, it may mean preparing for Sunday, community outreach, teaching, worship, youth programs or simply giving an overwhelmed administrator room to focus.
+ChurchPlannerPro automates the operational work and gives that time back to the church.
+Pricing Philosophy
+One platform. One affordable price. Everything included.
+Churches deserve great software they can afford.
+They should not have to calculate pricing across modules, products or usage tiers to understand what their software will cost.
+11. Primary Differentiators
+1. Automation First
+ChurchPlannerPro is built around one question:
+How can we automate this?
+The goal is not simply fewer clicks or better screens.
+The goal is less work.
+2. Everything You Need. Nothing You Don’t.
+ChurchPlannerPro is intentionally focused on the operations small and midsize churches need.
+No unnecessary bells and whistles.
+No complexity for complexity’s sake.
+No race to build the longest feature list.
+The goal is to build the right software and automate as much of the work as possible.
+3. Outcomes Instead of Features
+Churches should not have to assemble features into workflows themselves.
+ChurchPlannerPro starts with outcomes such as filling volunteer shifts, running Sunday school and reconciling finances, then brings together the capabilities required to make them happen.
+4. Your Systems Working Together
+ChurchPlannerPro connects the systems churches already use.
+The purpose of integration is not simply moving data.
+It is enabling automation across the church.
+5. Know What Needs Your Attention
+Not everything should be automated.
+ChurchPlannerPro handles routine work and surfaces the things that need a person’s attention.
+Instead of constantly checking systems, staff should be able to focus on exceptions, decisions and people.
+6. Software + Service
+Churches should not need a software administrator to get value from their software.
+ChurchPlannerPro can help configure, migrate, clean, integrate and operate the system.
+7. Great Software at an Affordable Price
+Churches deserve great software they can afford.
+ChurchPlannerPro should not make churches calculate pricing across modules, products or usage tiers.
+One price gives the church access to the entire platform.
+No module-by-module pricing.
+No complicated usage calculations.
+No choosing which important capabilities the church can afford.
+One platform. One affordable price. Everything included.
+12. Messaging Pillars
+Pillar 1: Automate Your Church Operations
+This is the umbrella over everything else.
+Every other messaging pillar explains how ChurchPlannerPro fulfills this promise.
+Supporting ideas:
+- Automate repetitive work
+- Automate follow-up
+- Automate recurring communications
+- Automate data movement
+- Automate volunteer coordination
+- Automate financial workflows
+- Automate recurring administrative processes
+- Surface exceptions automatically
+- Let members complete routine actions themselves
+The ideal workflow is not one where staff can complete a task in fewer clicks.
+It is one where staff do not need to complete the task at all.
+Pillar 2: Everything You Need. Nothing You Don’t.
+More software is not necessarily better software.
+ChurchPlannerPro focuses on what small and midsize churches need to run their operations well.
+Supporting ideas:
+- Essential church operations
+- Complete workflows
+- Less configuration
+- Less complexity
+- No unnecessary bells and whistles
+- No paying for functionality you do not need
+- Built for churches without large administrative teams
+- One platform at one affordable price
+We are not trying to build the church software with the most features. We are building the church software that does what churches need and automates as much of that work as possible.
+Pillar 3: Focus on Outcomes
+Automation should produce something the church cares about.
+Supporting ideas:
+- Every volunteer shift is filled
+- Sunday school and VBS run smoothly
+- Financials reconcile every month
+- Accurate giving statements are ready on time
+- Members know what’s happening
+- Stay on budget
+- Member needs get answered quickly
+- Know what needs your attention
+Don’t sell the feature.
+Sell the work the church no longer needs to worry about.
+Pillar 4: Connect What You Already Use
+Churches should not have to replace every system before they can automate their operations.
+Supporting ideas:
+- Connect existing systems
+- Synchronize data
+- Eliminate duplicate entry
+- Audit and clean data
+- Automate workflows across systems
+- Keep tools that already work
+- Replace systems later when it makes sense
+Pillar 5: Know What Needs Your Attention
+The purpose of automation is not to remove people.
+It is to make better use of their time.
+Supporting ideas:
+- Routine work happens automatically
+- Exceptions are surfaced
+- Member needs are visible
+- Unfilled positions are identified
+- Financial discrepancies are highlighted
+- Follow-up is assigned
+- People step in when judgment or attention is required
+Pillar 6: Great Software. Simple Price.
+Churches deserve great software that is affordable and straightforward to buy.
+Supporting ideas:
+- One price
+- Entire platform included
+- No module-by-module pricing
+- No complicated usage calculations
+- No artificial feature gates
+- Predictable software costs
+- Affordable for small and midsize churches
+13. Competitive Narrative
+Church software has gone through its first major transformation.
+It moved administration from paper and spreadsheets into software.
+ChurchPlannerPro represents the next transformation:
+From digitizing church administration to automating church operations.
+Traditional church software asks:
+How can software help staff manage this process?
+ChurchPlannerPro asks:
+How much of this process can software handle for them?
+That difference changes how the product is built.
+Volunteer scheduling is not finished when the church has a scheduling interface.
+It is finished when the shifts are filled.
+Sunday school software is not successful because registrations are stored in a database.
+It is successful when registration, room assignment, attendance, communication and follow-up work together.
+Financial software is not successful because another report exists.
+It is successful when the numbers reconcile.
+And more features do not necessarily create a better product.
+Small and midsize churches should not have to navigate enterprise-level complexity, configure dozens of modules or pay for capabilities they never use.
+Everything you need. Nothing you don’t.
+The next generation of church software should automate the work churches actually need done without creating unnecessary complexity around it.
+And churches should not have to navigate complicated pricing models to get it.
+One platform. One affordable price. Everything included.
+14. Long-Term Product Direction
+Every major ChurchPlannerPro product investment should advance the same promise:
+Automate your church operations.
+Over time, ChurchPlannerPro should increasingly be able to:
+- Detect work that needs to happen
+- Trigger routine actions automatically
+- Coordinate workflows across systems
+- Keep church data accurate
+- Identify exceptions and problems
+- Recommend next actions
+- Surface issues requiring human attention
+- Answer operational questions
+- Create workflows from natural-language instructions
+- Learn recurring church processes
+- Complete more routine administrative work without staff involvement
+But product expansion should not mean feature bloat.
+Every new capability should pass two tests:
+Does this help automate an important church operation?
+Do our churches actually need it?
+If the answer to both is no, it probably does not belong in ChurchPlannerPro.
+The destination is not a church database with more features.
+It is software that understands how the church operates, automates more of the work and stays focused on what churches actually need.
+15. Tone and Voice
+- Practical
+- Warm
+- Confident
+- Direct
+- Accessible
+- Simple
+- Respectful of church budgets
+- Focused on real church operations
+- Focused on work removed rather than features added
+- Concrete rather than abstract
+- Helpful without being overly technical
+Use the language church staff use.
+Talk about volunteers, Sunday school, giving, communications, member needs, budgets and the work that has to get done.
+Technology is the mechanism.
+Automation is the promise.
+Everything you need. Nothing you don’t. is the product philosophy.
+More time for what is most important to your church is the benefit.
+16. Copywriting Principles
+Lead with automation
+Whenever possible, start with:
+Automate your church operations.
+Then explain what is being automated.
+Lead with outcomes before features
+Don’t say:
+“ChurchPlannerPro includes volunteer scheduling.”
+Say:
+“Fill every volunteer shift without spending the week chasing people.”
+Explain what work disappears
+Every product claim should answer:
+What does the church no longer have to do?
+Keep the product focused
+Remember:
+Everything you need. Nothing you don’t.
+Do not add complexity to the message simply because the product can do something.
+Prioritize the capabilities churches actually need.
+Connect automation to time
+Automation is not the final human benefit.
+The benefit is:
+More time for what is most important to your church.
+Keep pricing simple
+Do not bury the pricing philosophy.
+Affordability and simplicity are part of the ChurchPlannerPro promise:
+One platform. One affordable price. Everything included.
+Avoid
+- “All-in-one” as the primary positioning
+- Long feature lists
+- Feature bloat
+- “Powerful”
+- “Robust”
+- “Seamless”
+- “Revolutionary”
+- Generic “AI-powered” claims
+- “Digital transformation”
+- Generic “save time and money” language
+- Making ease of use the primary differentiator
+- Positioning ChurchPlannerPro solely as a cheaper alternative
+- Complicated software terminology
+- Implying churches need to replace everything they use
+- Talking about integrations without connecting them to automation
+- Talking about features without connecting them to outcomes
+- Assuming what a church should do with the time ChurchPlannerPro gives back
+17. Brand Architecture
+Everything ChurchPlannerPro communicates should ultimately branch
