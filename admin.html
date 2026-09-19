@@ -1,1 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Static, clickable replica of the ChurchPlannerPro admin app: every screen, tab and modal, rebuilt from the live UI.">
+<style>
+:root{color-scheme:light}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>ChurchPlannerPro Admin Replica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* ===== tokens sampled from the live app (Tailwind slate + green-600) ===== */
+:root{
+  --slate-50:#F8FAFC; --slate-100:#F1F5F9; --slate-200:#E2E8F0; --slate-300:#CBD5E1;
+  --slate-400:#94A3B8; --slate-500:#64748B; --slate-600:#475569; --slate-700:#334155; --slate-800:#1E293B;
+  --gray-300:#D1D5DB;
+  --green-600:#16A34A; --green-700:#15803D; --green-100:#DCFCE7; --green-800:#166534;
+  --red-600:#DC2626; --red-100:#FEE2E2; --red-700:#B91C1C;
+  --amber-100:#FEF3C7; --amber-800:#92400E; --amber-50:#FFFBEB; --amber-400:#FBBF24;
+  --blue-link:#0000EE;
+  --violet-100:#EDE9FE; --violet-700:#6D28D9;
+  --font:'Inter',-apple-system,system-ui,'Segoe UI',Roboto,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#0B1220;color:var(--slate-800);font-family:var(--font);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit}
 
+/* ===== replica chrome (not part of the app) ===== */
+.wrap{height:100dvh;min-height:520px;display:flex;flex-direction:column}
+.strip{
+  flex:none;display:flex;align-items:center;gap:12px;padding:0 14px;height:44px;
+  background:#0B1220;color:#94A3B8;font-size:12px;border-bottom:1px solid #1E293B;
+}
+.strip .dot{width:9px;height:9px;border-radius:50%;background:#EF4444;box-shadow:14px 0 0 #F59E0B,28px 0 0 #22C55E;margin-right:30px;flex:none}
+.strip .url{
+  flex:1;min-width:0;font-family:var(--mono);font-size:11.5px;background:#111C2E;border:1px solid #1E293B;
+  border-radius:7px;padding:5px 11px;color:#93C5A6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.strip .tag{flex:none;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:#64748B;display:none}
+@media(min-width:760px){.strip .tag{display:block}}
+.notes-toggle{
+  flex:none;display:inline-flex;align-items:center;gap:7px;background:#111C2E;border:1px solid #1E293B;color:#94A3B8;
+  border-radius:999px;padding:5px 12px 5px 8px;font-size:11.5px;cursor:pointer;white-space:nowrap;
+}
+.notes-toggle .sw{width:26px;height:15px;border-radius:999px;background:#334155;position:relative;transition:background .15s}
+.notes-toggle .sw::after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#94A3B8;transition:transform .15s,background .15s}
+.notes-toggle[aria-pressed="true"]{color:var(--amber-400);border-color:#3F3016}
+.notes-toggle[aria-pressed="true"] .sw{background:#78350F}
+.notes-toggle[aria-pressed="true"] .sw::after{transform:translateX(11px);background:var(--amber-400)}
+
+/* ===== the app ===== */
+.app{flex:1;min-height:0;display:flex;background:var(--slate-50);overflow:hidden}
+aside{
+  flex:none;width:260px;background:var(--slate-800);color:var(--slate-200);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.brand{flex:none;padding:20px 20px 16px;font-size:15px;font-weight:700;color:#fff;letter-spacing:-.01em}
+aside nav{flex:1;overflow-y:auto;padding:0 12px 12px;display:flex;flex-direction:column;gap:2px}
+aside nav a{
+  display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;
+  font-size:14px;font-weight:500;color:var(--slate-200);text-decoration:none;cursor:pointer;
+}
+aside nav a:hover{background:rgba(255,255,255,.06)}
+aside nav a.on{background:rgba(255,255,255,.1);color:#fff}
+aside nav a .ic{font-size:14px;width:18px;text-align:center;flex:none}
+aside nav a.child{padding-left:30px;font-size:13px;color:var(--slate-300)}
+.navdiv{margin:16px 6px 8px;font-size:10.5px;letter-spacing:.12em;color:var(--slate-500);text-align:center;font-weight:600}
+.badge{margin-left:auto;font-size:10px;font-weight:600;letter-spacing:.02em;padding:2px 6px;border-radius:5px;background:rgba(255,255,255,.12);color:#CBD5E1}
+.badge.new{background:transparent;color:var(--slate-400);padding:0}
+.church{flex:none;border-top:1px solid rgba(255,255,255,.1);padding:14px 20px;display:flex;align-items:center;gap:10px}
+.church .sq{width:26px;height:26px;border-radius:7px;background:var(--green-600);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center;flex:none}
+.church b{display:block;font-size:13px;font-weight:600;color:#fff}
+.church span{display:block;font-size:11.5px;color:var(--slate-400)}
+
+.col{flex:1;min-width:0;display:flex;flex-direction:column}
+header.topbar{
+  flex:none;height:64px;background:#fff;border-bottom:1px solid var(--slate-200);
+  display:flex;align-items:center;gap:12px;padding:0 32px;
+}
+header.topbar h2{margin:0;font-size:18px;font-weight:600;letter-spacing:-.01em}
+.acct{margin-left:auto;display:flex;align-items:center;gap:10px}
+.acct .av{width:26px;height:26px;border-radius:50%;background:var(--green-600);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center}
+.acct .em{font-size:13px;color:var(--slate-600)}
+.acct .out{display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:var(--slate-800);font-size:14px;cursor:pointer;padding:0}
+.hamb{display:none;background:none;border:0;font-size:22px;line-height:1;cursor:pointer;color:var(--slate-800);padding:0 4px}
+
+main{flex:1;min-width:0;overflow-y:auto;padding:32px}
+h1{margin:0;font-size:32px;font-weight:700;letter-spacing:-.02em}
+.pagehead{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+.pagehead .acts{margin-left:auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.sub{margin:6px 0 0;font-size:14px;color:var(--slate-500)}
+
+/* controls */
+.btn{border:0;border-radius:8px;font-size:14px;font-weight:600;padding:10px 18px;cursor:pointer;background:transparent;color:var(--slate-800);white-space:nowrap}
+.btn.primary{background:var(--green-600);color:#fff}
+.btn.primary:hover{background:var(--green-700)}
+.btn.ghost:hover{background:var(--slate-100)}
+.btn.outline{border:1px solid var(--slate-300);background:#fff}
+.btn.sm{font-size:13px;padding:7px 13px}
+.btn.link{padding:0;font-weight:600;font-size:13px;color:var(--slate-800)}
+.btn.danger{color:var(--red-600)}
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=time],input[type=number],select,textarea{
+  width:100%;background:#fff;border:1px solid var(--gray-300);border-radius:8px;
+  font-family:inherit;font-size:14px;padding:10px 14px;color:var(--slate-800);
+}
+textarea{min-height:100px;resize:vertical}
+label.fl{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+.help{font-size:12px;color:var(--slate-500);margin:6px 0 0}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:560px){.fgrid{grid-template-columns:1fr}}
+.fgrid .full{grid-column:1/-1}
+
+/* tabs — inactive ones are unstyled links in the real app */
+.tabbar{display:flex;gap:4px;border-bottom:1px solid var(--slate-200);margin:20px 0 24px;overflow-x:auto}
+.tabbar a{padding:12px 20px;font-size:14px;font-weight:500;color:var(--blue-link);text-decoration:underline;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabbar a.on{color:var(--green-600);text-decoration:none;border-bottom-color:var(--green-600)}
+
+/* surfaces */
+.card{background:#fff;border:1px solid var(--slate-200);border-radius:12px}
+.card.pad{padding:20px 24px}
+.cardtitle{font-size:15px;font-weight:600;margin:0 0 14px}
+.empty{padding:24px 32px;color:var(--slate-500);font-size:14px;text-align:center}
+.emptybar{background:#fff;border:1px solid var(--slate-200);border-radius:10px;padding:14px 18px;font-size:14px;color:var(--slate-600)}
+
+/* tables */
+.tablewrap{background:#fff;border:1px solid var(--slate-200);border-radius:12px;overflow:hidden}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th{background:var(--slate-50);font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;text-align:left;padding:14px 20px;border-bottom:1px solid var(--slate-200);color:var(--slate-800)}
+td{font-size:14px;padding:16px 20px;border-bottom:1px solid var(--slate-200);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+.num{font-variant-numeric:tabular-nums}
+.linky{color:var(--blue-link);text-decoration:underline;cursor:pointer}
+
+/* pills */
+.pill{display:inline-block;border-radius:999px;font-size:12px;font-weight:600;padding:4px 10px}
+.pill.green{background:var(--green-100);color:var(--green-800)}
+.pill.amber{background:var(--amber-100);color:var(--amber-800)}
+.pill.slate{background:var(--slate-100);color:var(--slate-600)}
+.pill.violet{background:var(--violet-100);color:var(--violet-700)}
+.pill.red{background:var(--red-100);color:var(--red-700)}
+.status-ok{color:var(--green-600);font-weight:600;font-size:13px}
+.muted{color:var(--slate-500)}
+.tiny{font-size:12px}
+
+/* stat tiles */
+.tiles{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-bottom:16px}
+.tile{background:#fff;border:1px solid var(--slate-200);border-radius:12px;padding:20px 22px}
+.tile .v{font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.tile .k{font-size:13px;color:var(--slate-500);margin-top:6px}
+.tile .v.pos{color:var(--green-600)} .tile .v.neg{color:var(--red-600)}
+
+/* people split */
+.split{display:grid;grid-template-columns:300px 1fr;background:#fff;border:1px solid var(--slate-200);border-radius:12px;overflow:hidden;min-height:520px}
+@media(max-width:720px){.split{grid-template-columns:1fr}.split .detail{border-left:0;border-top:1px solid var(--slate-200)}}
+.split .list{border-right:1px solid var(--slate-200);display:flex;flex-direction:column;min-height:0}
+.split .list .search{padding:10px 12px;border-bottom:1px solid var(--slate-200)}
+.split .list .search input{border:0;padding:6px 4px;font-size:14px}
+.split .list .search input:focus{outline:none}
+.split .list .rows{overflow-y:auto;max-height:560px}
+.prow{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;border:0;background:none;width:100%;text-align:left}
+.prow:hover{background:var(--slate-50)}
+.prow.on{background:#EFF6F1}
+.av{width:36px;height:36px;border-radius:50%;background:var(--green-600);color:#fff;font-size:12px;font-weight:600;display:grid;place-items:center;flex:none}
+.prow .pmeta{min-width:0;flex:1}
+.prow .nm{display:block;font-size:14px;font-weight:500;line-height:1.3}
+.prow .sb{display:block;font-size:12px;color:var(--slate-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.detail{padding:24px 32px}
+.dhead{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.dhead .av{width:44px;height:44px;font-size:14px}
+.dhead h3{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em}
+.dhead .sb{font-size:13px;color:var(--slate-500)}
+.dhead .acts{margin-left:auto;display:flex;gap:14px}
+.seclabel{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--slate-500);padding-bottom:8px;border-bottom:1px solid var(--slate-200);margin:0 0 14px}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px 40px;margin-bottom:26px}
+@media(max-width:560px){.kv{grid-template-columns:1fr}}
+.kv .row{display:flex;justify-content:space-between;gap:16px;font-size:13px}
+.kv .row .k{color:var(--slate-500)}
+.notefield{background:var(--amber-50);border-left:3px solid var(--amber-400);border-radius:0 6px 6px 0;min-height:30px;padding:6px 12px;font-size:13px;color:var(--slate-600)}
+
+/* group cards */
+.gcards{display:grid;gap:16px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:760px){.gcards{grid-template-columns:1fr}}
+.gcards.loose{display:flex;flex-wrap:wrap}
+.gcards.loose .gcard{flex:0 1 250px}
+.gcard{background:#fff;border:1px solid var(--slate-200);border-radius:12px;padding:18px 20px}
+.gcard h4{margin:0 0 4px;font-size:15px;font-weight:600}
+.gcard .cnt{font-size:13px;color:var(--slate-500);margin:0 0 14px;padding-bottom:14px;border-bottom:1px solid var(--slate-200)}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:6px}
+.chk input{width:14px;height:14px;accent-color:var(--green-600);margin:0}
+.gcard .acts{display:flex;gap:10px;margin-top:12px}
+
+/* volunteers */
+.vgrid{background:#fff;border:1px solid var(--slate-200);border-radius:12px;overflow:hidden}
+.vgrid table{min-width:820px}
+.vgrid th{text-align:center;padding:10px}
+.vgrid th:first-child{text-align:left}
+.vgrid th .d{display:block;font-size:17px;font-weight:700;letter-spacing:-.02em;text-transform:none;margin-top:2px}
+.vgrid td{padding:8px;border-right:1px solid var(--slate-200);vertical-align:top;min-height:80px}
+.vgrid td:last-child{border-right:0}
+.vgrid td.grp{font-size:13px;font-weight:500;border-left:3px solid var(--green-600);padding-left:14px;vertical-align:middle;white-space:nowrap}
+.shift{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:7px;padding:7px 9px;margin-bottom:6px;cursor:pointer}
+.shift b{display:block;font-size:12px;font-weight:600}
+.shift i{display:block;font-size:10.5px;color:var(--slate-500);font-style:normal}
+.shift em{display:block;font-size:10.5px;color:var(--green-700);font-style:normal;font-weight:600}
+
+/* calendar */
+.cal{background:#fff;border:1px solid var(--slate-200);border-radius:12px;overflow:hidden}
+.calbar{display:flex;align-items:center;gap:10px;padding:14px 16px;flex-wrap:wrap}
+.calbar .mid{flex:1;text-align:center;font-size:22px;font-weight:700;letter-spacing:-.02em;min-width:180px}
+.calbtn{border:1px solid var(--slate-300);background:#fff;border-radius:7px;padding:6px 12px;font-size:13px;cursor:pointer}
+.calbtn.on{background:var(--slate-800);color:#fff;border-color:var(--slate-800)}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid var(--slate-200);min-width:700px}
+.calgrid .dow{font-size:12px;font-weight:600;color:var(--slate-500);text-align:center;padding:8px 4px;border-bottom:1px solid var(--slate-200);background:var(--slate-50)}
+.cell{border-right:1px solid var(--slate-200);border-bottom:1px solid var(--slate-200);min-height:86px;padding:4px}
+.cell:nth-child(7n+7){border-right:0}
+.cell .dn{font-size:11px;color:var(--slate-500);text-align:right;padding:0 3px 3px}
+.cell.out .dn{color:var(--slate-300)}
+.ev{display:flex;gap:5px;font-size:10.5px;background:#F0FDF4;border-left:2px solid var(--green-600);border-radius:0 4px 4px 0;padding:2px 4px;margin-bottom:2px;cursor:pointer;line-height:1.35}
+.ev .t{color:var(--slate-500);flex:none}
+.ev .n{font-weight:600;color:var(--green-800);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.legend{display:flex;gap:18px;padding:12px 16px;font-size:12px;color:var(--slate-600);flex-wrap:wrap}
+.legend i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:6px}
+
+/* bars */
+.bars{display:grid;grid-template-columns:repeat(12,1fr);gap:8px;align-items:end;height:160px;margin-top:10px}
+.bars .b{display:flex;flex-direction:column;justify-content:flex-end;height:100%;gap:0}
+.bars .b .fill{background:var(--green-600);border-radius:3px 3px 0 0;min-height:3px}
+.bars .b .fill.zero{background:var(--slate-200)}
+.barlabels{display:grid;grid-template-columns:repeat(12,1fr);gap:8px;margin-top:6px;text-align:center}
+.barlabels div{font-size:10px;color:var(--slate-500)}
+.barlabels div b{display:block;font-size:11px;color:var(--slate-700);font-weight:600}
+
+/* chat */
+.chatwrap{display:grid;grid-template-columns:230px 1fr;gap:16px}
+@media(max-width:720px){.chatwrap{grid-template-columns:1fr}}
+.qa{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.qa button{background:#fff;border:1px solid var(--slate-200);border-radius:9px;padding:10px 14px;font-size:13px;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.hist{background:#fff;border:1px solid var(--slate-200);border-radius:12px;overflow:hidden}
+.hist .hh{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid var(--slate-200)}
+.hist .hh b{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--slate-500)}
+.hist .hh span{margin-left:auto;font-size:12px;color:var(--green-600);font-weight:600;cursor:pointer}
+.hist .hi{padding:9px 14px;border-bottom:1px solid var(--slate-100);cursor:pointer}
+.hist .hi:hover{background:var(--slate-50)}
+.hist .hi b{display:block;font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist .hi span{font-size:11px;color:var(--slate-400)}
+.thread{background:#fff;border:1px solid var(--slate-200);border-radius:12px;padding:18px;display:flex;flex-direction:column;min-height:330px}
+.msg{display:flex;gap:10px;align-items:flex-start}
+.msg .bub{background:var(--slate-50);border:1px solid var(--slate-200);border-radius:10px;padding:11px 14px;font-size:13.5px;max-width:62ch}
+.composer{margin-top:auto;display:flex;gap:10px;padding-top:16px}
+.composer input{flex:1}
+.send{background:var(--green-600);border:0;border-radius:8px;color:#fff;width:44px;display:grid;place-items:center;cursor:pointer;font-size:15px}
+
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto;z-index:50}
+.modal{background:#fff;border-radius:12px;box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);width:500px;max-width:100%;margin:auto}
+.modal.wide{width:620px}
+.modal .mh{display:flex;align-items:center;padding:20px 24px 0}
+.modal .mh h3{margin:0;font-size:18px;font-weight:600}
+.modal .mh button{margin-left:auto;background:none;border:0;font-size:18px;color:var(--slate-400);cursor:pointer;line-height:1}
+.modal .mb{padding:20px 24px;display:flex;flex-direction:column;gap:16px}
+.modal .mf{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid var(--slate-200)}
+.subhead{font-size:15px;font-weight:600;margin:6px 0 0;padding-top:16px;border-top:1px solid var(--slate-200)}
+.callout{background:#EFF6F1;border:1px solid #BBF7D0;border-radius:9px;padding:12px 14px;font-size:12.5px;color:var(--slate-600)}
+.drop{border:2px dashed var(--slate-300);border-radius:10px;padding:34px;text-align:center;color:var(--slate-500);font-size:13.5px}
+.drop .big{font-size:26px;display:block;margin-bottom:8px;filter:grayscale(1);opacity:.6}
+
+/* annotations */
+.note{display:none;background:var(--amber-50);border:1px solid #FDE68A;border-left:3px solid var(--amber-400);border-radius:0 8px 8px 0;padding:10px 14px;font-size:12.5px;color:#78350F;margin:12px 0}
+.note b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.note code{font-family:var(--mono);font-size:11.5px;background:#FDE68A;border-radius:3px;padding:1px 4px}
+body.notes .note{display:block}
+.route-chip{font-family:var(--mono);font-size:11px;color:var(--slate-500)}
+
+@media(max-width:860px){
+  aside{position:absolute;z-index:40;height:100%;transform:translateX(-100%);transition:transform .2s}
+  aside.open{transform:none}
+  .app{position:relative}
+  .hamb{display:block}
+  .acct .em{display:none}
+  header.topbar{padding:0 16px}
+  main{padding:20px 16px}
+  h1{font-size:26px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+:focus-visible{outline:2px solid var(--green-600);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="strip">
+    <span class="dot"></span>
+    <span class="tag">Static replica</span>
+    <span class="url" id="urlbar">churchplannerpro.com/admin/people</span>
+    <button class="notes-toggle" id="ntog" aria-pressed="false"><span class="sw"></span>Spec notes</button>
+  </div>
+
+  <div class="app">
+    <aside id="side">
+      <div class="brand">ChurchPlanner PRO</div>
+      <nav id="nav"></nav>
+      <div class="church">
+        <span class="sq">P</span>
+        <div><b>Prairie Ridge Church</b><span>Andrew Schneider</span></div>
+      </div>
+    </aside>
+
+    <div class="col">
+      <header class="topbar">
+        <button class="hamb" id="hamb" aria-label="Toggle navigation">☰</button>
+        <h2 id="ptitle">People</h2>
+        <div class="acct">
+          <span class="av">A</span>
+          <span class="em">andrew.schneider639@gmail.com</span>
+          <button class="out">⎋ Sign out</button>
+        </div>
+      </header>
+      <main id="screen"></main>
+    </div>
+  </div>
+</div>
+
+<div id="overlay" hidden></div>
+
+<script>
+/* =========================================================================
+   ChurchPlannerPro admin — static replica.
+   Structure, copy, field sets, defaults and enum values were read off the
+   live app (Prairie Ridge Church tenant) on 19 Sep 2026.
+   ========================================================================= */
+
+const NAV = [
+  {ic:'👥', label:'People',          route:'/admin/people',              title:'People'},
+  {ic:'✅', label:'Member approval',  route:'/admin/members/approval',    title:'Member approval'},
+  {ic:'📝', label:'Forms',           route:'/admin/forms',               title:'Forms'},
+  {ic:'🤝', label:'Groups',          route:'/admin/groups',              title:'Groups'},
+  {ic:'📋', label:'Volunteers',      route:'/admin/volunteers',          title:'Volunteers'},
+  {ic:'📮', label:'Inquiries',       route:'/admin/inquiries',           title:'Member inquiries'},
+  {ic:'✦',  label:'Programs',        route:'/admin/programs',            title:'Programs', badge:'New'},
+  {ic:'💬', label:'Ask Chat',        route:'/admin/ask-aaron',           title:'Ask Chat'},
+  {ic:'📅', label:'Calendar',        route:'/admin/calendar',            title:'Calendar'},
+  {ic:'📊', label:'Reporting',       route:'/admin/reporting',           title:'Reporting Dashboard'},
+  {ic:'⚡', label:'Workflows',       route:'/admin/workflows',           title:'Workflows'},
+  {ic:'⏰', label:'Reminders',       route:'/admin/tasks',               title:'Reminders'},
+  {ic:'💰', label:'Finances',        route:'/admin/finances',            title:'Finances'},
+  {ic:'📁', label:'Files',           route:'/admin/files',               title:'Files', badge:'New'},
+  {ic:'🎁', label:'Campaigns',       route:'/admin/campaigns',           title:'Campaigns'},
+  {div:'OPERATIONS'},
+  {ic:'⚙️', label:'Settings',        route:'/admin/settings',            title:'Settings'},
+  {ic:'🏢', label:'Vendors',         route:'/admin/vendors',             title:'Vendors'},
+  {ic:'🔗', label:'Integrations',    route:'/admin/integrations/planning-center', title:'Planning Center', badge:'Soon'},
+  {ic:'•',  label:'All integrations',route:'/admin/integrations',        title:'Integrations', child:true},
+];
+
+const MEMBERS = [
+  ['Carolyn Erickson',8,'carolyn.erickson32@mailinator.com','The Erickson Family','Active','2018-03-12','2019-04-02','(651) 555-9830'],
+  ['Elizabeth King',20,'elizabeth.king55@mailinator.com','The King Family','Active','2006-04-27','2013-02-13','(651) 555-7543'],
+  ['Ronald Carlson',40,'ronald.carlson20@mailinator.com','The Carlson Family','Active','1986-06-04','2001-09-19','(651) 555-2214'],
+  ['Mary Hoffman',48,'mary.hoffman77@mailinator.com','The Hoffman Family','Active','1978-01-22','1996-05-11','(651) 555-3092'],
+  ['Stephen Wright',1,'stephen.wright60@mailinator.com','The Wright Family','Active','2025-02-09','2025-06-01','(651) 555-4417'],
+  ['Brandon Roberts',17,'brandon.roberts35@mailinator.com','The Roberts Family','Active','2009-07-30','2011-03-06','(651) 555-8801'],
+  ['Pamela Hoffman',18,'pamela.hoffman21@mailinator.com','The Hoffman Family','Active','2008-05-15','2010-10-24','(651) 555-6677'],
+  ['William Campbell',36,'william.campbell34@mailinator.com','The Campbell Family','Active','1990-11-02','2012-08-19','(651) 555-1120'],
+  ['Sharon Clark',37,'sharon.clark14@mailinator.com','The Clark Family','Active','1989-09-08','1998-04-12','(651) 555-9043'],
+  ['Jeffrey Clark',39,'jeffrey.clark78@mailinator.com','The Clark Family','Active','1987-02-17','1998-04-12','(651) 555-9044'],
+  ['Dorothy Anderson',44,'dorothy.anderson77@mailinator.com','The Anderson Family','Active','1982-06-25','1999-01-10','(651) 555-7781'],
+  ['Timothy Carlson',9,'timothy.carlson47@mailinator.com','The Carlson Family','Active','2017-04-03','2018-05-20','(651) 555-2215'],
+  ['Raymond Strand',45,'raymond.strand73@mailinator.com','The Strand Family','Active','1981-08-14','2004-03-07','(651) 555-5510'],
+  ['Scott Martin',64,'scott.martin9@mailinator.com','The Martin Family','Active','1962-03-29','1985-09-15','(651) 555-3348'],
+  ['Donald Nordstrom',87,'donald.nordstrom68@mailinator.com','The Nordstrom Family','Inactive','1939-05-06','1961-06-11','(651) 555-9902'],
+  ['Lisa Roberts',42,'lisa.roberts18@mailinator.com','The Roberts Family','Active','1984-10-19','2007-02-25','(651) 555-8802'],
+  ['Steven Wagner',51,'steven.wagner63@mailinator.com','The Wagner Family','Active','1975-01-07','2000-11-05','(651) 555-4436'],
+  ['Katherine Olson',29,'katherine.olson12@mailinator.com','The Olson Family','Pending','1997-07-21','','(651) 555-6612'],
+  ['Anthony Bergstrom',33,'anthony.bergstrom5@mailinator.com','The Bergstrom Family','Active','1993-12-11','2015-04-05','(651) 555-7729'],
+  ['Melissa Campbell',31,'melissa.campbell88@mailinator.com','The Campbell Family','Active','1995-02-28','2016-09-18','(651) 555-1121'],
+];
+
+const FAMILIES = [
+  ['The Holm Family',4,'1 Target Field Way',23],['The Martin Family',2,'',24],['The Erickson Family',6,'',25],
+  ['The King Family',3,'',26],['The Carlson Family',4,'',27],['The Hoffman Family',4,'',28],
+  ['The Wright Family',3,'',29],['The Anderson Family',3,'',30],['The Roberts Family',4,'',31],
+  ['The Campbell Family',3,'',32],['The Clark Family',4,'',33],['The Strand Family',2,'',34],
+  ['The Wagner Family',4,'',35],['The Lindberg Family',2,'',36],['The Hill Family',3,'',37],
+  ['The Adams Family',5,'',38],['The Olson Family',3,'',39],['The Schultz Family',2,'',40],
+];
+const FAMILY_NAMES = ['The Holm Family','The Martin Family','The Erickson Family','The King Family','The Carlson Family','The Hoffman Family','The Wright Family','The Anderson Family','The Roberts Family','The Campbell Family','The Clark Family','The Strand Family','The Wagner Family','The Lindberg Family','The Hill Family','The Adams Family','The Olson Family','The Schultz Family','The Becker Family','The Walker Family','The Peterson Family','The Schmidt Family','The Nguyen Family','The Sandberg Family','The Young Family','The Mitchell Family','The Swanson Family','The Baker Family','The Engstrom Family','The Nordstrom Family','The Smith Family','The Bergstrom Family','The Dahl Family','The Berg Family','The Weber Family','The Lewis Family','The Nelson Family','The Mueller Family','The Thompson Family','The Miller Family','The Lopez Family','The Hall Family'];
+
+const GROUPS = [
+  ['Communion Server',2,true,true],['Confirmation Class',4,false,false],
+  ['Cookie Server',1,true,true],['First Communion',2,false,false],
+  ['Greeter',2,true,true],['High School Group',0,false,false],
+  ['Hospitality Volunteers',0,true,true],['Middle School Group',0,false,false],
+  ['Music Group',0,false,false],['Nursery Care',3,true,true],
+  ['Sunday School',2,false,false],['Ushers',1,true,true],
+];
+
+const FORMS = [
+  ['First Communion Form','Published',0,'Aug 27, 2026',28,'first-communion-form'],
+  ['Baptism Form','Published',0,'Aug 27, 2026',27,'baptism-form'],
+  ['Confirmation Class','Published',0,'Aug 26, 2026',26,'confirmation-class'],
+  ['Sunday School','Published',0,'Aug 24, 2026',25,'sunday-school'],
+];
+
+const DONATIONS = [
+  ['Mary Hoffman','Aug 11, 2026','Building Fund','ONLINE','$25.00'],
+  ['Melissa Campbell','Aug 11, 2026','Youth Ministry','ONLINE','$100.00'],
+  ['Carol Martin','Aug 11, 2026','General Fund','CASH','$125.00'],
+  ['Catherine Becker','Aug 11, 2026','Benevolence','CHECK','$20.00'],
+  ['Deborah Anderson','Aug 11, 2026','General Fund','CASH','$300.00'],
+  ['Christine Wagner','Aug 11, 2026','General Fund','ONLINE','$250.00'],
+  ['Nicole Carlson','Aug 11, 2026','General Fund','CHECK','$50.00'],
+  ['William Campbell','Aug 11, 2026','Missions','ONLINE','$1,000.00'],
+  ['Debra Erickson','Aug 11, 2026','Missions','CHECK','$100.00'],
+  ['Betty Adams','Aug 11, 2026','Benevolence','CASH','$25.00'],
+];
+
+const EVENTS = [
+  {id:17,name:'Sunday School',time:'8a',daily:true,attend:true,group:'Sunday School',start:'8:00 AM',end:'9:00 AM'},
+  {id:18,name:'Confirmation Class',time:'5p',daily:true,attend:true,group:'Confirmation Class',start:'5:00 PM',end:'6:00 PM'},
+  {id:19,name:'First Communion',time:'8p',daily:true,attend:true,group:'First Communion',start:'8:00 PM',end:'9:00 PM'},
+  {id:4, name:'Worship',time:'8a',dow:0,group:'',start:'8:00 AM',end:'9:00 AM'},
+  {id:6, name:'Grief Group',time:'3p',dow:1,group:'',start:'3:00 PM',end:'4:00 PM'},
+  {id:7, name:'Lunch Bunch',time:'12p',dow:4,group:'',start:'12:00 PM',end:'1:00 PM'},
+  {id:5, name:'Bible study',time:'8a',dow:6,group:'',start:'8:00 AM',end:'9:00 AM'},
+];
+
+const VOL_ROWS = [['Communion Server',2],['Cookie Server',1],['Greeter',1],['Hospitality Volunteers',1],['Nursery Care',3],['Ushers',1]];
+const PROGRAMS = [
+  ['Confirmation Class',4,'Daily 5:00 PM','',30],
+  ['First Communion',2,'Daily 8:00 PM','3 avg. present',32],
+  ['Sunday School',2,'Daily 8:00 AM','',26],
+];
+const USERS = [
+  ['Andrew Schneider','andrew.schneider639@gmail.com','ADMIN'],
+  ['Deborah Martin','pric.dmartin@mailinator.com','STAFF'],
+  ['Jeb Erickson','jeb@mailinator.com','MEMBER'],
+  ['Kevin Holm','kevin.holm73@mailinator.com','MEMBER'],
+];
+const INTEGRATIONS = [
+  ['BANK','Northern Trust · Operating + Building Fund. Daily transaction sync.',false],
+  ['EMAIL','Gmail · Aaron sends emails to members on your behalf.',false],
+  ['ICON','Financial &amp; payroll system. Syncs chart of accounts, transactions, and payroll runs.',false],
+  ['PLANNING_CENTER','Church management. Syncs people, groups, and check-ins.',true],
+  ['SIGNUP_GENIUS','SignUpGenius · Sign-up sheets and volunteer coordination. Syncs signups back to CPP for follow-up.',true],
+];
+const CHAT_HISTORY = [
+  ['how many members have ch…','Aug 29'],['I want to identify any current…','Aug 27'],
+  ['pull a list of members that ar…','Aug 27'],['Can you identify all the mem…','Aug 24'],
+  ['Can you create a Family for …','Aug 23'],['what is our budget?','Aug 17'],
+  ['who has given','Aug 11'],['can you summarize respons…',''],
+];
+
+/* ---------- helpers ---------- */
+const $ = (s,r=document)=>r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const initials = n => n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+const note = (kind,html) => `<div class="note"><b>${kind}</b>${html}</div>`;
+const opts = (arr,sel) => arr.map(o=>{const [v,l]=Array.isArray(o)?o:[o,o];return `<option${v===sel?' selected':''}>${esc(l)}</option>`;}).join('');
+const field = (label,ctrl,help) => `<div><label class="fl">${label}</label>${ctrl}${help?`<p class="help">${help}</p>`:''}</div>`;
+const text = (ph='') => `<input type="text" placeholder="${esc(ph)}">`;
+const sel = (arr,s) => `<select>${opts(arr,s)}</select>`;
+const date = () => `<input type="date">`;
+const area = (ph='') => `<textarea placeholder="${esc(ph)}"></textarea>`;
+const tabbar = (items,active) => `<div class="tabbar">${items.map(([l,r])=>`<a class="${r===active?'on':''}" data-go="${r}">${l}</a>`).join('')}</div>`;
+const tablewrap = (cols,rows,min) => `<div class="tablewrap"><div class="scroll"><table${min?` style="min-width:${min}px"`:''}>
+  <thead><tr>${cols.map(c=>`<th${c.startsWith('~')?' class="r"':''}>${c.replace(/^~/,'')}</th>`).join('')}</tr></thead>
+  <tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`;
+
+let state = {route:'/admin/people', member:1, tab:null, side:false};
+
+/* ---------- nav ---------- */
+function renderNav(){
+  $('#nav').innerHTML = NAV.map(n=>{
+    if(n.div) return `<div class="navdiv">—— ${n.div} ——</div>`;
+    const on = state.route===n.route || (n.route!=='/admin/integrations' && n.route!=='/admin/people' && state.route.startsWith(n.route)) ||
+               (n.route==='/admin/people' && state.route.startsWith('/admin/people'));
+    return `<a class="${on?'on':''}${n.child?' child':''}" data-go="${n.route}">
+      <span class="ic">${n.ic}</span>${n.label}
+      ${n.badge?`<span class="badge ${n.badge==='New'?'new':''}">${n.badge}</span>`:''}</a>`;
+  }).join('');
+}
+function titleFor(route){
+  const exact = NAV.find(n=>n.route===route); if(exact) return exact.title;
+  const m = {
+    '/admin/people/families':'Families','/admin/people/families/new':'New Family',
+    '/admin/people/families/25/edit':'Edit Family','/admin/inquiries/new':'File inquiry on behalf',
+    '/admin/tasks/new':'New task','/admin/campaigns/new':'New campaign','/admin/campaigns/1':'New HVAC Fund',
+    '/admin/settings/users':'Users','/admin/settings/iconcmo-export':'IconCMO Export',
+    '/admin/calendar/events/17':'Event Details','/admin/calendar/events/17/attendance':'Event Details',
+    '/admin/forms/28':'First Communion Form','/admin/forms/28/responses':'Form Responses - First Communion Form',
+  };
+  return m[route] || 'ChurchPlannerPro';
+}
+function go(route){ state.route = route; render(); $('#screen').scrollTop = 0; $('#side').classList.remove('open'); }
+
+/* =========================== SCREENS =========================== */
+const S = {};
+
+/* ---- People ---- */
+S['/admin/people'] = () => {
+  const m = MEMBERS[state.member];
+  const rows = MEMBERS.map((p,i)=>`<button class="prow ${i===state.member?'on':''}" data-m="${i}">
+    <span class="av">${initials(p[0])}</span>
+    <span class="pmeta"><span class="nm">${esc(p[0])}</span><span class="sb">${p[1]} yrs · ${esc(p[2])}</span></span></button>`).join('');
+  return `
+  <div class="pagehead"><h1>People</h1><div class="acts">
+    <button class="btn ghost" data-modal="import">↑ Import CSV</button>
+    <button class="btn primary" data-modal="member">+ Add Member</button></div></div>
+  ${tabbar([['Members','/admin/people'],['Families','/admin/people/families']],'/admin/people')}
+  ${note('Styling bug','Inactive tabs are unstyled <code>&lt;a&gt;</code> elements, so they render in the browser default link blue <code>#0000EE</code> with an underline instead of the slate the design implies. Reproduced above.')}
+  <div class="split">
+    <div class="list">
+      <div class="search"><input type="text" placeholder="Search members..." id="msearch"></div>
+      <div class="rows" id="mrows">${rows}</div>
+    </div>
+    <div class="detail">
+      <div class="dhead">
+        <span class="av">${initials(m[0])}</span>
+        <div><h3>${esc(m[0])}</h3><span class="sb">${m[1]} yrs · ${esc(m[3])} family · ${m[4]}</span></div>
+        <div class="acts"><button class="btn link" data-modal="member">Edit</button><button class="btn link danger">Delete</button></div>
+      </div>
+      <p class="seclabel">Contact</p>
+      <div class="kv">
+        <div class="row"><span class="k">Email</span><span>${esc(m[2])}</span></div>
+        <div class="row"><span class="k">Phone</span><span>${m[7]}</span></div>
+        <div class="row"><span class="k">Address</span><span>--</span></div>
+      </div>
+      <p class="seclabel">Key dates</p>
+      <div class="kv">
+        <div class="row"><span class="k">Birthdate</span><span>${m[5]||'--'}</span></div>
+        <div class="row"><span class="k">Membership</span><span>${m[6]||'--'}</span></div>
+        <div class="row"><span class="k">Baptism</span><span>--</span></div>
+        <div class="row"><span class="k">First Communion</span><span>--</span></div>
+        <div class="row"><span class="k">Confirmation</span><span>--</span></div>
+        <div class="row"><span class="k">Marriage</span><span>--</span></div>
+      </div>
+      <p class="seclabel">Skills, talents and interests</p>
+      <p style="font-size:13px;margin:0 0 26px">None listed</p>
+      <p class="seclabel">Notes</p>
+      <div class="notefield"></div>
+    </div>
+  </div>`;
+};
+
+S['/admin/people/families'] = () => `
+  <div class="pagehead"><h1>Families</h1><div class="acts">
+    <button class="btn primary" data-go="/admin/people/families/new">+ New Family</button></div></div>
+  ${tabbar([['Members','/admin/people'],['Families','/admin/people/families']],'/admin/people/families')}
+  ${tablewrap(['Family name','Members','Address',''],
+    FAMILIES.map(f=>[esc(f[0]),`<span class="num">${f[1]}</span>`,f[2]||'--',
+      `<span class="linky" data-go="/admin/people/families/${f[3]}/edit">Edit</span>`]))}
+  ${note('Inconsistency','The table has no Phone or Email column even though Edit Family collects both — and New Family does not collect them at all.')}`;
+
+S['/admin/people/families/new'] = () => `
+  <h1>New Family</h1>
+  ${tabbar([['Members','/admin/people'],['Families','/admin/people/families']],'/admin/people/families')}
+  <div class="card pad" style="max-width:420px">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      ${field('Last Name <span style="color:var(--red-600)">*</span>', text(''))}
+      ${field('Address', text('123 Main St'))}
+      <div style="display:flex;justify-content:flex-end;gap:10px;padding-top:16px;border-top:1px solid var(--slate-200)">
+        <button class="btn ghost" data-go="/admin/people/families">Cancel</button>
+        <button class="btn primary">Create Family</button></div>
+    </div>
+  </div>
+  ${note('Gap','Create takes only Last Name + Address. Phone and Email exist on Edit Family only, so every new family needs a second trip.')}`;
+
+S['/admin/people/families/25/edit'] = () => `
+  <h1>The Erickson Family</h1>
+  ${tabbar([['Members','/admin/people'],['Families','/admin/people/families']],'/admin/people/families')}
+  <div class="card pad" style="max-width:420px">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      ${field('Last Name <span style="color:var(--red-600)">*</span>', `<input type="text" value="The Erickson Family">`)}
+      ${field('Address', text('123 Main St'))}
+      ${field('Phone', text('555-0100'))}
+      ${field('Email', text('family@example.com'))}
+      <div style="display:flex;justify-content:flex-end;gap:10px;padding-top:16px;border-top:1px solid var(--slate-200)">
+        <button class="btn ghost" data-go="/admin/people/families">Cancel</button>
+        <button class="btn primary">Save Changes</button></div>
+    </div>
+  </div>`;
+
+/* ---- Member approval ---- */
+S['/admin/members/approval'] = () => `
+  <h1>Member approval</h1>
+  <p class="sub">People who registered at your church are waiting for your review.</p>
+  <div style="height:22px"></div>
+  <div class="emptybar">No pending member registrations. New registrations will appear here.</div>
+  ${note('Not observable','The queue is empty in this tenant, so the approve / reject controls on a pending registration could not be captured.')}`;
+
+/* ---- Forms ---- */
+S['/admin/forms'] = () => `
+  <div class="pagehead"><div><h1>Forms</h1>
+    <p class="sub">Build forms for sign-ups, sacrament records, and member updates.</p></div>
+    <div class="acts"><button class="btn primary" data-modal="form">+ Create form</button></div></div>
+  <div style="margin:22px 0 16px;max-width:260px"><input type="text" placeholder="🔍  Search forms..."></div>
+  ${tablewrap(['Form','Status','Responses','Created'],
+    FORMS.map(f=>[`<span class="linky" data-go="/admin/forms/28">${esc(f[0])}</span>`,
+      `<span class="pill green">${f[1]}</span>`,`<span class="num">${f[2]}</span>`,
+      `<span class="linky">${f[3]}</span>`]))}`;
+
+S['/admin/forms/28'] = () => `
+  <p class="route-chip" style="margin:0 0 10px">Forms › First Communion Form</p>
+  <div class="pagehead"><div style="display:flex;align-items:center;gap:12px">
+      <span class="muted">←</span><h1 style="font-size:26px">First Communion Form</h1>
+      <span class="pill green">Published</span></div>
+    <div class="acts">
+      <button class="btn link">Edit</button>
+      <button class="btn link" data-go="/admin/forms/28/responses">Responses ( 0 )</button>
+      <button class="btn link">Copy link</button>
+      <button class="btn link danger">Delete</button></div></div>
+  <p class="sub" style="margin-bottom:22px">0 responses · Created Aug 27, 2026</p>
+
+  <div class="card" style="margin-bottom:16px">
+    <div style="padding:14px 22px;border-bottom:1px solid var(--slate-200)">
+      <p class="seclabel" style="border:0;margin:0;padding:0">Form details</p></div>
+    <div style="padding:18px 22px">
+      <p class="seclabel" style="border:0;padding:0;margin:0 0 4px">Title</p>
+      <p style="margin:0 0 18px;font-size:14px">First Communion Form</p>
+      <p class="seclabel" style="border:0;padding:0;margin:0 0 6px">Public link</p>
+      <div style="display:flex;gap:10px;max-width:520px">
+        <input type="text" value="/forms/prairie-ridge-church/first-communion-form/respond" readonly style="background:var(--slate-50);color:var(--slate-500)">
+        <button class="btn outline sm">Copy</button></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="padding:14px 22px;border-bottom:1px solid var(--slate-200);display:flex;gap:16px">
+      <p class="seclabel" style="border:0;margin:0;padding:0">Questions</p>
+      <p class="seclabel" style="border:0;margin:0;padding:0">1 total</p></div>
+    <div style="padding:18px 22px">
+      <div class="card pad" style="background:var(--slate-50);margin-bottom:18px">
+        <p class="seclabel" style="border:0;padding:0;margin:0 0 6px">Question 1 of 1</p>
+        <p style="margin:0 0 10px;font-size:14px">What is your name?</p>
+        <span class="pill slate" style="border-radius:6px">Short Answer</span>
+        <div style="margin-top:12px;max-width:280px"><input type="text" placeholder="Short answer text..."></div>
+        <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+          <button class="btn link">Edit</button><button class="btn link danger">Delete</button></div>
+      </div>
+      <p class="seclabel" style="border:0;padding:0">Add field</p>
+      <div class="fgrid" style="margin-bottom:14px">
+        ${field('Label', text(''))}
+        ${field('Type', sel([['TEXT','Short answer'],['TEXTAREA','Long answer'],['EMAIL','Email'],['DATE','Date'],['SELECT','Multiple choice'],['CHECKBOX','Checkbox']],'TEXT'))}
+      </div>
+      <label class="chk" style="margin-bottom:14px"><input type="checkbox"> Required field</label><br>
+      <button class="btn primary sm">Add Field</button>
+      ${note('Gap','Picking <code>SELECT</code> (Multiple choice) gives you nowhere to enter the choices — the Add Field row is only Label, Type and Required.')}
+    </div>
+  </div>`;
+
+S['/admin/forms/28/responses'] = () => `
+  <h1>First Communion Form</h1>
+  <p class="sub">0 response(s)</p>
+  <div style="margin:18px 0"><button class="btn outline sm" data-go="/admin/forms/28">← Back to Form</button></div>
+  ${tablewrap(['Submitted by','Date','What is your name?'],[['<span class="muted">No responses yet.</span>','','']])}`;
+
+/* ---- Groups ---- */
+S['/admin/groups'] = () => `
+  <h1>Groups</h1>
+  <div style="margin:18px 0 22px"><button class="btn primary" data-modal="group">+ New Group</button></div>
+  <div class="gcards">${GROUPS.map((g,i)=>`
+    <div class="gcard"><h4>${esc(g[0])}</h4><p class="cnt">${g[1]} members ·</p>
+      <label class="chk"><input type="checkbox" ${g[2]?'checked':''}> Volunteer scheduling</label>
+      ${g[2]?`<label class="chk"><input type="checkbox" ${g[3]?'checked':''}> Pickup allowed</label>`:''}
+      <div class="acts"><button class="btn link" data-modal="gmembers">Members</button>
+        <button class="btn link danger">Delete</button></div></div>`).join('')}</div>
+  ${note('Observed rule','“Pickup allowed” only renders once “Volunteer scheduling” is on, and only scheduling-enabled groups become rows on the Volunteers board.')}
+  ${note('Naming','New Group collects a free-text <code>Leader</code>, while membership uses a structured Leader <em>role</em> — two unconnected representations of the same idea.')}`;
+
+/* ---- Volunteers ---- */
+S['/admin/volunteers'] = () => {
+  const days = [['SUN',13],['MON',14],['TUE',15],['WED',16],['THU',17],['FRI',18],['SAT',19]];
+  const shift = `<div class="shift" data-modal="shiftedit"><b>09:00</b><i>Weekly on MONDAY</i><em>open</em></div>`;
+  return `
+  <h1 class="sr" style="position:absolute;left:-9999px">Volunteers</h1>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+    <button class="calbtn">‹</button><button class="calbtn">Today</button><button class="calbtn">›</button>
+    <b style="font-size:15px;margin-left:8px">Sep 13 – Sep 19, 2026</b>
+    <span style="margin-left:auto;display:flex;gap:10px">
+      <button class="btn primary" data-modal="shift">＋ Add shift</button>
+      <button class="btn outline">All published</button></span></div>
+  <div class="vgrid"><div class="scroll"><table class="num">
+    <thead><tr><th>Group</th>${days.map(d=>`<th>${d[0]}<span class="d">${d[1]}</span></th>`).join('')}</tr></thead>
+    <tbody>${VOL_ROWS.map(r=>`<tr><td class="grp">${esc(r[0])}</td>
+      <td>${shift.repeat(r[1])}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('')}</tbody>
+  </table></div></div>
+  ${note('UX note','On the Edit shift panel, “Notify assigned volunteer(s)” renders <em>below</em> Save changes — the toggle governing an outbound message sits past the button that sends it. Click any shift chip to see it.')}`;
+};
+
+/* ---- Inquiries ---- */
+S['/admin/inquiries'] = () => `
+  <div class="pagehead"><div><h1>Member inquiries</h1>
+    <p class="sub">Help-center tickets filed by members and by staff on their behalf.</p></div>
+    <div class="acts"><button class="btn primary" data-go="/admin/inquiries/new">+ File on behalf</button></div></div>
+  <div style="height:28px"></div>
+  <h3 style="margin:0 0 6px;font-size:17px">No inquiries yet</h3>
+  <p class="sub" style="margin:0 0 16px">When members send a message via the help center, or when staff file one on their behalf, it shows up here.</p>
+  <button class="btn primary" data-go="/admin/inquiries/new">File the first inquiry</button>`;
+
+S['/admin/inquiries/new'] = () => `
+  <p class="route-chip" style="margin:0 0 10px">Member inquiries › New</p>
+  <div class="pagehead"><div><h1>File inquiry on behalf</h1>
+    <p class="sub">Open a help-center ticket for a member of your church.</p></div>
+    <div class="acts"><button class="btn outline" data-go="/admin/inquiries">Back</button></div></div>
+  <div class="card" style="max-width:440px;margin-top:22px">
+    <div style="padding:14px 22px;border-bottom:1px solid var(--slate-200)">
+      <p class="seclabel" style="border:0;margin:0;padding:0">Inquiry details</p></div>
+    <div style="padding:18px 22px;display:flex;flex-direction:column;gap:16px">
+      ${field('Member (optional)', `<input type="number" placeholder="Enter the member's person id">`,
+        'The person this inquiry is about. Leave blank for general admin questions (no specific member).')}
+      ${field('Subject', text('Short summary of the inquiry'))}
+      ${field('Initial message', area("What's the inquiry about?"))}
+      <div style="display:flex;justify-content:flex-start;gap:10px">
+        <button class="btn ghost" data-go="/admin/inquiries">Cancel</button>
+        <button class="btn primary">File inquiry</button></div>
+    </div>
+  </div>
+  ${note('Gap','Member is a raw numeric person id typed by hand, with no lookup on this screen — every other person picker in the app is a select.')}`;
+
+/* ---- Programs ---- */
+S['/admin/programs'] = () => `
+  <div class="pagehead"><div><h1>Programs</h1>
+    <p class="sub">A program is a group, a registration form and a schedule, set up together and reported on together.</p></div>
+    <div class="acts"><button class="btn primary">+ New Program</button></div></div>
+  <div class="gcards loose" style="margin-top:22px">
+    ${PROGRAMS.map(p=>`<div class="gcard" style="cursor:pointer" data-modal="program">
+      <h4>${esc(p[0])}</h4>
+      <p class="cnt" style="border:0;padding:0;margin-bottom:10px">${p[1]} registered · ${p[2]}${p[3]?' · '+p[3]:''}</p>
+      <span class="pill green">Attendance on</span> <span class="pill violet">Form published</span></div>`).join('')}
+  </div>
+  ${note('Modelling','A program’s identity <em>is</em> its group — the editor lives at the group’s id, and the only true delete is deleting the group from Groups. “+ New Program” actually sends you to <code>/admin/calendar/groups/new?returnTo=programs</code>.')}`;
+
+/* ---- Ask Chat ---- */
+S['/admin/ask-aaron'] = () => `
+  <h1>Ask Chat</h1>
+  <p class="sub">Your church assistant for Prairie Ridge Church — add members, schedule events, create groups, build forms, and answer questions about your data.</p>
+  <div style="height:20px"></div>
+  <div class="qa">
+    <button>👤 Add a new member</button><button>🤝 Create a new group</button>
+    <button>📅 Schedule a new event</button><button>📄 Create a new form</button></div>
+  <div class="chatwrap">
+    <div class="hist"><div class="hh"><b>History</b><span>+ New</span></div>
+      ${CHAT_HISTORY.map(h=>`<div class="hi"><b>${esc(h[0])}</b><span>${h[1]}</span></div>`).join('')}</div>
+    <div class="thread">
+      <div class="msg"><span class="av" style="background:var(--green-600)">AC</span>
+        <div class="bub">Hi! I'm your church assistant. I can add members, create groups, schedule events, build forms, look up your church data, and answer questions. Just tell me what you need!</div></div>
+      <div class="composer"><input type="text" placeholder="Ask Chat anything about your church...">
+        <button class="send">➤</button></div>
+    </div>
+  </div>
+  ${note('Naming drift','The nav, title and composer all say “Ask Chat”, but the route is <code>/admin/ask-aaron</code> and other screens still say “Aaron” by name — Settings → Aaron preferences, Workflows → “sequences Aaron runs on your behalf”.')}`;
+
+/* ---- Calendar ---- */
+function calCells(){
+  // September 2026 grid, starting Sunday Aug 30
+  const out=[];
+  for(let i=0;i<42;i++){
+    const offset = i-1;                       // cell 0 = Aug 30
+    const d = new Date(2026,7,30+i);
+    const dom = d.getDate(), mon = d.getMonth(), dow = d.getDay();
+    const evs = EVENTS.filter(e=>e.daily||e.dow===dow)
+      .sort((a,b)=>a.name.localeCompare(b.name))
+      .sort((a,b)=>({'8a':0,'12p':1,'3p':2,'5p':3,'8p':4})[a.time]-({'8a':0,'12p':1,'3p':2,'5p':3,'8p':4})[b.time]);
+    out.push(`<div class="cell ${mon!==8?'out':''}"><div class="dn">${dom}</div>
+      ${evs.map(e=>`<div class="ev" data-go="/admin/calendar/events/17"><span class="t">${e.time}</span><span class="n">${esc(e.name)}</span></div>`).join('')}</div>`);
+    if(i===41) break;
+  }
+  return out.join('');
+}
+S['/admin/calendar'] = () => `
+  <h1>Calendar</h1>
+  <div style="margin:18px 0 22px"><button class="btn primary" data-modal="event">+ New Event</button></div>
+  <div class="cal">
+    <div class="calbar">
+      <button class="calbtn">‹</button><button class="calbtn">›</button>
+      <button class="calbtn" style="background:var(--slate-100)">today</button>
+      <span class="mid">September 2026</span>
+      <span style="display:flex;gap:4px"><button class="calbtn on">month</button>
+        <button class="calbtn">week</button><button class="calbtn">list</button></span>
+    </div>
+    <div class="scroll"><div class="calgrid">
+      ${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="dow">${d}</div>`).join('')}
+      ${calCells()}
+    </div></div>
+    <div class="legend">
+      <span><i style="background:#3B82F6"></i>Scheduled</span><span><i style="background:var(--green-600)"></i>Open</span>
+      <span><i style="background:var(--red-600)"></i>Cancelled</span><span><i style="background:var(--slate-400)"></i>Completed</span></div>
+  </div>`;
+
+S['/admin/calendar/events/17'] = () => `
+  <button class="btn link" style="margin-bottom:14px" data-go="/admin/calendar">← Back to Calendar</button>
+  <div class="pagehead"><div><h1 style="font-size:26px">Sunday School</h1>
+    <div style="margin-top:8px;display:flex;gap:8px"><span class="pill green">OPEN</span><span class="pill amber">ATTENDANCE</span></div></div>
+    <div class="acts"><button class="btn outline sm">Edit</button><button class="btn outline sm danger">Delete</button></div></div>
+  ${tabbar([['Details','/admin/calendar/events/17'],['Attendance','/admin/calendar/events/17/attendance']],'/admin/calendar/events/17')}
+  <div class="card pad" style="margin-bottom:16px">
+    <div style="display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">
+      ${[['Start','Aug 9, 2026<br><span class="muted tiny">8:00 AM</span>'],['End','Aug 9, 2026<br><span class="muted tiny">9:00 AM</span>'],
+         ['Location','—'],['Capacity','—'],['Linked group','Sunday School']]
+        .map(([k,v])=>`<div><p class="seclabel" style="border:0;padding:0;margin:0 0 5px">${k}</p><p style="margin:0;font-size:14px">${v}</p></div>`).join('')}
+    </div>
+  </div>
+  <div class="card pad" style="margin-bottom:16px"><p class="seclabel" style="border:0;padding:0;margin:0">Description</p></div>
+  <div><p class="seclabel" style="border:0;padding:0;margin:0 0 4px">Repeats</p><p style="margin:0;font-size:14px">Daily</p></div>`;
+
+S['/admin/calendar/events/17/attendance'] = () => {
+  const rows=[];
+  for(let i=0;i<14;i++){
+    const d=new Date(2026,7,9+i);
+    const s=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    rows.push(`<div style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid var(--slate-200)">
+      <div><b style="font-size:14px">${s}</b><div class="muted tiny">8:00 AM – 9:00 AM</div></div>
+      <span style="margin-left:auto" class="muted tiny">2 not marked</span>
+      <button class="btn link">Mark present</button></div>`);
+  }
+  return `
+  <button class="btn link" style="margin-bottom:14px" data-go="/admin/calendar">← Back to Calendar</button>
+  <div class="pagehead"><div><h1 style="font-size:26px">Sunday School</h1>
+    <div style="margin-top:8px;display:flex;gap:8px"><span class="pill green">OPEN</span><span class="pill amber">ATTENDANCE</span></div></div>
+    <div class="acts"><button class="btn outline sm">Edit</button><button class="btn outline sm danger">Delete</button></div></div>
+  ${tabbar([['Details','/admin/calendar/events/17'],['Attendance','/admin/calendar/events/17/attendance']],'/admin/calendar/events/17/attendance')}
+  <p class="seclabel" style="border:0;padding:0">Past 12 and upcoming 12 occurrences. Click “Mark present” to open the attendance roster for that date.</p>
+  <div class="card" style="overflow:hidden">${rows.join('')}
+    <div style="padding:14px 20px;text-align:center" class="muted tiny">… list continues to Dec 12</div></div>
+  ${note('Bug','The header promises 24 occurrences but the page renders the entire recurrence series — roughly 125 rows, 9 Aug through 12 Dec, on this event. Truncated here for length.')}`;
+};
+
+/* ---- Reporting ---- */
+S['/admin/reporting'] = () => {
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const vals=[0,0,0,0,0,0,0,3020,0,0,0,0]; const max=3020;
+  return `
+  <h1>Reporting Dashboard</h1>
+  <p class="sub">At-a-glance health of the church</p>
+  <div style="height:22px"></div>
+  <div class="tiles">
+    ${[['104','Total Members'],['75','Active'],['16','Inactive'],['13','Pending'],['4','New (30 days)']]
+      .map(([v,k])=>`<div class="tile"><div class="v num">${v}</div><div class="k">${k}</div></div>`).join('')}
+  </div>
+  <div class="tiles" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+    <div class="tile"><div class="v num">$3,020</div><div class="k">YTD Giving · +0.0% vs. last year</div></div>
+    <div class="tile"><div class="v num">0</div><div class="k">Avg Sunday Attendance · No data yet</div></div>
+    <div class="tile"><div class="v num">104</div><div class="k">New Members YTD · +104 vs. last year</div></div>
+  </div>
+  <div class="card" style="margin:16px 0">
+    <div style="padding:16px 22px"><p class="cardtitle" style="margin:0">Forms Activity</p></div>
+    <div class="scroll"><table><thead><tr><th>Form</th><th class="r">Responses</th><th>Last submitted</th></tr></thead>
+      <tbody>${FORMS.map(f=>`<tr><td>${esc(f[0])}</td><td class="r num">0</td><td>--</td></tr>`).join('')}</tbody></table></div>
+  </div>
+  <div class="card pad">
+    <p class="cardtitle">Giving by Month</p>
+    <div class="scroll"><div style="min-width:560px">
+      <div class="bars">${vals.map(v=>`<div class="b"><div class="fill ${v?'':'zero'}" style="height:${v?Math.max(6,v/max*100):0}%"></div></div>`).join('')}</div>
+      <div class="barlabels">${months.map((m,i)=>`<div>${m}<b>$${vals[i].toLocaleString()}</b></div>`).join('')}</div>
+    </div></div>
+  </div>
+  ${note('Data note','The four status tiles sum exactly to 104, but “Avg Sunday Attendance” reads 0 / “No data yet” even with attendance tracking on for three events — no roster has ever been marked.')}`;
+};
+
+/* ---- Workflows ---- */
+S['/admin/workflows'] = () => `
+  <h1>Workflows</h1>
+  <p class="sub">Automated sequences Aaron runs on your behalf</p>
+  <div style="margin:16px 0 26px"><button class="btn primary" data-modal="workflow">+ New Workflow</button></div>
+  <p class="muted" style="font-size:14px">No workflows yet. Create one to get started.</p>
+  ${note('Polish','Trigger options render as raw enum constants (<code>NEW_PERSON</code>), unlike the Form status select next door. There is also no step editor — creation only defines the trigger.')}`;
+
+/* ---- Reminders ---- */
+S['/admin/tasks'] = () => `
+  <div class="pagehead"><h1>Reminders</h1>
+    <p class="sub" style="margin:10px 0 0">A short title, an assignee, and a recurring schedule.</p>
+    <div class="acts"><button class="btn primary" data-go="/admin/tasks/new">+ New task</button></div></div>
+  <div style="height:18px"></div>
+  ${tablewrap(['Name','Assigned to','Schedule','Next run','Status','Actions'],[
+    ['Weekly Reconciliation','Andrew Schneider','<span class="pill violet">Weekly</span>','Fri, Sep 25, 9:00 AM','<span class="status-ok">Active</span>',
+     '<button class="btn link">Pause</button> <button class="btn link" style="color:var(--blue-link)">Edit</button> <button class="btn link danger">Delete</button>'],
+    ['Publish volunteer schedule','Andrew Schneider','<span class="pill violet">Weekly</span>','Fri, Sep 25, 10:00 AM','<span class="status-ok">Active</span>',
+     '<button class="btn link">Pause</button> <button class="btn link" style="color:var(--blue-link)">Edit</button> <button class="btn link danger">Delete</button>'],
+  ],760)}
+  ${note('Naming drift','Three names for one object: the nav says “Reminders”, the route is <code>/admin/tasks</code>, the form says “New task”.')}`;
+
+S['/admin/tasks/new'] = () => `
+  <p class="route-chip" style="margin:0 0 10px">Reminders › New</p>
+  <div class="pagehead"><div><h1>New task</h1>
+    <p class="sub">A short title, who it's for, how often it fires, and at what time.</p></div>
+    <div class="acts"><button class="btn outline" data-go="/admin/tasks">Back</button></div></div>
+  <div class="card" style="max-width:400px;margin-top:22px">
+    <div style="padding:14px 22px;border-bottom:1px solid var(--slate-200)">
+      <p class="cardtitle" style="margin:0 0 2px">Schedule</p>
+      <p class="help" style="margin:0">What the task is and when it fires.</p></div>
+    <div style="padding:18px 22px;display:flex;flex-direction:column;gap:16px">
+      ${field('Name', text('Send usher signup form every Thursday'))}
+      ${field('Assigned to', sel([['','— pick a person —'],...MEMBERS.map(m=>m[0])],''),'Who gets the in-app reminder when this task fires.')}
+      ${field('Recurrence', sel(['Daily','Weekly','Monthly'],'Weekly'))}
+      ${field('Day of week', sel(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],'Monday'),'The day of the week this task fires on.')}
+      ${field('Time of day', `<input type="time">`)}
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:18px;max-width:400px;justify-content:flex-end">
+    <button class="btn ghost" data-go="/admin/tasks">Cancel</button><button class="btn primary">Save task</button></div>
+  ${note('Gap','“Day of week” stays visible when Recurrence is set to Daily or Monthly, where it means nothing.')}`;
+
+/* ---- Finances ---- */
+S['/admin/finances'] = () => {
+  const tab = state.tab || 'bank';
+  const tabs = `<div class="tabbar">${[['Bank','bank'],['Donations','donations'],['Budget','budget']]
+    .map(([l,t])=>`<a class="${t===tab?'on':''}" data-tab="${t}">${l}</a>`).join('')}</div>`;
+  let body='';
+  if(tab==='bank'){
+    body = `
+      <div class="tiles" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+        <div class="tile"><p class="seclabel" style="border:0;padding:0;margin:0 0 6px">Operating</p>
+          <div class="v num">$500,000.00</div><div class="k">checking</div></div>
+        <div></div><div></div></div>
+      <div class="tiles" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+        <div class="tile"><div class="v num pos">+$0.00</div><div class="k">MTD Income</div></div>
+        <div class="tile"><div class="v num neg">-$0.00</div><div class="k">MTD Expenses</div></div>
+        <div class="tile"><div class="v num pos">+$0.00</div><div class="k">Net Change (MTD)</div></div></div>
+      <div style="display:flex;gap:10px;align-items:center;margin:18px 0;flex-wrap:wrap">
+        <div style="max-width:170px">${sel(['All accounts','Operating'],'All accounts')}</div>
+        <span style="margin-left:auto;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn outline sm" data-modal="account">+ New Account</button>
+          <button class="btn outline sm">📥 Import CSV</button>
+          <button class="btn primary sm" data-modal="txn">+ New Transaction</button></span></div>
+      ${tablewrap(['Date','Description','Category','Amount','Status','Account'],
+        [['<span class="muted">No transactions yet.</span>','','','','','']],700)}`;
+  } else if(tab==='donations'){
+    body = `
+      <div class="tiles" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+        <div class="tile"><div class="v num">$3,020.00</div><div class="k">YTD Giving</div></div>
+        <div class="tile"><div class="v num">$0.00</div><div class="k">MTD Giving</div></div>
+        <div class="tile"><div class="v num">14</div><div class="k">Total Donors</div></div>
+        <div class="tile"><div class="v num">0</div><div class="k">Recurring Gifts</div></div></div>
+      <div style="display:flex;gap:10px;align-items:center;margin:18px 0;flex-wrap:wrap">
+        <div style="width:150px">${sel(['All Funds','General','Building Fund','Missions'],'All Funds')}</div>
+        <div style="width:150px">${sel(['All Sources','Check','Online','Cash','Credit Card','ACH'],'All Sources')}</div>
+        <div style="width:170px">${text('Search donor...')}</div>
+        <span style="margin-left:auto;display:flex;gap:10px">
+          <button class="btn outline sm" title="Bulk-import donations from a CSV file">📥 Import CSV</button>
+          <button class="btn primary sm" data-modal="donation">+ Record Donation</button></span></div>
+      ${tablewrap(['Donor','Date','Fund','Source','Amount','Batch','Status'],
+        DONATIONS.map(d=>[esc(d[0]),d[1],d[2],d[3],`<span class="num">${d[4]}</span>`,'--','<span class="muted">Unmatched</span>']),820)}
+      ${note('Gap','Every row reads “Unmatched” with no visible match / reconcile action, and the Batch select in Record Donation offers only “— No Batch —” with no way to create one.')}`;
+  } else {
+    body = `
+      <h2 style="font-size:22px;font-weight:700;margin:4px 0 14px">Budget · 2026</h2>
+      <div style="display:flex;gap:10px;margin-bottom:18px">
+        <button class="btn outline sm">📥 Import CSV</button>
+        <button class="btn primary sm" data-modal="budget">+ Add Line Item</button></div>
+      ${tablewrap(['Category','Account','Budgeted','Spent to date','Remaining','% used'],
+        [['<span class="muted">No budget lines yet.</span>','','','','','']],760)}
+      ${note('Gap','The table has an <strong>Account</strong> column, but the Add Line Item modal has no account field to fill it.')}`;
+  }
+  return `<h1>Finances</h1>${tabs}${body}`;
+};
+
+/* ---- Files ---- */
+S['/admin/files'] = () => `
+  <div class="pagehead"><div><h1>Files</h1>
+    <p class="sub">Store and organize your church documents. Files can be used across forms, workflows, and communication.</p></div>
+    <div class="acts"><button class="btn outline">+ Add folder</button><button class="btn primary">+ Upload file</button></div></div>
+  <div style="margin:20px 0 14px;max-width:280px"><input type="text" placeholder="🔍  Search files and folders"></div>
+  <p class="seclabel" style="border:0;padding:0">Folders</p>
+  <div class="card"><div class="empty">No folders yet. Click “+ Add folder” to create one.</div></div>
+  <p class="seclabel" style="border:0;padding:0;margin-top:22px">Files</p>
+  ${tablewrap(['Name','Modified','Size','Uploaded by','~Actions'],[[
+    '📄 &nbsp;prairie_ridge_school_roster_2026-27.xlsx','<span class="muted">Aug 27, 2026</span>','19.91 kB','Andrew Schneider',
+    '<span style="float:right">⬇ &nbsp;<span style="color:var(--red-600)">🗑</span></span>']],720)}
+  ${note('Not observable','“Can be used across forms, workflows, and communication” is claimed here, but no file picker appears in the Forms builder or the Workflow modal.')}`;
+
+/* ---- Campaigns ---- */
+S['/admin/campaigns'] = () => `
+  <h1>Campaigns</h1>
+  <p class="sub">Create fundraising campaigns your church can share.</p>
+  <div style="margin:18px 0"><button class="btn primary" data-go="/admin/campaigns/new">+ New campaign</button></div>
+  ${tablewrap(['Title','Type','~Goal','~Raised','Status','~'],[
+    ['<span class="linky">New HVAC</span>','<span class="muted">HVAC</span>','<span class="num">$85,000</span>','<span class="num">$0</span>',
+     '<span class="muted tiny" style="letter-spacing:.06em">ARCHIVED</span>','<span style="float:right"><button class="btn outline sm">Open</button></span>'],
+    ['<span class="linky" data-go="/admin/campaigns/1">New HVAC Fund</span>','<span class="muted">HVAC</span>','<span class="num">$850,000</span>','<span class="num">$0</span>',
+     '<span class="pill amber">DRAFT</span>','<span style="float:right"><button class="btn outline sm" data-go="/admin/campaigns/1">Open</button></span>'],
+  ],760)}`;
+
+S['/admin/campaigns/new'] = () => `
+  <h1>New campaign</h1>
+  <p class="sub">Tell members what you're raising money for. You can edit everything later.</p>
+  <div class="card pad" style="max-width:440px;margin-top:22px">
+    <p class="fl" style="margin-bottom:10px">What are you raising money for?</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px">
+      ${[['🏠','Roof'],['❄️','HVAC'],['🅿️','Parking'],['🧱','Other']]
+        .map(([i,l])=>`<button class="btn outline sm" style="flex:1;min-width:88px">${i} ${l}</button>`).join('')}</div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      ${field('Campaign title', text('e.g. Keep Us Warm: New HVAC Fund'))}
+      ${field('Fundraising goal ($)', `<input type="number" placeholder="85000">`)}
+      ${field('The need, in one or two sentences', area('Our 22-year-old furnace failed twice this winter...'))}
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:18px">
+    <button class="btn ghost" data-go="/admin/campaigns">Cancel</button>
+    <button class="btn primary">Create campaign</button></div>`;
+
+S['/admin/campaigns/1'] = () => `
+  <div class="pagehead"><div><h1 style="font-size:26px">New HVAC Fund</h1>
+    <div style="margin-top:8px"><span class="pill amber">DRAFT</span></div></div>
+    <div class="acts"><button class="btn outline sm">Edit</button><button class="btn primary sm">Publish</button>
+      <button class="btn outline sm">Archive</button><button class="btn outline sm danger">Delete</button></div></div>
+  <div class="tabbar">
+    <a class="on">Overview</a><a>Video</a><a>Grade</a><a>Share</a></div>
+  ${note('Not implemented','Video, Grade and Share are rendered but inert — all three are <code>href="#"</code> on both the draft and the archived campaign, while “Next steps” below tells you to upload a video.')}
+  <div style="max-width:560px">
+    <div class="card pad" style="margin-bottom:16px">
+      <p class="cardtitle">Campaign overview</p>
+      ${[['Project type','HVAC'],['Title','New HVAC Fund'],['Goal','$850,000'],['Raised so far','$0'],
+         ['Need','Our 22 year old furnace needs to be replaced'],['Public URL','<span class="muted">(publish to generate)</span>']]
+        .map(([k,v])=>`<div style="display:flex;gap:20px;padding:6px 0;font-size:14px"><span class="muted" style="width:120px;flex:none">${k}</span><span>${v}</span></div>`).join('')}
+    </div>
+    <div class="card pad" style="margin-bottom:16px">
+      <p class="cardtitle">Next steps</p>
+      <ol style="margin:0;padding-left:18px;font-size:14px;line-height:1.9">
+        <li>Upload your campaign video (60–180 seconds works best).</li>
+        <li>Confirm the persuasion checklist — pastor on camera, dollar goal stated, etc.</li>
+        <li>Publish to make your <code class="route-chip">/c/{slug}</code> page live.</li></ol>
+    </div>
+    <div class="card pad">
+      <div style="display:flex;align-items:baseline"><p class="cardtitle" style="margin:0">Member donors</p>
+        <span class="muted tiny" style="margin-left:auto">0 gifts · $0.00 from members</span></div>
+      <p class="muted" style="font-size:13.5px;margin:12px 0 0">No donations from logged-in members yet. Share the campaign with your members so they can give from their accounts and appear here.</p>
+    </div>
+  </div>`;
+
+/* ---- Settings ---- */
+S['/admin/settings'] = () => `
+  <h1>Church Profile</h1>
+  <p class="sub">Personalize ChurchPlannerPro for Prairie Ridge Church</p>
+  ${tabbar([['Church Profile','/admin/settings'],['Users','/admin/settings/users'],['IconCMO Export','/admin/settings/iconcmo-export']],'/admin/settings')}
+  <div style="max-width:420px;display:flex;flex-direction:column;gap:16px">
+    <div class="card pad"><p class="cardtitle">Church profile</p>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        ${field('Church name', `<input type="text" value="Prairie Ridge Church">`)}
+        ${field('Administrator name', `<input type="text" value="Andrew Schneider">`)}</div></div>
+    <div><button class="btn primary sm">Save Changes</button></div>
+    <div class="card pad"><p class="cardtitle">Email</p>
+      <div style="display:flex;align-items:center;background:var(--slate-50);border-radius:8px;padding:10px 14px;font-size:13.5px">
+        Gmail not connected<span class="muted tiny" style="margin-left:auto;font-weight:600">Disconnected</span></div></div>
+    <div class="card pad"><p class="cardtitle">Aaron preferences</p>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13.5px;padding:8px 0">
+        <span style="flex:1">Always ask before sending emails — Aaron will draft and wait for approval</span>
+        <input type="checkbox" checked style="accent-color:#2563EB;width:15px;height:15px"></div>
+      <div style="display:flex;align-items:flex-start;gap:12px;font-size:13.5px;padding:8px 0">
+        <span style="flex:1">Auto-update member profiles from form responses — Aaron will ask before each update</span>
+        <input type="checkbox" checked style="accent-color:#2563EB;width:15px;height:15px"></div></div>
+    <div><button class="btn primary sm">Save Preferences</button></div>
+    <div class="card pad"><p class="cardtitle">Donations — Stripe</p>
+      <p class="muted" style="font-size:13.5px;margin:0 0 14px">Connect Stripe to accept donations directly through your campaign pages. Money goes straight to your church's bank account.</p>
+      <button class="btn primary sm">Connect Stripe</button></div>
+  </div>`;
+
+S['/admin/settings/users'] = () => `
+  <h1>Users</h1>
+  <p class="sub">People who can log in and manage your church account.</p>
+  ${tabbar([['Church Profile','/admin/settings'],['Users','/admin/settings/users'],['IconCMO Export','/admin/settings/iconcmo-export']],'/admin/settings/users')}
+  <div style="max-width:540px">
+    <div class="card pad" style="display:flex;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap">
+      <div><p class="cardtitle" style="margin:0 0 3px">Invite a team member</p>
+        <p class="muted tiny" style="margin:0">Generate a secure invite link — share via email, text, or Slack.</p></div>
+      <button class="btn primary sm" style="margin-left:auto">+ Invite User</button></div>
+    ${tablewrap(['Name','Email','Role','Status',''], USERS.map(u=>[
+      esc(u[0]),`<span class="muted tiny">${esc(u[1])}</span>`,
+      `<span class="pill ${u[2]==='ADMIN'?'violet':u[2]==='STAFF'?'slate':'slate'}">${u[2]}</span>`,
+      `<span class="pill green">Active</span>`,
+      `<div style="text-align:right"><button class="btn link" style="display:block;margin-left:auto">${u[2]==='ADMIN'?'Make Staff':'Make Admin'}</button>
+       <button class="btn link danger" style="display:block;margin-left:auto">Deactivate</button></div>`]),620)}
+  </div>
+  ${note('Gap','There is no “Make Member” action — a MEMBER can be promoted to ADMIN but nothing demotes anyone back, and the only ADMIN can deactivate their own account.')}`;
+
+S['/admin/settings/iconcmo-export'] = () => `
+  <h1 style="font-size:28px">IconCMO → ChurchPlannerPro Export</h1>
+  <p class="sub">One-click way to move your member directory out of Icon Systems (IconCMO).</p>
+  ${tabbar([['Church Profile','/admin/settings'],['Users','/admin/settings/users'],['IconCMO Export','/admin/settings/iconcmo-export']],'/admin/settings/iconcmo-export')}
+  <div style="max-width:520px;display:flex;flex-direction:column;gap:16px">
+    <div class="card pad">
+      <p class="cardtitle">1. Drag this button to your bookmarks bar</p>
+      <p class="muted" style="font-size:13px;margin:0 0 14px">Make sure your browser's <b>Bookmarks Bar</b> is visible (Ctrl/Cmd + Shift + B in most browsers). Then drag the blue button below into it.</p>
+      <span style="display:inline-block;background:#1D4ED8;color:#fff;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;cursor:grab">🔖 Export to CPP</span>
+      <p class="muted tiny" style="margin:12px 0 0">Bookmarklet size: <b>16290 chars</b> (most browsers accept up to ~65,000 — well under the limit).</p>
+    </div>
+    <div class="card pad">
+      <p class="cardtitle">2. Use it</p>
+      <ol style="margin:0;padding-left:18px;font-size:13.5px;line-height:1.85">
+        <li>Sign into IconCMO at <code class="route-chip">https://www.iconsystemsinc.com/church-login/&lt;your-church-phone&gt;/</code></li>
+        <li>Click the <b>Export to CPP</b> bookmark in your bookmarks bar</li>
+        <li>A small progress panel pops up; then <code class="route-chip">iconcmo-members-YYYY-MM-DD.csv</code> downloads</li>
+        <li>Go to <b>People</b> in the sidebar and click the <b>↑ Import CSV</b> button (top-right of the People page) to upload that CSV</li></ol>
+    </div>
+    <div class="card pad">
+      <p class="cardtitle">What gets exported</p>
+      <ul style="margin:0;padding-left:18px;font-size:13.5px;line-height:1.8">
+        <li>All individuals in your IconCMO database</li>
+        <li>Household info (family name, address, phone) joined via <code class="route-chip">hseRecordCntr</code></li>
+        <li>Email (Personal → Work fallback), Phone (Mobile → Work → Household fallback)</li>
+        <li>Status mapped to ChurchPlannerPro's enum: <code class="route-chip">Active/Active NonMbr → ACTIVE</code>, <code class="route-chip">Inactive/Delete → INACTIVE</code>, <code class="route-chip">Friend/Prospect/Visitor → PENDING</code></li>
+        <li>Birth, baptism, confirmation, marriage, membership-add dates</li></ul>
+    </div>
+    <div class="card pad">
+      <p class="cardtitle">What does NOT get exported</p>
+      <ul style="margin:0;padding-left:18px;font-size:13.5px;line-height:1.8">
+        <li>First Communion dates (not exposed by IconCMO's API)</li>
+        <li>Photos, attendance, events, donations, skills/ministries</li></ul>
+    </div>
+  </div>`;
+
+/* ---- Vendors ---- */
+S['/admin/vendors'] = () => `
+  <h1>Vendors</h1>
+  <div style="margin:16px 0 18px"><button class="btn primary" data-modal="vendor">+ Add Vendor</button></div>
+  <div style="display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap">
+    <div style="width:200px">${text('Search by name or specialty...')}</div>
+    <div style="display:flex;gap:4px">
+      <button class="calbtn on">All</button><button class="calbtn">Active</button><button class="calbtn">Inactive</button></div></div>
+  <div class="card"><div class="empty">No vendors yet. Add your first vendor to get started.</div></div>
+  ${note('Product note','Vendors and Campaigns both key off project types (HVAC, Roof, Parking) but nothing links a campaign to the vendor who would do the work.')}`;
+
+/* ---- Integrations ---- */
+S['/admin/integrations'] = () => `
+  <h1>Integrations</h1>
+  <p class="sub">Connected services that sync data into ChurchPlannerPro</p>
+  <div style="height:20px"></div>
+  <div class="gcards">${INTEGRATIONS.map(i=>`
+    <div class="gcard"><div style="display:flex;align-items:baseline;gap:10px">
+      <h4>${i[0]}</h4><span class="muted tiny" style="margin-left:auto;font-weight:600">Disconnected</span></div>
+      <p class="muted" style="font-size:13px;margin:8px 0 14px">${i[1]}</p>
+      <button class="btn ${i[2]?'primary':'outline'} sm" ${i[0]==='PLANNING_CENTER'?'data-go="/admin/integrations/planning-center"':''}>Manage</button></div>`).join('')}</div>
+  ${note('Inconsistency','Card keys render as raw enum names (<code>PLANNING_CENTER</code>, <code>SIGNUP_GENIUS</code>), and the sidebar’s “Integrations” item carries a <code>Soon</code> badge while linking to the working Planning Center page — this built-out index sits under the unlabelled child link instead.')}`;
+
+S['/admin/integrations/planning-center'] = () => `
+  <h1>Planning Center</h1>
+  <p class="sub">Connect your Planning Center account to sync People and Households into ChurchPlannerPro.</p>
+  <div style="height:20px"></div>
+  <div class="card pad" style="margin-bottom:16px">
+    <div style="display:flex;align-items:baseline;gap:10px">
+      <p class="cardtitle" style="margin:0">Planning Center</p>
+      <span class="muted tiny" style="margin-left:auto;font-weight:600">Disconnected</span></div>
+    <p class="muted" style="font-size:13px;margin:8px 0 14px">Church management. Syncs people and households from your Planning Center org.</p>
+    <p style="font-size:13.5px;margin:0 0 12px">You haven't connected Planning Center yet.</p>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <label class="chk" style="margin:0"><input type="checkbox" checked style="accent-color:#2563EB"> Anonymize PII for people who haven't opted into directory sharing</label>
+      <button class="btn primary sm">Connect Planning Center</button></div>
+  </div>
+  <div class="card pad">
+    <p class="cardtitle">What gets synced</p>
+    <ul style="margin:0 0 12px;padding-left:18px;font-size:13.5px;line-height:1.8">
+      <li><b>People</b> — name, email, phone, status (active/inactive)</li>
+      <li><b>Households</b> — family records linked via the household membership</li></ul>
+    <p class="muted" style="font-size:13px;margin:0">Future phases will add Giving, Check-Ins, and webhooks. PII is anonymized for people who have not consented to directory sharing.</p>
+  </div>`;
+
+/* =========================== MODALS =========================== */
+const M = {
+  member: () => ({title:'Add Member', body:`
+    <div class="fgrid">
+      ${field('First Name', text(''))}${field('Last Name', text(''))}
+      ${field('Email', `<input type="email">`)}${field('Phone', `<input type="tel">`)}
+      ${field('Date of Birth', date())}${field('Family', sel([['','-- No family --'],...FAMILY_NAMES],''))}
+      <div class="full">${field('Status', sel([['ACTIVE','active'],['INACTIVE','inactive'],['PENDING','pending']],'ACTIVE'))}</div>
+      <div class="full">${field('Skills &amp; Interests', text('Comma-separated: Painting, Sunday school'))}</div>
+      <div class="full">${field('Address', area(''))}</div>
+    </div>
+    <p class="subhead">Key Dates</p>
+    <div class="fgrid">
+      ${field('Membership Date', date())}${field('Baptism Date', date())}
+      ${field('First Communion', date())}${field('Confirmation', date())}
+      ${field('Marriage', date())}<div></div>
+      <div class="full">${field('Notes', area(''))}</div>
+    </div>`, foot:`<button class="btn ghost" data-close>Cancel</button><button class="btn primary" data-close>Save</button>`}),
+
+  import: () => ({title:'Import Members', body:`
+    <p style="font-size:13.5px;margin:0;color:var(--slate-600)">Upload a CSV file to bulk-import members. Columns will be auto-detected and you can adjust the mapping before importing.</p>
+    <div class="callout">🍀 <b>Coming from IconCMO / Icon Systems?</b> Grab the export bookmarklet from <span class="linky">Settings → IconCMO Export</span> first — it pulls your member list into the right CSV format while you're still logged into IconCMO.</div>
+    <div class="drop"><span class="big">☁️</span>Drop your CSV here or click to browse<br><span class="tiny">No file chosen</span></div>
+    <div style="display:flex;gap:18px"><span class="linky tiny">↓ Try sample CSV</span><span class="linky tiny">↓ Download template</span></div>
+    <div class="note" style="display:none"><b>Sample columns</b>First Name, Last Name, Email, Phone, Date of Birth, Status, Family Name, Address, Membership Date, Baptism Date, First Communion Date, Confirmation Date, Marriage Date, Skills, Notes</div>`,
+    foot:`<button class="btn ghost" data-close>Cancel</button><button class="btn primary" data-close>Continue →</button>`}),
+
+  form: () => ({title:'New Form', body:`
+    ${field('Name', text(''))}
+    ${field('Description', area(''))}
+    ${field('Status', sel([['DRAFT','Draft'],['ACTIVE','Active'],['ARCHIVED','Archived']],'DRAFT'))}
+    ${field('On submit, add the person to a group (optional)', sel([['',"— Don't add to a group —"],...GROUPS.map(g=>g[0])],''),
+      'Submissions are added to the chosen group when they fill out this form. Best for registration/sign-up forms.')}`,
+    foot:`<button class="btn ghost" data-close>Cancel</button><button class="btn primary" data-close>Save</button>`}),
+
+  group: () => ({title:'New Group', body:`
+    ${field('Group Name', text(''))}${field('Description', area(''))}${field('Leader', text('Optional'))}`,
+    foot:`<button class="btn ghost" data-close>Cancel</button><button class="btn primary" data-close>Create Group</button>`}),
+
+  gmembers: () => ({title:'Group Members', body:`
+    <div class="tablewrap"><table style="min-width:0">
+      <thead><tr><th>Name</th><th>Role</th></tr></thead>
+      <tbody><tr><td>Jeb Erickson</td><td>Member</td></tr><tr><td>Kevin Holm</td><td>Member</td></tr></tbody></table></div>
+    <div style="display:flex;gap:10px;align-items:flex-end">
+      <div style="flex:1">${field('Person', sel([['','Select a person...'],...MEMBERS.map(m=>m[0])],''))}</div>
+      <div style="width:120px">${field('Role', sel(['Member','Leader'],'Member'))}</div>
+      <button class="btn primary sm">Add Member</button></div>
+    <div class="note"><b>Gap</b>The member rows have no remove control.</div>`,
+    foot:`<button class="btn outline" data-close>Close</button>`}),
+
+  shift: () => ({title:'Add a shift', body:`
+    <p class="help" style="margin:0">One shift = one position. Want 2 nursery volunteers on the same day? Add the shift twice.</p>
+    ${field('Group', sel(VOL_ROWS.map(v=>v[0]),'Communion Server'))}
+    ${field('Date', `<input type="date" value="2026-09-13">`)}
+    <div class="fgrid">${field('Start', `<input type="time" value="09:00">`)}${field('End', `<input type="time" value="10:00">`)}</div>
+    ${field('Occasion', `<input type="text" value="Sunday service">`)}
+    ${field('Repeat', sel([['NONE','Does not repeat'],['WEEKLY','Weekly'],['BIWEEKLY','Every other week'],['MONTHLY','Monthly']],'WEEKLY'))}
+    ${field('Weeks ahead', sel([['4','4 weeks'],['8','8 weeks'],['13','13 weeks (a quarter)']],'8'))}`,
+    foot:`<button class="btn ghost" data-close>Cancel</button><button class="btn primary" data-close>Save shift</button><button class="btn outline" data-close>Save &amp; add another</button>`}),
+
+  shiftedit: () => ({title:'Edit shift', body:`
+    ${field('Group', sel(VOL_ROWS.map(v=>v[0]),'Communion Server'))}
+    ${field('Date', `<input type="date" value="2026-09-13">`)}
+    <div class="fgrid">${field('Start', `<input type="time" value="09:00">`)}${field('End', `<input type="time" value="10:00">`)}</div>
+    ${field('Occasion', `<input type="text" value="Sunday service">`)}
+    ${field('Note', area(''))}
+    <label class="chk"><input type="checkbox" checked> Open for members to claim</label>
+    <div class="card pad" style="background:var(--slate-50)">
+      <p class="fl" style="margin-bottom:8px">Apply changes to</p>
+      <label class="chk"><input type="radio" name="ap" checked> This shift only</label>
+      <label class="chk"><input type="radio" name="ap"> This and following shifts</label>
+      <label class="chk"><input type="radio" name="ap"> All shifts in this series</label></div>
+    <p class="subhead">Assigned to</p>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div style="flex:1">${sel([['','— pick a person —'],...MEMBERS.map(m=>m[0])],'')}</div>
+      <button class="btn outline sm">Assign</button></div>`,
+    foot:`<div style="width:100%">
+      <div style="display:flex;justify-content:flex-end;gap:10px">
+        <button class="btn ghost" data-close>Cancel</button><button class="btn primary" data-close>Save changes</button></div>
+      <label class="chk" style="margin:16px 0 12px"><input type="checkbox" checked> Notify assigned volunteer(s)</label>
+      <button class="btn sm" style="background:var(--red-600);color:#fff" data-close>Delete this shift</button>
+      <div class="note"><b>UX note</b>The notify toggle and the destructive delete both sit <em>below</em> Save changes.</div>
+    </div>`}),
+
+  event: () => ({title:'New Event', wide:true, body:`
+    ${field('Title', text(''))}${field('Description', area(''))}
+    <div class="fgrid">${field('Start Date &amp; Time', `<input type="datetime-local">`)}${field('End Date &amp; Time', `<input type="datetime-local">`)}</div>
+    ${field('Time zone <span class="muted" style="font-weight:400">(the local zone of the times above)</span>',
+      sel(['UTC','America/New_York (Eastern)','America/Chicago (Central)','America/Denver (Mountain)','America/Phoenix (Arizona)','America/Los_Angeles (Pacific)','America/Anchorage (Alaska)','Pacific/Honolulu (Hawaii)','Europe/London','Europe/Berlin'],'UTC'))}
+    <div class="fgrid">${field('Location', text(''))}${field('Capacity', text(''))}</div>
+    <label class="chk"><input type="checkbox"> Repeat</label>
+    ${field('Group (optional)', sel([['','— Not linked to a group —'],...GROUPS.map(g=>g[0])],''),
+      "If linked, this event shows up on the group's program and is the basis for member self check-in.")}
+    <div><label class="chk"><input type="checkbox"> Track attendance</label>
+      <p class="help">When on, the Attendance tab appears on the event detail and members get a "We're here" button during the meeting window.</p></div>`,
+    foot:`<button class="btn ghost" data-close>Cancel</button><button class="btn primary" data-close>Save</button>`}),
+
+  program: () => ({title:'Edit Program: Confirmation Class', body:`
+    <div><p class="fl">Registration form</p>
+      <p class="help" style="margin:0 0 10px">Choose a form that registers people into this program. Leave blank to unlink.</p>
+      ${field('Form', sel([['','— No form linked —'],...FORMS.map(f=>f[0]+' (ACTIVE)')],'Confirmation Class (ACTIVE)'))}
+      <div style="margin-top:10px"><button class="btn outline sm">Save form link</button></div></div>
+    <div><p class="fl">Schedule</p>
+      <p class="help" style="margin:0 0 10px">Choose an existing event, or create a new one that will be attached to this program automatically.</p>
+      ${field('Existing event', sel([['','— No schedule linked —'],'Confirmation Class — Aug 26, 5:00 PM','Lunch Bunch — Aug 13, 12:00 PM','Grief Group — Aug 10, 3:00 PM','Worship — Aug 9, 8:00 AM','Bible study — Aug 8, 8:00 AM'],'Confirmation Class — Aug 26, 5:00 PM'))}
+      <div style="margin-top:10px"><button class="btn outline sm">Save schedule link</button></div>
+      <div style="margin-top:10px;background:var(--slate-50);border-radius:8px;padding:10px 12px;font-size:13px;font-weight:600;cursor:pointer">▸ + Create new event for this program</div></div>
+    <div><p class="fl">Upcoming check-ins</p>
+      <p class="help" style="margin:0 0 10px">The next few occurrences of the linked schedule and how many people have registered for each.</p>
+      ${['Saturday, September 19, 5:00 PM','Sunday, September 20, 5:00 PM','Monday, September 21, 5:00 PM','Tuesday, September 22, 5:00 PM']
+        .map(d=>`<div style="display:flex;padding:7px 4px;font-size:13px"><span>${d}</span><b style="margin-left:auto">0 registered</b></div>`).join('')}</div>
+    <div style="border-top:1px solid var(--slate-200);padding-top:16px">
+      <p class="fl" style="color:var(--red-600)">Delete program</p>
+      <p class="help" style="margin:0 0 10px">Removes this program from the Programs tab by unlinking the registration form and schedule. The underlying group is preserved — you can re-link from this modal, or hard-delete the group from the Groups tab if you want the full cascade.</p>
+      <button class="btn sm" style="background:var(--red-600);color:#fff">Delete program</button></div>`,
+    foot:`<button class="btn link" style="color:var(--blue-link);text-decoration:underline" data-close>Done</button>`}),
+
+  workflow: () => ({title:'New Workflow', body:`
+    ${field('Name', text(''))}${field('Description', area(''))}
+    ${field('Trigger', sel(['MANUAL','NEW_PERSON','FORM_SUBMISSION'],'MANUAL'))}
+    ${field('Trigger Form (optional)', sel([['','— No trigger form —'],...FORMS.map(f=>f[0])],''))}`,
+    foot:`<button class="btn ghost" data-close>Cancel</button><button class="btn primary" data-close>Create Workflow</button>`}),
+
+  account: () => ({title:'Add Bank Account', body:`
+    ${field('Account Name', text('e.g. Operating Checking'))}
+    ${field('Account Type', sel(['Checking','Savings','Money Market'],'Checking'))}
+    ${field('Starting Balance', `<input type="number" value="0">`)}`,
+    foot:`<button class="btn ghost" data-close>Cancel</button><button class="btn primary" data-close>Add Account</button>`}),
+
+  txn: () => ({title:'Record Transaction', body:`
+    <div class="fgrid">${field('Type', sel(['Deposit','Withdrawal','Transfer'],'Deposit'))}
+      ${field('Bank Account', sel([['','-- Choose an account --'],'Operating'],''))}</div>
+    ${field('Date', date())}${field('Description', text(''))}
+    <div class="fgrid">${field('Category', text(''))}${field('Amount', `<input type="number">`)}</div>
+    ${field('Notes', area(''))}`,
+    foot:`<button class="btn ghost" data-close>Cancel</button><button class="btn primary" data-close>Save</button>`}),
+
+  donation: () => ({title:'Record Donation', body:`
+    ${field('Donor', sel([['','-- Anonymous --'],...MEMBERS.map(m=>m[0])],''))}
+    <div class="fgrid">${field('Amount', `<input type="number" placeholder="0.00">`)}${field('Date', date())}</div>
+    ${field('Fund', sel(['General','Building Fund','Missions','Youth Ministry','Benevolence'],'General'))}
+    ${field('Source', sel(['Check','Online','Cash','Credit Card','ACH'],'Check'))}
+    ${field('Batch', sel([['','-- No Batch --']],''))}
+    ${field('Notes', area(''))}`,
+    foot:`<button class="btn ghost" data-close>Cancel</button><button class="btn primary" data-close>Record</button>`}),
+
+  budget: () => ({title:'Add Budget Line Item', body:`
+    ${field('Category', text(''))}
+    <div class="fgrid">${field('Budgeted Amount', `<input type="number">`)}${field('Year', `<input type="number" value="2026">`)}</div>
+    ${field('Notes', area(''))}
+    <div class="note"><b>Gap</b>No Account field, though the budget table has an Account column.</div>`,
+    foot:`<button class="btn ghost" data-close>Cancel</button><button class="btn primary" data-close>Add Line Item</button>`}),
+
+  vendor: () => ({title:'Add Vendor', body:`
+    ${field('Company Name', text('Vendor company name'))}
+    ${field('Status', sel(['Active','Inactive'],'Active'))}
+    ${field('Specialty', text('e.g. HVAC, Electrical, Plumbing'))}
+    ${field('Contact Name', text('Primary contact'))}
+    <div class="fgrid">${field('Phone', text('555-000-0000'))}${field('Email', text('contact@vendor.com'))}</div>`,
+    foot:`<button class="btn ghost" data-close>Cancel</button><button class="btn primary" data-close>Add Vendor</button>`}),
+};
+
+function openModal(name){
+  const m = M[name]; if(!m) return;
+  const d = m();
+  const ov = $('#overlay');
+  ov.className='overlay';
+  ov.innerHTML = `<div class="modal${d.wide?' wide':''}" role="dialog" aria-modal="true" aria-label="${esc(d.title)}">
+    <div class="mh"><h3>${d.title}</h3><button data-close aria-label="Close">×</button></div>
+    <div class="mb">${d.body}</div><div class="mf">${d.foot}</div></div>`;
+  ov.hidden = false;
+}
+function closeModal(){ const ov=$('#overlay'); ov.hidden=true; ov.innerHTML=''; }
+
+/* =========================== render =========================== */
+function render(){
+  renderNav();
+  $('#ptitle').textContent = titleFor(state.route);
+  $('#urlbar').textContent = 'churchplannerpro.com' + state.route +
+    (state.route==='/admin/finances' && state.tab && state.tab!=='bank' ? '?tab='+state.tab : '');
+  const fn = S[state.route];
+  $('#screen').innerHTML = fn ? fn() : `<h1>${titleFor(state.route)}</h1><p class="sub">Screen not captured.</p>`;
+}
+
+document.addEventListener('click', e => {
+  const close = e.target.closest('[data-close]');
+  if(close){ closeModal(); return; }
+  if(e.target.id==='overlay'){ closeModal(); return; }
+  const mod = e.target.closest('[data-modal]');
+  if(mod){ openModal(mod.dataset.modal); return; }
+  const tab = e.target.closest('[data-tab]');
+  if(tab){ state.tab = tab.dataset.tab; render(); return; }
+  const g = e.target.closest('[data-go]');
+  if(g){ state.tab=null; go(g.dataset.go); return; }
+  const row = e.target.closest('[data-m]');
+  if(row){ state.member = +row.dataset.m; render(); return; }
+  if(e.target.id==='hamb'){ $('#side').classList.toggle('open'); }
+});
+
+document.addEventListener('input', e => {
+  if(e.target.id==='msearch'){
+    const q = e.target.value.toLowerCase();
+    [...document.querySelectorAll('#mrows .prow')].forEach(r=>{
+      r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  }
+});
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+$('#ntog').addEventListener('click', e => {
+  const on = document.body.classList.toggle('notes');
+  e.currentTarget.setAttribute('aria-pressed', on ? 'true':'false');
+});
+
+render();
+</script>
+
+</body>
+</html>
