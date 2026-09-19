@@ -786,8 +786,8 @@ p+p{margin-top:18px;}
 /* ---------- Pricing (§7) ---------- */
 .pricing{display:flex;justify-content:center;margin-top:48px;}
 .pricing-card{
-  width:100%;max-width:380px;background:var(--card);
-  border:1px solid var(--line);border-radius:var(--r-card);padding:32px;
+  width:100%;max-width:720px;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--r-card);padding:36px 40px;
 }
 /* The offer has a shelf life, so it lives in one removable element. Deleting
    this pill must leave the card correct. */
@@ -801,19 +801,23 @@ p+p{margin-top:18px;}
 .price-cents{font-family:var(--display);font-size:22px;font-weight:700;line-height:1.05;letter-spacing:-.02em;}
 .price-per{align-self:flex-end;margin-left:6px;font-size:14px;color:var(--muted);line-height:1.6;}
 .pricing-card>p{margin-top:14px;font-size:16px;line-height:26px;}
-.pricing-included{margin-top:24px;border-top:1px solid var(--line);}
+/* Ten lines of what's included, paired off so the card stays roughly square
+   rather than running down the page. One column once the card narrows. */
+.pricing-included{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:0 28px;margin-top:24px;
+}
 .pricing-included li{
   display:flex;align-items:center;justify-content:space-between;gap:14px;
   padding:13px 0;border-bottom:1px solid var(--line);
   font-size:15px;font-weight:600;color:var(--ink);
 }
 .pricing-tick{color:var(--green);font-weight:700;}
-.pricing-notes{margin-top:20px;display:flex;flex-direction:column;gap:10px;}
-.pricing-notes li{display:flex;gap:11px;font-size:15px;line-height:23px;}
 .pricing-card .btn--green{width:100%;margin-top:24px;}
 .pricing-reassure{margin-top:14px;font-size:13.5px;line-height:20px;color:var(--muted);text-align:center;}
 @media (max-width:767px){
   .pricing-card{max-width:none;padding:24px 20px;}
+  .pricing-included{grid-template-columns:1fr;}
   .price-dollars{font-size:42px;}
 }
 
@@ -1388,16 +1392,16 @@ p+p{margin-top:18px;}
         </p>
         <p>One price for the whole platform. Not per user, not per module, and not a starter tier &mdash; every church on ChurchPlannerPro gets all of it.</p>
         <ul class="pricing-included">
-          <li>Data &amp; integrations <span class="pricing-tick" aria-hidden="true">&#10003;</span></li>
-          <li>Volunteers, groups &amp; facilities <span class="pricing-tick" aria-hidden="true">&#10003;</span></li>
-          <li>Giving &amp; reconciliation <span class="pricing-tick" aria-hidden="true">&#10003;</span></li>
-          <li>Sunday school &amp; sacraments <span class="pricing-tick" aria-hidden="true">&#10003;</span></li>
-        </ul>
-        <ul class="pricing-notes">
-          <li><span class="pricing-tick" aria-hidden="true">&#10003;</span><span>Two-way sync with IconCMO, Planning Center, Stripe</span></li>
-          <li><span class="pricing-tick" aria-hidden="true">&#10003;</span><span>Data health check on every import</span></li>
-          <li><span class="pricing-tick" aria-hidden="true">&#10003;</span><span>Unlimited staff and volunteer logins</span></li>
-          <li><span class="pricing-tick" aria-hidden="true">&#10003;</span><span>No setup fee and no annual contract</span></li>
+          <li>Member management <span class="pricing-tick" aria-hidden="true">&#10003;</span></li>
+          <li>Volunteer scheduling <span class="pricing-tick" aria-hidden="true">&#10003;</span></li>
+          <li>Programs &amp; registration <span class="pricing-tick" aria-hidden="true">&#10003;</span></li>
+          <li>Giving &amp; financials <span class="pricing-tick" aria-hidden="true">&#10003;</span></li>
+          <li>Email &amp; communication <span class="pricing-tick" aria-hidden="true">&#10003;</span></li>
+          <li>Forms &amp; workflows <span class="pricing-tick" aria-hidden="true">&#10003;</span></li>
+          <li>Facilities &amp; events <span class="pricing-tick" aria-hidden="true">&#10003;</span></li>
+          <li>Pastoral care <span class="pricing-tick" aria-hidden="true">&#10003;</span></li>
+          <li>Integrations &amp; data sync <span class="pricing-tick" aria-hidden="true">&#10003;</span></li>
+          <li>Implementation support <span class="pricing-tick" aria-hidden="true">&#10003;</span></li>
         </ul>
         <a class="btn btn--green" href="https://churchplannerpro.com/signup">Sign up</a>
         <p class="pricing-reassure">No card required. Invite only for now &mdash; email for a code.</p>
