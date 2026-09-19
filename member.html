@@ -1,1 +1,1053 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); color-scheme: light; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>ChurchPlannerPro Member App</title>
+<style>
+  /* ============================================================
+     REPLICA CHROME  (prefix rx-) — not part of the real product
+     ============================================================ */
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: #0f172a;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .rx-bar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 8px 16px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 12px;
+    border-bottom: 1px solid #1e293b;
+  }
+  .rx-bar-title { font-weight: 700; color: #fff; letter-spacing: -0.01em; font-size: 12.5px; }
+  .rx-tag {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    background: #12603A; color: #d1fae5; padding: 2px 7px; border-radius: 999px;
+  }
+  .rx-route {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11.5px; color: #94a3b8; background: #1e293b;
+    padding: 3px 8px; border-radius: 5px; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+  }
+  .rx-spacer { flex: 1 1 auto; }
+  .rx-controls { display: flex; gap: 6px; flex-shrink: 0; }
+  .rx-btn {
+    font: inherit; font-size: 11.5px; font-weight: 600;
+    background: #1e293b; color: #cbd5e1; border: 1px solid #334155;
+    padding: 4px 10px; border-radius: 6px; cursor: pointer;
+  }
+  .rx-btn:hover { background: #334155; color: #fff; }
+  .rx-btn[aria-pressed="true"] { background: #12603A; border-color: #15803d; color: #ecfdf5; }
+  .rx-btn:focus-visible, .rx-notes a:focus-visible { outline: 2px solid #4ade80; outline-offset: 2px; }
 
+  .rx-stage {
+    padding: 0;
+    background: #0f172a;
+  }
+  .rx-frame {
+    background: #f8fafc;
+    margin: 0 auto;
+    min-height: calc(100vh - 42px);
+    transition: max-width 0.25s ease;
+  }
+  body[data-view="mobile"] .rx-stage { padding: 20px 16px 40px; }
+  body[data-view="mobile"] .rx-frame { min-height: 70vh; }
+  body[data-view="mobile"] .rx-frame {
+    max-width: 390px;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+    container-type: inline-size;
+  }
+
+  .rx-notes {
+    display: none;
+    background: #0b1220;
+    border-top: 1px solid #1e293b;
+    color: #94a3b8;
+    font-size: 12.5px;
+    line-height: 1.55;
+    padding: 16px;
+  }
+  body[data-notes="on"] .rx-notes { display: block; }
+  .rx-notes-inner { max-width: 960px; margin: 0 auto; }
+  .rx-notes h3 {
+    margin: 0 0 8px; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #64748b; font-weight: 700;
+  }
+  .rx-notes ul { margin: 0; padding-left: 18px; }
+  .rx-notes li { margin-bottom: 5px; }
+  .rx-notes code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11.5px; color: #86efac; background: #142032; padding: 1px 5px; border-radius: 4px;
+  }
+  .rx-notes strong { color: #e2e8f0; }
+
+  /* ============================================================
+     PRODUCT STYLES — transcribed from member.css + page styles
+     on churchplannerpro.com (captured 2026-09-19)
+     ============================================================ */
+  .app {
+    --color-surface: #ffffff;
+    --color-bg: #f8fafc;
+    --color-border: #e2e8f0;
+    --color-text: #1e293b;
+    --color-text-muted: #64748b;
+    --color-primary: #12603A;
+    --color-primary-hover: #0F5231;
+    --color-primary-soft: #f0fdf4;
+    --color-danger: #dc2626;
+    --color-danger-soft: #fef2f2;
+    --color-success: #16a34a;
+    --color-success-soft: #f0fdf4;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+    --radius: 10px;
+    --radius-sm: 6px;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.5;
+    font-size: 16px;
+  }
+
+  /* --- nav --- */
+  .member-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.875rem 1.5rem;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  }
+  .member-nav-brand { font-weight: 700; font-size: 1.05rem; color: var(--color-primary); letter-spacing: -0.01em; }
+  .member-nav-links { display: flex; gap: 1.25rem; flex: 1; margin-left: 2rem; }
+  .member-nav-links a {
+    color: var(--color-text-muted); text-decoration: none; font-weight: 500; font-size: 0.95rem;
+    padding: 0.375rem 0.5rem; border-radius: var(--radius-sm); transition: color .15s, background .15s;
+    white-space: nowrap;
+  }
+  .member-nav-links a:hover { color: var(--color-text); background: var(--color-bg); }
+  .member-nav-links a.active { color: var(--color-primary); background: var(--color-primary-soft); }
+  .member-nav-user {
+    display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem;
+    color: var(--color-text-muted); white-space: nowrap; flex-shrink: 0;
+  }
+  .nav-badge {
+    display: inline-block; min-width: 18px; padding: 1px 6px; border-radius: 9px;
+    background: #dc2626; color: #fff; font-size: 0.7rem; font-weight: 700;
+    text-align: center; line-height: 1.2;
+  }
+  .btn-link {
+    background: none; border: none; color: var(--color-primary); cursor: pointer;
+    font-family: inherit; font-size: 0.9rem; font-weight: 500;
+    padding: 0.25rem 0.5rem; border-radius: var(--radius-sm);
+  }
+  .btn-link:hover { background: var(--color-primary-soft); }
+
+  /* --- page shell --- */
+  .member-main { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+  .page-header { margin-bottom: 2rem; }
+  .page-header h1, .page-title {
+    margin: 0 0 0.25rem; font-size: 1.875rem; font-weight: 700; letter-spacing: -0.02em;
+  }
+  .page-subtitle { margin: 0; color: var(--color-text-muted); font-size: 1rem; }
+  .page-header-with-action {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 1rem; margin-bottom: 2rem;
+  }
+  .section-label {
+    font-size: 12px; font-weight: 600; color: var(--color-text-muted);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;
+  }
+
+  /* --- cards --- */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; align-items: start; }
+  .card {
+    background: var(--color-surface); border: 1px solid var(--color-border);
+    border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow-sm);
+  }
+  .card h2 { margin: 0 0 1rem; font-size: 1.125rem; font-weight: 600; color: var(--color-text); }
+  .card-footer-link { margin: 1rem 0 0; font-size: 0.9rem; }
+  .card-footer-link a { color: var(--color-primary); text-decoration: none; font-weight: 500; }
+  .card-footer-link a:hover { text-decoration: underline; }
+  .empty-state { color: var(--color-text-muted); font-size: 0.95rem; margin: 0; padding: 0.5rem 0; }
+
+  /* --- event / form lists --- */
+  .event-list, .form-list, .campaign-list { list-style: none; margin: 0; padding: 0; }
+  .event-list li, .form-list li, .campaign-list li { padding: 0.75rem 0; border-bottom: 1px solid var(--color-border); }
+  .event-list li:last-child, .form-list li:last-child, .campaign-list li:last-child { border-bottom: none; }
+  .event-title { font-weight: 600; color: var(--color-text); margin-bottom: 0.125rem; }
+  .event-meta { font-size: 0.875rem; color: var(--color-primary); font-weight: 500; }
+  .event-location { font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.125rem; }
+  .event-description { font-size: 0.9rem; color: var(--color-text-muted); margin-top: 0.375rem; }
+  .form-list li { font-size: 0.95rem; }
+  .form-list a { color: var(--color-primary); text-decoration: none; font-weight: 500; }
+  .form-list a:hover { text-decoration: underline; }
+
+  /* --- forms --- */
+  .form-field { margin-bottom: 1.25rem; }
+  .form-field label { display: block; font-weight: 500; font-size: 0.9rem; color: var(--color-text); margin-bottom: 0.375rem; }
+  .form-field input[type="text"], .form-field input[type="email"], .form-field textarea, .form-field select {
+    display: block; width: 100%; box-sizing: border-box;
+    padding: 0.625rem 0.875rem; font-size: 0.95rem; font-family: inherit;
+    border: 1px solid var(--color-border); border-radius: var(--radius-sm);
+    background: var(--color-surface); color: var(--color-text);
+  }
+  .form-field textarea { min-height: 100px; resize: vertical; }
+  .form-field input:focus, .form-field textarea:focus, .form-field select:focus {
+    outline: none; border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-soft);
+  }
+  .field-required { color: var(--color-danger); margin-left: 0.25rem; }
+  .field-help { font-size: 0.875rem; color: var(--color-text-muted); margin: 0.375rem 0 0; }
+  .form-error {
+    background: var(--color-danger-soft); color: var(--color-danger);
+    padding: 0.75rem 1rem; border-radius: var(--radius-sm);
+    margin-bottom: 1.25rem; font-size: 0.95rem;
+  }
+
+  /* --- buttons --- */
+  button, .btn { cursor: pointer; font-family: inherit; }
+  .btn-primary {
+    display: inline-block; background: var(--color-primary); color: #fff; border: none;
+    padding: 0.625rem 1.25rem; border-radius: var(--radius-sm);
+    font-size: 0.95rem; font-weight: 600; text-decoration: none; transition: background .15s;
+  }
+  .btn-primary:hover { background: var(--color-primary-hover); }
+  .btn-secondary {
+    display: inline-block; background: #f8fafc; color: var(--color-text);
+    border: 1px solid var(--color-border); border-radius: 8px;
+    font-size: 13px; font-weight: 600; padding: 7px 14px; text-decoration: none;
+  }
+  .btn-secondary:hover { background: #eef2f7; }
+  .btn-sm { font-size: 13px; padding: 5px 12px; }
+  .btn-primary.btn-sm { padding: 6px 14px; font-size: 13px; border-radius: 6px; }
+  .actions-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .form-select {
+    font-family: inherit; font-size: 14px; padding: 8px 12px;
+    border: 1px solid #d1d5db; border-radius: 8px; background: #fff; color: #111827;
+  }
+
+  /* --- thanks --- */
+  .thanks-card {
+    background: var(--color-surface); border: 1px solid var(--color-border);
+    border-radius: var(--radius); padding: 2.5rem; text-align: center; box-shadow: var(--shadow-sm);
+  }
+  .thanks-card h1 { margin: 0 0 0.75rem; color: var(--color-success); font-size: 1.75rem; }
+  .thanks-card p { margin: 0.5rem 0; color: var(--color-text-muted); }
+  .thanks-card a { color: var(--color-primary); text-decoration: none; font-weight: 500; }
+  .thanks-card a:hover { text-decoration: underline; }
+
+  /* --- campaigns --- */
+  .campaign-list li.card { border-radius: var(--radius); padding: 1.25rem; margin-bottom: 0.875rem; }
+  .campaign-list a { color: var(--color-primary); text-decoration: none; font-weight: 600; font-size: 1rem; }
+  .campaign-list a:hover { text-decoration: underline; }
+  .campaign-need { margin: 0.375rem 0 0.75rem; font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.4; }
+  .campaign-progress { height: 8px; background: var(--color-bg); border-radius: 4px; overflow: hidden; margin: 0.5rem 0; }
+  .campaign-progress-bar { height: 100%; background: var(--color-primary); border-radius: 4px; transition: width .3s; }
+  .campaign-amounts { display: flex; justify-content: space-between; font-size: 0.85rem; margin: 0.375rem 0 1rem; }
+  .campaign-raised { font-weight: 600; color: var(--color-text); }
+  .campaign-goal { color: var(--color-text-muted); }
+
+  /* --- register --- */
+  .register-section-count {
+    display: inline-block; background: #e5e7eb; color: #374151;
+    font-size: 0.85rem; font-weight: 600; padding: 2px 10px;
+    border-radius: 999px; margin-left: 8px; vertical-align: middle;
+  }
+  .register-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  .register-row {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 16px;
+  }
+  .register-row-title { font-weight: 600; color: #111827; }
+  .register-row-meta { color: #6b7280; font-size: 0.85rem; margin-top: 2px; }
+  .register-heading { font-size: 1.125rem; font-weight: 700; margin: 1.5rem 0 0.75rem; }
+
+  /* --- attendance --- */
+  .attendance-pick-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  .attendance-pick-row {
+    display: flex; align-items: center; gap: 12px;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
+    padding: 12px 16px; cursor: pointer;
+  }
+  .attendance-pick-row:hover { background: #f9fafb; }
+  .attendance-pick-row input[type="checkbox"] { width: auto; }
+
+  /* --- volunteer --- */
+  .vol-page { padding: 24px 0; max-width: 720px; }
+  .vol-page > h1 { margin: 0; font-size: 1.875rem; font-weight: 700; letter-spacing: -0.02em; }
+  .vol-section { margin-top: 24px; }
+  .vol-section h2 { font-size: 16px; font-weight: 700; margin: 0 0 12px; }
+  .vol-list { display: flex; flex-direction: column; gap: 8px; }
+  .vol-card {
+    padding: 12px 16px; border: 1px solid #e4e8ee; border-radius: 8px;
+    background: #fff; box-shadow: 0 1px 2px rgba(16,24,40,.06);
+  }
+  .vol-card-open { border-color: #bbf7d0; background: linear-gradient(180deg, #f7fdf9, #fff); }
+  .vol-card-meta { font-size: 12px; color: #6b7686; margin-bottom: 4px; }
+  .vol-card-title { font-size: 15px; font-weight: 700; }
+  .vol-card-sub { font-size: 12px; color: #6b7686; margin-top: 2px; }
+  .vol-card .actions-row { margin-top: 10px; }
+  .muted { color: #6b7686; }
+
+  /* --- tables --- */
+  .table-container { overflow-x: auto; }
+  .app table {
+    width: 100%; border-collapse: collapse; background: #fff;
+    border: 1px solid var(--color-border); border-radius: var(--radius); overflow: hidden;
+  }
+  .app th {
+    font-size: 12px; font-weight: 600; color: var(--color-text-muted);
+    text-transform: uppercase; letter-spacing: 0.04em; text-align: left;
+    padding: 12px 16px; border-bottom: 1px solid var(--color-border); background: #fcfdfe;
+  }
+  .app td { font-size: 16px; font-weight: 500; padding: 12px 16px; border-bottom: 1px solid var(--color-border); }
+  .app tbody tr:last-child td { border-bottom: none; }
+  .app th:last-child, .app td:last-child { text-align: right; }
+  .panel-empty {
+    background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius);
+    padding: 1.5rem; text-align: center; color: var(--color-text-muted); font-size: 0.95rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .inline-empty { color: var(--color-text-muted); font-size: 0.95rem; }
+  .inline-empty a { color: var(--color-primary); font-weight: 500; }
+  .empty-block { text-align: left; }
+  .empty-block h2 { font-size: 1.05rem; font-weight: 700; margin: 0 0 0.35rem; }
+  .empty-block p { margin: 0 0 1rem; color: var(--color-text-muted); font-size: 0.9rem; }
+  .toast {
+    background: var(--color-success-soft); border: 1px solid #bbf7d0; color: #166534;
+    padding: 0.75rem 1rem; border-radius: var(--radius-sm); margin-bottom: 1.25rem; font-size: 0.95rem;
+  }
+
+  /* --- product responsive rules (max-width: 640px) --- */
+  @media (max-width: 640px) {
+    .member-nav { flex-wrap: wrap; padding: 0.625rem 0.75rem; gap: 0; }
+    .member-nav-brand { font-size: 0.95rem; flex-shrink: 0; }
+    .member-nav-links {
+      flex: 0 0 100% !important; width: 100% !important; margin-left: 0 !important;
+      max-width: 100%; margin-top: 0.5rem; order: 3; overflow-x: auto;
+      flex-wrap: nowrap; scrollbar-width: none; padding-bottom: 4px; gap: 1rem;
+    }
+    .member-nav-links::-webkit-scrollbar { display: none; }
+    .member-nav-links a { flex-shrink: 0; white-space: nowrap; }
+    .member-nav-user { margin-left: auto; min-width: 0; max-width: 100%; }
+    .member-nav-user span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px; min-width: 0; }
+    .member-main { padding: 1rem 0.75rem; }
+    .card-grid { grid-template-columns: 1fr; }
+    .page-header, .page-header-with-action { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .actions-row { flex-wrap: wrap; gap: 8px; }
+    .btn-primary { min-height: 44px; }
+    .app table { max-width: 100%; }
+  }
+  /* mirror the same breakpoint inside the phone frame */
+  @container (max-width: 640px) {
+    .member-nav { flex-wrap: wrap; padding: 0.625rem 0.75rem; gap: 0; }
+    .member-nav-brand { font-size: 0.95rem; flex-shrink: 0; }
+    .member-nav-links {
+      flex: 0 0 100% !important; width: 100% !important; margin-left: 0 !important;
+      margin-top: 0.5rem; order: 3; overflow-x: auto;
+      flex-wrap: nowrap; scrollbar-width: none; padding-bottom: 4px; gap: 1rem;
+    }
+    .member-nav-links::-webkit-scrollbar { display: none; }
+    .member-nav-links a { flex-shrink: 0; white-space: nowrap; }
+    .member-nav-user { margin-left: auto; min-width: 0; }
+    .member-nav-user span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px; }
+    .member-main { padding: 1rem 0.75rem; }
+    .card-grid { grid-template-columns: 1fr; }
+    .page-header-with-action { flex-direction: column; align-items: flex-start; gap: 12px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="rx-bar">
+  <span class="rx-tag">Replica</span>
+  <span class="rx-bar-title">ChurchPlannerPro · Member app</span>
+  <span class="rx-route" id="rx-route">/members</span>
+  <span class="rx-spacer"></span>
+  <span class="rx-controls">
+    <button class="rx-btn" id="rx-view" aria-pressed="false" type="button">Phone view</button>
+    <button class="rx-btn" id="rx-notes-btn" aria-pressed="false" type="button">Notes</button>
+  </span>
+</div>
+
+<div class="rx-stage">
+  <div class="rx-frame">
+    <div class="app" id="app"></div>
+  </div>
+</div>
+
+<div class="rx-notes">
+  <div class="rx-notes-inner" id="rx-notes-body"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ----------------------------------------------------------
+     DATA — captured from churchplannerpro.com/members on
+     2026-09-19, signed in as kevin.holm73@mailinator.com
+     (Prairie Ridge Church).
+     ---------------------------------------------------------- */
+
+  var USER = "kevin.holm73@mailinator.com";
+  var CHURCH = "Prairie Ridge Church";
+
+  var HOUSEHOLD = [
+    { id: "241", name: "Kevin Holm (me)" },
+    { id: "348", name: "Darcy Holm" },
+    { id: "349", name: "Elizabeth Holm" },
+    { id: "290", name: "Paul Holm" }
+  ];
+
+  // [ISO date, title, time label]
+  var EVENTS = [
+    ["2026-09-19", "Sunday School", "8:00 AM"],
+    ["2026-09-19", "Bible study", "8:00 AM"],
+    ["2026-09-19", "Confirmation Class", "5:00 PM"],
+    ["2026-09-19", "First Communion", "8:00 PM"],
+    ["2026-09-20", "Sunday School", "8:00 AM"],
+    ["2026-09-20", "Worship", "8:00 AM"],
+    ["2026-09-20", "Confirmation Class", "5:00 PM"],
+    ["2026-09-20", "First Communion", "8:00 PM"],
+    ["2026-09-21", "Sunday School", "8:00 AM"],
+    ["2026-09-21", "Grief Group", "3:00 PM"],
+    ["2026-09-21", "Confirmation Class", "5:00 PM"],
+    ["2026-09-21", "First Communion", "8:00 PM"],
+    ["2026-09-22", "Sunday School", "8:00 AM"],
+    ["2026-09-22", "Confirmation Class", "5:00 PM"],
+    ["2026-09-22", "First Communion", "8:00 PM"],
+    ["2026-09-23", "Sunday School", "8:00 AM"],
+    ["2026-09-23", "Confirmation Class", "5:00 PM"],
+    ["2026-09-23", "First Communion", "8:00 PM"],
+    ["2026-09-24", "Sunday School", "8:00 AM"],
+    ["2026-09-24", "Lunch Bunch", "12:00 PM"],
+    ["2026-09-24", "Confirmation Class", "5:00 PM"],
+    ["2026-09-24", "First Communion", "8:00 PM"],
+    ["2026-09-25", "Sunday School", "8:00 AM"],
+    ["2026-09-25", "Confirmation Class", "5:00 PM"],
+    ["2026-09-25", "First Communion", "8:00 PM"],
+    ["2026-09-26", "Sunday School", "8:00 AM"],
+    ["2026-09-26", "Bible study", "8:00 AM"],
+    ["2026-09-26", "Confirmation Class", "5:00 PM"],
+    ["2026-09-26", "First Communion", "8:00 PM"],
+    ["2026-09-27", "Worship", "8:00 AM"],
+    ["2026-09-28", "Grief Group", "3:00 PM"],
+    ["2026-10-01", "Lunch Bunch", "12:00 PM"],
+    ["2026-10-03", "Bible study", "8:00 AM"],
+    ["2026-10-04", "Worship", "8:00 AM"],
+    ["2026-10-05", "Grief Group", "3:00 PM"],
+    ["2026-10-08", "Lunch Bunch", "12:00 PM"],
+    ["2026-10-10", "Bible study", "8:00 AM"],
+    ["2026-10-11", "Worship", "8:00 AM"],
+    ["2026-10-12", "Grief Group", "3:00 PM"],
+    ["2026-10-15", "Lunch Bunch", "12:00 PM"],
+    ["2026-10-17", "Bible study", "8:00 AM"],
+    ["2026-10-18", "Worship", "8:00 AM"],
+    ["2026-10-19", "Grief Group", "3:00 PM"],
+    ["2026-10-22", "Lunch Bunch", "12:00 PM"],
+    ["2026-10-24", "Bible study", "8:00 AM"],
+    ["2026-10-25", "Worship", "8:00 AM"],
+    ["2026-10-26", "Grief Group", "3:00 PM"],
+    ["2026-10-29", "Lunch Bunch", "12:00 PM"],
+    ["2026-10-31", "Bible study", "8:00 AM"],
+    ["2026-11-01", "Worship", "8:00 AM"],
+    ["2026-11-02", "Grief Group", "3:00 PM"],
+    ["2026-11-05", "Lunch Bunch", "12:00 PM"],
+    ["2026-11-07", "Bible study", "8:00 AM"],
+    ["2026-11-08", "Worship", "8:00 AM"],
+    ["2026-11-09", "Grief Group", "3:00 PM"],
+    ["2026-11-12", "Lunch Bunch", "12:00 PM"]
+  ];
+
+  // Only this occurrence exposes a Check-in link on the live app
+  // (attendance-enabled program instance 17 on 2026-09-19).
+  var CHECKIN = { index: 0, href: "/members/attendance/17/2026-09-19" };
+
+  var FORMS = [
+    {
+      slug: "first-communion-form", title: "First Communion Form",
+      fields: [{ type: "text", label: "What is your name?", required: false }]
+    },
+    {
+      slug: "baptism-form", title: "Baptism Form",
+      fields: [{ type: "text", label: "What is your name?", required: false }]
+    },
+    {
+      slug: "confirmation-class", title: "Confirmation Class",
+      fields: [{ type: "text", label: "What school does your child attend?", required: true }]
+    },
+    {
+      slug: "sunday-school", title: "Sunday School",
+      fields: [
+        { type: "text", label: "What school does your child attend?", required: true },
+        {
+          type: "select", required: false,
+          label: "Does your child require support related needs listed below? If needs are selected you will be contacted to discuss more information regarding your child.",
+          options: ["Choose…"]
+        }
+      ]
+    }
+  ];
+
+  var MY_SHIFTS = [
+    { when: "Sun, Sep 20 · 9:00", role: "Nursery Care", service: "Sunday service" }
+  ];
+  var SWAP_CANDIDATES = [
+    { id: "289", name: "Linda King" },
+    { id: "242", name: "Carol Martin" },
+    { id: "334", name: "Mark Schultz" }
+  ];
+  var OPEN_SHIFTS = [
+    { when: "Sun, Sep 20 · 9:00", role: "Nursery Care", service: "Sunday service" },
+    { when: "Sun, Sep 20 · 9:00", role: "Ushers", service: "Sunday service" },
+    { when: "Sun, Sep 20 · 9:00", role: "Nursery Care", service: "Sunday service" },
+    { when: "Sun, Sep 20 · 9:00", role: "Nursery Care", service: "Sunday service" },
+    { when: "Sun, Sep 20 · 9:00", role: "Greeter", service: "Sunday service" },
+    { when: "Sun, Sep 20 · 9:00", role: "Communion Server", service: "Sunday service" },
+    { when: "Sun, Sep 20 · 9:00", role: "Communion Server", service: "Sunday service" }
+  ];
+
+  var FILES = [
+    { name: "prairie_ridge_school_roster_2026-27.xlsx", uploaded: "Aug 27, 2026", href: "/members/files/10/download" }
+  ];
+
+  var ATTENDANCE_PEOPLE = ["Darcy Holm", "Kevin Holm"];
+
+  var NAV = [
+    { label: "Home", route: "/members", badge: 0 },
+    { label: "Register", route: "/members/quick-register", badge: 4 },
+    { label: "Events", route: "/members/events", badge: 0 },
+    { label: "Campaigns", route: "/members/campaigns", badge: 0 },
+    { label: "Giving", route: "/members/donations", badge: 0 },
+    { label: "Volunteer", route: "/members/volunteer", badge: 7 },
+    { label: "Inquiries", route: "/members/inquiries", badge: 0 },
+    { label: "Files", route: "/members/files", badge: 0 }
+  ];
+
+  /* ---------------------------------------------------------- */
+
+  var DAYS_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  var DAYS_LONG = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  var MONTHS_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  var MONTHS_LONG = ["January", "February", "March", "April", "May", "June", "July",
+                     "August", "September", "October", "November", "December"];
+
+  function parseISO(s) {
+    var p = s.split("-");
+    return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+  }
+  function shortDate(iso) {
+    var d = parseISO(iso);
+    return DAYS_SHORT[d.getDay()] + ", " + MONTHS_SHORT[d.getMonth()] + " " + d.getDate();
+  }
+  function longDate(iso) {
+    var d = parseISO(iso);
+    return DAYS_LONG[d.getDay()] + ", " + MONTHS_LONG[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+  }
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  /* ---------------------------------------------------------- */
+
+  var flash = null; // one-shot message shown on next render
+
+  function nav(active) {
+    var links = NAV.map(function (n) {
+      var badge = n.badge ? ' <span class="nav-badge">' + n.badge + "</span>" : "";
+      var cls = n.route === active ? ' class="active"' : "";
+      return '<a href="#' + n.route + '"' + cls + ">" + n.label + badge + "</a>";
+    }).join("");
+    return '' +
+      '<nav class="member-nav">' +
+        '<div class="member-nav-brand">ChurchPlannerPro</div>' +
+        '<div class="member-nav-links">' + links + "</div>" +
+        '<div class="member-nav-user">' +
+          "<span>" + esc(USER) + "</span>" +
+          '<button class="btn-link" type="button" data-act="signout">Sign out</button>' +
+        "</div>" +
+      "</nav>";
+  }
+
+  function header(title, subtitle) {
+    return '<div class="page-header"><h1>' + esc(title) + "</h1>" +
+      (subtitle ? '<p class="page-subtitle">' + esc(subtitle) + "</p>" : "") + "</div>";
+  }
+
+  function flashBlock() {
+    if (!flash) return "";
+    var f = flash; flash = null;
+    return '<div class="toast">' + esc(f) + "</div>";
+  }
+
+  /* ---------------------- screens --------------------------- */
+
+  var screens = {};
+
+  screens["/members"] = function () {
+    var upcoming = EVENTS.map(function (e) {
+      return '<li><div class="event-title">' + esc(e[1]) + "</div>" +
+        '<div class="event-meta">' + shortDate(e[0]) + " • " + esc(e[2]) + "</div></li>";
+    }).join("");
+
+    var forms = FORMS.map(function (f) {
+      return '<li><a href="#/members/forms/prairie-ridge-church/' + f.slug + '/respond">' +
+        esc(f.title) + "</a></li>";
+    }).join("");
+
+    return header("Welcome", "Here's what's happening at your church.") +
+      '<div class="card-grid">' +
+        '<section class="card">' +
+          "<h2>Campaigns</h2>" +
+          '<p class="empty-state">No active campaigns right now.</p>' +
+          '<p class="card-footer-link"><a href="#/members/campaigns">See all campaigns →</a></p>' +
+        "</section>" +
+        '<section class="card">' +
+          "<h2>Upcoming events</h2>" +
+          '<ul class="event-list">' + upcoming + "</ul>" +
+          '<p class="card-footer-link"><a href="#/members/events">See all events →</a></p>' +
+        "</section>" +
+        '<section class="card">' +
+          "<h2>Forms for you</h2>" +
+          '<ul class="form-list">' + forms + "</ul>" +
+        "</section>" +
+      "</div>";
+  };
+
+  screens["/members/quick-register"] = function () {
+    var rows = FORMS.map(function (f) {
+      return '<li class="register-row">' +
+        '<div><div class="register-row-title">' + esc(f.title) + "</div></div>" +
+        '<a class="btn-primary btn-sm" href="#/members/forms/prairie-ridge-church/' +
+          f.slug + '/respond">Fill out</a>' +
+      "</li>";
+    }).join("");
+
+    return header("Register", "Programs and forms that need your attention.") +
+      '<h2 class="register-heading">Programs <span class="register-section-count">0</span></h2>' +
+      '<p class="empty-state">No upcoming attendance-enabled programs.</p>' +
+      '<h2 class="register-heading">Forms <span class="register-section-count">' + FORMS.length + "</span></h2>" +
+      '<ul class="register-list">' + rows + "</ul>";
+  };
+
+  screens["/members/events"] = function () {
+    var items = EVENTS.map(function (e, i) {
+      var checkin = (i === CHECKIN.index)
+        ? '<div class="actions-row" style="margin-top:8px"><a class="btn-primary btn-sm" href="#' +
+          CHECKIN.href + '">Check-in</a></div>'
+        : "";
+      return "<li>" +
+        '<div class="event-title">' + esc(e[1]) + "</div>" +
+        '<div class="event-meta">' + longDate(e[0]) + " • " + esc(e[2]) + "</div>" +
+        checkin +
+      "</li>";
+    }).join("");
+
+    return header("Upcoming events", "Everything happening at your church.") +
+      '<ul class="event-list">' + items + "</ul>";
+  };
+
+  screens["/members/campaigns"] = function () {
+    return header("Campaigns", "Support what's happening at your church.") +
+      '<div class="panel-empty">No active campaigns right now. Check back later.</div>';
+  };
+
+  screens["/members/donations"] = function () {
+    return header("My giving", "Donations you've made to capital campaigns at your church.") +
+      '<p class="inline-empty">You haven\'t made any donations yet. ' +
+      '<a href="#/members">Back to dashboard</a></p>';
+  };
+
+  screens["/members/volunteer"] = function () {
+    var mine = MY_SHIFTS.map(function (s, i) {
+      var opts = ['<option value="">Choose someone…</option>'].concat(
+        SWAP_CANDIDATES.map(function (c) {
+          return '<option value="' + c.id + '">' + esc(c.name) + "</option>";
+        })
+      ).join("");
+      return '<div class="vol-card">' +
+        '<div class="vol-card-meta">' + esc(s.when) + "</div>" +
+        '<div class="vol-card-title">' + esc(s.role) + "</div>" +
+        '<div class="vol-card-sub">' + esc(s.service) + "</div>" +
+        '<div class="actions-row">' +
+          '<button class="btn btn-secondary btn-sm" type="button" data-act="drop" data-i="' + i + '">Drop shift</button>' +
+        "</div>" +
+        '<div class="actions-row">' +
+          '<label class="sr-label" for="swap-' + i + '" hidden>Offer swap to</label>' +
+          '<select class="form-select" id="swap-' + i + '">' + opts + "</select>" +
+          '<button class="btn btn-secondary btn-sm" type="button" data-act="swap" data-i="' + i + '">Offer swap</button>' +
+        "</div>" +
+      "</div>";
+    }).join("");
+
+    var mineBlock = MY_SHIFTS.length
+      ? '<div class="vol-list">' + mine + "</div>"
+      : '<p class="muted">You have no upcoming shifts.</p>';
+
+    var open = OPEN_SHIFTS.map(function (s, i) {
+      return '<div class="vol-card vol-card-open">' +
+        '<div class="vol-card-meta">' + esc(s.when) + "</div>" +
+        '<div class="vol-card-title">' + esc(s.role) + "</div>" +
+        '<div class="vol-card-sub">' + esc(s.service) + "</div>" +
+        '<div class="actions-row">' +
+          '<button class="btn btn-primary btn-sm" type="button" data-act="claim" data-i="' + i + '">Claim open shift</button>' +
+        "</div>" +
+      "</div>";
+    }).join("");
+
+    return '<div class="vol-page">' +
+      "<h1>Volunteer</h1>" +
+      '<section class="vol-section"><h2>My upcoming shifts</h2>' + mineBlock + "</section>" +
+      '<section class="vol-section"><h2>Open shifts in your groups</h2>' +
+        '<div class="vol-list">' + open + "</div>" +
+      "</section>" +
+    "</div>";
+  };
+
+  screens["/members/inquiries"] = function () {
+    return '<div class="page-header-with-action">' +
+        "<div><h1 class=\"page-title\">My inquiries</h1>" +
+        '<p class="page-subtitle">Your questions for the church staff. Staff replies show up here.</p></div>' +
+        '<a class="btn-primary" href="#/members/inquiries/new">+ File a new inquiry</a>' +
+      "</div>" +
+      '<div class="empty-block">' +
+        "<h2>No inquiries yet</h2>" +
+        "<p>File your first inquiry and staff will reply here.</p>" +
+        '<a class="btn-primary" href="#/members/inquiries/new">File the first inquiry</a>' +
+      "</div>";
+  };
+
+  screens["/members/inquiries/new"] = function () {
+    return header("File a new inquiry",
+      "Send a question to the church staff. They'll reply here, and you'll see it in your inbox.") +
+      '<div class="card">' +
+      '<form data-form="inquiry">' +
+        '<div class="form-field">' +
+          '<label for="inq-subject">Subject</label>' +
+          '<input type="text" id="inq-subject" name="subject">' +
+        "</div>" +
+        '<div class="form-field">' +
+          '<label for="inq-message">Message</label>' +
+          '<textarea id="inq-message" name="message"></textarea>' +
+        "</div>" +
+        '<div class="actions-row">' +
+          '<button class="btn-primary" type="submit">Send to staff</button>' +
+          '<a class="btn-secondary" href="#/members/inquiries">Cancel</a>' +
+        "</div>" +
+      "</form></div>";
+  };
+
+  screens["/members/files"] = function () {
+    var rows = FILES.map(function (f) {
+      return "<tr><td>" + esc(f.name) + "</td><td>" + esc(f.uploaded) + "</td>" +
+        '<td><a class="btn btn-secondary" href="#" data-act="download">Download</a></td></tr>';
+    }).join("");
+
+    return header("Files", "Browse church documents shared by your admin team.") +
+      '<section style="margin-bottom:1.75rem">' +
+        '<div class="section-label">Folders</div>' +
+        '<div class="panel-empty">No folders here yet.</div>' +
+      "</section>" +
+      "<section>" +
+        '<div class="section-label">Files</div>' +
+        '<div class="table-container"><table>' +
+          "<thead><tr><th>Name</th><th>Uploaded</th><th>Action</th></tr></thead>" +
+          "<tbody>" + rows + "</tbody>" +
+        "</table></div>" +
+      "</section>";
+  };
+
+  screens["/members/attendance/17/2026-09-19"] = function () {
+    var rows = ATTENDANCE_PEOPLE.map(function (p, i) {
+      return '<li><label class="attendance-pick-row" for="att-' + i + '">' +
+        '<input type="checkbox" id="att-' + i + '"><span>' + esc(p) + "</span></label></li>";
+    }).join("");
+
+    return header("We're here!", "Pick the family members who are at 2026-09-19's meeting.") +
+      '<form data-form="attendance">' +
+        '<ul class="attendance-pick-list">' + rows + "</ul>" +
+        '<div class="actions-row" style="margin-top:1.25rem">' +
+          '<button class="btn-primary" type="submit">Save</button>' +
+          '<a class="btn-secondary" href="#/members/events">Cancel</a>' +
+        "</div>" +
+      "</form>";
+  };
+
+  function formScreen(form) {
+    var who = HOUSEHOLD.map(function (p, i) {
+      return '<option value="' + p.id + '"' + (i === 0 ? " selected" : "") + ">" + esc(p.name) + "</option>";
+    }).join("");
+
+    var fields = form.fields.map(function (f, i) {
+      var id = "f-" + form.slug + "-" + i;
+      var req = f.required ? '<span class="field-required">*</span>' : "";
+      var control;
+      if (f.type === "select") {
+        control = '<select id="' + id + '">' + f.options.map(function (o) {
+          return '<option value="">' + esc(o) + "</option>";
+        }).join("") + "</select>";
+      } else {
+        control = '<input type="text" id="' + id + '"' + (f.required ? " required" : "") + ">";
+      }
+      return '<div class="form-field"><label for="' + id + '">' + esc(f.label) + req + "</label>" + control + "</div>";
+    }).join("");
+
+    return '<div class="page-header"><h1>' + esc(form.title) + "</h1></div>" +
+      '<form data-form="respond" data-slug="' + form.slug + '">' +
+        '<div class="form-field">' +
+          '<label for="who-' + form.slug + '">Who is this for?</label>' +
+          '<select id="who-' + form.slug + '" required>' + who + "</select>" +
+          '<p class="field-help">Submitting on behalf of a household member? Pick them here — one submission per person.</p>' +
+        "</div>" +
+        fields +
+        '<div class="actions-row"><button class="btn-primary" type="submit">Submit</button></div>' +
+      "</form>";
+  }
+
+  FORMS.forEach(function (f) {
+    screens["/members/forms/prairie-ridge-church/" + f.slug + "/respond"] = function () {
+      return formScreen(f);
+    };
+  });
+
+  screens["/members/forms/thanks"] = function () {
+    return '<div class="thanks-card">' +
+      "<h1>Thank you!</h1>" +
+      "<p>Your response has been recorded.</p>" +
+      '<p><a href="#/members">Back to dashboard</a></p>' +
+    "</div>";
+  };
+
+  /* ---------------------- notes ----------------------------- */
+
+  var NOTES = {
+    "/members": [
+      "Card grid is <code>repeat(auto-fit, minmax(320px, 1fr))</code> inside a 960px main — two columns on desktop, one below 640px.",
+      "Upcoming events renders the <strong>full</strong> event feed (56 occurrences), not a truncated preview. There is no scroll container on the card.",
+      "Campaigns card and Forms card have no footer link and footer link respectively — only Campaigns and Events carry a <code>See all →</code>."
+    ],
+    "/members/quick-register": [
+      "Two sections, each with a pill count: Programs (<code>0</code>) and Forms (<code>4</code>).",
+      "Programs lists <em>attendance-enabled</em> programs only; empty here.",
+      "Each form row links to <code>/members/forms/{church-slug}/{form-slug}/respond</code>."
+    ],
+    "/members/events": [
+      "Same feed as the dashboard card, with long-form dates including the year.",
+      "Only occurrences tied to an attendance-enabled program show <strong>Check-in</strong>. On capture that was one row: <code>/members/attendance/17/2026-09-19</code>.",
+      "No event detail page — rows are not links."
+    ],
+    "/members/campaigns": [
+      "Empty state. The stylesheet carries a full campaign card design that is unused here: title link, <code>.campaign-need</code> blurb, progress bar, raised/goal row, and a Donate button.",
+      "Those styles are included in this replica so the populated state can be mocked up later."
+    ],
+    "/members/donations": [
+      "Single-line empty state with an inline link back to the dashboard — no card, no table."
+    ],
+    "/members/volunteer": [
+      "This page ships its own inline <code>&lt;style&gt;</code> block (<code>.vol-*</code>) rather than using member.css — different border color (<code>#e4e8ee</code>), radii and shadow from the rest of the app.",
+      "Open shifts get a green-tinted card: <code>border-color:#bbf7d0</code> and a subtle top-down gradient.",
+      "My shift exposes three actions: <strong>Drop shift</strong>, a person picker, and <strong>Offer swap</strong>. The nav badge (7) counts open shifts.",
+      "Page max-width is 720px here, not the 960px used elsewhere."
+    ],
+    "/members/inquiries": [
+      "Only page using the <code>.page-header-with-action</code> split header, with a primary action at top right.",
+      "The empty state repeats the same call to action as a second button."
+    ],
+    "/members/inquiries/new": [
+      "Two fields, neither marked required in the markup: Subject (text) and Message (textarea, min-height 100px).",
+      "Submit is <strong>Send to staff</strong>; Cancel returns to the inquiries list."
+    ],
+    "/members/files": [
+      "Two sections under uppercase <code>.section-label</code> eyebrows: Folders, then Files.",
+      "Folders is an empty panel; Files is a table with Name / Uploaded / Action, the action column right-aligned.",
+      "Download links to <code>/members/files/{id}/download</code>."
+    ],
+    "/members/attendance/17/2026-09-19": [
+      "Reached from the Check-in button on the Events page.",
+      "Lists the signed-in member's household as checkbox rows; the whole row is the label, so clicking anywhere toggles it.",
+      "The subtitle prints the raw ISO date (<code>2026-09-19</code>) rather than a formatted one — reproduced as-is."
+    ],
+    "form": [
+      "Every form starts with a <strong>Who is this for?</strong> household picker — one submission per person.",
+      "Required fields get a red asterisk via <code>.field-required</code>.",
+      "Field sets differ per form: First Communion and Baptism ask only for a name; Confirmation Class and Sunday School ask for a school (required); Sunday School adds a support-needs picker whose option list was empty on capture."
+    ],
+    "/members/forms/thanks": [
+      "<strong>Inferred screen.</strong> The stylesheet defines <code>.thanks-card</code> (green heading, centered, 2.5rem padding) but no submission was made during capture, so the exact copy here is a placeholder.",
+      "Everything else in this replica is transcribed from live pages."
+    ]
+  };
+
+  function notesFor(route) {
+    if (NOTES[route]) return NOTES[route];
+    if (route.indexOf("/respond") !== -1) return NOTES.form;
+    return null;
+  }
+
+  /* ---------------------- router ---------------------------- */
+
+  var app = document.getElementById("app");
+  var routeEl = document.getElementById("rx-route");
+  var notesBody = document.getElementById("rx-notes-body");
+
+  function activeNav(route) {
+    if (route === "/members") return "/members";
+    var best = "";
+    NAV.forEach(function (n) {
+      if (n.route !== "/members" && route.indexOf(n.route) === 0 && n.route.length > best.length) best = n.route;
+    });
+    if (route.indexOf("/members/forms/") === 0) return "/members/quick-register";
+    if (route.indexOf("/members/attendance/") === 0) return "/members/events";
+    return best || "/members";
+  }
+
+  var current = "/members";
+
+  function render() {
+    var route = screens[current] ? current : "/members";
+    current = route;
+
+    routeEl.textContent = route;
+    document.title = "ChurchPlannerPro Member App";
+
+    app.innerHTML = nav(activeNav(route)) +
+      '<main class="member-main">' + flashBlock() + screens[route]() + "</main>";
+
+    var list = notesFor(route);
+    notesBody.innerHTML = list
+      ? "<h3>Screen notes — " + esc(route) + "</h3><ul>" +
+        list.map(function (n) { return "<li>" + n + "</li>"; }).join("") + "</ul>"
+      : "<h3>Screen notes</h3><p>No annotations for this screen.</p>";
+
+    var stage = document.querySelector(".rx-stage");
+    if (stage) stage.scrollTop = 0;
+    window.scrollTo(0, 0);
+  }
+
+  function go(route, message) {
+    if (message) flash = message;
+    current = route;
+    render();
+  }
+
+  // Route from in-page links. The artifact viewer sandboxes the page, so
+  // fragment navigation is not reliable there — intercept and route in JS.
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest('a[href^="#/"]');
+    if (!a) return;
+    e.preventDefault();
+    go(a.getAttribute("href").slice(1));
+  });
+
+  /* ---------------------- interactions ---------------------- */
+
+  app.addEventListener("click", function (e) {
+    var el = e.target.closest("[data-act]");
+    if (!el) return;
+    var act = el.getAttribute("data-act");
+
+    if (act === "signout") {
+      e.preventDefault();
+      go("/members", "Signed out. (Replica — session is not really ended.)");
+    } else if (act === "download") {
+      e.preventDefault();
+      flash = "Download requested: " + FILES[0].name + " (replica — no file is served).";
+      render();
+    } else if (act === "drop") {
+      e.preventDefault();
+      MY_SHIFTS.splice(Number(el.getAttribute("data-i")), 1);
+      go("/members/volunteer", "Shift dropped.");
+    } else if (act === "swap") {
+      e.preventDefault();
+      var sel = document.getElementById("swap-" + el.getAttribute("data-i"));
+      if (!sel || !sel.value) { flash = "Pick someone to offer the swap to."; render(); return; }
+      var name = sel.options[sel.selectedIndex].text;
+      go("/members/volunteer", "Swap offered to " + name + ".");
+    } else if (act === "claim") {
+      e.preventDefault();
+      var i = Number(el.getAttribute("data-i"));
+      var s = OPEN_SHIFTS.splice(i, 1)[0];
+      MY_SHIFTS.push(s);
+      NAV[5].badge = OPEN_SHIFTS.length;
+      go("/members/volunteer", "You claimed the " + s.role + " shift on " + s.when + ".");
+    }
+  });
+
+  app.addEventListener("submit", function (e) {
+    var form = e.target.closest("[data-form]");
+    if (!form) return;
+    e.preventDefault();
+    var kind = form.getAttribute("data-form");
+
+    if (kind === "inquiry") {
+      var subject = document.getElementById("inq-subject").value.trim();
+      go("/members/inquiries", subject
+        ? "Inquiry sent to staff: “" + subject + "”"
+        : "Inquiry sent to staff.");
+    } else if (kind === "attendance") {
+      var checked = Array.prototype.filter.call(
+        form.querySelectorAll('input[type="checkbox"]'), function (c) { return c.checked; });
+      go("/members/events", checked.length
+        ? "Checked in " + checked.length + (checked.length === 1 ? " person." : " people.")
+        : "No one checked in.");
+    } else if (kind === "respond") {
+      var slug = form.getAttribute("data-slug");
+      var f = FORMS.filter(function (x) { return x.slug === slug; })[0];
+      var missing = Array.prototype.some.call(
+        form.querySelectorAll("[required]"), function (c) { return !c.value.trim(); });
+      if (missing) { flash = "Please fill in the required fields."; render(); return; }
+      flash = f.title + " submitted.";
+      go("/members/forms/thanks");
+    }
+  });
+
+  /* ---------------------- chrome controls ------------------- */
+
+  var viewBtn = document.getElementById("rx-view");
+  viewBtn.addEventListener("click", function () {
+    var on = document.body.getAttribute("data-view") === "mobile";
+    document.body.setAttribute("data-view", on ? "desktop" : "mobile");
+    viewBtn.setAttribute("aria-pressed", on ? "false" : "true");
+    viewBtn.textContent = on ? "Phone view" : "Desktop view";
+  });
+
+  var notesBtn = document.getElementById("rx-notes-btn");
+  notesBtn.addEventListener("click", function () {
+    var on = document.body.getAttribute("data-notes") === "on";
+    document.body.setAttribute("data-notes", on ? "off" : "on");
+    notesBtn.setAttribute("aria-pressed", on ? "false" : "true");
+  });
+
+  document.body.setAttribute("data-view", "desktop");
+  document.body.setAttribute("data-notes", "off");
+
+  render();
+})();
+</script>
+
+</body>
+</html>
