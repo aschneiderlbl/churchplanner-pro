@@ -1,918 +1,939 @@
-Website design guidelines
-Standing rules for churchplannerpro.com. These are decisions, not suggestions — where a rule exists, follow it rather than re-deciding per page. This governs the marketing site only; the product has its own system in cppdesignsystem.html and the two are deliberately different.
-v1 · September 2026Marketing site onlyPalette: settledDesktop + mobileTypeface: Outfit + Inter14 sections + templatesMigration tracked — §14
-Contents
-01Principles
-02The wordmark
-03Color
-04Typography & headings
-05Layout, spacing & responsive
-06Shape, elevation & motion
-07Components
-08Imagery
-09Words on the page
-10Building a page
-11Accessibility, print & consent
-12The app boundary
-13Page templates
-14Outstanding decisions
-01
-Principles
-Five sentences that decide most arguments before they start.
-The page is calm because the product isn't
-CPP is sold to people whose week is already noisy — a church administrator holding twelve spreadsheets together. The site should feel like relief, not like more input. When a choice is between more energy and more quiet, choose quiet.
-Show the software
-The most persuasive thing on any page is a real screen from the product with real data in it. Prefer a screenshot to an illustration, an illustration to a stock photo, and a stock photo to nothing — except that we do not use stock photos, so prefer nothing.
-Green means act
-Inherited from the product and non-negotiable. Green appears on things you can do something with. It is never decoration.
-Outcomes, not modules
-Every page is organized around what a church needs to get right, never around our feature list. If a section could be retitled "Features" without changing its content, it is wrong.
-Nothing should look generated
-The warm ground, the real screenshots, the specific copy and the restraint on color are all in service of this. A page that could belong to any B2B tool has failed even if every rule below was followed.
-02
-The wordmark
-The identity is a single-ink typographic lockup: Church bold, Planner light, PRO as a small raised suffix. There is no icon and no color in it.
-Wordmark at 44 / 22 / 15px
-ChurchPlannerPRO
-ChurchPlannerPRO
-ChurchPlannerPRO
-Property
-Rule
-Color
-#0B1220 on light grounds. Solid white on green or ink. Nothing else, ever.
-Clear space
-The height of the capital C on all four sides — about 0.55× the lockup height.
-Minimum width
-132px. Below that the PRO suffix closes up.
-Aspect
-4.95 : 1. Needs a 200px+ slot; use the fallback below 480px.
-Mobile fallback
-Wordmark without the PRO suffix, below 768px. Never stack it on two lines.
-Icon
-White C on a green rounded square. See below.
-
-The icon
-The identity has no mark, so the icon is built rather than extracted: a rounded green square carrying the wordmark's C in white. A solid color block is the only thing that reads reliably at 16px, and green makes the tab findable in a strip of blue software.
-Icon at 64 / 32 / 16px, and in a tab strip
-C
-64
-C
-32
-C
-16
-C
-Church operations. On autopilot.
-In a browser tab
-The icon uses the brand green, and it is the exception to §3
-Green #12603A, corner radius 22% of the square, the C at roughly 58% of the height, optically centered — a C centered by its bounding box sits slightly too far right.
-§3 says green never appears as decoration. The icon is the one permitted exception, and it survives the rule's spirit: the icon is the thing you tap to open CPP, which makes it the most literal action target we have.
-Deliverables: favicon.svg (the source), favicon.ico at 32 and 16, apple-touch-icon.png at 180×180 with no transparency and no rounded corners of its own — iOS applies its own mask — and icon-512-maskable.png with the C inside the safe zone at 80% of the canvas. A site.webmanifest naming ChurchPlannerPro with theme_color #12603A and background_color #FAF7F2.
-One consequence worth being deliberate about: this icon is used by the marketing site and the product, so it is the single asset where both systems must agree on a hex. It takes the site's #12603A, because the brand green belongs to brand assets — the app's #15803D stays what it is, a semantic UI color that never appears in identity work.
-Do
-Reverse it to solid white on the green band
-Let it sit on paper, wash, or white equally
-Keep the weight relationship exactly as drawn
-Don't
-Tint it green, or color any single word
-Add a mark, glyph, or church iconography beside it
-Set it in a different typeface to "match" a headline
-Place it over a photograph
-03
-Color
-One accent on a warm ground. There is no second brand color, and adding one is a decision that requires revisiting this document — not a per-page choice.
-Paper
-#FAF7F2
-Page ground. The site is never pure white.
-Card
-#FFFFFF
-Cards, inputs, product frames.
-Wash
-#EFE7D8
-Alternating panels, footer, icon plates.
-Ink
-#0B1220
-Headlines, wordmark, titles, nameplates.
-Body
-#5A5751
-Running text.
-Muted
-#6B675F
-Eyebrows, captions, attribution.
-Green
-#12603A
-Action only.
-Line
-#E3DDD2
-All 1px borders.
-Green appears only on things you can act on
-A button, a link, a border around a button, a checkmark confirming something is included. Never a section background, never a fill behind an illustration, never a decorative underline or bar.
-The single exception is the closing call-to-action band, where the green area is the call to action. One such band per page, at the bottom.
-Every neutral is warm-biased
-Cool greys read blue and dirty against paper. The four neutrals above are the complete set. If a shade you need isn't here, derive it from these — do not borrow from the product palette, whose neutrals are tuned for a cool ground.
-The most common way this rule breaks: someone copies a component out of cppdesignsystem.html and brings #64748B or #F8FAFC with it.
-One large green area per page
-Green earns its meaning by scarcity. The closing band spends it; everything else that could be tinted — alternating panels, icon plates, the footer — uses wash or paper.
-Inline links
-Green, underlined, 1px thickness at 2px offset. On hover the underline thickens to 2px — nothing else moves, no color change. No visited state: a marketing site that dims links people have already read is working against itself.
-Inside the green band, links are white with the same underline treatment. Never green-on-green.
-Inline links, on paper and on green
-ChurchPlannerPro connects to IconCMO, Planning Center and Vanco, and runs a data health check on everything it imports.
-Every plan includes the full platform — see what's covered on the pricing page.
-Not in the palette
-No yellow, amber, gold, terracotta, or any second accent. No gradients, on any element, including buttons and bands. No colored drop shadows. No blue — it is the default color of church software and we are deliberately not using it.
-Semantic colors for error and warning states are permitted in forms only — see §7 — and appear nowhere else on the site.
-There is no dark mode. The site is light-only and the palette is built that way; a warm paper ground has no meaningful dark equivalent. Do not add a prefers-color-scheme block, and do not let a component library introduce one.
-04
-Typography & headings
-One scale, two roles, one device carried over from the logo, and a heading structure that does the SEO work without costing the outline.
-The weight-contrast device
-The wordmark sets one bold word against one light word at the same size. Repeat it in headlines: the light half carries the setup, the bold half carries the claim. This is the site's signature and it costs nothing.
-One break per headline, on the phrase that carries the promise. Never mid-clause. Never three alternations in a line. Never in body copy, buttons, labels, or captions.
-Correct — one break, on the claim
-Church operations. On autopilot.
-Less to remember. Less to chase. Less to do by hand.
-Wrong — alternating, so nothing leads
-Connect your tools. Run your church. Automate what happens next.
-The triad is three sentences of equal weight — set it in one weight, or split it across three columns. Don't break it four times.
-Style
-Size / line-height
-Weight
-Tracking
-Notes
-Hero headline
-48 / 52
-300 + 700
--0.025em
-One per page. Weight device applies.
-Section headline
-36 / 42
-300 + 700
--0.022em
-Never as large as the hero.
-Card title
-22 / 29
-650
--0.010em
-Single weight. No device.
-Eyebrow
-13 / 18
-600
-+0.09em
-Uppercase. Muted. Above every section headline.
-Lead paragraph
-18 / 28
-400
-normal
-One per section, directly under the headline.
-Body
-16 / 26
-400
-normal
-Max 65 characters per line.
-Small
-13.5 / 20
-400
-normal
-Captions, attribution, legal.
-Button
-15 / 1
-600
-normal
-Sentence case. Never uppercase.
-
-Heading structure
-The technique borrowed from When I Work: a keyword-bearing descriptive line sits above the brand headline, set small and quiet, so the page opens with a phrase a person would actually search for instead of pure brand language. That part is worth taking. What isn't worth taking is their markup — they tag the small line as the h1 and demote the real headline to h2.
-One h1 per page, containing both halves
-Wrap the descriptive line and the claim in a single h1 and style the spans. The heading's text content carries the search phrase and the promise, the visual hierarchy is unchanged, the outline stays correct, and a screen reader announces the whole thing as the page's title — which is more useful than either half alone.
-<h1 class="hero-title">
-  <span class="eyebrow">All-in-one church operations software</span>
-  <span class="claim">
-    <span class="lt">Church operations.</span>
-    <span class="bd">On autopilot.</span>
-  </span>
-</h1>
-
-.hero-title       { display:flex; flex-direction:column; gap:14px; }
-.hero-title .eyebrow { font-size:13px; font-weight:600; letter-spacing:.09em;
-                       text-transform:uppercase; color:var(--muted); }
-.hero-title .claim   { font-size:48px; line-height:1.08; letter-spacing:-.025em;
-                       color:var(--ink); }
-Rendered — identical to the pattern we liked, correct underneath
-All-in-one church operations softwareChurch operations. On autopilot.
-Element
-Tag
-Rule
-Hero
-h1 ×1
-Descriptive line + claim in one element. Exactly one per page.
-Section headline
-h2
-Carries the search phrase, not only the clever claim. This is where keyword coverage actually comes from.
-Section eyebrow
-p
-A label, not a heading. Tagging it h2 or h3 puts noise in the outline.
-Card title
-h3
-Under the section's h2. Never skip a level to get a size.
-Card label
-p
-Same as section eyebrow — a label.
-Footer group
-h2
-"Platform", "Solutions", "Compare", "Company".
-
-Where the SEO actually happens
-In descending order of what moves anything: the <title> tag, the first fifty words of visible copy, the section h2s, the footer's long-tail link list, and internal links using real phrases as anchor text. Heading level is not on that list.
-Google's stated position is that its systems work with whatever heading markup they find, and a January 2026 benchmark of top-ranking pages found only 13.5% carried an exact-match keyword in the h1 at all. So the tag swap buys close to nothing; the descriptive line buys real coverage regardless of which element wraps it. Take the technique, skip the markup.
-The title tag pattern
-<page> | ChurchPlannerPro for interior pages. The homepage carries the tagline instead: ChurchPlannerPro — the church management platform that does the work for you.
-Under 60 characters where possible, page name first because the tail gets truncated, and never the same string on two pages. The tagline earns its place here for the same reason it earns the footer: it is the one line carrying both the search term and the differentiator.
-Two faces, split by role
-Outfit — display only: the hero headline, section headlines, the wordmark, the price figure, and the icon's C. A geometric sans that matches the wordmark's construction, so headlines and logo agree instead of nearly-agreeing.
-Inter — everything else: body, leads, eyebrows, buttons, labels, captions, form fields, and the entire product. Inter is the more legible face at small sizes and it is already the app's typeface, so this split costs the product nothing.
-The dividing line is size, not importance: if it's above 22px it's Outfit, below that it's Inter. Card titles at 22px are the boundary and go to Inter, because they sit in running content rather than announcing a section.
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?
-  family=Outfit:wght@300;600;700&family=Inter:wght@400;500;600;650;700&display=swap">
-
---display: Outfit, "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
---text:    Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-Load only the weights in use — Outfit 300/600/700 and Inter 400/500/600/650/700. Outfit runs wide, so display sizes need the tighter tracking already specified in the scale above; without it, headlines feel loose.
-The wordmark's own typeface
-The lockup's original face is unidentified, and some geometrics in that family are commercially licensed. Outfit — Rodrigo Fuenzalida, open licence, nine weights — is close enough in construction to reset the wordmark in if it ever needs to be redrawn, at Bold and Light.
-That is the reason to standardise on it beyond the visual match: it makes the identity reproducible by anyone, forever, with no licence to track. Worth confirming the original face before redrawing anything — but a logotype is permitted to be its own thing, so a small mismatch between the shipped wordmark and Outfit headlines is not a defect.
-05
-Layout, spacing & responsive
-Two container widths, one section rhythm, one gap — and three breakpoints, because every page ships in a desktop and a mobile version.
-Token
-Value
-Applies to
-container
-1240px
-Grids, panels, product screenshots, footer
-measure
-720px
-Centered intro paragraphs — never wider
-section-pad
-96px top and bottom
-Every section, no exceptions
-panel-pad
-56px 48px
-Inside a wash or green panel
-grid-gap
-24px
-Between cards in a row
-gutter
-28px
-Page edge on mobile
-
-Panels float; the page doesn't change color
-A tinted section is a 24px-radius block sitting inside the container with paper visible either side. Color never runs edge to edge of the browser. This is what keeps a long page from reading as a series of stripes.
-Three or four cards in a row, never five
-Pick a count the content fills. A row with one card orphaned on a second line is a layout that needs fewer items, not a wider grid. Cards are equalized by the grid, never by a fixed height.
-Desktop and mobile
-Every page ships in both. Mobile is not a fallback and not a shrunk desktop — it is the version an administrator opens on their phone between services, and for several components it is the more important one.
-Three breakpoints, and what each one does
-≥1024px — desktop. Full layout as specified above. 768–1023px — tablet. Container becomes fluid with 32px gutters; two-column splits stay, three-up grids stay, the nav stays full. <768px — mobile. Everything is one column, the nav becomes a drawer, and the mobile type scale takes over.
-Nothing collapses to two columns. A three-up grid going to two leaves one card orphaned on a second row, which looks like a bug — it goes straight from three to one.
-Component
-Desktop ≥1024
-Mobile <768
-Header
-Wordmark, 3 links, 2 buttons
-Wordmark (no PRO) + 44px menu button, drawer opens full-screen
-Hero
-Two columns, screenshot right
-Stacked, text first, screenshot bleeds off the right gutter
-Hero screenshot
-Desktop app screen
-Mobile app screen — not the desktop one squeezed
-Hero CTA cluster
-Buttons side by side, price line under
-Both buttons full width, stacked, price line under
-Three-up cards
-3 columns, 24px gap
-1 column, 20px gap, padding 32 → 24
-Split panel + portrait
-Portrait left, overlapping nameplate
-Portrait first, nameplate inline below — overlap removed
-Panels
-24px radius, 52/44 padding
-16px radius, 32/22 padding
-Pricing card
-380px, centered
-Full width minus gutters
-Footer
-4 columns
-Collapsed groups, tap to expand
-Section padding
-96px
-64px
-Page gutter
-Container 1240px
-20px each side
-
-The mobile type scale
-The desktop scale doesn't survive a 375px screen — a 48px headline at that width breaks into four ragged lines. Sizes drop; the weight-contrast device stays.
-Style
-Desktop
-Mobile
-Hero headline
-48 / 52
-32 / 35
-Section headline
-36 / 42
-26 / 31
-Card title
-22 / 29
-19 / 25
-Eyebrow
-13
-11.5
-Lead
-18 / 28
-16.5 / 26
-Body
-16 / 26
-15.5 / 25
-Small
-13.5
-13 — never lower
-
-Touch targets grow, they don't shrink
-Every tappable thing is at least 44×44px with 8px of clear space around it. Buttons gain vertical padding on mobile rather than losing it — a 13px-tall pill that looked elegant on desktop is a miss target on a phone. Full-width buttons for anything primary.
-The mobile nav drawer
-Full-screen, paper ground, opens from the menu button with no animation beyond a 150ms fade. Contents in order: the wordmark and a 44px close button on the line the header occupied; the five nav links at 22px with generous row spacing; a hairline; then Staff login and Member login at 17px; then Sign up as a full-width green rectangle pinned at the bottom.
-Both logins, not just one — the drawer is the entire navigation on mobile, and dropping Member login strands the audience most likely to be on a phone. Body scroll locks while it is open, Esc closes it, focus moves to the close button on open and returns to the menu button on close.
-The screenshot rule, restated for mobile
-This is the one most often got wrong. On a phone the hero image should be the product's mobile screen, because that is what the visitor will actually use on their phone — showing them a shrunken desktop dashboard advertises the wrong thing. If there is no mobile product screen to show, show no image rather than a scaled-down desktop one.
-Mobile — header, hero, card, footer
-Header + hero · 375px
-ChurchPlanner
-All-in-one church operations softwareChurch operations. On autopilot.
-Connect the tools you already use, then let ChurchPlannerPro handle the follow-up work nobody has time for.
-Sign up
-Card + footer · 375px
-Automate
-Let CPP handle what's next
-Someone signs up to serve, a gift comes in, a family joins — the confirmation, the statement and the follow-up happen without you.
-See it work
-Platform+
-Solutions+
-Compare+
-Company+
-Note the hero screenshot bleeding off the right gutter rather than being letterboxed to fit, and the footer's four columns becoming four tappable groups.
-06
-Shape, elevation & motion
-Four radii, each with a job; no shadows at all; and almost no motion. Shape carries meaning here — it tells the reader what a thing does before they read the label.
-Token
-Value
-Meaning
-r-pill
-999px
-Navigation. Takes you somewhere, changes nothing.
-r-input
-8px
-Commitment. Inputs and the buttons that submit them.
-r-card
-12px
-An object — a card, a pricing plan, a product frame.
-r-panel
-24px
-A region of the page.
-border
-1px solid #E3DDD2
-Every card and input. No exceptions.
-
-Pills navigate, rectangles commit
-Every "explore", "see", "read more" control is a pill. Every control that submits a form or starts a trial is an 8px rectangle. A reader learns this in one page and it stops them misreading a browse link as a commitment.
-Shape by role
-See how it worksSign upSign up
-Ghost pill for browsing · quiet pill for a secondary path · green rectangle for the commitment
-Not everything is a card
-A border, a fill and a radius each say "separate object." Spend them where separation is the point. A list of features inside a card does not need each row in its own box.
-Motion
-Deliberately almost none. This is a rule about what not to build, and it matters more than it sounds — scroll-triggered fade-ins on every section are the most reliable tell of a page that was generated rather than designed, and their absence is a large part of why the reference site reads as considered.
-Hover transitions only, 150ms
-Interactive elements — buttons, links, cards with a click target — transition background, border-color, color and text-decoration-thickness over 150ms ease. Nothing else on the site animates.
-No scroll-triggered anything
-No fade-ins, no slide-ups, no intersection observers, no parallax, no counters that tick up, no sticky elements that shrink. Every section is fully rendered and readable the instant the page loads. If a section needs an entrance to feel interesting, the section is the problem.
-Nothing moves on its own
-No carousels, no auto-rotating testimonials, no looping background video, no animated illustration. The testimonial masonry in §7 exists precisely so quotes can be read at once instead of rotating past.
-/* the entire motion system */
-.btn, a, .card-interactive {
-  transition: background-color .15s ease,
-              border-color .15s ease,
-              color .15s ease,
-              text-decoration-thickness .15s ease;
-}
-@media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; animation: none !important; }
-}
-The reduced-motion block is near-redundant given how little moves — keep it anyway, since it also disables anything a future component quietly introduces.
-07
-Components
-Each component below is rendered live, in the real palette, with real copy. Inspect the page to lift the markup — these are not mockups of the components, they are the components.
-Buttons
-Green rectangle — the page's single primary action, labelled "Sign up" everywhere without exception (§9). One per screenful. Ghost pill — every mid-page "explore this" link; this is the most-used control on the site. Quiet pill — a secondary path beside a primary, such as booking a demo next to starting a trial. Paper pill — used only inside the green band.
-Never place two green buttons in the same section. If two things feel equally primary, one of them isn't.
-The four buttons
-Sign upSee integrationsLog inSign up
-Header
-Transparent on the paper with a hairline rule beneath — no white bar, no shadow, no sticky behaviour. It scrolls away with the page.
-Five links left: Platform, Integrations, Pricing, About, Blog, at 15px/600. Right: the two logins as plain text links, a hairline divider, then Sign up as a green rectangle. One button in the header, and it is the only one.
-The logins are text, not pills, on purpose. Eight items needs a hierarchy or it reads as a list, and the hierarchy here is honest: five things to explore, two doors for people who already have an account, one thing we want you to do. Making the logins pills would give returning-user utility the same weight as the conversion path.
-Header
-ChurchPlannerPRO
-PlatformIntegrationsPricingAboutBlog
-Staff loginMember login
-Sign up
-Two logins, and why the member one is in the nav at all
-Staff login is for administrators and church staff — the people this site is written for. Member login is for the congregation, who are not the audience for a single word of the marketing copy.
-It earns its place anyway: a member told to "log into the church system" will search the product name and land here, and if the header offers them no door they will email the administrator — which is exactly the chasing this product exists to remove. Both logins are navigation utilities, styled as such, and neither ever appears as a call to action anywhere else on the site.
-Label them in full. A single "Log in" opening a chooser adds a step for both audiences to save one header slot.
-Hero
-Split two-column: the combined h1, one lead paragraph, and a CTA cluster on the left; a framed product screenshot on the right.
-There are no forms on the marketing site. Not in the hero, not above the footer, not anywhere. Every primary call to action is a button that goes to /signup. This removes the single strongest conversion device the reference site had, so the hero needs something carrying that weight instead — and for a $9.99 product, that thing is the price.
-The CTA cluster is therefore three parts: a green rectangle, a quiet pill beside it, and one muted line underneath stating the price and the trial. Saying "$9.99 a month, everything included. 90 days free" above the fold does more work than a two-field form ever did, because the objection this product faces isn't friction — it's disbelief.
-Hero
-All-in-one church operations software
-Church operations. On autopilot.
-Connect the tools you already use — IconCMO, Planning Center, Vanco — then let ChurchPlannerPro handle the follow-up work nobody has time for.
-Sign up
-$9.99 a month, everything included. 90 days free — invite only while we onboard churches one at a time.
-Prairie Ridge Church
-Cards
-White on paper, 1px line, 12px radius, 32px padding. Fixed internal order: uppercase label, hairline rule, image or icon plate, title, body, then a ghost pill pushed to the bottom with margin-top:auto so buttons align across a row of unequal text.
-The white surface is what separates a card from the page — there are no shadows anywhere on this site. On paper, white already does the lifting, and a shadow on top of it is decoration pretending to be structure.
-Three-up cards — Connect / Manage / Automate
-Connect
-Bring your tools together
-Members, giving and calendars from IconCMO, Planning Center, Vanco and Servant Keeper land in one place — and stay in sync without a spreadsheet in the middle.
-See integrations
-Manage
-Run your church in one place
-Volunteers, groups, facilities, Sunday school and sacraments, pastoral care. One record per family, one calendar, one set of permissions.
-See the platform
-Automate
-Let CPP handle what's next
-Someone signs up to serve, a gift comes in, a family joins — the confirmation, the statement and the follow-up happen without you.
-See it work
-The ten outcomes — a list of workflows, never a grid of modules
-Ten items fit no grid. Three-up leaves an orphan, four-up leaves two, and a ten-card grid is a module menu — which is precisely the thing we argue against Planning Center for. So the ten don't get cards at all.
-Instead each becomes a row with the mechanism made literal: something happens at a church → ChurchPlannerPro handles what comes next. A domain label, the trigger in the administrator's own words, and the consequence. Hairline-separated rows on paper, no boxes, no numbering — these aren't a sequence and numbering would imply one.
-The structure is the argument. A reader scanning it sees ten things that happen to them and ten things that stop being their problem, which is a fundamentally different claim from ten things we sell.
-The ten outcomes
-The ten things a church has to get right
-Something happens. CPP handles what comes next.
-Volunteers
-Someone signs up to serve
-Confirmed, added to the rota, reminded the day before, and backfilled if they drop
-Giving
-A gift comes in
-Reconciled against the batch, receipted, and reflected in budget-versus-actual the same day
-Communication
-An event is added to the calendar
-It reaches the newsletter, the website and the bulletin without being retyped three times
-Sunday school
-A family registers a child
-Roster updated, allergy and pickup notes attached, nametags queued for printing
-Sacraments
-A baptism is scheduled
-Recorded on the member file, the certificate drafted, the anniversary tracked
-Groups
-A small group asks for a room
-Room assigned, conflict checked, setup request sent to whoever unlocks the building
-Facilities
-Something breaks
-Work order raised, assigned, and visible to the person who has to answer for it on Sunday
-Membership
-A family joins — or a member dies
-One record updated everywhere, with the giving statement and directory following automatically
-Worship
-The service plan changes
-Musicians, readers and tech all see the same version, not four emailed drafts
-Pastoral care
-Someone goes into hospital
-Visit logged, follow-up scheduled, and nobody falls off the list because one person was away
-The eleventh — the dashboard — is not a row. It's what you see when you stop having to check.
-Rules for the outcomes list
-Triggers are written in the administrator's words, not ours — "someone signs up to serve," not "volunteer registration event." Consequences name the actual artefact: a nametag, a receipt, a work order, a rota. Every row is one line of trigger and at most two of consequence; a row that needs three is a page. On mobile the three columns stack and the domain label sits above the trigger.
-Panels
-A wash panel groups a section that would otherwise float. A green panel is the closing call to action and appears once, at the bottom. Both are 24px radius inside the container.
-Overlap earns a panel its life: a portrait breaking the panel's left edge, a nameplate breaking the portrait's edge. Without an overlap a tinted panel is just a colored box.
-Wash panel with portrait — the "why us" block
-Nate Boucher
-Church administrator
-Customer since 2026
-Ready in an afternoon, not a quarter
-Church Management 2.0
-Church Management 1.0 gave you features, a configuration screen, and a staff member to do the work. 2.0 starts from the outcome, builds the workflow, and does the work for you.
-Less to remember. Less to chase. Less to do by hand.
-See how it works
-Integrations strip — replaces the customer logo strip
-The homepage recipe called for a row of customer logos. We don't have permission to use any, so that component doesn't exist. What replaces it in the same slot is the thing we can say truthfully: the systems CPP connects to.
-Set as wordmarks in type at 62% opacity, not as third-party logo files — it sidesteps another set of brand permissions, it looks deliberate rather than scraped, and it reads as "works with what you already have," which is the actual message. Never imply endorsement or partnership.
-Integrations strip
-Works withIconCMOPlanning CenterVancoServant KeeperSignUpGenius
-Testimonial masonry — built, but blocked on permission
-Three columns, uneven heights on purpose, quote in italic, then name and church. No customer logos — the component is specified without them, so it stays correct whatever permissions arrive later.
-It cannot ship until at least four churches have agreed to be quoted and named. §8's rule holds: a quote without a nameable person is a stock photo with extra steps. Until then the homepage skips this section rather than filling it with anonymised quotes.
-Testimonial masonry — placeholder text, do not ship without consent
-"Reconciliation used to take me most of Monday. It now takes about twenty minutes, and I stopped dreading the end of the month."
-[Name]
-[Church], [City]
- 
-"I set it up on a Tuesday afternoon and had the audit report before I went home. It found four duplicate families I'd been maintaining separately for years."
-[Name]
-[Church], [City]
- 
-"The volunteers confirm themselves now. That's the whole thing. I'm not chasing anyone on a Saturday night."
-[Name]
-[Church], [City]
- 
-"Our previous system charged per module. We were paying for four and using two."
-[Name]
-[Church], [City]
- 
-"Nametags print themselves on Sunday morning. Small thing. Changed my week."
-[Name]
-[Church], [City]
-Segment grid
-Four cards, each topped by a real screenshot of that segment's actual workflow rather than a generic illustration — the screenshot is the differentiator between this and the three-up. Title, two lines, ghost pill. Collapses to one column below 768px.
-Segment grid
-Lutheran (ELCA)
-Sacrament records, synod reporting, and the giving statements your council expects.
-See ELCA
-Church + school
-One family record across the parish and the school, without exporting to a spreadsheet.
-See schools
-Under 200 members
-Built for one administrator doing all of it, not a staff of six.
-See small churches
-Multi-site
-Separate calendars and rotas, one directory and one set of books.
-See multi-site
-Mobile block
-Text left, phone showing the product right. The one section whose image is always a mobile product screen. Its job is answering "can I do this from the building on a Sunday," so the copy names a Sunday-morning task rather than describing an app.
-Mobile block
-On the phone in your pocket
-Handle it from the narthex.
-Approve a swap between services, check who's covering coffee hour, look up a family's giving history before you talk to them. The things that come up while you're standing up.
-See it on mobile
-Forms — one, and it isn't on this site
-The marketing site has no forms at all. No hero capture, no pre-footer signup card, no newsletter box, no demo request, no contact form — Contact is a mailto:. Every call to action is a link to /signup, which is the one page in the whole estate that collects anything.
-This is a real trade. The reference site's inline form was the strongest conversion device on its page, and we're giving it up. What we get back: nothing on the marketing site can half-fail, there is no partial submission to handle, no validation to maintain across nine pages, and no second form asking for what the first one already took. For a one-person company that is the right trade, and the price line under the hero CTA carries the persuasive weight instead.
-The field specs below therefore govern the signup page only — see §13. Five states: rest, focus, error, submitting, success. Error is the only place semantic red appears anywhere.
-Field states — signup page only
-Rest
-Focus
-Error
-That email address looks incomplete — check for a missing domain.
-SubmittingSigning you up…
-✓
-Check your email.
-We've sent a confirmation to andrew@princeofpeacechurch.org. Your church is set up and ready.
-Error message rules
-Say what's wrong and how to fix it, in that order. Never apologise, never blame the user, never say "invalid." "That email address looks incomplete — check for a missing domain" beats "Please enter a valid email." Errors appear under the field they belong to, never as a banner at the top, and the field keeps whatever the person typed.
-Server failures name what to do next: "We couldn't reach our end just now. Try again in a moment, or email andrew@churchplannerpro.com and I'll set you up by hand."
-Pricing — one plan, so the page's job changes
-CPP is $9.99 a month for everything, with a 90-day free trial and 50% off the first year. There is no tier ladder, which means the pricing page is not helping anyone choose. Its only job is answering "what's the catch" — because a church administrator who has been quoted several hundred a month by a competitor will assume a price this low is a trial balloon, a per-user figure, or a stripped tier.
-So the card leads with the price, and every element under it exists to remove doubt: everything included stated as included, no asterisks, no "starting at", and the limits — if any — stated plainly rather than left to be discovered.
-Price typography
-Dollars and cents split: $9 at 50px display weight 700, .99 at 22px baseline-aligned to the top. Real cents earn the split — a round number would not. Per-month sits at 14px muted, immediately after.
-The promotional line is a component, not copy
-"50% off the first year" is an offer with a shelf life. It lives in a single removable pill above the price — never baked into the headline, never into the price figure itself. Deleting that one element must leave the card correct, because one day someone will delete it.
-The 90-day trial is different: it is a permanent term, not a promotion, so it sits in the button and in the reassurance line beneath it. Ninety days is unusually long and is doing real work — say it, don't bury it.
-Pricing card
-50% off your first year
-$9.99/month, everything included
-One price for the whole platform. Not per user, not per module, and not a starter tier — every church on ChurchPlannerPro gets all of it.
-Data & integrations✓
-Volunteers, groups & facilities✓
-Giving & reconciliation✓
-Sunday school & sacraments✓
-✓Two-way sync with IconCMO, Planning Center, Vanco
-✓Data health check on every import
-✓Unlimited staff and volunteer logins
-✓No setup fee and no annual contract
-Sign up
-No card required. Invite only for now — email for a code.
-Do
-Say "everything included" next to the price, in those words
-State the trial length in the button label
-Keep the promo in its own removable pill
-Name what's not charged for: users, modules, setup
-Don't
-Write "starting at $9.99" — nothing starts, it's one price
-Show a struck-through comparison price
-Put a countdown or urgency device on the offer
-Add a second card to make this one look better
-Closing band
-Solid green, 24px radius, 96px of vertical padding, centered, one paper pill. Once per page, at the bottom. This is the only large green area anywhere on the site.
-Closing CTA band
-Straightforward pricing. No long-term contract.
-Start with your existing data, read the audit report the same afternoon, and cancel any time. No implementation fee and no per-module upsell.
-Sign up
-FAQ — a homepage section, and never an accordion
-Two columns of question-and-answer pairs on paper, question in ink at 17px/650, answer in body. Sits directly under the pricing section, because most of what it answers is provoked by the price.
-Open, not collapsed. An accordion hides the answers, adds motion the site otherwise doesn't have, and makes someone click six times to scan what they could have read in twenty seconds. Open text is also what actually gets indexed and quoted. If the list grows past eight, the answer is fewer questions, not a disclosure widget.
-Write real objections, in the words people use. A question nobody asks is marketing copy wearing a question mark.
-FAQ
-Before you ask
-The questions we actually get.
-Is it really everything for $9.99?
-Yes. One price per church for the whole platform — not per user, not per module, and there is no higher tier holding anything back.
-What happens after 90 days?
-You start paying $9.99 a month, at 50% off for your first year. If you'd rather not, cancel and nothing is charged — we don't take a card to start.
-Can I get my data back out?
-Any time, as CSV, including giving history. It's your congregation's data and leaving should be as easy as arriving.
-Do I have to leave IconCMO or Planning Center?
-No. ChurchPlannerPro syncs with them. Plenty of churches run both while they decide.
-How safe is our giving history?
-Encrypted in transit and at rest, nightly backups, and the server isn't exposed to the public internet. The security page has the detail.
-Do I need an invite code?
-Yes, for now. We're onboarding churches one at a time so each setup gets done properly. Email andrew@churchplannerpro.com and you'll have a code back the same day.
-How long does setup take?
-An afternoon for most churches. You connect your existing system, we import, and the data audit tells you what needs cleaning before you rely on it.
-Footer — this is the real page inventory
-Wash panel, brand block plus four groups, 14px links at normal weight, no icons. There is no long-tail SEO block: the reference site's sixty-industry list suits a horizontal tool with sixty verticals, and padding ours out to match would read as thin.
-The footer is the sitemap. Every link here is a page that exists or is committed to; nothing gets added speculatively. Contact is a mailto:, not a form — a single-operator product where the founder answers is a strength, not something to hide behind a contact page.
-Footer
-ChurchPlannerPRO
-The church management platform that does the work for you.
-Platform
-Church communication
-Programs and events
-Volunteer scheduling
-Pricing
-Security
-Resources
-Blog
-Planning Center alternative
-Company
-About
-Contact
-Legal
-Terms
-Privacy
-© 2026 ChurchPlannerPro. All rights reserved.Made for church administrators.
-Link
-Destination
-Note
-Security
-discover.churchplannerpro.com/security
-Off the main domain — see §14
-About
-churchplannerpro.com/#about
-Homepage anchor, not a page
-Contact
-mailto:andrew@churchplannerpro.com
-Opens a mail client, no form
-Terms
-churchplannerpro.com/legal/terms
-
-
-Privacy
-churchplannerpro.com/legal/privacy
-
-
-Planning Center alternative
-To build
-The comparison page — outcomes vs. modules, kept respectful
-
-The tagline
-"The church management platform that does the work for you." Used verbatim, in the footer and as the <title> suffix.
-It does two jobs in one line. "Church management platform" is the category people actually search for, and refusing to say it costs us the search term while making the site harder to place. "That does the work for you" is the whole differentiator, and it turns the category admission into a claim — we're in the category and we're the one that isn't just a system of record.
-This is the only sanctioned use of the category words. §9 still bans stacking them through the body copy: the site says what CPP is once, here, and then talks about outcomes.
-08
-Imagery
-The strictest section in this document, because imagery is where a site like this most often goes wrong. Confirmed policy: no stock photography of any kind. Every image is either a real product screen or a named customer.
-The working consequence: product screenshots are the primary and default source, and a page with no available screenshot runs no image rather than filling the slot. Photography of named customers is an upgrade to add later, not a dependency for shipping.
-Use
-Real product screens with real demo data — Prairie Ridge Church, not Lorem Parish
-Photographs of actual customers in their actual offices, once they've agreed to be named
-Two-color line art of objects: a nametag, a bulletin, a signup sheet, a sync arrow between two systems
-Nothing at all, if the alternative is filler
-Never
-Stock photography of any kind, church or office
-Customer logos — no permission exists for any of them
-Third-party product logos; name integrations in type instead
-Hands raised in worship, sunlit sanctuaries, open Bibles, crosses, doves
-Cartoon characters or mascots
-Generic 3D shapes, blobs, abstract gradients
-Screenshots with obviously fake data or empty states
-Screenshots are warm-corrected
-The product has a cool ground. Dropped onto paper unmodified, a screenshot looks pasted on. Frame every product image in a 12px-radius white card with a 1px line, which mediates the temperature difference — and never place a raw screenshot directly on the paper.
-Weight budget
-The site is screenshot-heavy, and screenshots are the asset most likely to arrive as a 2MB PNG. WebP for everything, AVIF where the pipeline supports it, PNG only for an image that genuinely needs lossless. 200KB per product screenshot, 120KB per photograph, 1MB total per page.
-Serve 1× and 2× via srcset and set explicit width and height on every image so nothing reflows as it loads. Everything below the fold is loading="lazy"; the hero screenshot is not, and gets fetchpriority="high".
-Photographs are of people we actually work with
-A named person, their church, and how long they've been a customer. If we can't name them, we don't run the photo. A caption without a name is a stock photo with extra steps.
-09
-Words on the page
-Copy is design material. These are the rules the layout depends on.
-Write to the administrator
-The reader is the person doing the work every week — Nate, Tracy, a parish administrator holding twelve spreadsheets together. They are not the buyer in a procurement sense and not a technologist. They are competent, busy, and have been sold to before.
-What that means concretely: measure value in hours and chasing, not in ROI or efficiency gains. Name real tasks — reconciling giving, printing nametags, chasing a volunteer who didn't confirm — rather than categories. Assume they know their job better than we do. Never explain church operations to them.
-The pastor or council approves the spend but does not read this site. If we need to make the stewardship case, it gets its own page rather than diluting these one.
-Every section opens eyebrow → headline → one paragraph
-No section starts cold on a headline. The eyebrow is a short uppercase label that says what the section is about; the headline makes a claim; one paragraph explains it. If a section needs three paragraphs, it needs to be two sections.
-The fixed phrases
-These are the campaign and are used verbatim, not paraphrased.
-Tagline: The church management platform that does the work for you. · Promise: Church operations. On autopilot. · Triad: Connect your tools. Run your church. Automate what happens next. · Mechanism: Something happens → ChurchPlannerPro handles what comes next. · Payoff: Less to remember. Less to chase. Less to do by hand.
-Connect — bring your tools and data together. Manage — run your church in one place. Automate — let ChurchPlannerPro handle what happens next.
-A control says exactly what happens
-Sentence case, verb first, no more than four words. Not "Learn more", "Get started", "Click here", or anything uppercase.
-The primary call to action is always the same two words: "Sign up." Every green button on every page and every template, without variation — not "Start free trial" on the pricing card and "Start in an afternoon" in the hero and "Create your church" on the form. One label, learned once.
-It reads plainer than a benefit-loaded label, and that is the point twice over. A reader who has seen the same button four times knows exactly where it goes without reading it again. And with signup gated behind an invite code, "Start free trial" promises immediacy the next page won't deliver — "Sign up" promises only what actually happens.
-Ghost pills are not calls to action and keep their own specific labels: "See integrations", "See how it works", "See ELCA". They navigate; only green signs up.
-Banned phrasings
-"The work between them" — abstract and by now repetitive. "On-autopilot library" — internal jargon. "Set up in an afternoon" — over-promises; the correct phrase is "Start in an afternoon," and it belongs in body copy, never on a button.
-Also avoid stacking category language. The site says what CPP is once, near the top, and then talks about outcomes. Repeating "church operations and automation platform" in every section reads as insecurity.
-10
-Building a page
-The homepage rhythm, and how to construct anything else.
-Alternate paper and wash; end on green
-Sections run paper, paper, wash, paper, wash, and close on the green band followed by the footer. The alternation is what keeps a long page from feeling long. Never two wash panels in a row.
-Every page carries two conversion points
-One in the hero, one in the closing green band. Both are links to /signup, not forms. Between them every call to action is a ghost pill — that restraint is why the two real ones read as important.
-A new page starts from an outcome, not a template
-Before laying anything out, name the one thing a reader should be able to do or decide when they reach the bottom. Sections that don't serve it come out, however good they are.
-Standard section inventory
-Hero with inline signup · integrations strip · centered thesis with three-up cards · the ten outcomes · deep-dive band with product screenshot · segment grid · mobile block · wash panel with customer portrait · testimonial masonry · pricing · FAQ · green CTA band · footer.
-Two are gated: the portrait panel and the testimonial masonry both need a customer who has agreed to be named. Until then the homepage runs without them rather than filling the slots — nine sections that are true beat eleven where two are invented.
-No page invents a twelfth section type without a reason worth writing down.
-11
-Accessibility, print & consent
-Non-negotiable minimums. The palette was chosen so these are easy to meet.
-Pair
-Ratio
-Requirement
-Ink on paper
-17.52 : 1
-AA / AAA
-Body on paper
-6.74 : 1
-AA / AAA
-Muted on paper
-5.27 : 1
-AA
-Green on paper
-7.12 : 1
-AA / AAA
-White on green
-7.61 : 1
-AA / AAA
-
-Rules that follow
-Muted text never goes below 13px, since it has the least headroom. Focus states are always visible — a 2px green outline at 3px offset, never outline:none. Line length stays at or under 65 characters. Motion respects prefers-reduced-motion. Every product screenshot carries alt text describing what the screen shows, not "screenshot".
-Print
-Normally not worth specifying. It is here because of who reads this site: an administrator printing the pricing section to bring to a council meeting is a completely plausible path to a $9.99 purchase being approved, and a page that prints as four sheets of navigation and a black rectangle undermines it.
-Print rules
-Hide the header, footer navigation, the closing green band and every button. Print on white with black text — paper and wash both drop out, since nobody wants a full-bleed background on their printer. Keep card borders as hairlines so structure survives. Expand inline links to show their URL after the text. Never break a pricing card or an outcome row across pages.
-@media print {
-  header, .site-nav, .cta-band, .btn, .signup { display: none; }
-  body { background: #fff; color: #000; font-size: 11pt; }
-  .card, .panel { background: #fff; border: 1px solid #999;
-                  break-inside: avoid; border-radius: 0; }
-  .outcome-row, .pricing-card { break-inside: avoid; }
-  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; }
-}
-Domains & canonicals
-One canonical host: churchplannerpro.com, no www
-The bare domain is canonical. Everything already points that way — the footer links, /signup, /legal/terms and /legal/privacy are all written without www — so making www the canonical would mean rewriting all of them to fix a description rather than a fact.
-www.churchplannerpro.com 301-redirects to it. Every page carries a self-referencing <link rel="canonical"> on the bare host, and internal links are written that way too — a canonical tag doesn't excuse linking inconsistently.
-Retiring discover.churchplannerpro.com
-It is a second complete marketing site on our own domain, which means it competes with the real one in search rather than helping it. When it comes down: 301 the root to churchplannerpro.com, and 301 /security to churchplannerpro.com/security specifically rather than dumping it on the homepage — it is the one URL there worth preserving, and anyone following that link is mid-evaluation.
-Redirect, don't delete. A dead subdomain loses whatever links and history it has accumulated; a redirected one passes them on.
-Analytics & consent
-Google Analytics needs a consent banner, and it gets the quietest one possible
-GA sets cookies, so a notice is required for visitors in scope of GDPR and it is good practice regardless. Ours is a single bar pinned to the bottom: one sentence, an "Accept" green rectangle and a "Decline" quiet pill of equal visual weight. No modal, no overlay, no blocking the page, no "manage preferences" maze, no pre-ticked anything. It dismisses permanently either way.
-Decline must actually decline — GA does not load. A banner whose refusal does nothing is worse than no banner, and this is a product asking churches to trust it with giving records; the consent bar is the first evidence of how we treat data.
-Load GA after consent, never in the head. Anonymise IPs. Don't add a second analytics tool without removing this one.
-Consent bar
-We use Google Analytics to see which pages help churches decide. No advertising, no third-party tracking. Privacy
-DeclineAccept
-12
-The app boundary
-The website and the product are deliberately not the same, and this is the most likely thing to get "fixed" by someone trying to be helpful.
-Crosses the boundary
-The wordmark and its ink, #0B1220
-The meaning of green: it marks the thing you act on
-Inter as the body typeface
-The 8px input radius and 12px card radius
-Plain language — outcomes, never module names
-Stays on its own side
-Grounds — paper #FAF7F2 here, #F8FAFC there
-The green hex — #12603A here, #15803D there
-Neutrals — warm here, cool there
-Indigo #4F46E5, which is app-only
-The badge system, sidebar, and every in-product pattern
-The reasoning: a tool someone works in for three hours wants a cool, recessive ground that doesn't fatigue. A page someone reads for ninety seconds wants warmth and personality. Making them identical would compromise both.
-/* marketing site tokens */
---paper:#FAF7F2;  --card:#FFFFFF;   --wash:#EFE7D8;
---ink:#0B1220;    --body:#5A5751;   --muted:#6B675F;
---green:#12603A;  --green-deep:#0F5231;  --line:#E3DDD2;
-
---r-pill:999px;  --r-input:8px;  --r-card:12px;  --r-panel:24px;
---container:1240px;  --measure:720px;  --section-pad:96px;  --gap:24px;
-
-/* product tokens — do not sync */
---app-bg:#F8FAFC;  --app-green:#15803D;  --app-indigo:#4F46E5;
-13
-Page templates
-§1–§12 describe a homepage system. These are the other page types the footer commits to. Each inherits everything above — header, footer, palette, type, motion — and adds only what's specific to it.
-Homepage — pricing lives here, not on its own page
-There is no separate pricing page. The pricing card sits as a section between the testimonial masonry and the closing band, on wash, centered, followed by the FAQ section, which answers the objections the price provokes. The security question there links to the security page.
-Putting it inline rather than a click away suits a one-plan product — there is nothing to compare, so there is nothing to send anyone to a separate page to do. The nav's "Pricing" link is an anchor.
-Article template — the blog
-The only page on the site set for sustained reading, so it drops nearly everything else. Single column at the 720px measure, left-aligned, no sidebar, no related-posts rail, no share buttons, no reading-progress bar.
-Header: eyebrow category, title in Outfit at 40px with the weight device, then date and reading time in muted 13.5px. No author byline while it is only you writing — a byline on a one-person company reads as padding. Add it when there is a second writer.
-Body: Inter 18/30 — larger than the 16px used elsewhere, because this is the one place people read for minutes rather than seconds. h2 at 26px with 48px of space above and 16 below; h3 at 20px. Lists get 12px between items. Blockquotes are indented with a 2px green left rule, no italics, no quotation marks. Code and data tables scroll inside their own container.
-Images break the measure to the full 1240px container and carry a 13px muted caption beneath. Foot: a single wash panel with one line of what CPP does and one green "Sign up" rectangle. No newsletter capture, no tag cloud.
-Don't link Blog in the header until there are three posts. A nav item leading to an empty index is worse than no nav item — it advertises abandonment on a product whose whole pitch is that things get done. The template is ready; ship the link with the content.
-The index is the same measure: a plain list of title, date and one-line standfirst, newest first. No cards, no thumbnails, no excerpt teasers. At three posts a grid looks empty; at thirty a list still scans.
-Article header and body
-Data quality
-Four duplicate families you almost certainly have.
-9 September 2026 · 6 min read
-Every church database we have imported has had duplicates in it. Not because anyone was careless — because a family joined twice, once when they started attending and once when their child was registered for Sunday school, and nothing ever reconciled the two records.
-The same person, entered twice
-The commonest pattern is a maiden name and a married name on separate records, both active, both receiving statements. The second commonest is a nickname — Bob and Robert, Kathy and Katherine — with different email addresses.
-In a 300-member database, four to twelve duplicate families is normal. Most administrators know about one or two of them.
-The audit report flags all of them on import, with the evidence for each match, and you decide what merges.
-Comparison page — restyle, don't rewrite
-The Planning Center alternative page already exists and its content is right: it credits Planning Center's real advantages before positioning CPP for a different segment, and it ends with a decision framework rather than a verdict. That tone is the asset. This is a restyling job, not a redesign.
-The comparison table is the one place two-column structure is allowed, and it needs rules so it doesn't become a scoreboard: no ticks and crosses, no red anywhere, no "winner" column shading, and Planning Center's column is styled identically to ours. Both columns get prose, not symbols — "organised by module, configured per church" against "organised by outcome, works on setup" states a difference without scoring it.
-Everything else on the page uses standard sections. The "when Planning Center is the better choice" block is a wash panel, not a footnote — burying it is what makes a comparison page feel dishonest, and it is the section that earns the rest of it.
-Product page — one template, three fills
-Church communication, programs and events, volunteer scheduling. Fixed order: hero with eyebrow, weight-device headline, lead, ghost pill and a screenshot of that feature; a three-up of what it does; a deep-dive band with a second screenshot; the relevant slice of the ten outcomes as a short version of the workflow list; then the shared closing band and footer. No pricing card — it links to the homepage anchor.
-Every product page shows at least two real screens of that feature. A product page without screenshots is a brochure.
-Legal and security — same template, different tone
-Single column at the 720px measure, Inter 16/28, h2 at 22px, a "last updated" date directly under the title, and a table of contents for anything over five sections. White card on paper, standard header and footer, nothing else — no CTA, no closing band. A green rectangle under a privacy policy reads as opportunism.
-The security page moves to churchplannerpro.com/security and keeps its content as written — network isolation, access management, threat protection, encryption in transit and at rest, backups. That content is substantive and specific, which is exactly right; it just needs to be on the main domain and in this design. It is the page someone reads while deciding whether to trust us with giving history, so it is the one legal-family page that may carry a single quiet line at the foot pointing to Contact.
-404
-Paper, centered, no illustration, no joke. The weight device on a short line, one sentence, and three links to the places people were most likely heading: the homepage, pricing, and contact. Standard header and footer so it doesn't feel like a different site.
-404
-404
-That page isn't here.
-It may have moved, or the link may be out of date. These are the most likely places you were going.
-HomePricingContact
-The signup page — the only form in the estate
-Every primary CTA on the site lands here. Because nothing else collects anything, this page carries the entire conversion burden, and it gets more care than a form usually would.
-Layout: paper ground, wordmark centered at the top, form in a white card at 12px radius and 400px wide, single column. Standard footer, no site header — a nav bar here invites people to leave. One green rectangle, full width, and the reassurance line beneath it.
-Signup is gated: the invite code is required. That is a bigger decision than a field, because every button on the site leads here. A page that looks like open signup and then refuses you at the last field is the single worst experience the site can produce — the person has typed four fields before discovering they were never eligible.
-So the invite code comes first, not last. It is the top field, marked required, and the page says what it is before asking for anything else. Someone without one finds out in two seconds instead of two minutes, and someone with one is reassured they're in the right place.
-And there is a way to get one, in the same breath. Directly under the field: "Don't have a code? Email andrew@churchplannerpro.com and I'll send you one." A mailto, not a form — consistent with §7, and a real person's address does more for trust here than a request form would.
-Fields, in order: invite code, church name, your name, email, password. Five, but the password confirmation goes — replaced by a show/hide toggle, which is fewer keystrokes and better practice. Requirements stated up front, not revealed on failure.
-Restate the offer on the page. Someone arriving here has left the page where the price was: 90 days free, then $9.99 a month for everything. 50% off your first year. No card required. The commitment moment is where the terms should be visible, not one back-click away.
-Gated signup changes what the CTAs promise
-Labels like "Start free trial" or "Start in an afternoon" imply you can act now. If a code is required, they are writing a cheque the signup page won't cash, and the reader discovers that only after clicking.
-The fix is not to soften the buttons — it is to say it plainly where the offer is stated. The hero's price line now ends "invite only while we onboard churches one at a time," which is honest and, for a one-person company that sets each church up by hand, reads as care rather than a barrier. Scarcity that is actually true is an asset.
-Two things to keep consistent while this holds: the FAQ answers it directly, and the button labels stay as they are. The moment signup opens up, that one clause comes out of the price line and the FAQ entry goes — nothing else changes.
-Signup page
-ChurchPlannerPRO
-Sign up
-Invite only for now. Setup takes about fifteen minutes.
-Invite code *Don't have a code? Email me and I'll send you one.
-Church name
-Your name
-Email
-PasswordAt least 12 characters. Show
-Sign up
-90 days free, then $9.99 a month for everything — 50% off your first year. No card required.
-Already have an account? Log in
-14
-Outstanding decisions
-Five items, none blocking a build. The first is the migration checklist for the live sites; the rest are small or waiting on other people.
-Migration — what changes on the live site
-Tracked, not blockingall
-This document is canonical. www.churchplannerpro.com and discover.churchplannerpro.com both predate it and both diverge; they get brought into line rather than the other way round. The concrete deltas, so nothing gets missed:
-Palette — live sites use blue #2563EB as the primary accent with a green sign-up button beside it, on a white-to-lavender gradient. Becomes paper, one green accent, no blue anywhere (§3).
-Headline device — live sites color one phrase blue ("Run your whole church from one platform"). Becomes the weight contrast (§4).
-Positioning — "Nine modules covering the work admins actually do" is on the live homepage. Modules named as modules is the thing the Planning Center page argues against; becomes the ten outcomes (§7).
-Commercial story — "Free while we validate with churches · No credit card · 15-minute setup" becomes $9.99, 90-day trial, 50% first year (§7). This is the largest single change and it is a business decision, not a design one.
-Product naming — the assistant is "Ask Aaron" on the live site. Whatever it is called, it must be called that everywhere.
-Demo tenant — live screenshots show Christ Lutheran, 312 members; the guidelines and prototypes use Prairie Ridge Church, 142 members. Pick one and reshoot every screenshot from it (§8).
-Signup — five fields including password, confirmation and an optional invite code. See §14.
-Nav — live nav is Product / Ask Aaron / Integrations / Why CPP / FAQ; the footer inventory in §7 is the agreed structure.
-Order: the commercial story first, since it decides copy everywhere. Then the homepage, then the security page onto the main domain, then the comparison page restyle, then the rest. discover.* comes down once its /security redirect is in place.
-Consent for named customers
-Gates two components§7 · §8
-Logos are settled — none, ever. Still open is whether any church will agree to be quoted and named. The testimonial masonry and the portrait panel are both built and both unshippable until four or so have said yes. Until then the homepage runs nine sections instead of eleven.
-Security page content is ten months old
-Doesn't block§13
-Dated 21 November 2025. The content is good and specific, but it is the one page whose entire job is being trusted, and a stale date on it undercuts that on its own. Review the claims against what's actually running before it moves to the main domain, and re-date it when it lands.
-The wordmark's original typeface
-Doesn't block§2 · §4
-Still unidentified. It doesn't block anything now that the site is standardised on Outfit — but if the lockup ever needs redrawing, knowing whether it was a licensed face decides whether you re-cut it in Outfit or renew a licence. Worth five minutes with a font identifier on the original file.
-Closed in this round
-Typeface — Outfit for display above 22px, Inter for everything else and the whole product. Pricing — genuinely flat per church, stated on the card as "not per user, not per module." The discount — a standing first-year offer, not a lapsing promotion. Shadows — none, anywhere; white on paper does the lifting. The ten outcomes — a hairline-separated workflow list, not a grid. Four missing components — built, with the logo strip replaced by an integrations strip. Footer — your real inventory; the footer is the sitemap. Social share image — none by choice. Motion — hover transitions only, no scroll entrances. Form states — five, specified. Inline links — green, underlined, 2px offset, no visited state. Dark mode — none. Legal — terms, privacy and security pages exist and are linked. Header — five links, two logins as text, one green Sign up. No forms on the marketing site; every CTA goes to /signup, and no demo or walkthrough booking exists. FAQ — a homepage section under pricing, open text, never an accordion. Canonical host — churchplannerpro.com, no www; discover.* redirects and comes down. Platform is the word in both header and footer. Signup is gated — invite code required and first on the page, with a mailto route to get one. One CTA label — every green button says "Sign up". Tagline — "the church management platform that does the work for you," the one sanctioned use of the category words.
-Settled, for the record
-Palette — warm paper, one green accent, no second color. Ink #0B1220, from the wordmark. The weight-contrast headline device. One h1 per page containing both the search phrase and the claim. Pills navigate, rectangles commit. Green only on things you can act on, with the icon as the single stated exception. The site and the product deliberately do not share a ground.
-Imagery — no stock photography, ever; real product screens or named customers only, and no image at all rather than a filler one. Audience — the administrator doing the weekly work, with the stewardship case given its own page if it's needed. Pricing — one plan at $9.99/month with everything included, a 90-day trial, and the first-year discount held in a removable component. Icon — white C on a green rounded square, brand green #12603A. Mobile wordmark — drops the PRO suffix below 768px, never stacks. Every page ships desktop and mobile, per §5.
-The visual reference question is also closed: headshotpro supplied the ground and the restraint, When I Work supplied the structure and the component anatomy. They're no longer competing directions.
-This document is set in the system it describes: paper ground, warm neutrals, one green accent used only on links, and the weight-contrast device in the title and section headings. Display is Outfit, body is Inter — the split settled in §4. Component specimens are live markup, not images — inspect to copy. Contrast ratios are computed to WCAG 2.1. This supersedes the earlier ChurchPlannerPro Site Spec, which is retained only as the audit trail for where these values came from.
-
-
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#FAF7F2"><title>ChurchPlannerPro — Website Design Guidelines</title><meta name="description" content="The canonical visual and content guidelines for the ChurchPlannerPro marketing site."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#FAF7F2;--card:#FFFFFF;--wash:#EFE7D8;--ink:#0B1220;--body:#5A5751;--muted:#6B675F;--green:#12603A;--line:#E3DDD2}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--body);font:16px/1.75 Inter,Arial,sans-serif}a{color:var(--green);text-decoration:underline;text-underline-offset:2px}a:hover{text-decoration-thickness:2px}a:focus-visible,summary:focus-visible{outline:3px solid var(--green);outline-offset:4px}h1,h2,h3,h4{color:var(--ink);font-family:Outfit,Arial,sans-serif;line-height:1.15;letter-spacing:-.025em}p{margin:0 0 1em}h1{font-size:clamp(2.4rem,5vw,4.8rem);font-weight:700;margin:0 0 .32em}h2{font-size:clamp(2rem,3.8vw,3.6rem);font-weight:700;margin:2em 0 .5em}h3{font-size:clamp(1.35rem,2vw,1.85rem);font-weight:600;margin:2.1em 0 .5em}h4{font-size:1rem;font-weight:700;letter-spacing:0;margin:2em 0 .5em}.topbar{border-bottom:1px solid var(--line);background:var(--paper)}.topbar-inner{max-width:1440px;margin:auto;padding:18px clamp(20px,4vw,64px);display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-family:Outfit,sans-serif;color:var(--ink);font-size:22px;white-space:nowrap;text-decoration:none;line-height:1}.brand strong{font-weight:800}.brand em{font-style:normal;font-weight:300}.brand sup{font-size:.44em;vertical-align:super;font-weight:700;letter-spacing:.04em}.top-note{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}.hero{max-width:1440px;margin:auto;padding:clamp(60px,8vw,124px) clamp(20px,4vw,64px) clamp(72px,8vw,120px);border-bottom:1px solid var(--line)}.eyebrow,.chapter-kicker{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}.hero h1{max-width:950px;margin:20px 0 28px}.hero h1 .light{font-weight:300}.hero p{font-size:clamp(17px,2vw,21px);max-width:720px;line-height:1.6}.hero-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:34px}.hero-meta span{border:1px solid var(--line);border-radius:100px;padding:6px 14px;font-size:12px;color:var(--ink)}.layout{max-width:1440px;margin:auto;display:grid;grid-template-columns:260px minmax(0,1fr);gap:clamp(40px,5vw,90px);padding:0 clamp(20px,4vw,64px)}.sidebar{position:sticky;top:20px;align-self:start;max-height:calc(100vh - 40px);overflow:auto;padding:52px 0}.sidebar-title{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:14px}.sidebar a{display:flex;gap:15px;align-items:baseline;border-bottom:1px solid var(--line);padding:8px 0;color:var(--body);text-decoration:none;font-size:13px;line-height:1.35}.sidebar a:hover{color:var(--green)}.sidebar a span{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}.content{min-width:0}.chapter{padding:62px 0 88px;border-bottom:1px solid var(--line);scroll-margin-top:20px}.chapter:nth-of-type(even){background:var(--wash)}.chapter>h2.chapter-title{margin:12px 0 22px}.chapter>p,.chapter>ul,.chapter>h3,.chapter>h4,.chapter>h1,.chapter>h2:not(.chapter-title){max-width:780px}.chapter>p:first-of-type{font-size:18px;color:var(--ink)}.chapter h1:not(:first-child){font-size:clamp(1.8rem,3vw,2.8rem);border-left:2px solid var(--line);padding-left:22px;margin:2em 0 .8em}.chapter h2:not(.chapter-title){font-size:clamp(1.6rem,2.8vw,2.4rem);margin-top:2.2em}.chapter h3{padding-top:8px}.chapter p{overflow-wrap:anywhere}.chapter p:has(>.wordmark-sample){padding:20px}.source-list{padding-left:23px;margin:0 0 1.4em;max-width:780px}.source-list li{padding-left:5px;margin:.35em 0}.front-matter{max-width:780px}.preface{border-bottom:1px solid var(--line);padding:24px 0}.preface summary{cursor:pointer;color:var(--green);font-size:13px;font-weight:600}.preface[open] summary{margin-bottom:22px}.preface h1{font-size:2rem}.preface h4{margin-top:1.5em}.hex-value{font:600 14px/1.4 Inter,sans-serif;letter-spacing:.04em;color:var(--ink);margin-bottom:5px}.wordmark-sample{display:block;font:700 clamp(22px,4vw,44px)/1 Outfit,sans-serif;letter-spacing:-.05em;color:var(--ink);border:1px solid var(--line);background:var(--card);padding:24px;margin:8px 0 18px}.chapter p:has(>.wordmark-sample){padding:0}.chapter p:has(>.hex-value){margin-bottom:4px}.chapter p:has(>.hex-value)+p{font-size:14px}.chapter p:has(>.hex-value)::before{content:"";display:inline-block;width:20px;height:20px;border:1px solid var(--line);background:var(--card);vertical-align:middle;margin-right:10px}.source-link{font-size:12px;color:var(--muted);margin-top:36px}.footer{padding:50px clamp(20px,4vw,64px);max-width:1440px;margin:auto;display:flex;justify-content:space-between;gap:25px;font-size:12px;color:var(--muted)}@media(max-width:950px){.layout{display:block}.sidebar{position:static;max-height:none;padding:20px 0;border-bottom:1px solid var(--line)}.sidebar nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:26px}.chapter{padding:55px 0 68px}.top-note{display:none}}@media(max-width:600px){body{font-size:15px;line-height:1.7}.sidebar nav{grid-template-columns:1fr}.sidebar a{padding:10px 0}.hero{padding-top:62px;padding-bottom:65px}.hero h1{font-size:clamp(2.4rem,12vw,4rem)}.chapter h3{font-size:1.35rem}.footer{display:block}.footer p{margin:0 0 10px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style></head><body><header class="topbar"><div class="topbar-inner"><a class="brand" href="#top" aria-label="ChurchPlannerPro, back to top"><strong>Church</strong><em>Planner</em><sup>PRO</sup></a><span class="top-note">Marketing site design system · September 2026</span></div></header><main id="top"><div class="hero"><div class="eyebrow">ChurchPlannerPro / Reference 01</div><h1>Website design <span class="light">guidelines.</span></h1><p>Standing rules for churchplannerpro.com. Decisions for a calmer site that shows the software, speaks to outcomes, and makes every action clear.</p><div class="hero-meta"><span>Outfit + Inter</span><span>14 sections</span><span>Desktop + mobile</span><span>v1 · September 2026</span></div></div><div class="layout"><aside class="sidebar" aria-label="On this page"><div class="sidebar-title">Contents</div><nav><a href="#section-01"><span>01</span>Principles</a><a href="#section-02"><span>02</span>The wordmark</a><a href="#section-03"><span>03</span>Color</a><a href="#section-04"><span>04</span>Typography &amp; headings</a><a href="#section-05"><span>05</span>Layout, spacing &amp; responsive</a><a href="#section-06"><span>06</span>Shape, elevation &amp; motion</a><a href="#section-07"><span>07</span>Components</a><a href="#section-08"><span>08</span>Imagery</a><a href="#section-09"><span>09</span>Words on the page</a><a href="#section-10"><span>10</span>Building a page</a><a href="#section-11"><span>11</span>Accessibility, print &amp; consent</a><a href="#section-12"><span>12</span>The app boundary</a><a href="#section-13"><span>13</span>Page templates</a><a href="#section-14"><span>14</span>Outstanding decisions</a></nav></aside><article class="content"><details class="preface"><summary>Original document preface and contents</summary><h1 class="front-matter">Website design guidelines</h1>
+<p class="front-matter">Standing rules for churchplannerpro.com. These are decisions, not suggestions — where a rule exists, follow it rather than re-deciding per page. This governs the marketing site only; the product has its own system in cppdesignsystem.html and the two are deliberately different.</p>
+<p class="front-matter">v1 · September 2026Marketing site onlyPalette: settledDesktop + mobileTypeface: Outfit + Inter14 sections + templatesMigration tracked — §14</p>
+<h4 class="front-matter">Contents</h4>
+<ul class="source-list">
+<li class="front-matter">01Principles</li>
+<li class="front-matter">02The wordmark</li>
+<li class="front-matter">03Color</li>
+<li class="front-matter">04Typography &amp; headings</li>
+<li class="front-matter">05Layout, spacing &amp; responsive</li>
+<li class="front-matter">06Shape, elevation &amp; motion</li>
+<li class="front-matter">07Components</li>
+<li class="front-matter">08Imagery</li>
+<li class="front-matter">09Words on the page</li>
+<li class="front-matter">10Building a page</li>
+<li class="front-matter">11Accessibility, print &amp; consent</li>
+<li class="front-matter">12The app boundary</li>
+<li class="front-matter">13Page templates</li>
+<li class="front-matter">14Outstanding decisions</li>
+</ul>
+</details><section class="chapter" id="section-01"><div class="chapter-kicker">01 / Principles</div>
+<h2 class="chapter-title">Principles</h2>
+<p>Five sentences that decide most arguments before they start.</p>
+<h3>The page is calm because the product isn't</h3>
+<p>CPP is sold to people whose week is already noisy — a church administrator holding twelve spreadsheets together. The site should feel like relief, not like more input. When a choice is between more energy and more quiet, choose quiet.</p>
+<h3>Show the software</h3>
+<p>The most persuasive thing on any page is a real screen from the product with real data in it. Prefer a screenshot to an illustration, an illustration to a stock photo, and a stock photo to nothing — except that we do not use stock photos, so prefer nothing.</p>
+<h3>Green means act</h3>
+<p>Inherited from the product and non-negotiable. Green appears on things you can do something with. It is never decoration.</p>
+<h3>Outcomes, not modules</h3>
+<p>Every page is organized around what a church needs to get right, never around our feature list. If a section could be retitled &quot;Features&quot; without changing its content, it is wrong.</p>
+<h3>Nothing should look generated</h3>
+<p>The warm ground, the real screenshots, the specific copy and the restraint on color are all in service of this. A page that could belong to any B2B tool has failed even if every rule below was followed.</p>
+</section>
+<section class="chapter" id="section-02"><div class="chapter-kicker">02 / The wordmark</div>
+<h2 class="chapter-title">The wordmark</h2>
+<p>The identity is a single-ink typographic lockup: Church bold, Planner light, PRO as a small raised suffix. There is no icon and no color in it.</p>
+<p>Wordmark at 44 / 22 / 15px</p>
+<p class="wordmark-sample">ChurchPlannerPRO</p>
+<p class="wordmark-sample">ChurchPlannerPRO</p>
+<p class="wordmark-sample">ChurchPlannerPRO</p>
+<p>Property</p>
+<p>Rule</p>
+<p>Color</p>
+<p>#0B1220 on light grounds. Solid white on green or ink. Nothing else, ever.</p>
+<p>Clear space</p>
+<p>The height of the capital C on all four sides — about 0.55× the lockup height.</p>
+<p>Minimum width</p>
+<p>132px. Below that the PRO suffix closes up.</p>
+<p>Aspect</p>
+<p>4.95 : 1. Needs a 200px+ slot; use the fallback below 480px.</p>
+<p>Mobile fallback</p>
+<p>Wordmark without the PRO suffix, below 768px. Never stack it on two lines.</p>
+<p>Icon</p>
+<p>White C on a green rounded square. See below.</p>
+<h3>The icon</h3>
+<p>The identity has no mark, so the icon is built rather than extracted: a rounded green square carrying the wordmark's C in white. A solid color block is the only thing that reads reliably at 16px, and green makes the tab findable in a strip of blue software.</p>
+<p>Icon at 64 / 32 / 16px, and in a tab strip</p>
+<p>C</p>
+<p>64</p>
+<p>C</p>
+<p>32</p>
+<p>C</p>
+<p>16</p>
+<p>C</p>
+<p>Church operations. On autopilot.</p>
+<p>In a browser tab</p>
+<h3>The icon uses the brand green, and it is the exception to §3</h3>
+<p>Green #12603A, corner radius 22% of the square, the C at roughly 58% of the height, optically centered — a C centered by its bounding box sits slightly too far right.</p>
+<p>§3 says green never appears as decoration. The icon is the one permitted exception, and it survives the rule's spirit: the icon is the thing you tap to open CPP, which makes it the most literal action target we have.</p>
+<p>Deliverables: favicon.svg (the source), favicon.ico at 32 and 16, apple-touch-icon.png at 180×180 with no transparency and no rounded corners of its own — iOS applies its own mask — and icon-512-maskable.png with the C inside the safe zone at 80% of the canvas. A site.webmanifest naming ChurchPlannerPro with theme_color #12603A and background_color #FAF7F2.</p>
+<p>One consequence worth being deliberate about: this icon is used by the marketing site and the product, so it is the single asset where both systems must agree on a hex. It takes the site's #12603A, because the brand green belongs to brand assets — the app's #15803D stays what it is, a semantic UI color that never appears in identity work.</p>
+<p>Do</p>
+<ul class="source-list">
+<li>Reverse it to solid white on the green band</li>
+<li>Let it sit on paper, wash, or white equally</li>
+<li>Keep the weight relationship exactly as drawn</li>
+</ul>
+<p>Don't</p>
+<ul class="source-list">
+<li>Tint it green, or color any single word</li>
+<li>Add a mark, glyph, or church iconography beside it</li>
+<li>Set it in a different typeface to &quot;match&quot; a headline</li>
+<li>Place it over a photograph</li>
+</ul>
+</section>
+<section class="chapter" id="section-03"><div class="chapter-kicker">03 / Color</div>
+<h2 class="chapter-title">Color</h2>
+<p>One accent on a warm ground. There is no second brand color, and adding one is a decision that requires revisiting this document — not a per-page choice.</p>
+<p>Paper</p>
+<p class="hex-value">#FAF7F2</p>
+<p>Page ground. The site is never pure white.</p>
+<p>Card</p>
+<p class="hex-value">#FFFFFF</p>
+<p>Cards, inputs, product frames.</p>
+<p>Wash</p>
+<p class="hex-value">#EFE7D8</p>
+<p>Alternating panels, footer, icon plates.</p>
+<p>Ink</p>
+<p class="hex-value">#0B1220</p>
+<p>Headlines, wordmark, titles, nameplates.</p>
+<p>Body</p>
+<p class="hex-value">#5A5751</p>
+<p>Running text.</p>
+<p>Muted</p>
+<p class="hex-value">#6B675F</p>
+<p>Eyebrows, captions, attribution.</p>
+<p>Green</p>
+<p class="hex-value">#12603A</p>
+<p>Action only.</p>
+<p>Line</p>
+<p class="hex-value">#E3DDD2</p>
+<p>All 1px borders.</p>
+<h3>Green appears only on things you can act on</h3>
+<p>A button, a link, a border around a button, a checkmark confirming something is included. Never a section background, never a fill behind an illustration, never a decorative underline or bar.</p>
+<p>The single exception is the closing call-to-action band, where the green area is the call to action. One such band per page, at the bottom.</p>
+<h3>Every neutral is warm-biased</h3>
+<p>Cool greys read blue and dirty against paper. The four neutrals above are the complete set. If a shade you need isn't here, derive it from these — do not borrow from the product palette, whose neutrals are tuned for a cool ground.</p>
+<p>The most common way this rule breaks: someone copies a component out of cppdesignsystem.html and brings #64748B or #F8FAFC with it.</p>
+<h3>One large green area per page</h3>
+<p>Green earns its meaning by scarcity. The closing band spends it; everything else that could be tinted — alternating panels, icon plates, the footer — uses wash or paper.</p>
+<h3>Inline links</h3>
+<p>Green, underlined, 1px thickness at 2px offset. On hover the underline thickens to 2px — nothing else moves, no color change. No visited state: a marketing site that dims links people have already read is working against itself.</p>
+<p>Inside the green band, links are white with the same underline treatment. Never green-on-green.</p>
+<p>Inline links, on paper and on green</p>
+<p>ChurchPlannerPro connects to IconCMO, Planning Center and Vanco, and runs a data health check on everything it imports.</p>
+<p>Every plan includes the full platform — see what's covered on the pricing page.</p>
+<h4>Not in the palette</h4>
+<p>No yellow, amber, gold, terracotta, or any second accent. No gradients, on any element, including buttons and bands. No colored drop shadows. No blue — it is the default color of church software and we are deliberately not using it.</p>
+<p>Semantic colors for error and warning states are permitted in forms only — see §7 — and appear nowhere else on the site.</p>
+<p>There is no dark mode. The site is light-only and the palette is built that way; a warm paper ground has no meaningful dark equivalent. Do not add a prefers-color-scheme block, and do not let a component library introduce one.</p>
+</section>
+<section class="chapter" id="section-04"><div class="chapter-kicker">04 / Typography &amp; headings</div>
+<h2 class="chapter-title">Typography &amp; headings</h2>
+<p>One scale, two roles, one device carried over from the logo, and a heading structure that does the SEO work without costing the outline.</p>
+<h3>The weight-contrast device</h3>
+<p>The wordmark sets one bold word against one light word at the same size. Repeat it in headlines: the light half carries the setup, the bold half carries the claim. This is the site's signature and it costs nothing.</p>
+<p>One break per headline, on the phrase that carries the promise. Never mid-clause. Never three alternations in a line. Never in body copy, buttons, labels, or captions.</p>
+<p>Correct — one break, on the claim</p>
+<p>Church operations. On autopilot.</p>
+<p>Less to remember. Less to chase. Less to do by hand.</p>
+<p>Wrong — alternating, so nothing leads</p>
+<p>Connect your tools. Run your church. Automate what happens next.</p>
+<p>The triad is three sentences of equal weight — set it in one weight, or split it across three columns. Don't break it four times.</p>
+<p>Style</p>
+<p>Size / line-height</p>
+<p>Weight</p>
+<p>Tracking</p>
+<p>Notes</p>
+<p>Hero headline</p>
+<p>48 / 52</p>
+<p>300 + 700</p>
+<p>-0.025em</p>
+<p>One per page. Weight device applies.</p>
+<p>Section headline</p>
+<p>36 / 42</p>
+<p>300 + 700</p>
+<p>-0.022em</p>
+<p>Never as large as the hero.</p>
+<p>Card title</p>
+<p>22 / 29</p>
+<p>650</p>
+<p>-0.010em</p>
+<p>Single weight. No device.</p>
+<p>Eyebrow</p>
+<p>13 / 18</p>
+<p>600</p>
+<p>+0.09em</p>
+<p>Uppercase. Muted. Above every section headline.</p>
+<p>Lead paragraph</p>
+<p>18 / 28</p>
+<p>400</p>
+<p>normal</p>
+<p>One per section, directly under the headline.</p>
+<p>Body</p>
+<p>16 / 26</p>
+<p>400</p>
+<p>normal</p>
+<p>Max 65 characters per line.</p>
+<p>Small</p>
+<p>13.5 / 20</p>
+<p>400</p>
+<p>normal</p>
+<p>Captions, attribution, legal.</p>
+<p>Button</p>
+<p>15 / 1</p>
+<p>600</p>
+<p>normal</p>
+<p>Sentence case. Never uppercase.</p>
+<h3>Heading structure</h3>
+<p>The technique borrowed from When I Work: a keyword-bearing descriptive line sits above the brand headline, set small and quiet, so the page opens with a phrase a person would actually search for instead of pure brand language. That part is worth taking. What isn't worth taking is their markup — they tag the small line as the h1 and demote the real headline to h2.</p>
+<h3>One h1 per page, containing both halves</h3>
+<p>Wrap the descriptive line and the claim in a single h1 and style the spans. The heading's text content carries the search phrase and the promise, the visual hierarchy is unchanged, the outline stays correct, and a screen reader announces the whole thing as the page's title — which is more useful than either half alone.</p>
+<p>&lt;h1 class=&quot;hero-title&quot;&gt;</p>
+<p>  &lt;span class=&quot;eyebrow&quot;&gt;All-in-one church operations software&lt;/span&gt;</p>
+<p>  &lt;span class=&quot;claim&quot;&gt;</p>
+<p>    &lt;span class=&quot;lt&quot;&gt;Church operations.&lt;/span&gt;</p>
+<p>    &lt;span class=&quot;bd&quot;&gt;On autopilot.&lt;/span&gt;</p>
+<p>  &lt;/span&gt;</p>
+<p>&lt;/h1&gt;</p>
+<p>.hero-title       { display:flex; flex-direction:column; gap:14px; }</p>
+<p>.hero-title .eyebrow { font-size:13px; font-weight:600; letter-spacing:.09em;</p>
+<p>                       text-transform:uppercase; color:var(--muted); }</p>
+<p>.hero-title .claim   { font-size:48px; line-height:1.08; letter-spacing:-.025em;</p>
+<p>                       color:var(--ink); }</p>
+<p>Rendered — identical to the pattern we liked, correct underneath</p>
+<p>All-in-one church operations softwareChurch operations. On autopilot.</p>
+<p>Element</p>
+<p>Tag</p>
+<p>Rule</p>
+<p>Hero</p>
+<p>h1 ×1</p>
+<p>Descriptive line + claim in one element. Exactly one per page.</p>
+<p>Section headline</p>
+<p>h2</p>
+<p>Carries the search phrase, not only the clever claim. This is where keyword coverage actually comes from.</p>
+<p>Section eyebrow</p>
+<p>p</p>
+<p>A label, not a heading. Tagging it h2 or h3 puts noise in the outline.</p>
+<p>Card title</p>
+<p>h3</p>
+<p>Under the section's h2. Never skip a level to get a size.</p>
+<p>Card label</p>
+<p>p</p>
+<p>Same as section eyebrow — a label.</p>
+<p>Footer group</p>
+<p>h2</p>
+<p>&quot;Platform&quot;, &quot;Solutions&quot;, &quot;Compare&quot;, &quot;Company&quot;.</p>
+<h3>Where the SEO actually happens</h3>
+<p>In descending order of what moves anything: the &lt;title&gt; tag, the first fifty words of visible copy, the section h2s, the footer's long-tail link list, and internal links using real phrases as anchor text. Heading level is not on that list.</p>
+<p>Google's stated position is that its systems work with whatever heading markup they find, and a January 2026 benchmark of top-ranking pages found only 13.5% carried an exact-match keyword in the h1 at all. So the tag swap buys close to nothing; the descriptive line buys real coverage regardless of which element wraps it. Take the technique, skip the markup.</p>
+<h3>The title tag pattern</h3>
+<p>&lt;page&gt; | ChurchPlannerPro for interior pages. The homepage carries the tagline instead: ChurchPlannerPro — the church management platform that does the work for you.</p>
+<p>Under 60 characters where possible, page name first because the tail gets truncated, and never the same string on two pages. The tagline earns its place here for the same reason it earns the footer: it is the one line carrying both the search term and the differentiator.</p>
+<h3>Two faces, split by role</h3>
+<p>Outfit — display only: the hero headline, section headlines, the wordmark, the price figure, and the icon's C. A geometric sans that matches the wordmark's construction, so headlines and logo agree instead of nearly-agreeing.</p>
+<p>Inter — everything else: body, leads, eyebrows, buttons, labels, captions, form fields, and the entire product. Inter is the more legible face at small sizes and it is already the app's typeface, so this split costs the product nothing.</p>
+<p>The dividing line is size, not importance: if it's above 22px it's Outfit, below that it's Inter. Card titles at 22px are the boundary and go to Inter, because they sit in running content rather than announcing a section.</p>
+<p>&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.gstatic.com&quot; crossorigin&gt;</p>
+<p>&lt;link rel=&quot;stylesheet&quot; href=&quot;https://fonts.googleapis.com/css2?</p>
+<p>  family=Outfit:wght@300;600;700&amp;family=Inter:wght@400;500;600;650;700&amp;display=swap&quot;&gt;</p>
+<p>--display: Outfit, &quot;Inter&quot;, -apple-system, BlinkMacSystemFont, sans-serif;</p>
+<p>--text:    Inter, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;</p>
+<p>Load only the weights in use — Outfit 300/600/700 and Inter 400/500/600/650/700. Outfit runs wide, so display sizes need the tighter tracking already specified in the scale above; without it, headlines feel loose.</p>
+<h3>The wordmark's own typeface</h3>
+<p>The lockup's original face is unidentified, and some geometrics in that family are commercially licensed. Outfit — Rodrigo Fuenzalida, open licence, nine weights — is close enough in construction to reset the wordmark in if it ever needs to be redrawn, at Bold and Light.</p>
+<p>That is the reason to standardise on it beyond the visual match: it makes the identity reproducible by anyone, forever, with no licence to track. Worth confirming the original face before redrawing anything — but a logotype is permitted to be its own thing, so a small mismatch between the shipped wordmark and Outfit headlines is not a defect.</p>
+</section>
+<section class="chapter" id="section-05"><div class="chapter-kicker">05 / Layout, spacing &amp; responsive</div>
+<h2 class="chapter-title">Layout, spacing &amp; responsive</h2>
+<p>Two container widths, one section rhythm, one gap — and three breakpoints, because every page ships in a desktop and a mobile version.</p>
+<p>Token</p>
+<p>Value</p>
+<p>Applies to</p>
+<p>container</p>
+<p>1240px</p>
+<p>Grids, panels, product screenshots, footer</p>
+<p>measure</p>
+<p>720px</p>
+<p>Centered intro paragraphs — never wider</p>
+<p>section-pad</p>
+<p>96px top and bottom</p>
+<p>Every section, no exceptions</p>
+<p>panel-pad</p>
+<p>56px 48px</p>
+<p>Inside a wash or green panel</p>
+<p>grid-gap</p>
+<p>24px</p>
+<p>Between cards in a row</p>
+<p>gutter</p>
+<p>28px</p>
+<p>Page edge on mobile</p>
+<h3>Panels float; the page doesn't change color</h3>
+<p>A tinted section is a 24px-radius block sitting inside the container with paper visible either side. Color never runs edge to edge of the browser. This is what keeps a long page from reading as a series of stripes.</p>
+<h3>Three or four cards in a row, never five</h3>
+<p>Pick a count the content fills. A row with one card orphaned on a second line is a layout that needs fewer items, not a wider grid. Cards are equalized by the grid, never by a fixed height.</p>
+<h3>Desktop and mobile</h3>
+<p>Every page ships in both. Mobile is not a fallback and not a shrunk desktop — it is the version an administrator opens on their phone between services, and for several components it is the more important one.</p>
+<h3>Three breakpoints, and what each one does</h3>
+<p>≥1024px — desktop. Full layout as specified above. 768–1023px — tablet. Container becomes fluid with 32px gutters; two-column splits stay, three-up grids stay, the nav stays full. &lt;768px — mobile. Everything is one column, the nav becomes a drawer, and the mobile type scale takes over.</p>
+<p>Nothing collapses to two columns. A three-up grid going to two leaves one card orphaned on a second row, which looks like a bug — it goes straight from three to one.</p>
+<p>Component</p>
+<p>Desktop ≥1024</p>
+<p>Mobile &lt;768</p>
+<p>Header</p>
+<p>Wordmark, 3 links, 2 buttons</p>
+<p>Wordmark (no PRO) + 44px menu button, drawer opens full-screen</p>
+<p>Hero</p>
+<p>Two columns, screenshot right</p>
+<p>Stacked, text first, screenshot bleeds off the right gutter</p>
+<p>Hero screenshot</p>
+<p>Desktop app screen</p>
+<p>Mobile app screen — not the desktop one squeezed</p>
+<p>Hero CTA cluster</p>
+<p>Buttons side by side, price line under</p>
+<p>Both buttons full width, stacked, price line under</p>
+<p>Three-up cards</p>
+<p>3 columns, 24px gap</p>
+<p>1 column, 20px gap, padding 32 → 24</p>
+<p>Split panel + portrait</p>
+<p>Portrait left, overlapping nameplate</p>
+<p>Portrait first, nameplate inline below — overlap removed</p>
+<p>Panels</p>
+<p>24px radius, 52/44 padding</p>
+<p>16px radius, 32/22 padding</p>
+<p>Pricing card</p>
+<p>380px, centered</p>
+<p>Full width minus gutters</p>
+<p>Footer</p>
+<p>4 columns</p>
+<p>Collapsed groups, tap to expand</p>
+<p>Section padding</p>
+<p>96px</p>
+<p>64px</p>
+<p>Page gutter</p>
+<p>Container 1240px</p>
+<p>20px each side</p>
+<h3>The mobile type scale</h3>
+<p>The desktop scale doesn't survive a 375px screen — a 48px headline at that width breaks into four ragged lines. Sizes drop; the weight-contrast device stays.</p>
+<p>Style</p>
+<p>Desktop</p>
+<p>Mobile</p>
+<p>Hero headline</p>
+<p>48 / 52</p>
+<p>32 / 35</p>
+<p>Section headline</p>
+<p>36 / 42</p>
+<p>26 / 31</p>
+<p>Card title</p>
+<p>22 / 29</p>
+<p>19 / 25</p>
+<p>Eyebrow</p>
+<p>13</p>
+<p>11.5</p>
+<p>Lead</p>
+<p>18 / 28</p>
+<p>16.5 / 26</p>
+<p>Body</p>
+<p>16 / 26</p>
+<p>15.5 / 25</p>
+<p>Small</p>
+<p>13.5</p>
+<p>13 — never lower</p>
+<h3>Touch targets grow, they don't shrink</h3>
+<p>Every tappable thing is at least 44×44px with 8px of clear space around it. Buttons gain vertical padding on mobile rather than losing it — a 13px-tall pill that looked elegant on desktop is a miss target on a phone. Full-width buttons for anything primary.</p>
+<h3>The mobile nav drawer</h3>
+<p>Full-screen, paper ground, opens from the menu button with no animation beyond a 150ms fade. Contents in order: the wordmark and a 44px close button on the line the header occupied; the five nav links at 22px with generous row spacing; a hairline; then Staff login and Member login at 17px; then Sign up as a full-width green rectangle pinned at the bottom.</p>
+<p>Both logins, not just one — the drawer is the entire navigation on mobile, and dropping Member login strands the audience most likely to be on a phone. Body scroll locks while it is open, Esc closes it, focus moves to the close button on open and returns to the menu button on close.</p>
+<h3>The screenshot rule, restated for mobile</h3>
+<p>This is the one most often got wrong. On a phone the hero image should be the product's mobile screen, because that is what the visitor will actually use on their phone — showing them a shrunken desktop dashboard advertises the wrong thing. If there is no mobile product screen to show, show no image rather than a scaled-down desktop one.</p>
+<p>Mobile — header, hero, card, footer</p>
+<p>Header + hero · 375px</p>
+<p>ChurchPlanner</p>
+<h1>All-in-one church operations softwareChurch operations. On autopilot.</h1>
+<p>Connect the tools you already use, then let ChurchPlannerPro handle the follow-up work nobody has time for.</p>
+<p>Sign up</p>
+<p>Card + footer · 375px</p>
+<p>Automate</p>
+<h3>Let CPP handle what's next</h3>
+<p>Someone signs up to serve, a gift comes in, a family joins — the confirmation, the statement and the follow-up happen without you.</p>
+<p>See it work</p>
+<p>Platform+</p>
+<p>Solutions+</p>
+<p>Compare+</p>
+<p>Company+</p>
+<p>Note the hero screenshot bleeding off the right gutter rather than being letterboxed to fit, and the footer's four columns becoming four tappable groups.</p>
+</section>
+<section class="chapter" id="section-06"><div class="chapter-kicker">06 / Shape, elevation &amp; motion</div>
+<h2 class="chapter-title">Shape, elevation &amp; motion</h2>
+<p>Four radii, each with a job; no shadows at all; and almost no motion. Shape carries meaning here — it tells the reader what a thing does before they read the label.</p>
+<p>Token</p>
+<p>Value</p>
+<p>Meaning</p>
+<p>r-pill</p>
+<p>999px</p>
+<p>Navigation. Takes you somewhere, changes nothing.</p>
+<p>r-input</p>
+<p>8px</p>
+<p>Commitment. Inputs and the buttons that submit them.</p>
+<p>r-card</p>
+<p>12px</p>
+<p>An object — a card, a pricing plan, a product frame.</p>
+<p>r-panel</p>
+<p>24px</p>
+<p>A region of the page.</p>
+<p>border</p>
+<p>1px solid #E3DDD2</p>
+<p>Every card and input. No exceptions.</p>
+<h3>Pills navigate, rectangles commit</h3>
+<p>Every &quot;explore&quot;, &quot;see&quot;, &quot;read more&quot; control is a pill. Every control that submits a form or starts a trial is an 8px rectangle. A reader learns this in one page and it stops them misreading a browse link as a commitment.</p>
+<p>Shape by role</p>
+<p>See how it worksSign upSign up</p>
+<p>Ghost pill for browsing · quiet pill for a secondary path · green rectangle for the commitment</p>
+<h3>Not everything is a card</h3>
+<p>A border, a fill and a radius each say &quot;separate object.&quot; Spend them where separation is the point. A list of features inside a card does not need each row in its own box.</p>
+<h3>Motion</h3>
+<p>Deliberately almost none. This is a rule about what not to build, and it matters more than it sounds — scroll-triggered fade-ins on every section are the most reliable tell of a page that was generated rather than designed, and their absence is a large part of why the reference site reads as considered.</p>
+<h3>Hover transitions only, 150ms</h3>
+<p>Interactive elements — buttons, links, cards with a click target — transition background, border-color, color and text-decoration-thickness over 150ms ease. Nothing else on the site animates.</p>
+<h3>No scroll-triggered anything</h3>
+<p>No fade-ins, no slide-ups, no intersection observers, no parallax, no counters that tick up, no sticky elements that shrink. Every section is fully rendered and readable the instant the page loads. If a section needs an entrance to feel interesting, the section is the problem.</p>
+<h3>Nothing moves on its own</h3>
+<p>No carousels, no auto-rotating testimonials, no looping background video, no animated illustration. The testimonial masonry in §7 exists precisely so quotes can be read at once instead of rotating past.</p>
+<p>/* the entire motion system */</p>
+<p>.btn, a, .card-interactive {</p>
+<p>  transition: background-color .15s ease,</p>
+<p>              border-color .15s ease,</p>
+<p>              color .15s ease,</p>
+<p>              text-decoration-thickness .15s ease;</p>
+<p>}</p>
+<p>@media (prefers-reduced-motion: reduce) {</p>
+<p>  * { transition: none !important; animation: none !important; }</p>
+<p>}</p>
+<p>The reduced-motion block is near-redundant given how little moves — keep it anyway, since it also disables anything a future component quietly introduces.</p>
+</section>
+<section class="chapter" id="section-07"><div class="chapter-kicker">07 / Components</div>
+<h2 class="chapter-title">Components</h2>
+<p>Each component below is rendered live, in the real palette, with real copy. Inspect the page to lift the markup — these are not mockups of the components, they are the components.</p>
+<h3>Buttons</h3>
+<p>Green rectangle — the page's single primary action, labelled &quot;Sign up&quot; everywhere without exception (§9). One per screenful. Ghost pill — every mid-page &quot;explore this&quot; link; this is the most-used control on the site. Quiet pill — a secondary path beside a primary, such as booking a demo next to starting a trial. Paper pill — used only inside the green band.</p>
+<p>Never place two green buttons in the same section. If two things feel equally primary, one of them isn't.</p>
+<p>The four buttons</p>
+<p>Sign upSee integrationsLog inSign up</p>
+<h3>Header</h3>
+<p>Transparent on the paper with a hairline rule beneath — no white bar, no shadow, no sticky behaviour. It scrolls away with the page.</p>
+<p>Five links left: Platform, Integrations, Pricing, About, Blog, at 15px/600. Right: the two logins as plain text links, a hairline divider, then Sign up as a green rectangle. One button in the header, and it is the only one.</p>
+<p>The logins are text, not pills, on purpose. Eight items needs a hierarchy or it reads as a list, and the hierarchy here is honest: five things to explore, two doors for people who already have an account, one thing we want you to do. Making the logins pills would give returning-user utility the same weight as the conversion path.</p>
+<p>Header</p>
+<p class="wordmark-sample">ChurchPlannerPRO</p>
+<p>PlatformIntegrationsPricingAboutBlog</p>
+<p>Staff loginMember login</p>
+<p>Sign up</p>
+<h3>Two logins, and why the member one is in the nav at all</h3>
+<p>Staff login is for administrators and church staff — the people this site is written for. Member login is for the congregation, who are not the audience for a single word of the marketing copy.</p>
+<p>It earns its place anyway: a member told to &quot;log into the church system&quot; will search the product name and land here, and if the header offers them no door they will email the administrator — which is exactly the chasing this product exists to remove. Both logins are navigation utilities, styled as such, and neither ever appears as a call to action anywhere else on the site.</p>
+<p>Label them in full. A single &quot;Log in&quot; opening a chooser adds a step for both audiences to save one header slot.</p>
+<h3>Hero</h3>
+<p>Split two-column: the combined h1, one lead paragraph, and a CTA cluster on the left; a framed product screenshot on the right.</p>
+<p>There are no forms on the marketing site. Not in the hero, not above the footer, not anywhere. Every primary call to action is a button that goes to /signup. This removes the single strongest conversion device the reference site had, so the hero needs something carrying that weight instead — and for a $9.99 product, that thing is the price.</p>
+<p>The CTA cluster is therefore three parts: a green rectangle, a quiet pill beside it, and one muted line underneath stating the price and the trial. Saying &quot;$9.99 a month, everything included. 90 days free&quot; above the fold does more work than a two-field form ever did, because the objection this product faces isn't friction — it's disbelief.</p>
+<p>Hero</p>
+<h1>All-in-one church operations software</h1>
+<h1>Church operations. On autopilot.</h1>
+<p>Connect the tools you already use — IconCMO, Planning Center, Vanco — then let ChurchPlannerPro handle the follow-up work nobody has time for.</p>
+<p>Sign up</p>
+<p>$9.99 a month, everything included. 90 days free — invite only while we onboard churches one at a time.</p>
+<p>Prairie Ridge Church</p>
+<h3>Cards</h3>
+<p>White on paper, 1px line, 12px radius, 32px padding. Fixed internal order: uppercase label, hairline rule, image or icon plate, title, body, then a ghost pill pushed to the bottom with margin-top:auto so buttons align across a row of unequal text.</p>
+<p>The white surface is what separates a card from the page — there are no shadows anywhere on this site. On paper, white already does the lifting, and a shadow on top of it is decoration pretending to be structure.</p>
+<p>Three-up cards — Connect / Manage / Automate</p>
+<p>Connect</p>
+<h3>Bring your tools together</h3>
+<p>Members, giving and calendars from IconCMO, Planning Center, Vanco and Servant Keeper land in one place — and stay in sync without a spreadsheet in the middle.</p>
+<p>See integrations</p>
+<p>Manage</p>
+<h3>Run your church in one place</h3>
+<p>Volunteers, groups, facilities, Sunday school and sacraments, pastoral care. One record per family, one calendar, one set of permissions.</p>
+<p>See the platform</p>
+<p>Automate</p>
+<h3>Let CPP handle what's next</h3>
+<p>Someone signs up to serve, a gift comes in, a family joins — the confirmation, the statement and the follow-up happen without you.</p>
+<p>See it work</p>
+<h3>The ten outcomes — a list of workflows, never a grid of modules</h3>
+<p>Ten items fit no grid. Three-up leaves an orphan, four-up leaves two, and a ten-card grid is a module menu — which is precisely the thing we argue against Planning Center for. So the ten don't get cards at all.</p>
+<p>Instead each becomes a row with the mechanism made literal: something happens at a church → ChurchPlannerPro handles what comes next. A domain label, the trigger in the administrator's own words, and the consequence. Hairline-separated rows on paper, no boxes, no numbering — these aren't a sequence and numbering would imply one.</p>
+<p>The structure is the argument. A reader scanning it sees ten things that happen to them and ten things that stop being their problem, which is a fundamentally different claim from ten things we sell.</p>
+<p>The ten outcomes</p>
+<p>The ten things a church has to get right</p>
+<h2>Something happens. CPP handles what comes next.</h2>
+<p>Volunteers</p>
+<p>Someone signs up to serve</p>
+<p>Confirmed, added to the rota, reminded the day before, and backfilled if they drop</p>
+<p>Giving</p>
+<p>A gift comes in</p>
+<p>Reconciled against the batch, receipted, and reflected in budget-versus-actual the same day</p>
+<p>Communication</p>
+<p>An event is added to the calendar</p>
+<p>It reaches the newsletter, the website and the bulletin without being retyped three times</p>
+<p>Sunday school</p>
+<p>A family registers a child</p>
+<p>Roster updated, allergy and pickup notes attached, nametags queued for printing</p>
+<p>Sacraments</p>
+<p>A baptism is scheduled</p>
+<p>Recorded on the member file, the certificate drafted, the anniversary tracked</p>
+<p>Groups</p>
+<p>A small group asks for a room</p>
+<p>Room assigned, conflict checked, setup request sent to whoever unlocks the building</p>
+<p>Facilities</p>
+<p>Something breaks</p>
+<p>Work order raised, assigned, and visible to the person who has to answer for it on Sunday</p>
+<p>Membership</p>
+<p>A family joins — or a member dies</p>
+<p>One record updated everywhere, with the giving statement and directory following automatically</p>
+<p>Worship</p>
+<p>The service plan changes</p>
+<p>Musicians, readers and tech all see the same version, not four emailed drafts</p>
+<p>Pastoral care</p>
+<p>Someone goes into hospital</p>
+<p>Visit logged, follow-up scheduled, and nobody falls off the list because one person was away</p>
+<p>The eleventh — the dashboard — is not a row. It's what you see when you stop having to check.</p>
+<h3>Rules for the outcomes list</h3>
+<p>Triggers are written in the administrator's words, not ours — &quot;someone signs up to serve,&quot; not &quot;volunteer registration event.&quot; Consequences name the actual artefact: a nametag, a receipt, a work order, a rota. Every row is one line of trigger and at most two of consequence; a row that needs three is a page. On mobile the three columns stack and the domain label sits above the trigger.</p>
+<h3>Panels</h3>
+<p>A wash panel groups a section that would otherwise float. A green panel is the closing call to action and appears once, at the bottom. Both are 24px radius inside the container.</p>
+<p>Overlap earns a panel its life: a portrait breaking the panel's left edge, a nameplate breaking the portrait's edge. Without an overlap a tinted panel is just a colored box.</p>
+<p>Wash panel with portrait — the &quot;why us&quot; block</p>
+<p>Nate Boucher</p>
+<p>Church administrator</p>
+<p>Customer since 2026</p>
+<p>Ready in an afternoon, not a quarter</p>
+<h2>Church Management 2.0</h2>
+<p>Church Management 1.0 gave you features, a configuration screen, and a staff member to do the work. 2.0 starts from the outcome, builds the workflow, and does the work for you.</p>
+<p>Less to remember. Less to chase. Less to do by hand.</p>
+<p>See how it works</p>
+<h3>Integrations strip — replaces the customer logo strip</h3>
+<p>The homepage recipe called for a row of customer logos. We don't have permission to use any, so that component doesn't exist. What replaces it in the same slot is the thing we can say truthfully: the systems CPP connects to.</p>
+<p>Set as wordmarks in type at 62% opacity, not as third-party logo files — it sidesteps another set of brand permissions, it looks deliberate rather than scraped, and it reads as &quot;works with what you already have,&quot; which is the actual message. Never imply endorsement or partnership.</p>
+<p>Integrations strip</p>
+<p>Works withIconCMOPlanning CenterVancoServant KeeperSignUpGenius</p>
+<h3>Testimonial masonry — built, but blocked on permission</h3>
+<p>Three columns, uneven heights on purpose, quote in italic, then name and church. No customer logos — the component is specified without them, so it stays correct whatever permissions arrive later.</p>
+<p>It cannot ship until at least four churches have agreed to be quoted and named. §8's rule holds: a quote without a nameable person is a stock photo with extra steps. Until then the homepage skips this section rather than filling it with anonymised quotes.</p>
+<p>Testimonial masonry — placeholder text, do not ship without consent</p>
+<p>&quot;Reconciliation used to take me most of Monday. It now takes about twenty minutes, and I stopped dreading the end of the month.&quot;</p>
+<p>[Name]</p>
+<p>[Church], [City]</p>
+<p> </p>
+<p>&quot;I set it up on a Tuesday afternoon and had the audit report before I went home. It found four duplicate families I'd been maintaining separately for years.&quot;</p>
+<p>[Name]</p>
+<p>[Church], [City]</p>
+<p> </p>
+<p>&quot;The volunteers confirm themselves now. That's the whole thing. I'm not chasing anyone on a Saturday night.&quot;</p>
+<p>[Name]</p>
+<p>[Church], [City]</p>
+<p> </p>
+<p>&quot;Our previous system charged per module. We were paying for four and using two.&quot;</p>
+<p>[Name]</p>
+<p>[Church], [City]</p>
+<p> </p>
+<p>&quot;Nametags print themselves on Sunday morning. Small thing. Changed my week.&quot;</p>
+<p>[Name]</p>
+<p>[Church], [City]</p>
+<h3>Segment grid</h3>
+<p>Four cards, each topped by a real screenshot of that segment's actual workflow rather than a generic illustration — the screenshot is the differentiator between this and the three-up. Title, two lines, ghost pill. Collapses to one column below 768px.</p>
+<p>Segment grid</p>
+<h3>Lutheran (ELCA)</h3>
+<p>Sacrament records, synod reporting, and the giving statements your council expects.</p>
+<p>See ELCA</p>
+<h3>Church + school</h3>
+<p>One family record across the parish and the school, without exporting to a spreadsheet.</p>
+<p>See schools</p>
+<h3>Under 200 members</h3>
+<p>Built for one administrator doing all of it, not a staff of six.</p>
+<p>See small churches</p>
+<h3>Multi-site</h3>
+<p>Separate calendars and rotas, one directory and one set of books.</p>
+<p>See multi-site</p>
+<h3>Mobile block</h3>
+<p>Text left, phone showing the product right. The one section whose image is always a mobile product screen. Its job is answering &quot;can I do this from the building on a Sunday,&quot; so the copy names a Sunday-morning task rather than describing an app.</p>
+<p>Mobile block</p>
+<p>On the phone in your pocket</p>
+<h2>Handle it from the narthex.</h2>
+<p>Approve a swap between services, check who's covering coffee hour, look up a family's giving history before you talk to them. The things that come up while you're standing up.</p>
+<p>See it on mobile</p>
+<h3>Forms — one, and it isn't on this site</h3>
+<p>The marketing site has no forms at all. No hero capture, no pre-footer signup card, no newsletter box, no demo request, no contact form — Contact is a mailto:. Every call to action is a link to /signup, which is the one page in the whole estate that collects anything.</p>
+<p>This is a real trade. The reference site's inline form was the strongest conversion device on its page, and we're giving it up. What we get back: nothing on the marketing site can half-fail, there is no partial submission to handle, no validation to maintain across nine pages, and no second form asking for what the first one already took. For a one-person company that is the right trade, and the price line under the hero CTA carries the persuasive weight instead.</p>
+<p>The field specs below therefore govern the signup page only — see §13. Five states: rest, focus, error, submitting, success. Error is the only place semantic red appears anywhere.</p>
+<p>Field states — signup page only</p>
+<p>Rest</p>
+<p>Focus</p>
+<p>Error</p>
+<p>That email address looks incomplete — check for a missing domain.</p>
+<p>SubmittingSigning you up…</p>
+<p>✓</p>
+<p>Check your email.</p>
+<p>We've sent a confirmation to andrew@princeofpeacechurch.org. Your church is set up and ready.</p>
+<h3>Error message rules</h3>
+<p>Say what's wrong and how to fix it, in that order. Never apologise, never blame the user, never say &quot;invalid.&quot; &quot;That email address looks incomplete — check for a missing domain&quot; beats &quot;Please enter a valid email.&quot; Errors appear under the field they belong to, never as a banner at the top, and the field keeps whatever the person typed.</p>
+<p>Server failures name what to do next: &quot;We couldn't reach our end just now. Try again in a moment, or email andrew@churchplannerpro.com and I'll set you up by hand.&quot;</p>
+<h3>Pricing — one plan, so the page's job changes</h3>
+<p>CPP is $9.99 a month for everything, with a 90-day free trial and 50% off the first year. There is no tier ladder, which means the pricing page is not helping anyone choose. Its only job is answering &quot;what's the catch&quot; — because a church administrator who has been quoted several hundred a month by a competitor will assume a price this low is a trial balloon, a per-user figure, or a stripped tier.</p>
+<p>So the card leads with the price, and every element under it exists to remove doubt: everything included stated as included, no asterisks, no &quot;starting at&quot;, and the limits — if any — stated plainly rather than left to be discovered.</p>
+<h3>Price typography</h3>
+<p>Dollars and cents split: $9 at 50px display weight 700, .99 at 22px baseline-aligned to the top. Real cents earn the split — a round number would not. Per-month sits at 14px muted, immediately after.</p>
+<h3>The promotional line is a component, not copy</h3>
+<p>&quot;50% off the first year&quot; is an offer with a shelf life. It lives in a single removable pill above the price — never baked into the headline, never into the price figure itself. Deleting that one element must leave the card correct, because one day someone will delete it.</p>
+<p>The 90-day trial is different: it is a permanent term, not a promotion, so it sits in the button and in the reassurance line beneath it. Ninety days is unusually long and is doing real work — say it, don't bury it.</p>
+<p>Pricing card</p>
+<p>50% off your first year</p>
+<p>$9.99/month, everything included</p>
+<p>One price for the whole platform. Not per user, not per module, and not a starter tier — every church on ChurchPlannerPro gets all of it.</p>
+<p>Data &amp; integrations✓</p>
+<p>Volunteers, groups &amp; facilities✓</p>
+<p>Giving &amp; reconciliation✓</p>
+<p>Sunday school &amp; sacraments✓</p>
+<ul class="source-list">
+<li>✓Two-way sync with IconCMO, Planning Center, Vanco</li>
+<li>✓Data health check on every import</li>
+<li>✓Unlimited staff and volunteer logins</li>
+<li>✓No setup fee and no annual contract</li>
+</ul>
+<p>Sign up</p>
+<p>No card required. Invite only for now — email for a code.</p>
+<p>Do</p>
+<ul class="source-list">
+<li>Say &quot;everything included&quot; next to the price, in those words</li>
+<li>State the trial length in the button label</li>
+<li>Keep the promo in its own removable pill</li>
+<li>Name what's not charged for: users, modules, setup</li>
+</ul>
+<p>Don't</p>
+<ul class="source-list">
+<li>Write &quot;starting at $9.99&quot; — nothing starts, it's one price</li>
+<li>Show a struck-through comparison price</li>
+<li>Put a countdown or urgency device on the offer</li>
+<li>Add a second card to make this one look better</li>
+</ul>
+<h3>Closing band</h3>
+<p>Solid green, 24px radius, 96px of vertical padding, centered, one paper pill. Once per page, at the bottom. This is the only large green area anywhere on the site.</p>
+<p>Closing CTA band</p>
+<h2>Straightforward pricing. No long-term contract.</h2>
+<p>Start with your existing data, read the audit report the same afternoon, and cancel any time. No implementation fee and no per-module upsell.</p>
+<p>Sign up</p>
+<h3>FAQ — a homepage section, and never an accordion</h3>
+<p>Two columns of question-and-answer pairs on paper, question in ink at 17px/650, answer in body. Sits directly under the pricing section, because most of what it answers is provoked by the price.</p>
+<p>Open, not collapsed. An accordion hides the answers, adds motion the site otherwise doesn't have, and makes someone click six times to scan what they could have read in twenty seconds. Open text is also what actually gets indexed and quoted. If the list grows past eight, the answer is fewer questions, not a disclosure widget.</p>
+<p>Write real objections, in the words people use. A question nobody asks is marketing copy wearing a question mark.</p>
+<p>FAQ</p>
+<p>Before you ask</p>
+<h2>The questions we actually get.</h2>
+<p>Is it really everything for $9.99?</p>
+<p>Yes. One price per church for the whole platform — not per user, not per module, and there is no higher tier holding anything back.</p>
+<p>What happens after 90 days?</p>
+<p>You start paying $9.99 a month, at 50% off for your first year. If you'd rather not, cancel and nothing is charged — we don't take a card to start.</p>
+<p>Can I get my data back out?</p>
+<p>Any time, as CSV, including giving history. It's your congregation's data and leaving should be as easy as arriving.</p>
+<p>Do I have to leave IconCMO or Planning Center?</p>
+<p>No. ChurchPlannerPro syncs with them. Plenty of churches run both while they decide.</p>
+<p>How safe is our giving history?</p>
+<p>Encrypted in transit and at rest, nightly backups, and the server isn't exposed to the public internet. The security page has the detail.</p>
+<p>Do I need an invite code?</p>
+<p>Yes, for now. We're onboarding churches one at a time so each setup gets done properly. Email andrew@churchplannerpro.com and you'll have a code back the same day.</p>
+<p>How long does setup take?</p>
+<p>An afternoon for most churches. You connect your existing system, we import, and the data audit tells you what needs cleaning before you rely on it.</p>
+<h3>Footer — this is the real page inventory</h3>
+<p>Wash panel, brand block plus four groups, 14px links at normal weight, no icons. There is no long-tail SEO block: the reference site's sixty-industry list suits a horizontal tool with sixty verticals, and padding ours out to match would read as thin.</p>
+<p>The footer is the sitemap. Every link here is a page that exists or is committed to; nothing gets added speculatively. Contact is a mailto:, not a form — a single-operator product where the founder answers is a strength, not something to hide behind a contact page.</p>
+<p>Footer</p>
+<p class="wordmark-sample">ChurchPlannerPRO</p>
+<p>The church management platform that does the work for you.</p>
+<h4>Platform</h4>
+<ul class="source-list">
+<li>Church communication</li>
+<li>Programs and events</li>
+<li>Volunteer scheduling</li>
+<li>Pricing</li>
+<li>Security</li>
+</ul>
+<h4>Resources</h4>
+<ul class="source-list">
+<li>Blog</li>
+<li>Planning Center alternative</li>
+</ul>
+<h4>Company</h4>
+<ul class="source-list">
+<li>About</li>
+<li>Contact</li>
+</ul>
+<h4>Legal</h4>
+<ul class="source-list">
+<li>Terms</li>
+<li>Privacy</li>
+</ul>
+<p>© 2026 ChurchPlannerPro. All rights reserved.Made for church administrators.</p>
+<p>Link</p>
+<p>Destination</p>
+<p>Note</p>
+<p>Security</p>
+<p>discover.churchplannerpro.com/security</p>
+<p>Off the main domain — see §14</p>
+<p>About</p>
+<p>churchplannerpro.com/#about</p>
+<p>Homepage anchor, not a page</p>
+<p>Contact</p>
+<p>mailto:andrew@churchplannerpro.com</p>
+<p>Opens a mail client, no form</p>
+<p>Terms</p>
+<p>churchplannerpro.com/legal/terms</p>
+<p>Privacy</p>
+<p>churchplannerpro.com/legal/privacy</p>
+<p>Planning Center alternative</p>
+<p>To build</p>
+<p>The comparison page — outcomes vs. modules, kept respectful</p>
+<h3>The tagline</h3>
+<p>&quot;The church management platform that does the work for you.&quot; Used verbatim, in the footer and as the &lt;title&gt; suffix.</p>
+<p>It does two jobs in one line. &quot;Church management platform&quot; is the category people actually search for, and refusing to say it costs us the search term while making the site harder to place. &quot;That does the work for you&quot; is the whole differentiator, and it turns the category admission into a claim — we're in the category and we're the one that isn't just a system of record.</p>
+<p>This is the only sanctioned use of the category words. §9 still bans stacking them through the body copy: the site says what CPP is once, here, and then talks about outcomes.</p>
+</section>
+<section class="chapter" id="section-08"><div class="chapter-kicker">08 / Imagery</div>
+<h2 class="chapter-title">Imagery</h2>
+<p>The strictest section in this document, because imagery is where a site like this most often goes wrong. Confirmed policy: no stock photography of any kind. Every image is either a real product screen or a named customer.</p>
+<p>The working consequence: product screenshots are the primary and default source, and a page with no available screenshot runs no image rather than filling the slot. Photography of named customers is an upgrade to add later, not a dependency for shipping.</p>
+<p>Use</p>
+<ul class="source-list">
+<li>Real product screens with real demo data — Prairie Ridge Church, not Lorem Parish</li>
+<li>Photographs of actual customers in their actual offices, once they've agreed to be named</li>
+<li>Two-color line art of objects: a nametag, a bulletin, a signup sheet, a sync arrow between two systems</li>
+<li>Nothing at all, if the alternative is filler</li>
+</ul>
+<p>Never</p>
+<ul class="source-list">
+<li>Stock photography of any kind, church or office</li>
+<li>Customer logos — no permission exists for any of them</li>
+<li>Third-party product logos; name integrations in type instead</li>
+<li>Hands raised in worship, sunlit sanctuaries, open Bibles, crosses, doves</li>
+<li>Cartoon characters or mascots</li>
+<li>Generic 3D shapes, blobs, abstract gradients</li>
+<li>Screenshots with obviously fake data or empty states</li>
+</ul>
+<h3>Screenshots are warm-corrected</h3>
+<p>The product has a cool ground. Dropped onto paper unmodified, a screenshot looks pasted on. Frame every product image in a 12px-radius white card with a 1px line, which mediates the temperature difference — and never place a raw screenshot directly on the paper.</p>
+<h3>Weight budget</h3>
+<p>The site is screenshot-heavy, and screenshots are the asset most likely to arrive as a 2MB PNG. WebP for everything, AVIF where the pipeline supports it, PNG only for an image that genuinely needs lossless. 200KB per product screenshot, 120KB per photograph, 1MB total per page.</p>
+<p>Serve 1× and 2× via srcset and set explicit width and height on every image so nothing reflows as it loads. Everything below the fold is loading=&quot;lazy&quot;; the hero screenshot is not, and gets fetchpriority=&quot;high&quot;.</p>
+<h3>Photographs are of people we actually work with</h3>
+<p>A named person, their church, and how long they've been a customer. If we can't name them, we don't run the photo. A caption without a name is a stock photo with extra steps.</p>
+</section>
+<section class="chapter" id="section-09"><div class="chapter-kicker">09 / Words on the page</div>
+<h2 class="chapter-title">Words on the page</h2>
+<p>Copy is design material. These are the rules the layout depends on.</p>
+<h3>Write to the administrator</h3>
+<p>The reader is the person doing the work every week — Nate, Tracy, a parish administrator holding twelve spreadsheets together. They are not the buyer in a procurement sense and not a technologist. They are competent, busy, and have been sold to before.</p>
+<p>What that means concretely: measure value in hours and chasing, not in ROI or efficiency gains. Name real tasks — reconciling giving, printing nametags, chasing a volunteer who didn't confirm — rather than categories. Assume they know their job better than we do. Never explain church operations to them.</p>
+<p>The pastor or council approves the spend but does not read this site. If we need to make the stewardship case, it gets its own page rather than diluting these one.</p>
+<h3>Every section opens eyebrow → headline → one paragraph</h3>
+<p>No section starts cold on a headline. The eyebrow is a short uppercase label that says what the section is about; the headline makes a claim; one paragraph explains it. If a section needs three paragraphs, it needs to be two sections.</p>
+<h3>The fixed phrases</h3>
+<p>These are the campaign and are used verbatim, not paraphrased.</p>
+<p>Tagline: The church management platform that does the work for you. · Promise: Church operations. On autopilot. · Triad: Connect your tools. Run your church. Automate what happens next. · Mechanism: Something happens → ChurchPlannerPro handles what comes next. · Payoff: Less to remember. Less to chase. Less to do by hand.</p>
+<p>Connect — bring your tools and data together. Manage — run your church in one place. Automate — let ChurchPlannerPro handle what happens next.</p>
+<h3>A control says exactly what happens</h3>
+<p>Sentence case, verb first, no more than four words. Not &quot;Learn more&quot;, &quot;Get started&quot;, &quot;Click here&quot;, or anything uppercase.</p>
+<p>The primary call to action is always the same two words: &quot;Sign up.&quot; Every green button on every page and every template, without variation — not &quot;Start free trial&quot; on the pricing card and &quot;Start in an afternoon&quot; in the hero and &quot;Create your church&quot; on the form. One label, learned once.</p>
+<p>It reads plainer than a benefit-loaded label, and that is the point twice over. A reader who has seen the same button four times knows exactly where it goes without reading it again. And with signup gated behind an invite code, &quot;Start free trial&quot; promises immediacy the next page won't deliver — &quot;Sign up&quot; promises only what actually happens.</p>
+<p>Ghost pills are not calls to action and keep their own specific labels: &quot;See integrations&quot;, &quot;See how it works&quot;, &quot;See ELCA&quot;. They navigate; only green signs up.</p>
+<h4>Banned phrasings</h4>
+<p>&quot;The work between them&quot; — abstract and by now repetitive. &quot;On-autopilot library&quot; — internal jargon. &quot;Set up in an afternoon&quot; — over-promises; the correct phrase is &quot;Start in an afternoon,&quot; and it belongs in body copy, never on a button.</p>
+<p>Also avoid stacking category language. The site says what CPP is once, near the top, and then talks about outcomes. Repeating &quot;church operations and automation platform&quot; in every section reads as insecurity.</p>
+</section>
+<section class="chapter" id="section-10"><div class="chapter-kicker">10 / Building a page</div>
+<h2 class="chapter-title">Building a page</h2>
+<p>The homepage rhythm, and how to construct anything else.</p>
+<h3>Alternate paper and wash; end on green</h3>
+<p>Sections run paper, paper, wash, paper, wash, and close on the green band followed by the footer. The alternation is what keeps a long page from feeling long. Never two wash panels in a row.</p>
+<h3>Every page carries two conversion points</h3>
+<p>One in the hero, one in the closing green band. Both are links to /signup, not forms. Between them every call to action is a ghost pill — that restraint is why the two real ones read as important.</p>
+<h3>A new page starts from an outcome, not a template</h3>
+<p>Before laying anything out, name the one thing a reader should be able to do or decide when they reach the bottom. Sections that don't serve it come out, however good they are.</p>
+<h3>Standard section inventory</h3>
+<p>Hero with inline signup · integrations strip · centered thesis with three-up cards · the ten outcomes · deep-dive band with product screenshot · segment grid · mobile block · wash panel with customer portrait · testimonial masonry · pricing · FAQ · green CTA band · footer.</p>
+<p>Two are gated: the portrait panel and the testimonial masonry both need a customer who has agreed to be named. Until then the homepage runs without them rather than filling the slots — nine sections that are true beat eleven where two are invented.</p>
+<p>No page invents a twelfth section type without a reason worth writing down.</p>
+</section>
+<section class="chapter" id="section-11"><div class="chapter-kicker">11 / Accessibility, print &amp; consent</div>
+<h2 class="chapter-title">Accessibility, print &amp; consent</h2>
+<p>Non-negotiable minimums. The palette was chosen so these are easy to meet.</p>
+<p>Pair</p>
+<p>Ratio</p>
+<p>Requirement</p>
+<p>Ink on paper</p>
+<p>17.52 : 1</p>
+<p>AA / AAA</p>
+<p>Body on paper</p>
+<p>6.74 : 1</p>
+<p>AA / AAA</p>
+<p>Muted on paper</p>
+<p>5.27 : 1</p>
+<p>AA</p>
+<p>Green on paper</p>
+<p>7.12 : 1</p>
+<p>AA / AAA</p>
+<p>White on green</p>
+<p>7.61 : 1</p>
+<p>AA / AAA</p>
+<h3>Rules that follow</h3>
+<p>Muted text never goes below 13px, since it has the least headroom. Focus states are always visible — a 2px green outline at 3px offset, never outline:none. Line length stays at or under 65 characters. Motion respects prefers-reduced-motion. Every product screenshot carries alt text describing what the screen shows, not &quot;screenshot&quot;.</p>
+<h3>Print</h3>
+<p>Normally not worth specifying. It is here because of who reads this site: an administrator printing the pricing section to bring to a council meeting is a completely plausible path to a $9.99 purchase being approved, and a page that prints as four sheets of navigation and a black rectangle undermines it.</p>
+<h3>Print rules</h3>
+<p>Hide the header, footer navigation, the closing green band and every button. Print on white with black text — paper and wash both drop out, since nobody wants a full-bleed background on their printer. Keep card borders as hairlines so structure survives. Expand inline links to show their URL after the text. Never break a pricing card or an outcome row across pages.</p>
+<p>@media print {</p>
+<p>  header, .site-nav, .cta-band, .btn, .signup { display: none; }</p>
+<p>  body { background: #fff; color: #000; font-size: 11pt; }</p>
+<p>  .card, .panel { background: #fff; border: 1px solid #999;</p>
+<p>                  break-inside: avoid; border-radius: 0; }</p>
+<p>  .outcome-row, .pricing-card { break-inside: avoid; }</p>
+<p>  a[href^=&quot;http&quot;]::after { content: &quot; (&quot; attr(href) &quot;)&quot;; font-size: 9pt; }</p>
+<p>}</p>
+<h3>Domains &amp; canonicals</h3>
+<h3>One canonical host: churchplannerpro.com, no www</h3>
+<p>The bare domain is canonical. Everything already points that way — the footer links, /signup, /legal/terms and /legal/privacy are all written without www — so making www the canonical would mean rewriting all of them to fix a description rather than a fact.</p>
+<p>www.churchplannerpro.com 301-redirects to it. Every page carries a self-referencing &lt;link rel=&quot;canonical&quot;&gt; on the bare host, and internal links are written that way too — a canonical tag doesn't excuse linking inconsistently.</p>
+<h3>Retiring discover.churchplannerpro.com</h3>
+<p>It is a second complete marketing site on our own domain, which means it competes with the real one in search rather than helping it. When it comes down: 301 the root to churchplannerpro.com, and 301 /security to churchplannerpro.com/security specifically rather than dumping it on the homepage — it is the one URL there worth preserving, and anyone following that link is mid-evaluation.</p>
+<p>Redirect, don't delete. A dead subdomain loses whatever links and history it has accumulated; a redirected one passes them on.</p>
+<h3>Analytics &amp; consent</h3>
+<h3>Google Analytics needs a consent banner, and it gets the quietest one possible</h3>
+<p>GA sets cookies, so a notice is required for visitors in scope of GDPR and it is good practice regardless. Ours is a single bar pinned to the bottom: one sentence, an &quot;Accept&quot; green rectangle and a &quot;Decline&quot; quiet pill of equal visual weight. No modal, no overlay, no blocking the page, no &quot;manage preferences&quot; maze, no pre-ticked anything. It dismisses permanently either way.</p>
+<p>Decline must actually decline — GA does not load. A banner whose refusal does nothing is worse than no banner, and this is a product asking churches to trust it with giving records; the consent bar is the first evidence of how we treat data.</p>
+<p>Load GA after consent, never in the head. Anonymise IPs. Don't add a second analytics tool without removing this one.</p>
+<p>Consent bar</p>
+<p>We use Google Analytics to see which pages help churches decide. No advertising, no third-party tracking. Privacy</p>
+<p>DeclineAccept</p>
+</section>
+<section class="chapter" id="section-12"><div class="chapter-kicker">12 / The app boundary</div>
+<h2 class="chapter-title">The app boundary</h2>
+<p>The website and the product are deliberately not the same, and this is the most likely thing to get &quot;fixed&quot; by someone trying to be helpful.</p>
+<p>Crosses the boundary</p>
+<ul class="source-list">
+<li>The wordmark and its ink, #0B1220</li>
+<li>The meaning of green: it marks the thing you act on</li>
+<li>Inter as the body typeface</li>
+<li>The 8px input radius and 12px card radius</li>
+<li>Plain language — outcomes, never module names</li>
+</ul>
+<p>Stays on its own side</p>
+<ul class="source-list">
+<li>Grounds — paper #FAF7F2 here, #F8FAFC there</li>
+<li>The green hex — #12603A here, #15803D there</li>
+<li>Neutrals — warm here, cool there</li>
+<li>Indigo #4F46E5, which is app-only</li>
+<li>The badge system, sidebar, and every in-product pattern</li>
+</ul>
+<p>The reasoning: a tool someone works in for three hours wants a cool, recessive ground that doesn't fatigue. A page someone reads for ninety seconds wants warmth and personality. Making them identical would compromise both.</p>
+<p>/* marketing site tokens */</p>
+<p>--paper:#FAF7F2;  --card:#FFFFFF;   --wash:#EFE7D8;</p>
+<p>--ink:#0B1220;    --body:#5A5751;   --muted:#6B675F;</p>
+<p>--green:#12603A;  --green-deep:#0F5231;  --line:#E3DDD2;</p>
+<p>--r-pill:999px;  --r-input:8px;  --r-card:12px;  --r-panel:24px;</p>
+<p>--container:1240px;  --measure:720px;  --section-pad:96px;  --gap:24px;</p>
+<p>/* product tokens — do not sync */</p>
+<p>--app-bg:#F8FAFC;  --app-green:#15803D;  --app-indigo:#4F46E5;</p>
+</section>
+<section class="chapter" id="section-13"><div class="chapter-kicker">13 / Page templates</div>
+<h2 class="chapter-title">Page templates</h2>
+<p>§1–§12 describe a homepage system. These are the other page types the footer commits to. Each inherits everything above — header, footer, palette, type, motion — and adds only what's specific to it.</p>
+<h3>Homepage — pricing lives here, not on its own page</h3>
+<p>There is no separate pricing page. The pricing card sits as a section between the testimonial masonry and the closing band, on wash, centered, followed by the FAQ section, which answers the objections the price provokes. The security question there links to the security page.</p>
+<p>Putting it inline rather than a click away suits a one-plan product — there is nothing to compare, so there is nothing to send anyone to a separate page to do. The nav's &quot;Pricing&quot; link is an anchor.</p>
+<h3>Article template — the blog</h3>
+<p>The only page on the site set for sustained reading, so it drops nearly everything else. Single column at the 720px measure, left-aligned, no sidebar, no related-posts rail, no share buttons, no reading-progress bar.</p>
+<p>Header: eyebrow category, title in Outfit at 40px with the weight device, then date and reading time in muted 13.5px. No author byline while it is only you writing — a byline on a one-person company reads as padding. Add it when there is a second writer.</p>
+<p>Body: Inter 18/30 — larger than the 16px used elsewhere, because this is the one place people read for minutes rather than seconds. h2 at 26px with 48px of space above and 16 below; h3 at 20px. Lists get 12px between items. Blockquotes are indented with a 2px green left rule, no italics, no quotation marks. Code and data tables scroll inside their own container.</p>
+<p>Images break the measure to the full 1240px container and carry a 13px muted caption beneath. Foot: a single wash panel with one line of what CPP does and one green &quot;Sign up&quot; rectangle. No newsletter capture, no tag cloud.</p>
+<p>Don't link Blog in the header until there are three posts. A nav item leading to an empty index is worse than no nav item — it advertises abandonment on a product whose whole pitch is that things get done. The template is ready; ship the link with the content.</p>
+<p>The index is the same measure: a plain list of title, date and one-line standfirst, newest first. No cards, no thumbnails, no excerpt teasers. At three posts a grid looks empty; at thirty a list still scans.</p>
+<p>Article header and body</p>
+<p>Data quality</p>
+<h1>Four duplicate families you almost certainly have.</h1>
+<p>9 September 2026 · 6 min read</p>
+<p>Every church database we have imported has had duplicates in it. Not because anyone was careless — because a family joined twice, once when they started attending and once when their child was registered for Sunday school, and nothing ever reconciled the two records.</p>
+<h2>The same person, entered twice</h2>
+<p>The commonest pattern is a maiden name and a married name on separate records, both active, both receiving statements. The second commonest is a nickname — Bob and Robert, Kathy and Katherine — with different email addresses.</p>
+<p>In a 300-member database, four to twelve duplicate families is normal. Most administrators know about one or two of them.</p>
+<p>The audit report flags all of them on import, with the evidence for each match, and you decide what merges.</p>
+<h3>Comparison page — restyle, don't rewrite</h3>
+<p>The Planning Center alternative page already exists and its content is right: it credits Planning Center's real advantages before positioning CPP for a different segment, and it ends with a decision framework rather than a verdict. That tone is the asset. This is a restyling job, not a redesign.</p>
+<p>The comparison table is the one place two-column structure is allowed, and it needs rules so it doesn't become a scoreboard: no ticks and crosses, no red anywhere, no &quot;winner&quot; column shading, and Planning Center's column is styled identically to ours. Both columns get prose, not symbols — &quot;organised by module, configured per church&quot; against &quot;organised by outcome, works on setup&quot; states a difference without scoring it.</p>
+<p>Everything else on the page uses standard sections. The &quot;when Planning Center is the better choice&quot; block is a wash panel, not a footnote — burying it is what makes a comparison page feel dishonest, and it is the section that earns the rest of it.</p>
+<h3>Product page — one template, three fills</h3>
+<p>Church communication, programs and events, volunteer scheduling. Fixed order: hero with eyebrow, weight-device headline, lead, ghost pill and a screenshot of that feature; a three-up of what it does; a deep-dive band with a second screenshot; the relevant slice of the ten outcomes as a short version of the workflow list; then the shared closing band and footer. No pricing card — it links to the homepage anchor.</p>
+<p>Every product page shows at least two real screens of that feature. A product page without screenshots is a brochure.</p>
+<h3>Legal and security — same template, different tone</h3>
+<p>Single column at the 720px measure, Inter 16/28, h2 at 22px, a &quot;last updated&quot; date directly under the title, and a table of contents for anything over five sections. White card on paper, standard header and footer, nothing else — no CTA, no closing band. A green rectangle under a privacy policy reads as opportunism.</p>
+<p>The security page moves to churchplannerpro.com/security and keeps its content as written — network isolation, access management, threat protection, encryption in transit and at rest, backups. That content is substantive and specific, which is exactly right; it just needs to be on the main domain and in this design. It is the page someone reads while deciding whether to trust us with giving history, so it is the one legal-family page that may carry a single quiet line at the foot pointing to Contact.</p>
+<h3>404</h3>
+<p>Paper, centered, no illustration, no joke. The weight device on a short line, one sentence, and three links to the places people were most likely heading: the homepage, pricing, and contact. Standard header and footer so it doesn't feel like a different site.</p>
+<p>404</p>
+<p>404</p>
+<h1>That page isn't here.</h1>
+<p>It may have moved, or the link may be out of date. These are the most likely places you were going.</p>
+<p>HomePricingContact</p>
+<h3>The signup page — the only form in the estate</h3>
+<p>Every primary CTA on the site lands here. Because nothing else collects anything, this page carries the entire conversion burden, and it gets more care than a form usually would.</p>
+<p>Layout: paper ground, wordmark centered at the top, form in a white card at 12px radius and 400px wide, single column. Standard footer, no site header — a nav bar here invites people to leave. One green rectangle, full width, and the reassurance line beneath it.</p>
+<p>Signup is gated: the invite code is required. That is a bigger decision than a field, because every button on the site leads here. A page that looks like open signup and then refuses you at the last field is the single worst experience the site can produce — the person has typed four fields before discovering they were never eligible.</p>
+<p>So the invite code comes first, not last. It is the top field, marked required, and the page says what it is before asking for anything else. Someone without one finds out in two seconds instead of two minutes, and someone with one is reassured they're in the right place.</p>
+<p>And there is a way to get one, in the same breath. Directly under the field: &quot;Don't have a code? Email andrew@churchplannerpro.com and I'll send you one.&quot; A mailto, not a form — consistent with §7, and a real person's address does more for trust here than a request form would.</p>
+<p>Fields, in order: invite code, church name, your name, email, password. Five, but the password confirmation goes — replaced by a show/hide toggle, which is fewer keystrokes and better practice. Requirements stated up front, not revealed on failure.</p>
+<p>Restate the offer on the page. Someone arriving here has left the page where the price was: 90 days free, then $9.99 a month for everything. 50% off your first year. No card required. The commitment moment is where the terms should be visible, not one back-click away.</p>
+<h4>Gated signup changes what the CTAs promise</h4>
+<p>Labels like &quot;Start free trial&quot; or &quot;Start in an afternoon&quot; imply you can act now. If a code is required, they are writing a cheque the signup page won't cash, and the reader discovers that only after clicking.</p>
+<p>The fix is not to soften the buttons — it is to say it plainly where the offer is stated. The hero's price line now ends &quot;invite only while we onboard churches one at a time,&quot; which is honest and, for a one-person company that sets each church up by hand, reads as care rather than a barrier. Scarcity that is actually true is an asset.</p>
+<p>Two things to keep consistent while this holds: the FAQ answers it directly, and the button labels stay as they are. The moment signup opens up, that one clause comes out of the price line and the FAQ entry goes — nothing else changes.</p>
+<p>Signup page</p>
+<p class="wordmark-sample">ChurchPlannerPRO</p>
+<h3>Sign up</h3>
+<p>Invite only for now. Setup takes about fifteen minutes.</p>
+<p>Invite code *Don't have a code? Email me and I'll send you one.</p>
+<p>Church name</p>
+<p>Your name</p>
+<p>Email</p>
+<p>PasswordAt least 12 characters. Show</p>
+<p>Sign up</p>
+<p>90 days free, then $9.99 a month for everything — 50% off your first year. No card required.</p>
+<p>Already have an account? Log in</p>
+</section>
+<section class="chapter" id="section-14"><div class="chapter-kicker">14 / Outstanding decisions</div>
+<h2 class="chapter-title">Outstanding decisions</h2>
+<p>Five items, none blocking a build. The first is the migration checklist for the live sites; the rest are small or waiting on other people.</p>
+<h3>Migration — what changes on the live site</h3>
+<p>Tracked, not blockingall</p>
+<p>This document is canonical. www.churchplannerpro.com and discover.churchplannerpro.com both predate it and both diverge; they get brought into line rather than the other way round. The concrete deltas, so nothing gets missed:</p>
+<p>Palette — live sites use blue #2563EB as the primary accent with a green sign-up button beside it, on a white-to-lavender gradient. Becomes paper, one green accent, no blue anywhere (§3).<br>Headline device — live sites color one phrase blue (&quot;Run your whole church from one platform&quot;). Becomes the weight contrast (§4).<br>Positioning — &quot;Nine modules covering the work admins actually do&quot; is on the live homepage. Modules named as modules is the thing the Planning Center page argues against; becomes the ten outcomes (§7).<br>Commercial story — &quot;Free while we validate with churches · No credit card · 15-minute setup&quot; becomes $9.99, 90-day trial, 50% first year (§7). This is the largest single change and it is a business decision, not a design one.<br>Product naming — the assistant is &quot;Ask Aaron&quot; on the live site. Whatever it is called, it must be called that everywhere.<br>Demo tenant — live screenshots show Christ Lutheran, 312 members; the guidelines and prototypes use Prairie Ridge Church, 142 members. Pick one and reshoot every screenshot from it (§8).<br>Signup — five fields including password, confirmation and an optional invite code. See §14.<br>Nav — live nav is Product / Ask Aaron / Integrations / Why CPP / FAQ; the footer inventory in §7 is the agreed structure.</p>
+<p>Order: the commercial story first, since it decides copy everywhere. Then the homepage, then the security page onto the main domain, then the comparison page restyle, then the rest. discover.* comes down once its /security redirect is in place.</p>
+<h3>Consent for named customers</h3>
+<p>Gates two components§7 · §8</p>
+<p>Logos are settled — none, ever. Still open is whether any church will agree to be quoted and named. The testimonial masonry and the portrait panel are both built and both unshippable until four or so have said yes. Until then the homepage runs nine sections instead of eleven.</p>
+<h3>Security page content is ten months old</h3>
+<p>Doesn't block§13</p>
+<p>Dated 21 November 2025. The content is good and specific, but it is the one page whose entire job is being trusted, and a stale date on it undercuts that on its own. Review the claims against what's actually running before it moves to the main domain, and re-date it when it lands.</p>
+<h3>The wordmark's original typeface</h3>
+<p>Doesn't block§2 · §4</p>
+<p>Still unidentified. It doesn't block anything now that the site is standardised on Outfit — but if the lockup ever needs redrawing, knowing whether it was a licensed face decides whether you re-cut it in Outfit or renew a licence. Worth five minutes with a font identifier on the original file.</p>
+<h3>Closed in this round</h3>
+<p>Typeface — Outfit for display above 22px, Inter for everything else and the whole product. Pricing — genuinely flat per church, stated on the card as &quot;not per user, not per module.&quot; The discount — a standing first-year offer, not a lapsing promotion. Shadows — none, anywhere; white on paper does the lifting. The ten outcomes — a hairline-separated workflow list, not a grid. Four missing components — built, with the logo strip replaced by an integrations strip. Footer — your real inventory; the footer is the sitemap. Social share image — none by choice. Motion — hover transitions only, no scroll entrances. Form states — five, specified. Inline links — green, underlined, 2px offset, no visited state. Dark mode — none. Legal — terms, privacy and security pages exist and are linked. Header — five links, two logins as text, one green Sign up. No forms on the marketing site; every CTA goes to /signup, and no demo or walkthrough booking exists. FAQ — a homepage section under pricing, open text, never an accordion. Canonical host — churchplannerpro.com, no www; discover.* redirects and comes down. Platform is the word in both header and footer. Signup is gated — invite code required and first on the page, with a mailto route to get one. One CTA label — every green button says &quot;Sign up&quot;. Tagline — &quot;the church management platform that does the work for you,&quot; the one sanctioned use of the category words.</p>
+<h3>Settled, for the record</h3>
+<p>Palette — warm paper, one green accent, no second color. Ink #0B1220, from the wordmark. The weight-contrast headline device. One h1 per page containing both the search phrase and the claim. Pills navigate, rectangles commit. Green only on things you can act on, with the icon as the single stated exception. The site and the product deliberately do not share a ground.</p>
+<p>Imagery — no stock photography, ever; real product screens or named customers only, and no image at all rather than a filler one. Audience — the administrator doing the weekly work, with the stewardship case given its own page if it's needed. Pricing — one plan at $9.99/month with everything included, a 90-day trial, and the first-year discount held in a removable component. Icon — white C on a green rounded square, brand green #12603A. Mobile wordmark — drops the PRO suffix below 768px, never stacks. Every page ships desktop and mobile, per §5.</p>
+<p>The visual reference question is also closed: headshotpro supplied the ground and the restraint, When I Work supplied the structure and the component anatomy. They're no longer competing directions.</p>
+<p>This document is set in the system it describes: paper ground, warm neutrals, one green accent used only on links, and the weight-contrast device in the title and section headings. Display is Outfit, body is Inter — the split settled in §4. Component specimens are live markup, not images — inspect to copy. Contrast ratios are computed to WCAG 2.1. This supersedes the earlier ChurchPlannerPro Site Spec, which is retained only as the audit trail for where these values came from.</p>
+</section></article></div></main><footer class="footer"><p>ChurchPlannerPro · Website design guidelines</p><p>Source: <a href="https://docs.google.com/document/d/1fcCE9b6Dat2vWdObtpo-yUUgczB1U7hhA3I4ErhiJ6o/edit">Google Doc</a></p></footer></body></html>
