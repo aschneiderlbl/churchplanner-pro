@@ -305,7 +305,7 @@ body.notes .note{display:block}
 
   <div class="app">
     <aside id="side">
-      <div class="brand">ChurchPlanner PRO</div>
+      <div class="brand" data-go="/admin" style="cursor:pointer">ChurchPlanner PRO</div>
       <nav id="nav"></nav>
       <div class="church">
         <span class="sq">P</span>
@@ -489,6 +489,7 @@ function renderNav(){
   }).join('');
 }
 function titleFor(route){
+  if(route==='/admin') return 'Dashboard';
   const exact = NAV.find(n=>n.route===route); if(exact) return exact.title;
   const m = {
     '/admin/people/families':'Families','/admin/people/families/new':'New Family',
@@ -508,6 +509,42 @@ function go(route){ state.route = route; render(); $('#screen').scrollTop = 0; $
 
 /* =========================== SCREENS =========================== */
 const S = {};
+
+/* ---- Dashboard ---- */
+S['/admin'] = () => `
+  <div class="pagehead"><div><h1>Dashboard</h1>
+    <p class="sub">What needs attention at Prairie Ridge Church.</p></div>
+    <div class="acts"><button class="btn primary" data-go="/admin/ask-aaron">Ask Chat</button></div></div>
+  <div style="height:18px"></div>
+  <div class="tiles">
+    <div class="tile"><div class="v num">104</div><div class="k">Total members</div></div>
+    <div class="tile"><div class="v num">13</div><div class="k">Pending members</div></div>
+    <div class="tile"><div class="v num">1</div><div class="k">Open inquiry</div></div>
+    <div class="tile"><div class="v num">2</div><div class="k">Active reminders</div></div>
+  </div>
+  <div class="gcards" style="margin-top:16px">
+    <div class="card pad"><p class="cardtitle">Needs attention</p>
+      <div style="display:flex;flex-direction:column;gap:12px;font-size:13.5px">
+        <div style="display:flex;gap:12px;align-items:center"><span class="pill amber">13</span><span style="flex:1">Members waiting for approval</span><button class="btn link" data-go="/admin/members/approval">Review</button></div>
+        <div style="display:flex;gap:12px;align-items:center"><span class="pill slate">1</span><span style="flex:1">Open member inquiry</span><button class="btn link" data-go="/admin/inquiries">Open</button></div>
+        <div style="display:flex;gap:12px;align-items:center"><span class="pill violet">2</span><span style="flex:1">Upcoming reminders</span><button class="btn link" data-go="/admin/tasks">View</button></div>
+      </div>
+    </div>
+    <div class="card pad"><p class="cardtitle">Quick actions</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn outline sm" data-go="/admin/people">Add member</button>
+        <button class="btn outline sm" data-go="/admin/calendar">Schedule event</button>
+        <button class="btn outline sm" data-go="/admin/communications/email">Send email</button>
+        <button class="btn outline sm" data-go="/admin/programs">Manage programs</button>
+      </div>
+    </div>
+  </div>
+  <div class="card pad" style="margin-top:16px"><p class="cardtitle">Upcoming</p>
+    <div style="display:flex;justify-content:space-between;gap:16px;align-items:center;font-size:14px;flex-wrap:wrap">
+      <div><b>Sunday School</b><div class="muted tiny">Sunday · 9:00 AM</div></div>
+      <button class="btn link" data-go="/admin/calendar/events/17">View event</button>
+    </div>
+  </div>`;
 
 /* ---- People ---- */
 S['/admin/people'] = () => {
