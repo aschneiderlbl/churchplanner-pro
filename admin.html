@@ -494,6 +494,7 @@ function titleFor(route){
     '/admin/people/families':'Families','/admin/people/families/new':'New Family',
     '/admin/people/families/25/edit':'Edit Family','/admin/inquiries/new':'File inquiry on behalf',
     '/admin/inquiries/1':'Inquiry details','/admin/programs/1/editor':'Program editor',
+    '/admin/communications/newsletters':'Newsletters',
     '/admin/calendar/groups/new':'New Program','/admin/tasks/new':'New task','/admin/tasks/1/edit':'Edit task',
     '/admin/campaigns/new':'New campaign','/admin/campaigns/1':'New HVAC Fund',
     '/admin/settings/users':'Users','/admin/settings/iconcmo-export':'IconCMO Export',
@@ -1135,7 +1136,7 @@ S['/admin/communications/email'] = () => `
   <div class="pagehead"><div><h1>Communications</h1>
     <p class="sub">Create and send updates to your church from one place.</p></div>
     <div class="acts"><button class="btn primary">+ New email</button></div></div>
-  ${tabbar([['Email','/admin/communications/email']],'/admin/communications/email')}
+  ${tabbar([['Email','/admin/communications/email'],['Newsletters','/admin/communications/newsletters']],'/admin/communications/email')}
   <div class="tiles" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-bottom:20px">
     <div class="tile"><div class="v num">0</div><div class="k">Draft emails</div></div>
     <div class="tile"><div class="v num">0</div><div class="k">Scheduled</div></div>
@@ -1154,6 +1155,31 @@ S['/admin/communications/email'] = () => `
     <div class="acts"><div style="width:230px"><input type="text" placeholder="Search email"></div></div></div>
   ${tablewrap(['Subject','Audience','Status','Sent','Actions'],[[
     '<span class="muted">No emails yet.</span>','','','',''
+  ]],760)}`;
+
+S['/admin/communications/newsletters'] = () => `
+  <div class="pagehead"><div><h1>Newsletters</h1>
+    <p class="sub">Create recurring church updates and keep members informed.</p></div>
+    <div class="acts"><button class="btn primary">+ New newsletter</button></div></div>
+  ${tabbar([['Email','/admin/communications/email'],['Newsletters','/admin/communications/newsletters']],'/admin/communications/newsletters')}
+  <div class="tiles" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-bottom:20px">
+    <div class="tile"><div class="v num">0</div><div class="k">Draft newsletters</div></div>
+    <div class="tile"><div class="v num">0</div><div class="k">Scheduled</div></div>
+    <div class="tile"><div class="v num">0</div><div class="k">Sent this month</div></div>
+  </div>
+  <div class="card pad" style="max-width:760px;margin-bottom:20px">
+    <div style="display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap">
+      <div style="flex:1;min-width:240px">
+        <p class="cardtitle" style="margin-bottom:5px">Connect Gmail</p>
+        <p class="muted" style="font-size:13.5px;line-height:1.6;margin:0">Send newsletters from the account your members already recognize. Drafts wait for approval before anything is sent.</p>
+      </div>
+      <button class="btn outline sm">Connect Gmail</button>
+    </div>
+  </div>
+  <div class="pagehead" style="margin-bottom:12px"><div><h2 style="font-size:18px;margin:0">Newsletter history</h2></div>
+    <div class="acts"><div style="width:230px"><input type="text" placeholder="Search newsletters"></div></div></div>
+  ${tablewrap(['Newsletter','Audience','Status','Sent','Actions'],[[
+    '<span class="muted">No newsletters yet.</span>','','','',''
   ]],760)}`;
 
 /* ---- Settings ---- */
