@@ -699,11 +699,15 @@ S['/admin/volunteers'] = () => {
 S['/admin/inquiries'] = () => `
   <div class="pagehead"><div><h1>Member inquiries</h1>
     <p class="sub">Help-center tickets filed by members and by staff on their behalf.</p></div>
-    <div class="acts"><button class="btn primary" data-go="/admin/inquiries/new">+ File on behalf</button></div></div>
-  <div style="height:28px"></div>
-  <h3 style="margin:0 0 6px;font-size:17px">No inquiries yet</h3>
-  <p class="sub" style="margin:0 0 16px">When members send a message via the help center, or when staff file one on their behalf, it shows up here.</p>
-  <button class="btn primary" data-go="/admin/inquiries/new">File the first inquiry</button>`;
+    <div class="acts"><a class="btn primary" style="display:inline-flex;align-items:center;text-decoration:none" data-go="/admin/inquiries/new">+ File on behalf</a></div></div>
+  <div style="height:22px"></div>
+  ${tablewrap(['Subject','Status','Member','Created','Actions'], [[
+    `<span class="linky" data-go="/admin/inquiries/1">Question about Sunday school registration</span>`,
+    `<span class="pill slate">Open</span>`,
+    `Alex Johnson`,
+    `Sep 24, 2026`,
+    `<span class="btn link" data-go="/admin/inquiries/1">Open</span>`
+  ]])}`;
 
 S['/admin/inquiries/new'] = () => `
   <p class="route-chip" style="margin:0 0 10px">Member inquiries › New</p>
