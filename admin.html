@@ -493,6 +493,7 @@ function titleFor(route){
   const m = {
     '/admin/people/families':'Families','/admin/people/families/new':'New Family',
     '/admin/people/families/25/edit':'Edit Family','/admin/inquiries/new':'File inquiry on behalf',
+    '/admin/inquiries/1':'Inquiry details','/admin/programs/1/editor':'Program editor',
     '/admin/calendar/groups/new':'New Program','/admin/tasks/new':'New task','/admin/tasks/1/edit':'Edit task',
     '/admin/campaigns/new':'New campaign','/admin/campaigns/1':'New HVAC Fund',
     '/admin/settings/users':'Users','/admin/settings/iconcmo-export':'IconCMO Export',
@@ -732,18 +733,64 @@ S['/admin/inquiries/new'] = () => `
   </div>
   ${note('Gap','Member is a raw numeric person id typed by hand, with no lookup on this screen — every other person picker in the app is a select.')}`;
 
+S['/admin/inquiries/1'] = () => `
+  <p class="route-chip" style="margin:0 0 10px">Member inquiries › Detail</p>
+  <div class="pagehead"><div><h1>Question about Sunday school registration</h1>
+    <p class="sub">Filed by Alex Johnson · Sep 24, 2026</p></div>
+    <div class="acts"><button class="btn outline" data-go="/admin/inquiries">Back</button>
+      <button class="btn ghost">Close inquiry</button></div></div>
+  <div class="card" style="max-width:720px;margin-top:22px">
+    <div style="padding:14px 22px;border-bottom:1px solid var(--slate-200);display:flex;align-items:center;gap:10px">
+      <p class="cardtitle" style="margin:0">Conversation</p><span class="pill slate">Open</span></div>
+    <div style="padding:20px 22px;border-bottom:1px solid var(--slate-200)">
+      <p style="font-weight:650;margin:0 0 7px">Alex Johnson</p>
+      <p style="margin:0;line-height:1.6">Can you confirm whether registration is still open for the Sunday school program?</p></div>
+    <div style="padding:18px 22px;display:flex;flex-direction:column;gap:12px">
+      ${field('Reply', area('Write a response to the member…'))}
+      <div><button class="btn primary">Send reply</button></div></div>
+  </div>`;
+
 /* ---- Programs ---- */
 S['/admin/programs'] = () => `
   <div class="pagehead"><div><h1>Programs</h1>
     <p class="sub">A program is a group, a registration form and a schedule, set up together and reported on together.</p></div>
     <div class="acts"><button class="btn primary" data-go="/admin/calendar/groups/new">+ New Program</button></div></div>
   <div class="gcards loose" style="margin-top:22px">
-    ${PROGRAMS.map(p=>`<div class="gcard" style="cursor:pointer" data-modal="program">
+    ${PROGRAMS.map(p=>`<div class="gcard" style="cursor:pointer" data-go="/admin/programs/1/editor">
       <h4>${esc(p[0])}</h4>
       <p class="cnt" style="border:0;padding:0;margin-bottom:10px">${p[1]} registered · ${p[2]}${p[3]?' · '+p[3]:''}</p>
       <span class="pill green">Attendance on</span> <span class="pill violet">Form published</span></div>`).join('')}
   </div>
   ${note('Modelling','A program’s identity <em>is</em> its group — the editor lives at the group’s id, and the only true delete is deleting the group from Groups. “+ New Program” actually sends you to <code>/admin/calendar/groups/new?returnTo=programs</code>.')}`;
+
+S['/admin/programs/1/editor'] = () => `
+  <p class="route-chip" style="margin:0 0 10px">Programs › Editor</p>
+  <div class="pagehead"><div><h1>Sunday School</h1>
+    <p class="sub">Manage program details, registration and weekly schedule.</p></div>
+    <div class="acts"><button class="btn outline" data-go="/admin/programs">Back</button></div></div>
+  <div class="card" style="max-width:680px;margin-top:22px">
+    <p class="seclabel">Program details</p>
+    <div style="padding:18px 22px;display:flex;flex-direction:column;gap:16px">
+      ${field('Program name', `<input type="text" value="Sunday School">`)}
+      ${field('Description', area('Weekly classes and activities for children and families.'))}
+      <label class="chk"><input type="checkbox" checked style="accent-color:#2563EB"> Track attendance</label>
+    </div>
+  </div>
+  <div class="card" style="max-width:680px;margin-top:16px">
+    <p class="seclabel">Registration</p>
+    <div style="padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+      <div><p class="cardtitle" style="margin:0 0 3px">Registration form</p><p class="help" style="margin:0">Published · 24 registrations</p></div>
+      <button class="btn outline">Edit form</button></div>
+  </div>
+  <div class="card" style="max-width:680px;margin-top:16px">
+    <p class="seclabel">Schedule</p>
+    <div style="padding:18px 22px" class="fgrid">
+      ${field('Day', sel(['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],'Sunday'))}
+      ${field('Time', `<input type="time" value="09:00">`)}
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:18px;max-width:680px;justify-content:flex-end">
+    <button class="btn ghost" data-go="/admin/programs">Cancel</button><button class="btn primary">Save changes</button></div>`;
 
 S['/admin/calendar/groups/new'] = () => `
   <p class="route-chip" style="margin:0 0 10px">Programs › New</p>
