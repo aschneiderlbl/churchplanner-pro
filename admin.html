@@ -345,6 +345,7 @@ const NAV = [
   {ic:'📋', label:'Volunteers',      route:'/admin/volunteers',          title:'Volunteers'},
   {ic:'📮', label:'Inquiries',       route:'/admin/inquiries',           title:'Member inquiries'},
   {ic:'✦',  label:'Programs',        route:'/admin/programs',            title:'Programs', badge:'New'},
+  {ic:'✉️', label:'Communications',  route:'/admin/communications/email',title:'Communications'},
   {ic:'💬', label:'Ask Chat',        route:'/admin/ask-aaron',           title:'Ask Chat'},
   {ic:'📅', label:'Calendar',        route:'/admin/calendar',            title:'Calendar'},
   {ic:'📊', label:'Reporting',       route:'/admin/reporting',           title:'Reporting Dashboard'},
@@ -492,8 +493,10 @@ function titleFor(route){
   const m = {
     '/admin/people/families':'Families','/admin/people/families/new':'New Family',
     '/admin/people/families/25/edit':'Edit Family','/admin/inquiries/new':'File inquiry on behalf',
-    '/admin/tasks/new':'New task','/admin/campaigns/new':'New campaign','/admin/campaigns/1':'New HVAC Fund',
+    '/admin/calendar/groups/new':'New Program','/admin/tasks/new':'New task','/admin/tasks/1/edit':'Edit task',
+    '/admin/campaigns/new':'New campaign','/admin/campaigns/1':'New HVAC Fund',
     '/admin/settings/users':'Users','/admin/settings/iconcmo-export':'IconCMO Export',
+    '/admin/stripe/connect':'Connect Stripe','/admin/integrations/signupgenius':'SignUpGenius',
     '/admin/calendar/events/17':'Event Details','/admin/calendar/events/17/attendance':'Event Details',
     '/admin/forms/28':'First Communion Form','/admin/forms/28/responses':'Form Responses - First Communion Form',
   };
@@ -733,7 +736,7 @@ S['/admin/inquiries/new'] = () => `
 S['/admin/programs'] = () => `
   <div class="pagehead"><div><h1>Programs</h1>
     <p class="sub">A program is a group, a registration form and a schedule, set up together and reported on together.</p></div>
-    <div class="acts"><button class="btn primary">+ New Program</button></div></div>
+    <div class="acts"><button class="btn primary" data-go="/admin/calendar/groups/new">+ New Program</button></div></div>
   <div class="gcards loose" style="margin-top:22px">
     ${PROGRAMS.map(p=>`<div class="gcard" style="cursor:pointer" data-modal="program">
       <h4>${esc(p[0])}</h4>
@@ -741,6 +744,27 @@ S['/admin/programs'] = () => `
       <span class="pill green">Attendance on</span> <span class="pill violet">Form published</span></div>`).join('')}
   </div>
   ${note('Modelling','A program’s identity <em>is</em> its group — the editor lives at the group’s id, and the only true delete is deleting the group from Groups. “+ New Program” actually sends you to <code>/admin/calendar/groups/new?returnTo=programs</code>.')}`;
+
+S['/admin/calendar/groups/new'] = () => `
+  <p class="route-chip" style="margin:0 0 10px">Programs › New</p>
+  <div class="pagehead"><div><h1>New Program</h1>
+    <p class="sub">Create the group, registration and schedule that make up this program.</p></div>
+    <div class="acts"><button class="btn outline" data-go="/admin/programs">Back</button></div></div>
+  <div class="card" style="max-width:560px;margin-top:22px">
+    <div style="padding:18px 22px;display:flex;flex-direction:column;gap:16px">
+      ${field('Program name', text('Sunday School'))}
+      ${field('Description', area('What should families know about this program?'))}
+      <div class="fgrid">
+        ${field('Starts', date())}${field('Ends', date())}
+        ${field('Day', sel(['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],'Sunday'))}
+        ${field('Time', `<input type="time">`)}
+      </div>
+      <label class="chk"><input type="checkbox" checked style="accent-color:#2563EB"> Track attendance</label>
+      <label class="chk"><input type="checkbox" checked style="accent-color:#2563EB"> Create a registration form</label>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:18px;max-width:560px;justify-content:flex-end">
+    <button class="btn ghost" data-go="/admin/programs">Cancel</button><button class="btn primary">Create program</button></div>`;
 
 /* ---- Ask Chat ---- */
 S['/admin/ask-aaron'] = () => `
@@ -885,9 +909,9 @@ S['/admin/tasks'] = () => `
   <div style="height:18px"></div>
   ${tablewrap(['Name','Assigned to','Schedule','Next run','Status','Actions'],[
     ['Weekly Reconciliation','Andrew Schneider','<span class="pill violet">Weekly</span>','Fri, Sep 25, 9:00 AM','<span class="status-ok">Active</span>',
-     '<button class="btn link">Pause</button> <button class="btn link" style="color:var(--blue-link)">Edit</button> <button class="btn link danger">Delete</button>'],
+     '<button class="btn link">Pause</button> <button class="btn link" style="color:var(--blue-link)" data-go="/admin/tasks/1/edit">Edit</button> <button class="btn link danger">Delete</button>'],
     ['Publish volunteer schedule','Andrew Schneider','<span class="pill violet">Weekly</span>','Fri, Sep 25, 10:00 AM','<span class="status-ok">Active</span>',
-     '<button class="btn link">Pause</button> <button class="btn link" style="color:var(--blue-link)">Edit</button> <button class="btn link danger">Delete</button>'],
+     '<button class="btn link">Pause</button> <button class="btn link" style="color:var(--blue-link)" data-go="/admin/tasks/1/edit">Edit</button> <button class="btn link danger">Delete</button>'],
   ],760)}
   ${note('Naming drift','Three names for one object: the nav says “Reminders”, the route is <code>/admin/tasks</code>, the form says “New task”.')}`;
 
@@ -911,6 +935,26 @@ S['/admin/tasks/new'] = () => `
   <div style="display:flex;gap:10px;margin-top:18px;max-width:400px;justify-content:flex-end">
     <button class="btn ghost" data-go="/admin/tasks">Cancel</button><button class="btn primary">Save task</button></div>
   ${note('Gap','“Day of week” stays visible when Recurrence is set to Daily or Monthly, where it means nothing.')}`;
+
+S['/admin/tasks/1/edit'] = () => `
+  <p class="route-chip" style="margin:0 0 10px">Reminders › Edit</p>
+  <div class="pagehead"><div><h1>Edit task</h1>
+    <p class="sub">Update who owns this reminder and when it runs.</p></div>
+    <div class="acts"><button class="btn outline" data-go="/admin/tasks">Back</button></div></div>
+  <div class="card" style="max-width:400px;margin-top:22px">
+    <div style="padding:14px 22px;border-bottom:1px solid var(--slate-200)">
+      <p class="cardtitle" style="margin:0 0 2px">Schedule</p>
+      <p class="help" style="margin:0">What the task is and when it fires.</p></div>
+    <div style="padding:18px 22px;display:flex;flex-direction:column;gap:16px">
+      ${field('Name', `<input type="text" value="Weekly Reconciliation">`)}
+      ${field('Assigned to', sel(MEMBERS.map(m=>m[0]),'Andrew Schneider'))}
+      ${field('Recurrence', sel(['Daily','Weekly','Monthly'],'Weekly'))}
+      ${field('Day of week', sel(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],'Friday'))}
+      ${field('Time of day', `<input type="time" value="09:00">`)}
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:18px;max-width:400px;justify-content:flex-end">
+    <button class="btn ghost" data-go="/admin/tasks">Cancel</button><button class="btn primary">Save changes</button></div>`;
 
 /* ---- Finances ---- */
 S['/admin/finances'] = () => {
@@ -1039,6 +1083,32 @@ S['/admin/campaigns/1'] = () => `
     </div>
   </div>`;
 
+/* ---- Communications ---- */
+S['/admin/communications/email'] = () => `
+  <div class="pagehead"><div><h1>Communications</h1>
+    <p class="sub">Create and send updates to your church from one place.</p></div>
+    <div class="acts"><button class="btn primary">+ New email</button></div></div>
+  ${tabbar([['Email','/admin/communications/email']],'/admin/communications/email')}
+  <div class="tiles" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-bottom:20px">
+    <div class="tile"><div class="v num">0</div><div class="k">Draft emails</div></div>
+    <div class="tile"><div class="v num">0</div><div class="k">Scheduled</div></div>
+    <div class="tile"><div class="v num">0</div><div class="k">Sent this month</div></div>
+  </div>
+  <div class="card pad" style="max-width:760px;margin-bottom:20px">
+    <div style="display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap">
+      <div style="flex:1;min-width:240px">
+        <p class="cardtitle" style="margin-bottom:5px">Connect Gmail</p>
+        <p class="muted" style="font-size:13.5px;line-height:1.6;margin:0">Send church email from the account your members already recognize. Drafts wait for approval before anything is sent.</p>
+      </div>
+      <button class="btn outline sm">Connect Gmail</button>
+    </div>
+  </div>
+  <div class="pagehead" style="margin-bottom:12px"><div><h2 style="font-size:18px;margin:0">Email history</h2></div>
+    <div class="acts"><div style="width:230px"><input type="text" placeholder="Search email"></div></div></div>
+  ${tablewrap(['Subject','Audience','Status','Sent','Actions'],[[
+    '<span class="muted">No emails yet.</span>','','','',''
+  ]],760)}`;
+
 /* ---- Settings ---- */
 S['/admin/settings'] = () => `
   <h1>Church Profile</h1>
@@ -1063,7 +1133,23 @@ S['/admin/settings'] = () => `
     <div><button class="btn primary sm">Save Preferences</button></div>
     <div class="card pad"><p class="cardtitle">Donations — Stripe</p>
       <p class="muted" style="font-size:13.5px;margin:0 0 14px">Connect Stripe to accept donations directly through your campaign pages. Money goes straight to your church's bank account.</p>
-      <button class="btn primary sm">Connect Stripe</button></div>
+      <a class="btn primary sm" style="display:inline-flex;text-decoration:none" data-go="/admin/stripe/connect">Connect Stripe</a></div>
+  </div>`;
+
+S['/admin/stripe/connect'] = () => `
+  <p class="route-chip" style="margin:0 0 10px">Settings › Donations</p>
+  <div class="pagehead"><div><h1>Connect Stripe</h1>
+    <p class="sub">Accept online donations and send funds directly to your church's bank account.</p></div>
+    <div class="acts"><button class="btn outline" data-go="/admin/settings">Back</button></div></div>
+  <div class="card pad" style="max-width:560px;margin-top:22px">
+    <p class="cardtitle">Set up Stripe</p>
+    <p class="muted" style="font-size:13.5px;line-height:1.65">Stripe will verify your church, collect payout details and securely process card and bank donations. You can return to ChurchPlannerPro when setup is complete.</p>
+    <ul style="padding-left:18px;font-size:13.5px;line-height:1.8">
+      <li>Have your church's legal and tax information ready</li>
+      <li>Add the bank account that should receive payouts</li>
+      <li>Choose who can manage donation settings</li>
+    </ul>
+    <button class="btn primary">Continue to Stripe</button>
   </div>`;
 
 S['/admin/settings/users'] = () => `
@@ -1140,7 +1226,7 @@ S['/admin/integrations'] = () => `
     <div class="gcard"><div style="display:flex;align-items:baseline;gap:10px">
       <h4>${i[0]}</h4><span class="muted tiny" style="margin-left:auto;font-weight:600">Disconnected</span></div>
       <p class="muted" style="font-size:13px;margin:8px 0 14px">${i[1]}</p>
-      <button class="btn ${i[2]?'primary':'outline'} sm" ${i[0]==='PLANNING_CENTER'?'data-go="/admin/integrations/planning-center"':''}>Manage</button></div>`).join('')}</div>
+      <button class="btn ${i[2]?'primary':'outline'} sm" ${i[0]==='PLANNING_CENTER'?'data-go="/admin/integrations/planning-center"':i[0]==='SIGNUP_GENIUS'?'data-go="/admin/integrations/signupgenius"':''}>Manage</button></div>`).join('')}</div>
   ${note('Inconsistency','Card keys render as raw enum names (<code>PLANNING_CENTER</code>, <code>SIGNUP_GENIUS</code>), and the sidebar’s “Integrations” item carries a <code>Soon</code> badge while linking to the working Planning Center page — this built-out index sits under the unlabelled child link instead.')}`;
 
 S['/admin/integrations/planning-center'] = () => `
@@ -1163,6 +1249,27 @@ S['/admin/integrations/planning-center'] = () => `
       <li><b>People</b> — name, email, phone, status (active/inactive)</li>
       <li><b>Households</b> — family records linked via the household membership</li></ul>
     <p class="muted" style="font-size:13px;margin:0">Future phases will add Giving, Check-Ins, and webhooks. PII is anonymized for people who have not consented to directory sharing.</p>
+  </div>`;
+
+S['/admin/integrations/signupgenius'] = () => `
+  <p class="route-chip" style="margin:0 0 10px">Integrations › SignUpGenius</p>
+  <div class="pagehead"><div><h1>SignUpGenius</h1>
+    <p class="sub">Bring volunteer signups into ChurchPlannerPro for scheduling and follow-up.</p></div>
+    <div class="acts"><button class="btn outline" data-go="/admin/integrations">Back</button></div></div>
+  <div class="card pad" style="margin-top:22px;max-width:620px">
+    <div style="display:flex;align-items:baseline;gap:10px">
+      <p class="cardtitle" style="margin:0">SignUpGenius</p>
+      <span class="muted tiny" style="margin-left:auto;font-weight:600">Disconnected</span></div>
+    <p class="muted" style="font-size:13.5px;line-height:1.65">Connect your account to import sign-up sheets and match volunteers to their ChurchPlannerPro member records.</p>
+    <button class="btn primary sm">Connect SignUpGenius</button>
+  </div>
+  <div class="card pad" style="margin-top:16px;max-width:620px">
+    <p class="cardtitle">What gets synced</p>
+    <ul style="margin:0;padding-left:18px;font-size:13.5px;line-height:1.8">
+      <li>Sign-up sheets and volunteer opportunities</li>
+      <li>Volunteer names, contact details and selected shifts</li>
+      <li>Schedule changes used for reminders and follow-up</li>
+    </ul>
   </div>`;
 
 /* =========================== MODALS =========================== */
