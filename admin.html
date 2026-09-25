@@ -345,7 +345,7 @@ const NAV = [
   {ic:'📋', label:'Volunteers',      route:'/admin/volunteers',          title:'Volunteers'},
   {ic:'📮', label:'Inquiries',       route:'/admin/inquiries',           title:'Member inquiries'},
   {ic:'✦',  label:'Programs',        route:'/admin/programs',            title:'Programs', badge:'New'},
-  {ic:'✉️', label:'Communications',  route:'/admin/communications/email',title:'Communications'},
+  {ic:'✉️', label:'Communications',  route:'/admin/communications',      title:'Communications'},
   {ic:'💬', label:'Ask Chat',        route:'/admin/ask-aaron',           title:'Ask Chat'},
   {ic:'📅', label:'Calendar',        route:'/admin/calendar',            title:'Calendar'},
   {ic:'📊', label:'Reporting',       route:'/admin/reporting',           title:'Reporting Dashboard'},
@@ -1169,6 +1169,28 @@ S['/admin/campaigns/1'] = () => `
   </div>`;
 
 /* ---- Communications ---- */
+S['/admin/communications'] = () => `
+  <div class="pagehead"><div><h1>Communications</h1>
+    <p class="sub">Create and send church updates from one place.</p></div></div>
+  <div class="gcards" style="margin-top:22px">
+    <div class="gcard" style="cursor:pointer" data-go="/admin/communications/email">
+      <h4>Email</h4><p class="cnt">Write one-time messages, choose an audience and review delivery history.</p>
+      <span class="pill green">Open email</span></div>
+    <div class="gcard" style="cursor:pointer" data-go="/admin/communications/newsletters">
+      <h4>Newsletters</h4><p class="cnt">Build recurring church updates and keep members informed.</p>
+      <span class="pill violet">Open newsletters</span></div>
+    <div class="gcard">
+      <h4>Announcements</h4><p class="cnt">Publish short updates for members to see in ChurchPlannerPro.</p>
+      <span class="pill slate">Coming soon</span></div>
+  </div>
+  <div class="card pad" style="max-width:760px;margin-top:20px">
+    <p class="cardtitle">Gmail connection</p>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <p class="muted" style="font-size:13.5px;margin:0;flex:1;min-width:240px">Connect the account your members already recognize. Drafts wait for approval before anything is sent.</p>
+      <button class="btn outline sm">Connect Gmail</button>
+    </div>
+  </div>`;
+
 S['/admin/communications/email'] = () => `
   <div class="pagehead"><div><h1>Communications</h1>
     <p class="sub">Create and send updates to your church from one place.</p></div>
