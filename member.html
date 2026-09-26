@@ -734,10 +734,12 @@
         '<p class="page-subtitle">Your questions for the church staff. Staff replies show up here.</p></div>' +
         '<a class="btn-primary" href="#/members/inquiries/new">+ File a new inquiry</a>' +
       "</div>" +
-      '<div class="empty-block">' +
-        "<h2>No inquiries yet</h2>" +
-        "<p>File your first inquiry and staff will reply here.</p>" +
-        '<a class="btn-primary" href="#/members/inquiries/new">File the first inquiry</a>' +
+      '<div class="card">' +
+        '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">' +
+          '<div><a href="#/members/inquiries/1" style="color:var(--color-primary);font-weight:650;text-decoration:none">Question about Sunday school registration</a>' +
+          '<p style="margin:.4rem 0 0;color:var(--color-text-muted);font-size:.9rem">Last updated Sep 24, 2026</p></div>' +
+          '<span style="background:#f1f5f9;border-radius:999px;color:#475569;font-size:.75rem;font-weight:700;padding:4px 9px">Open</span>' +
+        "</div>" +
       "</div>";
   };
 
@@ -759,6 +761,27 @@
           '<a class="btn-secondary" href="#/members/inquiries">Cancel</a>' +
         "</div>" +
       "</form></div>";
+  };
+
+  screens["/members/inquiries/1"] = function () {
+    return '<p style="margin:0 0 10px;color:var(--color-text-muted);font-size:.85rem">My inquiries › Detail</p>' +
+      '<div class="page-header-with-action">' +
+        '<div><h1 class="page-title">Question about Sunday school registration</h1>' +
+        '<p class="page-subtitle">Opened Sep 24, 2026 · Status: Open</p></div>' +
+        '<a class="btn-secondary" href="#/members/inquiries">Back to inquiries</a>' +
+      "</div>" +
+      '<div class="card" style="max-width:720px">' +
+        '<h2 style="font-size:1rem;margin:0 0 1rem">Conversation</h2>' +
+        '<div style="border-bottom:1px solid var(--color-border);padding-bottom:1rem;margin-bottom:1rem">' +
+          '<p style="font-weight:650;margin:0 0 .4rem">You</p>' +
+          '<p style="margin:0;line-height:1.6">Can you confirm whether registration is still open for the Sunday school program?</p>' +
+        "</div>" +
+        '<form>' +
+          '<div class="form-field"><label for="inq-reply">Reply</label>' +
+          '<textarea id="inq-reply" name="reply" placeholder="Write a response to church staff"></textarea></div>' +
+          '<div class="actions-row"><button class="btn-primary" type="button">Send reply</button></div>' +
+        "</form>" +
+      "</div>";
   };
 
   screens["/members/files"] = function () {
@@ -875,11 +898,15 @@
     ],
     "/members/inquiries": [
       "Only page using the <code>.page-header-with-action</code> split header, with a primary action at top right.",
-      "The empty state repeats the same call to action as a second button."
+      "Each inquiry links to its conversation and shows its latest update date and status."
     ],
     "/members/inquiries/new": [
       "Two fields, neither marked required in the markup: Subject (text) and Message (textarea, min-height 100px).",
       "Submit is <strong>Send to staff</strong>; Cancel returns to the inquiries list."
+    ],
+    "/members/inquiries/1": [
+      "Fixture record used to represent the production inquiry linked from the member inquiry list.",
+      "Shows the conversation, current status and a member reply field."
     ],
     "/members/files": [
       "Two sections under uppercase <code>.section-label</code> eyebrows: Folders, then Files.",
