@@ -1037,6 +1037,33 @@ p+p{margin-top:18px;}
 .proto-bar span{margin-left:auto;opacity:.72;}
 @media print{.proto-bar{display:none;}}
 
+/* Shared marketing chrome measured against the shipped public pages. */
+.wordmark{font-family:var(--display);font-size:18px;font-weight:700;letter-spacing:-.06em;line-height:1}
+.wordmark span{display:inline}
+.wordmark-planner{font-weight:300}
+.wordmark-pro{font-size:.55em;font-weight:700;align-self:flex-start;margin:0 0 0 .033em}
+.site-footer .wordmark{font-size:17px}
+.nav-main a,.nav-trigger{font-size:14.5px;font-weight:400;line-height:1.625}
+.nav-main a{display:inline;text-align:left}
+.nav-trigger{display:inline-flex;gap:6px}
+.nav-login{font-size:14px;font-weight:400;color:var(--ink)}
+.nav-right .btn--green{display:block;border:0;border-radius:6px;padding:8px 16px;font-size:14px;line-height:1.625}
+.footer-tagline{font-size:14px;line-height:1.625;color:var(--muted);margin-top:6px}
+.footer-col h4{font-size:12px;font-weight:700;margin-bottom:14px}
+.footer-col a{font-size:14.5px;color:var(--ink)}
+.footer-base{font-size:13px}
+
+/* The live blog index uses a wider reading measure and stronger headings. */
+#page-blog .measure{max-width:672px}
+#page-blog .article-title{font-family:Outfit,system-ui,sans-serif;font-size:48px;font-weight:600;line-height:1.625;letter-spacing:normal;margin-bottom:16px}
+#page-blog .lead{font-family:Inter,system-ui,sans-serif;color:#555;line-height:29.25px}
+#page-blog .post-meta{font-family:Inter,system-ui,sans-serif;font-size:13px;font-weight:500;color:#777;line-height:1.625}
+#page-blog .post-featured-title{font-family:Outfit,system-ui,sans-serif;font-size:28px;font-weight:600;line-height:1.625;letter-spacing:normal}
+#page-blog .post-featured .lead{line-height:1.625}
+@media (max-width:767px){
+  #page-blog .article-title{font-size:32px;line-height:1.25}
+  #page-blog .post-featured-title{font-size:24px;line-height:1.4}
+}
 </style>
 </head>
 <body>
@@ -2239,7 +2266,7 @@ p+p{margin-top:18px;}
           <p class="footer-tagline">The church management platform that does the work for you.</p>
         </div>
         <div class="footer-col" data-open="false">
-          <h4>Platform</h2>
+          <h4>Platform</h4>
           <ul>
             <li><a href="#church-communication">Church communication</a></li>
             <li><a href="#programs-and-events">Programs and events</a></li>
@@ -2249,21 +2276,21 @@ p+p{margin-top:18px;}
           </ul>
         </div>
         <div class="footer-col" data-open="false">
-          <h4>Resources</h2>
+          <h4>Resources</h4>
           <ul>
             <li><a href="#blog">Blog</a></li>
             <li><a href="#planning-center-alternative">Planning Center alternative</a></li>
           </ul>
         </div>
         <div class="footer-col" data-open="false">
-          <h4>Company</h2>
+          <h4>Company</h4>
           <ul>
             <li><a href="#home/about">About</a></li>
             <li><a href="mailto:andrew@churchplannerpro.com">Contact</a></li>
           </ul>
         </div>
         <div class="footer-col" data-open="false">
-          <h4>Legal</h2>
+          <h4>Legal</h4>
           <ul>
             <li><a href="#terms">Terms</a></li>
             <li><a href="#privacy">Privacy</a></li>
