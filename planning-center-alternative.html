@@ -1,0 +1,471 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Planning Center alternative — ChurchPlannerPro · Design preview</title><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>
+:root{--paper:#FAF7F2;--card:#FFFFFF;--wash:#EFE7D8;--ink:#0B1220;--body:#5A5751;--muted:#6B675F;--green:#12603A;--deep:#0F5231;--line:#E3DDD2}*{box-sizing:border-box}html{scroll-padding-top:24px}body{margin:0;background:var(--paper);color:var(--body);font:16px/26px Inter,Arial,sans-serif}h1,h2,h3{color:var(--ink);margin:0 0 24px;letter-spacing:-.022em}h1,h2{font-family:Outfit,Arial,sans-serif;font-weight:700}h1{font-size:48px;line-height:52px}h2{font-size:36px;line-height:42px}h3{font:600 22px/29px Inter,Arial,sans-serif}.light{font-weight:300}strong{font-weight:700}p{margin:0 0 24px}a{color:var(--green);text-underline-offset:2px;text-decoration-thickness:1px;transition:background-color 150ms,border-color 150ms,text-decoration-color 150ms}a:hover{text-decoration-thickness:2px}a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--green);outline-offset:4px}.wordmark{display:inline-flex;align-items:baseline;white-space:nowrap;min-width:132px;color:var(--ink);text-decoration:none;font-size:21px;letter-spacing:-.5px;line-height:1}.wordmark-church{font-weight:700}.wordmark-planner{font-weight:300}.wordmark-pro{font-size:9px;font-weight:700;align-self:flex-start;line-height:1.3;margin-left:2px}.site-header{max-width:1304px;padding:20px 32px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px;border-bottom:1px solid var(--line)}.desktop-nav,.desktop-actions{display:flex;align-items:center;gap:16px}.desktop-nav a,.desktop-actions a:not(.signup){display:flex;align-items:center;min-height:44px;text-decoration:none;color:var(--ink);font-size:13.5px}.desktop-nav a:hover,.desktop-actions a:not(.signup):hover{text-decoration:underline}.signup{background:var(--green);color:white;display:inline-flex;align-items:center;justify-content:center;min-height:44px;border-radius:8px;padding:12px 24px;font-size:15px;font-weight:600;text-decoration:none}.signup:hover{background:var(--deep)}.menu-button{display:none}.hero-band{max-width:1240px;margin:auto;padding:96px 32px;text-align:left}.hero-band .wrap{max-width:720px;margin:auto}.matchup{display:flex;gap:16px;align-items:center;margin-bottom:32px;color:var(--muted);font-size:13.5px}.versus{padding:0 4px}.hero-home-lede{font-size:18px;line-height:28px;margin:0;max-width:720px}.article-layout{max-width:1240px;margin:auto;padding:0 32px}.article-layout article{width:100%}.section{padding:96px 0;border-top:1px solid var(--line)}.container{max-width:720px;margin:auto}#comparison .container{max-width:1120px}#comparison h2,#comparison .section-lead,#comparison .eyebrow{max-width:720px;margin-left:auto;margin-right:auto}.prose{max-width:720px}.lead{font-size:18px;line-height:28px}.eyebrow{font:600 13px/18px Inter,Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}.pc-alt-list,.pc-alt-questions-list,.pc-alt-outcomes-list{list-style:none;padding:0;margin:32px 0}.pc-alt-list li,.pc-alt-questions-list li,.pc-alt-outcomes-list li{padding:16px 0;border-bottom:1px solid var(--line)}.pc-alt-list li:first-child,.pc-alt-questions-list li:first-child,.pc-alt-outcomes-list li:first-child{border-top:1px solid var(--line)}.pc-alt-questions-list li{font-size:20px;line-height:30px;color:var(--ink)}.pc-alt-outcomes-list li{color:var(--ink)}.pc-alt-callout{background:var(--wash);border-radius:24px;padding:32px;margin:32px 0}.pc-alt-callout-title{font-weight:600;color:var(--ink)}.pc-alt-callout p:last-child{margin:0}.pc-alt-feature-eq{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:32px;margin:32px 0;text-align:center}.pc-alt-feature-eq-parts{font-size:15px}.pc-alt-feature-eq-arrow{padding:12px;color:var(--muted)}.pc-alt-feature-eq-result{font-size:20px;line-height:28px;color:var(--ink);font-weight:600}.pc-compare-wrap{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:32px 0}.pc-compare-table{width:100%;border-collapse:collapse;font-size:16px;line-height:26px;text-align:left;table-layout:fixed;background:var(--card)}.pc-compare-table th,.pc-compare-table td{padding:24px;vertical-align:top;border-bottom:1px solid var(--line)}.pc-compare-table thead th{background:var(--wash);color:var(--ink);font-weight:600}.pc-compare-table th:first-child{width:24%}.pc-compare-table td{width:38%}.pc-compare-table tbody th{color:var(--ink);font-weight:600}.pc-compare-table tbody tr:last-child>*{border-bottom:0}.pc-alt-price{font-family:Outfit,Arial,sans-serif;font-size:26px;line-height:31px;font-weight:700;color:var(--ink)}.pc-alt-mobile-cards{display:none}.pc-alt-source-note,.pc-alt-pricing-note{font-size:13.5px;line-height:20px;color:var(--muted);max-width:720px;margin:24px auto}.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}.panel--wash{padding:56px 48px;background:var(--wash);border-radius:24px}.panel p:last-child{margin-bottom:0}.pc-alt-decide{display:block;margin:32px 0}.pc-alt-decide-card{padding:32px 0;border-top:1px solid var(--line)}.pc-alt-decide-label{font:600 22px/29px Inter,Arial,sans-serif;color:var(--ink)}.pc-alt-decide-card ul{padding-left:24px;margin:0}.pc-alt-decide-card li{margin-bottom:12px}.pc-alt-decide-card li:last-child{margin-bottom:0}.closing-cta-wrap{max-width:1240px;margin:0 auto 96px;padding:0 32px;border:0}.closing-cta{background:var(--green);color:white;border-radius:24px;padding:56px 48px}.closing-cta h2,.closing-cta .lead{color:white}.closing-cta .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--paper);border-radius:999px;padding:12px 24px;color:var(--ink);background:var(--paper);font-size:15px;font-weight:600;text-decoration:none}.closing-cta .btn:hover{background:var(--wash)}.closing-cta .btn:focus-visible{outline-color:white}.chrome-footer{background:var(--wash);padding:64px 32px 32px;font-size:13.5px;line-height:22px}.chrome-footer-inner,.chrome-footer-bottom{max-width:1240px;margin:auto}.chrome-footer-inner{display:flex;gap:48px;flex-wrap:wrap}.chrome-footer a{color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}.chrome-footer a:hover{text-decoration:underline}.chrome-footer ul{padding:0;list-style:none;margin:0}.chrome-footer h4{font-size:13px;letter-spacing:.09em;color:var(--muted);margin:0 0 16px}.chrome-footer-brand{max-width:260px}.chrome-footer-bottom{padding-top:32px;color:var(--muted)}dialog{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:20px;border:0;background:var(--paper);color:var(--ink)}dialog::backdrop{background:var(--paper)}.drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}.close-menu,.menu-button{min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font:500 14px Inter,Arial,sans-serif;padding:12px;cursor:pointer}dialog nav{display:flex;flex-direction:column;gap:8px}dialog nav a{font-size:22px;line-height:30px;min-height:44px;text-decoration:none;color:var(--ink);padding:8px 0}.drawer-logins{border-top:1px solid var(--line);margin-top:24px;padding-top:24px;display:flex;flex-direction:column;gap:8px}.drawer-logins a{font-size:17px;min-height:44px;display:flex;align-items:center;color:var(--ink)}dialog>.signup{width:100%;margin-top:24px}dialog[open]{display:flex;flex-direction:column;overflow:auto}dialog>.signup{margin-top:auto}
+@media(min-width:768px) and (max-width:1100px){.site-header{gap:12px;flex-wrap:wrap}.desktop-nav,.desktop-actions{gap:12px}.wordmark{font-size:20px}.pc-compare-table th,.pc-compare-table td{padding:16px}}
+@media(max-width:767px){h1{font-size:32px;line-height:35px}h2{font-size:26px;line-height:31px}h3{font-size:19px;line-height:25px}.site-header{padding:16px 20px}.desktop-nav,.desktop-actions{display:none}.menu-button{display:block}.wordmark-pro{display:none}.hero-band{padding:64px 20px}.matchup{font-size:13px;gap:12px;margin-bottom:24px;flex-wrap:wrap}.hero-home-lede,.lead{font-size:16.5px;line-height:26px}.article-layout{padding:0 20px}.section{padding:64px 0}.pc-alt-callout{padding:32px 22px;border-radius:16px}.pc-alt-feature-eq{padding:24px}.panel--wash{padding:32px 22px;border-radius:16px}.pc-compare-wrap{display:none}.pc-alt-mobile-cards{display:grid;gap:20px;margin:32px 0}.pc-alt-mobile-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px}.pc-alt-mobile-card-title{margin-bottom:24px}.pc-alt-mobile-card dl{margin:0}.pc-alt-mobile-product dt{font-weight:600;color:var(--ink);margin-bottom:8px}.pc-alt-mobile-product dd{margin:0}.pc-alt-mobile-product+div{border-top:1px solid var(--line);padding-top:24px;margin-top:24px}.pc-alt-decide-label{font-size:19px;line-height:25px}.closing-cta-wrap{padding:0 20px;margin-bottom:64px}.closing-cta{padding:32px 22px;border-radius:16px}.closing-cta .btn{width:100%}.chrome-footer{padding:64px 20px 32px}.chrome-footer-inner{gap:32px}.pc-alt-questions-list li{font-size:18px;line-height:28px}}
+@media print{body{background:white;color:#000}.site-header,dialog,.closing-cta-wrap{display:none}.hero-band,.section{padding:32px 0}.article-layout{padding:0}.pc-compare-wrap{display:block}.pc-alt-mobile-cards{display:none}.pc-compare-table tr,.pc-alt-outcomes-list li{break-inside:avoid}.panel--wash,.pc-alt-callout,.pc-alt-feature-eq{background:white;border:1px solid #aaa}.chrome-footer{background:white}}
+</style></head><body><header class="site-header"><a class="wordmark chrome-nav-brand" href="https://churchplannerpro.com/" aria-label="ChurchPlannerPro"><span class="wordmark-church">Church</span><span class="wordmark-planner">Planner</span><span class="wordmark-pro">PRO</span></a><nav class="desktop-nav" aria-label="Primary"><a href="https://churchplannerpro.com/">Platform</a><a href="https://churchplannerpro.com/#integrations">Integrations</a><a href="https://churchplannerpro.com/#pricing">Pricing</a><a href="https://churchplannerpro.com/#about">About</a><a href="https://churchplannerpro.com/blog">Blog</a></nav><div class="desktop-actions"><a href="https://churchplannerpro.com/admin/login">Staff login</a><a href="https://churchplannerpro.com/members/login">Member login</a><a class="signup" href="https://churchplannerpro.com/signup">Sign up</a></div><button class="menu-button" type="button" aria-haspopup="dialog" aria-controls="mobile-menu">Menu</button></header><dialog id="mobile-menu" aria-label="Navigation"><div class="drawer-top"><a class="wordmark chrome-nav-brand" href="https://churchplannerpro.com/" aria-label="ChurchPlannerPro"><span class="wordmark-church">Church</span><span class="wordmark-planner">Planner</span><span class="wordmark-pro">PRO</span></a><button class="close-menu" type="button">Close</button></div><nav aria-label="Mobile primary"><a href="https://churchplannerpro.com/">Platform</a><a href="https://churchplannerpro.com/#integrations">Integrations</a><a href="https://churchplannerpro.com/#pricing">Pricing</a><a href="https://churchplannerpro.com/#about">About</a><a href="https://churchplannerpro.com/blog">Blog</a></nav><div class="drawer-logins"><a href="https://churchplannerpro.com/admin/login">Staff login</a><a href="https://churchplannerpro.com/members/login">Member login</a></div><a class="signup" href="https://churchplannerpro.com/signup">Sign up</a></dialog><main><section id="hero" class="hero-band hero-home">
+        <div class="wrap hero-home-copy hero-home-copy--solo">
+            <div class="matchup"><span>ChurchPlannerPro</span><span class="versus">vs.</span><span>Planning Center</span></div>
+            <h1 class="hero-home-h1"><span class="light">A simpler way</span> <strong>to run your church.</strong></h1>
+            <p class="hero-home-lede">
+                ChurchPlannerPro vs. Planning Center: how to choose the
+                right fit for your church’s work, team and budget.
+            </p>
+        </div>
+    </section><div class="article-layout"><article><section id="introduction" class="section">
+        <div class="container">
+            <div class="prose">
+                <p class="lead">
+                    Planning Center is one of the best-known church management
+                    platforms available. It gives churches tools for managing
+                    people, services, giving, groups, registrations, check-ins,
+                    calendars and more.
+                </p>
+                <p>For many churches, that flexibility is exactly what they need.</p>
+                <p>
+                    But it also reflects a particular way of thinking about church
+                    management software: give churches a collection of specialized
+                    products and let them configure those products around the way
+                    their church operates.
+                </p>
+                <p>ChurchPlannerPro takes a different approach.</p>
+                <p>
+                    We believe church staff shouldn't have to become software
+                    experts to make their church management system work.
+                </p>
+                <p>
+                    ChurchPlannerPro starts from the work your office is
+                    actually trying to do — we Connect your existing
+                    tools, Manage the operations in one place, and Automate
+                    the follow-up that would otherwise fall on someone's
+                    desk.
+                </p>
+                <ul class="pc-alt-list">
+                    <li>Schedule volunteers</li>
+                    <li>Run Sunday school</li>
+                    <li>Reconcile giving</li>
+                    <li>Communicate with members</li>
+                    <li>Manage events</li>
+                </ul>
+                <p>
+                    Then we bring the people, data, tools and workflows required
+                    to accomplish that work together.
+                </p>
+                <p>That's the fundamental difference between ChurchPlannerPro and Planning Center.</p>
+            </div>
+        </div>
+    </section><section id="comparison" class="section">
+        <div class="container">
+            <p class="eyebrow">At a glance</p>
+            <h2 class="h-section"><strong>Planning Center</strong> <span class="light vs">vs.</span> <strong>ChurchPlannerPro</strong></h2>
+            <p class="lead section-lead">
+                Both platforms can help churches manage many of the same
+                day-to-day operations. The difference is largely in how those
+                capabilities are organized and how much work your church wants
+                to do to configure them.
+            </p>
+
+            <div class="pc-compare-wrap" role="region" aria-label="Planning Center vs ChurchPlannerPro comparison" tabindex="0">
+                <table class="pc-compare-table">
+                    <thead>
+                        <tr>
+                            <th scope="col"><span class="visually-hidden">Comparison</span></th>
+                            <th scope="col">ChurchPlannerPro</th>
+                            <th scope="col">Planning Center</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Pricing</th>
+                            <td>
+                                <span class="pc-alt-price">$9.99/month</span><br>
+                                One flat price for the entire platform.
+                            </td>
+                            <td>
+                                <strong>More expensive for comparable functionality</strong><br>
+                                Pricing is based on selected products and usage. Free plans are available for limited needs.
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Approach</th>
+                            <td>Organized around church outcomes</td>
+                            <td>Collection of specialized products</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Best for</th>
+                            <td>Smaller, less complex churches with leaner teams and fewer dedicated administrative or technology staff</td>
+                            <td>Larger or more complex churches with specialized workflows and more dedicated staff</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Volunteer scheduling</th>
+                            <td>Publish shifts and let members pick up, swap or drop them in the member app</td>
+                            <td>Volunteer scheduling through Planning Center Services</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Programs</th>
+                            <td>People, registrations, groups, scheduling and communications brought together around a program</td>
+                            <td>Capabilities available across multiple Planning Center products</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Member experience</th>
+                            <td>ChurchPlannerPro member app</td>
+                            <td>Church Center</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Implementation</th>
+                            <td>Hands-on implementation included — we help migrate, audit and clean your data, and configure the platform around your church</td>
+                            <td>Migration tools, training and support, with third-party partners available for hands-on migration</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Administrative support</th>
+                            <td>Optional part-time church administrator for churches that want ongoing help</td>
+                            <td>Software and product support; churches arrange their own ongoing administrative staffing</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            
+            
+            <div class="pc-alt-mobile-cards" role="region" aria-label="Planning Center vs ChurchPlannerPro comparison (mobile)">
+                <article class="pc-alt-mobile-card">
+                    <h3 class="pc-alt-mobile-card-title">Pricing</h3>
+                    <dl>
+                        <div class="pc-alt-mobile-product">
+                            <dt>ChurchPlannerPro</dt>
+                            <dd><span class="pc-alt-price">$9.99/month</span><br>One flat price for the entire platform.</dd>
+                        </div>
+                        <div class="pc-alt-mobile-product">
+                            <dt>Planning Center</dt>
+                            <dd><strong>More expensive for comparable functionality</strong><br>Pricing is based on selected products and usage. Free plans are available for limited needs.</dd>
+                        </div>
+                    </dl>
+                </article>
+                <article class="pc-alt-mobile-card">
+                    <h3 class="pc-alt-mobile-card-title">Approach</h3>
+                    <dl>
+                        <div class="pc-alt-mobile-product">
+                            <dt>ChurchPlannerPro</dt>
+                            <dd>Organized around church outcomes</dd>
+                        </div>
+                        <div class="pc-alt-mobile-product">
+                            <dt>Planning Center</dt>
+                            <dd>Collection of specialized products</dd>
+                        </div>
+                    </dl>
+                </article>
+                <article class="pc-alt-mobile-card">
+                    <h3 class="pc-alt-mobile-card-title">Best for</h3>
+                    <dl>
+                        <div class="pc-alt-mobile-product">
+                            <dt>ChurchPlannerPro</dt>
+                            <dd>Smaller, less complex churches with leaner teams and fewer dedicated administrative or technology staff</dd>
+                        </div>
+                        <div class="pc-alt-mobile-product">
+                            <dt>Planning Center</dt>
+                            <dd>Larger or more complex churches with specialized workflows and more dedicated staff</dd>
+                        </div>
+                    </dl>
+                </article>
+                <article class="pc-alt-mobile-card">
+                    <h3 class="pc-alt-mobile-card-title">Volunteer scheduling</h3>
+                    <dl>
+                        <div class="pc-alt-mobile-product">
+                            <dt>ChurchPlannerPro</dt>
+                            <dd>Publish shifts and let members pick up, swap or drop them in the member app</dd>
+                        </div>
+                        <div class="pc-alt-mobile-product">
+                            <dt>Planning Center</dt>
+                            <dd>Volunteer scheduling through Planning Center Services</dd>
+                        </div>
+                    </dl>
+                </article>
+                <article class="pc-alt-mobile-card">
+                    <h3 class="pc-alt-mobile-card-title">Programs</h3>
+                    <dl>
+                        <div class="pc-alt-mobile-product">
+                            <dt>ChurchPlannerPro</dt>
+                            <dd>People, registrations, groups, scheduling and communications brought together around a program</dd>
+                        </div>
+                        <div class="pc-alt-mobile-product">
+                            <dt>Planning Center</dt>
+                            <dd>Capabilities available across multiple Planning Center products</dd>
+                        </div>
+                    </dl>
+                </article>
+                <article class="pc-alt-mobile-card">
+                    <h3 class="pc-alt-mobile-card-title">Member experience</h3>
+                    <dl>
+                        <div class="pc-alt-mobile-product">
+                            <dt>ChurchPlannerPro</dt>
+                            <dd>ChurchPlannerPro member app</dd>
+                        </div>
+                        <div class="pc-alt-mobile-product">
+                            <dt>Planning Center</dt>
+                            <dd>Church Center</dd>
+                        </div>
+                    </dl>
+                </article>
+                <article class="pc-alt-mobile-card">
+                    <h3 class="pc-alt-mobile-card-title">Implementation</h3>
+                    <dl>
+                        <div class="pc-alt-mobile-product">
+                            <dt>ChurchPlannerPro</dt>
+                            <dd>Hands-on implementation included — we help migrate, audit and clean your data, and configure the platform around your church</dd>
+                        </div>
+                        <div class="pc-alt-mobile-product">
+                            <dt>Planning Center</dt>
+                            <dd>Migration tools, training and support, with third-party partners available for hands-on migration</dd>
+                        </div>
+                    </dl>
+                </article>
+                <article class="pc-alt-mobile-card">
+                    <h3 class="pc-alt-mobile-card-title">Administrative support</h3>
+                    <dl>
+                        <div class="pc-alt-mobile-product">
+                            <dt>ChurchPlannerPro</dt>
+                            <dd>Optional part-time church administrator for churches that want ongoing help</dd>
+                        </div>
+                        <div class="pc-alt-mobile-product">
+                            <dt>Planning Center</dt>
+                            <dd>Software and product support; churches arrange their own ongoing administrative staffing</dd>
+                        </div>
+                    </dl>
+                </article>
+            </div>
+
+            <div class="prose pc-compare-trailing">
+                <p>
+                    Planning Center’s product and usage model includes free
+                    tiers. The “more expensive” comparison refers to
+                    comparable functionality requiring paid product plans; your
+                    actual total depends on the products and usage selected. See
+                    <a href="https://www.planningcenter.com/pricing" target="_blank" rel="noopener noreferrer">Planning Center pricing</a>.
+                </p>
+                <p>
+                    With ChurchPlannerPro, you get the entire platform for one
+                    predictable $9.99/month price. You can focus on the work your
+                    church needs to do without choosing a separate software
+                    subscription for each area.
+                </p>
+            </div>
+        </div>
+    </section><section id="weekly-work" class="section pc-alt-operational-questions" aria-labelledby="pc-alt-operational-questions-heading">
+        <div class="container">
+            <p class="eyebrow">Start here</p>
+            <h2 id="pc-alt-operational-questions-heading" class="h-section"><span class="light">Start with the questions</span> <strong>your team asks every week</strong></h2>
+            <p class="lead section-lead">
+                People, groups, calendars and forms are useful capabilities.
+                But your team’s day starts with practical questions:
+            </p>
+            <ul class="pc-alt-questions-list">
+                <li>Do we have every volunteer shift filled?</li>
+                <li>Is everything ready for Sunday school this week?</li>
+                <li>Do our financials reconcile?</li>
+                <li>Do members know what’s happening this week?</li>
+            </ul>
+            <aside class="pc-alt-callout">
+                <p class="pc-alt-callout-title">The goal is a church office that knows what’s ready, what’s missing and what needs a person’s attention.</p>
+            </aside>
+        </div>
+    </section><section id="outcomes" class="section pc-alt-outcomes" aria-labelledby="pc-alt-outcomes-heading">
+        <div class="container">
+            <p class="eyebrow">ChurchPlannerPro outcomes</p>
+            <h2 id="pc-alt-outcomes-heading" class="h-section"><span class="light">The things your church</span> <strong>actually needs to get done.</strong></h2>
+            <ul class="pc-alt-outcomes-list">
+                <li>Every volunteer shift is filled</li>
+                <li>Sunday school and VBS run smoothly</li>
+                <li>Financials reconcile every month</li>
+                <li>Accurate giving statements, ready on time</li>
+                <li>Members know what’s happening</li>
+                <li>Stay on budget</li>
+                <li>Member needs get answered quickly</li>
+                <li>Know what needs your attention</li>
+            </ul>
+        </div>
+    </section><section id="volunteers" class="section">
+        <div class="container">
+            <h2 class="h-section"><span class="light">Volunteer scheduling,</span> <strong>from open shifts to a ready team</strong></h2>
+            <div class="prose">
+                <p>A volunteer schedule brings together people, availability, reminders and communication. Giving someone a calendar is only one part of that work.</p>
+                <p>In ChurchPlannerPro, an administrator publishes the shifts that need to be filled. Members can see available opportunities in the member app and pick up a shift. When plans change, they can swap or drop their shift without starting a new chain of messages with the church office.</p>
+            </div>
+            <div class="pc-alt-feature-eq">
+                <div class="pc-alt-feature-eq-parts">People + Availability + Schedule + Reminders + Member App</div>
+                <div class="pc-alt-feature-eq-arrow" aria-hidden="true">↓</div>
+                <div class="pc-alt-feature-eq-result">A clear view of the volunteer schedule</div>
+            </div>
+            <div class="prose">
+                <p>The office can focus on the gaps that remain and the people who need help. Planning Center Services also supports volunteer scheduling; the choice is about the workflow that fits your team.</p>
+            </div>
+        </div>
+    </section><section id="programs" class="section">
+        <div class="container">
+            <h2 class="h-section"><span class="light">Bring Sunday school and VBS</span> <strong>together</strong></h2>
+            <div class="prose">
+                <p>Preparing a church program means coordinating registrations, groups, rooms, attendance, volunteers and parent communication. Those pieces all belong to the same week of ministry.</p>
+                <p>ChurchPlannerPro brings that work together around the program. Your team can prepare for Sunday school or VBS with the relevant people and information in one place.</p>
+            </div>
+            <aside class="pc-alt-callout">
+                <p class="pc-alt-callout-title">A practical starting point</p>
+                <p>Start with the program you need to run, then bring its registration, scheduling and communication work together.</p>
+            </aside>
+        </div>
+    </section><section id="financials" class="section">
+        <div class="container">
+            <h2 class="h-section"><span class="light">Keep financial work</span> <strong>connected</strong></h2>
+            <div class="prose">
+                <p>Recording a donation is one step. Your team also needs to reconcile financials, prepare accurate giving statements and understand how spending compares with the budget.</p>
+                <p>ChurchPlannerPro organizes the work around those needs. During implementation, we review your existing financial information and the tools you use, so the setup reflects how your church actually operates.</p>
+                <p>That work still needs good records and someone responsible for reviewing them. The aim is to make follow-through clearer and reduce the effort spent gathering information from different places.</p>
+            </div>
+        </div>
+    </section><section id="implementation" class="section">
+        <div class="container">
+            <h2 class="h-section"><span class="light">You shouldn’t have to implement church software</span> <strong>by yourself</strong></h2>
+            <div class="prose">
+                <p>Moving systems means more than importing a list of names. Someone needs to review records, resolve duplicates, fix outdated information, configure processes and help the team get comfortable.</p>
+                <p>Planning Center provides migration tools, training and support. Churches can use its import guidance, and third-party partners are available for hands-on migration. Its <a href="https://www.planningcenter.com/getting-started" target="_blank" rel="noopener noreferrer">Getting Started guide</a> explains those options.</p>
+                <p>ChurchPlannerPro includes hands-on implementation. We work alongside you to understand how your church operates, help migrate your information, audit and clean your data, and configure the platform around your work.</p>
+            </div>
+            <aside class="pc-alt-callout">
+                <p class="pc-alt-callout-title">Hands-on implementation included</p>
+                <p>We help migrate, audit and clean your data and get ChurchPlannerPro set up around the way your church operates.</p>
+            </aside>
+            <div class="prose">
+                <p>For a church with fewer dedicated administrative or technology staff, that help can make getting started much more manageable.</p>
+            </div>
+        </div>
+    </section><section id="admin-support" class="section">
+        <div class="container">
+            <h2 class="h-section"><span class="light">No admin?</span> <strong>No problem.</strong></h2>
+            <div class="prose">
+                <p>Sometimes the missing piece is staff time. A pastor or volunteer may be holding together the newsletter, member records, program preparation and follow-up between other responsibilities.</p>
+                <p>ChurchPlannerPro also offers an optional part-time church administrator for churches that want ongoing help with the work. You can discuss the responsibilities and level of support your church needs.</p>
+                <p>This optional administrator service is separate from the $9.99/month platform subscription. It is an option for ongoing support, in addition to the hands-on implementation included with the platform.</p>
+            </div>
+        </div>
+    </section><section id="in-fairness" class="section">
+        <div class="container">
+            <div class="panel panel--wash">
+                <p class="eyebrow">In fairness</p>
+                <h2 class="h-section"><span class="light">Planning Center’s modular approach</span> <strong>has real advantages</strong></h2>
+                <div class="prose pc-alt-fairness">
+                    <p>There are good reasons Planning Center is organized the way it is.</p>
+                    <p>
+                        A large church may have different teams responsible for
+                        worship services, children’s ministry, giving,
+                        groups and communications. Those teams may want
+                        specialized products with deep configuration options.
+                    </p>
+                    <p>Planning Center also has a mature ecosystem that has been built over many years.</p>
+                    <p>
+                        If your church already has a Planning Center setup that
+                        works well, your staff knows how to use it and you rely
+                        heavily on specific Planning Center functionality or
+                        integrations, switching systems may not make sense.
+                    </p>
+                    <p>ChurchPlannerPro isn’t trying to recreate Planning Center one module at a time.</p>
+                </div>
+            </div>
+        </div>
+    </section><section id="right-fit" class="section">
+        <div class="container">
+            <h2 class="h-section"><span class="light">So, is ChurchPlannerPro</span> <strong>a good Planning Center alternative?</strong></h2>
+            <p class="lead section-lead">It depends on what you’re looking for.</p>
+
+            <div class="pc-alt-decide">
+                <div class="pc-alt-decide-card">
+                    <p class="pc-alt-decide-label">Planning Center may be the better fit if</p>
+                    <ul>
+                        <li>You want a mature ecosystem of specialized church products.</li>
+                        <li>You have staff who want extensive configuration options.</li>
+                        <li>Your existing Planning Center setup already works well.</li>
+                        <li>You depend on specific Planning Center capabilities or integrations.</li>
+                        <li>You prefer assembling workflows across specialized products.</li>
+                    </ul>
+                </div>
+                <div class="pc-alt-decide-card">
+                    <p class="pc-alt-decide-label">ChurchPlannerPro may be the better fit if</p>
+                    <ul>
+                        <li>Your church is smaller and has less complex operations.</li>
+                        <li>You have a leaner team and fewer dedicated administrative or technology staff.</li>
+                        <li>You want a simple system organized around church outcomes.</li>
+                        <li>You want one flat price of $9.99/month for the entire platform.</li>
+                        <li>You want hands-on implementation, migration, data audit and cleanup included.</li>
+                        <li>You may benefit from an optional part-time church administrator.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="prose pc-alt-trailing">
+                <p>Neither approach is right for every church.</p>
+                <p>
+                    But we think a lot of churches have spent years adapting
+                    their processes to the way church management software works.
+                </p>
+                <p>We’re interested in doing the opposite.</p>
+            </div>
+        </div>
+    </section></article></div><section id="next-step" class="section closing-cta-wrap">
+        <div class="container">
+            <div class="closing-cta">
+                <h2 class="h-section"><span class="light">Give your team</span> <strong>more time for your church.</strong></h2>
+                <p class="lead">
+                    One platform. $9.99/month. Hands-on implementation included.
+                    See how ChurchPlannerPro can support the work your church
+                    needs to get done.
+                </p>
+                <a class="btn btn-primary" href="https://churchplannerpro.com/">Explore ChurchPlannerPro</a>
+            </div>
+        </div>
+    </section></main><footer class="chrome-footer">
+  <div class="chrome-footer-inner">
+    <div class="chrome-footer-grid">
+      <div class="chrome-footer-brand">
+        <a class="wordmark chrome-footer-brand-mark" href="https://churchplannerpro.com/" aria-label="ChurchPlannerPro"><span class="wordmark-church">Church</span><span class="wordmark-planner">Planner</span><span class="wordmark-pro">PRO</span></a>
+        <p class="chrome-footer-tagline">The church management platform that does the work for you.</p>
+      </div>
+
+      <div class="chrome-footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="https://churchplannerpro.com/church-communication">Church communication</a></li>
+          <li><a href="https://churchplannerpro.com/programs-and-events">Programs and events</a></li>
+          <li><a href="https://churchplannerpro.com/volunteer-scheduling">Volunteer scheduling</a></li>
+          <li><a href="https://churchplannerpro.com/#pricing">Pricing</a></li>
+          <li><a href="https://churchplannerpro.com/security">Security</a></li>
+        </ul>
+      </div>
+
+      <div class="chrome-footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://churchplannerpro.com/blog">Blog</a></li>
+          <li><a href="https://churchplannerpro.com/planning-center-alternative">Planning Center alternative</a></li>
+        </ul>
+      </div>
+
+      <div class="chrome-footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="https://churchplannerpro.com/#about">About</a></li>
+          <li><a href="mailto:andrew@churchplannerpro.com">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="chrome-footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="https://churchplannerpro.com/legal/terms">Terms</a></li>
+          <li><a href="https://churchplannerpro.com/legal/privacy">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chrome-footer-bottom">
+      <div class="chrome-footer-copyright">© 2026 ChurchPlannerPro. All rights reserved.</div>
+      <div class="chrome-footer-made-for">Made for church administrators.</div>
+    </div>
+  </div>
+</footer><script>const menu=document.getElementById('mobile-menu'),openButton=document.querySelector('.menu-button'),closeButton=document.querySelector('.close-menu');let scrollPosition=0;function openMenu(){scrollPosition=window.scrollY;document.body.style.position='fixed';document.body.style.top=`-${scrollPosition}px`;document.body.style.width='100%';menu.showModal();closeButton.focus()}function release(){document.body.style.position='';document.body.style.top='';document.body.style.width='';window.scrollTo(0,scrollPosition);openButton.focus()}openButton.addEventListener('click',openMenu);closeButton.addEventListener('click',()=>menu.close());menu.addEventListener('close',release);window.addEventListener('resize',()=>{if(innerWidth>=768&&menu.open)menu.close()});</script></body></html>
