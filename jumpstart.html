@@ -1,0 +1,1310 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Jumpstart: Church Data Migration & Setup | ChurchPlannerPro</title><meta name="description" content="Move your church records with Jumpstart. Included migration, cleanup, setup and verification help, with the Help Center for staff and congregation questions."><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>
+/* ============================================================
+   ChurchPlannerPro — marketing site
+   Built to Website design guidelines v1 · September 2026
+   Marketing site only. Product tokens deliberately absent (§12).
+   ============================================================ */
+
+/* ---------- Tokens (§12) ---------- */
+:root{
+  --paper:#FAF7F2;
+  --card:#FFFFFF;
+  --wash:#EFE7D8;
+  --ink:#0B1220;
+  --body:#5A5751;
+  --muted:#6B675F;
+  --green:#12603A;
+  --green-deep:#0F5231;
+  --line:#E3DDD2;
+
+  --r-pill:999px;
+  --r-input:8px;
+  --r-card:12px;
+  --r-panel:24px;
+
+  --container:1240px;
+  --measure:720px;
+  --section-pad:96px;
+  --gap:24px;
+  --gutter:20px;
+
+  --display:Outfit,"Inter",-apple-system,BlinkMacSystemFont,sans-serif;
+  --text:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+/* ---------- Reset ---------- */
+*,*::before,*::after{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--body);
+  font-family:var(--text);
+  font-size:16px;
+  line-height:1.625;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;height:auto;display:block;}
+h1,h2,h3,h4,p,ul,ol,figure{margin:0;}
+ul{padding:0;list-style:none;}
+a{color:inherit;}
+
+/* The entire motion system (§6) */
+.btn,a,.card-interactive{
+  transition:background-color .15s ease,
+             border-color .15s ease,
+             color .15s ease,
+             text-decoration-thickness .15s ease;
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important;}
+}
+
+/* Focus is always visible (§11) */
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{
+  outline:2px solid var(--green);
+  outline-offset:3px;
+  border-radius:2px;
+}
+
+/* ---------- Layout (§5) ---------- */
+.container{max-width:var(--container);margin:0 auto;padding:0 var(--gutter);}
+.section{padding:var(--section-pad) 0;}
+.measure{max-width:var(--measure);}
+.measure-center{max-width:var(--measure);margin-left:auto;margin-right:auto;}
+.center{text-align:center;}
+.visually-hidden{
+  position:absolute;width:1px;height:1px;overflow:hidden;
+  clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;
+}
+
+/* Panels float; the page never changes colour edge to edge (§5) */
+.panel{border-radius:var(--r-panel);padding:56px 48px;}
+.panel--wash{background:var(--wash);}
+
+/* ---------- Typography (§4) ---------- */
+.eyebrow{
+  font-family:var(--text);
+  font-size:13px;line-height:18px;font-weight:600;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:14px;
+}
+.h-hero{
+  font-family:var(--display);
+  font-size:48px;line-height:52px;letter-spacing:-.025em;color:var(--ink);
+  font-weight:300;
+}
+.h-section{
+  font-family:var(--display);
+  font-size:36px;line-height:42px;letter-spacing:-.022em;color:var(--ink);
+  font-weight:300;
+}
+.lt{font-weight:300;}
+.bd{font-weight:700;}
+.h-card{
+  font-family:var(--text);
+  font-size:22px;line-height:29px;letter-spacing:-.010em;
+  font-weight:650;color:var(--ink);
+}
+.lead{font-size:18px;line-height:28px;color:var(--body);}
+.small{font-size:13.5px;line-height:20px;color:var(--muted);}
+p+p{margin-top:18px;}
+
+/* One h1 per page carrying both halves (§4) */
+.hero-title{display:flex;flex-direction:column;gap:14px;margin:0;font-weight:400;}
+.hero-title .search-line{
+  font-family:var(--text);
+  font-size:13px;line-height:18px;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);
+}
+.hero-title .claim{
+  font-family:var(--display);
+  font-size:48px;line-height:1.08;letter-spacing:-.025em;color:var(--ink);
+  display:block;
+}
+
+/* Inline links (§3) */
+.prose a,a.inline{
+  color:var(--green);
+  text-decoration:underline;
+  text-decoration-thickness:1px;
+  text-underline-offset:2px;
+}
+.prose a:hover,a.inline:hover{text-decoration-thickness:2px;}
+
+/* ---------- Buttons (§6, §7) ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:var(--text);font-size:15px;font-weight:600;line-height:1;
+  text-decoration:none;cursor:pointer;border:1px solid transparent;
+  padding:15px 22px;min-height:46px;
+}
+/* Rectangles commit */
+.btn--green{background:var(--green);color:#fff;border-radius:var(--r-input);}
+.btn--green:hover{background:var(--green-deep);}
+/* Pills navigate */
+.btn--ghost{
+  background:transparent;color:var(--ink);
+  border-color:var(--line);border-radius:var(--r-pill);padding:13px 20px;
+}
+.btn--ghost:hover{background:var(--card);border-color:var(--ink);}
+.btn--quiet{
+  background:var(--card);color:var(--ink);
+  border-color:var(--line);border-radius:var(--r-pill);padding:13px 20px;
+}
+.btn--quiet:hover{border-color:var(--ink);}
+.btn--paper{
+  background:var(--paper);color:var(--ink);
+  border-radius:var(--r-pill);padding:15px 24px;
+}
+.btn--paper:hover{background:#fff;}
+
+
+/* Live platform-page structure, verified against production September 28, 2026. */
+.live-platform .measure-center{max-width:960px}
+.live-platform-hero{text-align:center;padding-top:88px}
+.live-platform-hero .lead{max-width:760px;margin:22px auto 0}
+.live-platform-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:32px}
+.live-platform-steps{background:#fff}
+.live-platform-steps ol{list-style:none;margin-top:36px;display:grid;gap:22px}
+.live-step{display:flex;gap:20px;align-items:flex-start;padding:24px;border:1px solid var(--line);border-radius:var(--r-card)}
+.live-step-num{display:grid;place-items:center;flex:none;width:36px;height:36px;background:var(--wash);border-radius:50%;font-weight:700;color:var(--green)}
+.live-step p{margin-top:10px}
+.live-platform-outcomes ul{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:20px;margin-top:32px}
+.live-platform-outcomes li{padding:22px;background:#fff;border:1px solid var(--line);border-radius:var(--r-card)}
+.live-platform-outcomes span{display:block}
+.live-platform-outcomes .outcome-name{font-size:19px;font-weight:700;color:var(--ink)}
+.live-platform-outcomes .outcome-detail{margin-top:10px}
+.live-platform-close{text-align:center;background:var(--ink);color:#fff;margin:20px;border-radius:var(--r-panel)}
+.live-platform-close .h-section,.live-platform-close .lead{color:#fff}
+.live-platform-close .lead{margin:20px auto 28px;max-width:700px}
+
+/* ---------- Header (§7) ---------- */
+.site-header{border-bottom:1px solid var(--line);background:transparent;}
+.site-header .container{
+  display:flex;align-items:center;gap:32px;
+  height:76px;
+}
+/* The wordmark is the supplied lockup, sized by height so it stays optically
+   consistent wherever it sits. §2: minimum width 132px, and a 200px+ slot. */
+.wordmark{display:inline-flex;align-items:center;text-decoration:none;flex:none;}
+.wordmark .wm{height:20px;width:auto;display:block;}
+.wordmark .wm-short{display:none;}
+.site-footer .wordmark .wm{height:24px;}
+.drawer .wordmark .wm{height:22px;}
+.nav-main{display:flex;gap:26px;margin-left:8px;}
+.nav-main a{
+  font-size:15px;font-weight:600;color:var(--ink);text-decoration:none;
+}
+.nav-main a:hover{color:var(--green);}
+.nav-right{display:flex;align-items:center;gap:18px;margin-left:auto;}
+.nav-login{font-size:15px;font-weight:500;color:var(--body);text-decoration:none;white-space:nowrap;}
+.nav-login:hover{color:var(--ink);}
+.nav-divider{width:1px;height:22px;background:var(--line);}
+
+.wordmark{font-family:var(--text);font-size:20px;font-weight:800;letter-spacing:-.06em;color:var(--ink);white-space:nowrap;line-height:1}
+.wordmark-planner{font-weight:400}
+.wordmark-pro{font-size:9px;font-weight:800;letter-spacing:0;align-self:flex-start;margin-left:1px;margin-top:-2px}
+.site-footer .wordmark{font-size:22px}
+
+/* Mobile drawer (§5) */
+.drawer{
+  position:fixed;inset:0;background:var(--paper);z-index:60;
+  display:none;flex-direction:column;padding:0 var(--gutter) 28px;
+}
+.drawer[data-open="true"]{display:flex;}
+.drawer-top{display:flex;align-items:center;justify-content:space-between;height:76px;}
+.drawer-links{display:flex;flex-direction:column;gap:22px;margin-top:28px;}
+.drawer-links a{font-size:22px;font-weight:600;color:var(--ink);text-decoration:none;}
+.drawer hr{border:0;border-top:1px solid var(--line);margin:28px 0;width:100%;}
+.drawer-logins{display:flex;flex-direction:column;gap:18px;}
+.drawer-logins a{font-size:17px;color:var(--body);text-decoration:none;}
+.drawer .btn--green{margin-top:auto;width:100%;}
+.icon-btn{
+  width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;
+  background:transparent;border:1px solid var(--line);border-radius:var(--r-pill);
+  color:var(--ink);cursor:pointer;
+}
+.icon-btn:hover{border-color:var(--ink);}
+/* Declared after .icon-btn so the desktop header never shows the menu button. */
+.nav-toggle{display:none;}
+
+/* ---------- Hero (§7) ---------- */
+.hero{padding:72px 0 var(--section-pad);}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:48px;align-items:center;}
+.hero-lead{margin-top:22px;max-width:34em;}
+.hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px;}
+.hero-price{margin-top:18px;max-width:44ch;}
+
+/* ---------- Product frames (§8) ---------- */
+/* Every product image sits in a white 12px card with a 1px line —
+   never a raw screenshot on the paper. */
+.shot{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-card);padding:10px;
+}
+.shot img{border-radius:6px;}
+/* A real screen, cropped to the frame's aspect rather than letterboxed.
+   object-position:top keeps the app's header and content and drops the dead
+   space at the bottom of a full-window capture. */
+.shot-crop{overflow:hidden;border-radius:6px;}
+.shot-crop img{width:100%;height:100%;object-fit:cover;object-position:left top;border-radius:0;}
+.shot figcaption{font-size:13.5px;line-height:20px;color:var(--muted);padding:10px 6px 4px;}
+
+/* Empty slot — a labelled placeholder, never filler artwork.
+   Delete .shot--empty and drop the <img> in. */
+.shot--empty{
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:28px;background:var(--card);
+  border:1px dashed var(--line);
+}
+.shot--empty .slot{max-width:32ch;}
+.shot--empty .slot-name{
+  font-size:13px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);
+}
+.shot--empty .slot-desc{font-size:15px;color:var(--body);margin-top:8px;}
+.shot--empty .slot-dims{font-size:13px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums;}
+.ratio-16-10{aspect-ratio:16/10;}
+.ratio-4-3{aspect-ratio:4/3;}
+.ratio-3-2{aspect-ratio:3/2;}
+.ratio-1-1{aspect-ratio:1/1;}
+.ratio-9-16{aspect-ratio:9/16;max-width:320px;margin-left:auto;margin-right:auto;}
+
+/* ---------- Cards (§7) ---------- */
+.grid{display:grid;gap:var(--gap);}
+.grid-3{grid-template-columns:repeat(3,minmax(0,1fr));}
+.grid-2{grid-template-columns:repeat(2,minmax(0,1fr));}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);
+  padding:32px;display:flex;flex-direction:column;
+}
+.card .card-label{
+  font-size:13px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);
+}
+.card hr{border:0;border-top:1px solid var(--line);margin:16px 0 20px;}
+.card .h-card{margin-bottom:10px;}
+.card p{font-size:16px;line-height:26px;}
+.card .btn{margin-top:auto;align-self:flex-start;}
+.card .btn:not(:first-child){margin-top:24px;}
+.card .shot{padding:0;border:1px solid var(--line);margin-bottom:20px;overflow:hidden;}
+
+/* ---------- Numbered steps ---------- */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap);}
+.step-num{
+  font-family:var(--display);font-size:15px;font-weight:700;color:var(--green);
+  letter-spacing:.02em;
+}
+.step h3{margin:10px 0 8px;}
+.step{border-top:1px solid var(--line);padding-top:20px;}
+
+/* ---------- Deep-dive split ---------- */
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:56px;align-items:center;}
+.split--reverse .split-media{order:-1;}
+.ticks{margin-top:24px;display:flex;flex-direction:column;gap:12px;}
+.ticks li{display:flex;gap:12px;font-size:16px;line-height:26px;}
+.tick{color:var(--green);flex:none;font-weight:700;line-height:26px;}
+
+/* ---------- Workflow row (mechanism) ---------- */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:16px;}
+.flow-item{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);
+  padding:18px 22px;font-size:16px;font-weight:600;color:var(--ink);
+}
+.flow-arrow{color:var(--muted);font-size:18px;line-height:1;}
+
+/* ---------- Integrations strip (§7) ---------- */
+.integrations{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px 32px;}
+.integrations .works-with{
+  font-size:13px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+}
+.integrations li{
+  font-family:var(--display);font-size:21px;font-weight:600;letter-spacing:-.015em;
+  color:var(--ink);opacity:.62;
+}
+
+/* ---------- Portrait panel (§7) ---------- */
+.portrait-panel{display:grid;grid-template-columns:340px minmax(0,1fr);gap:56px;align-items:center;}
+.portrait-wrap{position:relative;margin-left:-84px;}
+.portrait{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);
+  overflow:hidden;
+}
+.nameplate{
+  position:relative;margin:-28px 0 0 24px;display:inline-block;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);
+  padding:14px 20px;
+}
+.nameplate .np-name{font-size:16px;font-weight:650;color:var(--ink);}
+.nameplate .np-role{font-size:13.5px;color:var(--muted);}
+
+/* ---------- FAQ (§7) — open text, never an accordion ---------- */
+.faq-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px 56px;}
+.faq-q{font-size:17px;line-height:26px;font-weight:650;color:var(--ink);margin-bottom:8px;}
+.faq-a{font-size:16px;line-height:26px;}
+
+/* ---------- Closing green band (§7) ---------- */
+.cta-band{
+  background:var(--green);border-radius:var(--r-panel);
+  padding:96px 48px;text-align:center;color:#fff;
+}
+.cta-band .h-section{color:#fff;}
+.cta-band p{color:rgba(255,255,255,.88);margin:18px auto 0;max-width:56ch;}
+.cta-band .btn{margin-top:32px;}
+.cta-band a.inline{color:#fff;text-decoration-color:#fff;}
+
+/* ---------- Footer (§7) ---------- */
+.site-footer{padding:0 0 56px;}
+.footer-panel{background:var(--wash);border-radius:var(--r-panel);padding:56px 48px;}
+.footer-grid{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:40px;}
+.footer-tagline{font-size:15px;line-height:24px;color:var(--body);margin-top:16px;max-width:26ch;}
+.footer-col h4{
+  font-family:var(--text);font-size:13px;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:16px;
+}
+.footer-col li+li{margin-top:10px;}
+.footer-col a{font-size:14px;font-weight:400;color:var(--body);text-decoration:none;}
+.footer-col a:hover{color:var(--green);text-decoration:underline;text-underline-offset:2px;}
+.footer-base{
+  display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  margin-top:48px;padding-top:24px;border-top:1px solid rgba(11,18,32,.10);
+  font-size:13.5px;color:var(--muted);
+}
+.footer-toggle{display:none;}
+
+/* ---------- Legal / security template (§13) ---------- */
+.doc{max-width:var(--measure);margin:0 auto;}
+.doc-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);
+  padding:48px;
+}
+.doc-card h2{
+  font-family:var(--text);font-size:22px;line-height:30px;font-weight:650;color:var(--ink);
+  margin:44px 0 14px;
+}
+.doc-card h2:first-of-type{margin-top:0;}
+.doc-card p,.doc-card li{font-size:16px;line-height:28px;}
+.doc-card ul{margin-top:14px;display:flex;flex-direction:column;gap:10px;}
+.doc-card ul li{padding-left:18px;position:relative;}
+.doc-card ul li::before{
+  content:"";position:absolute;left:0;top:12px;width:6px;height:1px;background:var(--muted);
+}
+.doc-toc{border:1px solid var(--line);border-radius:var(--r-card);padding:24px 28px;background:var(--card);margin-bottom:32px;}
+.doc-toc h2{font-size:13px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;}
+.doc-toc li+li{margin-top:8px;}
+.doc-toc-list{margin:0;padding:0;list-style:none;}
+.doc-toc-list li{font-size:15px;line-height:24px;display:flex;gap:2px;}
+/* The clause number is muted and gets a fixed column so titles line up whether
+   the number is one digit or two. It sits outside the anchor in the contents
+   list, so it reads as the marker rather than as part of the link. */
+.doc-num{
+  color:var(--muted);font-variant-numeric:tabular-nums;font-weight:500;
+  flex:none;min-width:1.55em;
+}
+.doc-card h2 .doc-num{display:inline-block;font-weight:400;min-width:1.9em;}
+.doc-updated{font-size:13.5px;color:var(--muted);margin-top:14px;}
+/* Anchors land below the top edge rather than flush against it. */
+.doc-card h2[id]{scroll-margin-top:24px;}
+/* Legal documents run as headed paragraphs rather than the security page's
+   bulleted claims, so the first paragraph sits tight under its heading. */
+.doc-card h2+p{margin-top:0;}
+
+/* ============================================================
+   Tablet 768–1023 (§5)
+   ============================================================ */
+@media (max-width:1023px){
+  .container{padding:0 32px;}
+  .hero-grid,.split{gap:40px;}
+  .portrait-panel{grid-template-columns:280px minmax(0,1fr);gap:36px;}
+  .portrait-wrap{margin-left:-56px;}
+  .footer-grid{grid-template-columns:1fr 1fr 1fr;gap:36px;}
+}
+
+/* ============================================================
+   Mobile <768 (§5) — one column, never two
+   ============================================================ */
+@media (max-width:767px){
+  :root{--section-pad:64px;--gutter:20px;}
+  .container{padding:0 var(--gutter);}
+
+  /* Mobile type scale */
+  .h-hero,.hero-title .claim{font-size:32px;line-height:35px;}
+  .h-section{font-size:26px;line-height:31px;}
+  .h-card{font-size:19px;line-height:25px;}
+  .eyebrow,.hero-title .search-line{font-size:11.5px;}
+  .lead{font-size:16.5px;line-height:26px;}
+  body,.card p,.faq-a,.ticks li{font-size:15.5px;line-height:25px;}
+  .small,.footer-base{font-size:13px;}
+
+  /* Wordmark drops the PRO suffix, never stacks (§2) */
+  .wordmark .wm-full{display:none;}
+  .wordmark .wm-short{display:block;}
+  .wordmark .wm{height:18px;}
+  .site-footer .wordmark .wm{height:20px;}
+
+  .nav-main,.nav-right{display:none;}
+  .nav-toggle{display:inline-flex;margin-left:auto;}
+  .site-header .container{height:68px;}
+
+  .hero{padding:40px 0 var(--section-pad);}
+  .hero-grid,.split,.grid-3,.grid-2,.steps,.faq-grid,.portrait-panel{
+    grid-template-columns:1fr;
+  }
+  .grid,.steps{gap:20px;}
+  .card{padding:24px;}
+  .split--reverse .split-media{order:0;}
+
+  /* Hero image bleeds off the right gutter rather than letterboxing */
+  .hero-media{margin-right:calc(var(--gutter) * -1);}
+  .hero-media .shot{border-top-right-radius:0;border-bottom-right-radius:0;border-right:0;}
+  /* No mobile product screen exists yet, so the hero runs without an image on
+     phones rather than showing a shrunk desktop one (§5). Remove this rule
+     once there is a phone capture to put here. */
+  .hero-media{display:none;}
+  .hero-cta .btn{width:100%;}
+
+  .panel,.footer-panel{border-radius:16px;padding:32px 22px;}
+  .cta-band{border-radius:16px;padding:56px 22px;}
+  .doc-card{padding:28px 22px;}
+
+  .portrait-wrap{margin-left:0;}
+  .nameplate{margin:16px 0 0;display:block;}
+
+  /* Footer groups collapse, tap to expand */
+  .footer-grid{grid-template-columns:1fr;gap:0;}
+  .footer-col{border-top:1px solid rgba(11,18,32,.10);}
+  .footer-col:first-of-type{border-top:0;}
+  .footer-col h2{
+    display:flex;justify-content:space-between;align-items:center;
+    margin:0;padding:18px 0;cursor:pointer;
+  }
+  .footer-col h2::after{content:"+";font-size:16px;font-weight:400;}
+  .footer-col[data-open="true"] h2::after{content:"–";}
+  .footer-col ul{display:none;padding-bottom:20px;}
+  .footer-col[data-open="true"] ul{display:block;}
+  .footer-col a,.footer-col h2{min-height:44px;}
+  .footer-brand{padding-bottom:28px;}
+}
+
+/* ============================================================
+   Print (§11) — an administrator printing this for a council meeting
+   ============================================================ */
+@media print{
+  header,.site-nav,.drawer,.cta-band,.btn,.signup,.site-footer .footer-col,
+  .nav-toggle{display:none !important;}
+  body{background:#fff;color:#000;font-size:11pt;}
+  .card,.panel,.footer-panel,.doc-card,.shot{
+    background:#fff;border:1px solid #999;break-inside:avoid;border-radius:0;
+  }
+  .outcome-row,.pricing-card,.faq-grid>div,.step{break-inside:avoid;}
+  .h-hero,.h-section,.h-card,.hero-title .claim{color:#000;}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:9pt;}
+  .section{padding:24pt 0;}
+}
+
+/* ============================================================
+   Components lifted from marketingsite.html and rebuilt in this
+   palette. Structure and proportions are the originals; every colour,
+   gradient and shadow is replaced — the source is built in blue with
+   gradients and drop shadows, all three of which §3 and §6 rule out.
+   ============================================================ */
+
+/* ---------- Hero product stage ---------- */
+/* Geometry from ChurchPlannerProvolunteerhero.zip, which is the canonical
+   version — the copy inside marketingsite.html had lost the phone's bezel
+   (border + padding), which is why it read as a slab rather than a device.
+
+   Two changes to the original. The layers row is in normal flow rather than a
+   fixed 675px box: in the original the browser is taller than the box at any
+   container over ~1150px, so the step labels end up behind it. And the palette
+   is this site's — no shadows, no gradient ground, no blurred colour blobs.
+   Depth comes from the ink bezels and the 1px lines instead. */
+.stage{margin-top:56px;}
+.stage-layers{position:relative;min-height:620px;}
+
+.stage-browser{
+  position:relative;width:79%;overflow:hidden;
+  border:7px solid var(--ink);border-radius:24px;background:var(--card);
+}
+.stage-bar{
+  height:38px;display:flex;align-items:center;gap:8px;padding:0 14px;
+  border-bottom:1px solid var(--line);background:var(--paper);
+}
+.stage-dot{width:10px;height:10px;border-radius:50%;background:var(--line);flex:none;}
+.stage-address{width:220px;height:20px;margin-left:8px;border-radius:999px;background:var(--wash);}
+.stage-view{position:relative;aspect-ratio:1.55/1;overflow:hidden;background:var(--card);}
+.stage-view img{width:100%;height:100%;object-fit:cover;object-position:left top;display:block;}
+
+/* The bezel is what makes this read as a phone: 6px border plus 12px padding
+   around an inset screen. The member shot is portrait in the asset itself, so
+   the bezel scales it to fill and crops the empty right margin — the fixed
+   heights below are what the rest of the composition is positioned against. */
+.stage-phone{
+  position:absolute;z-index:3;top:55px;right:7.5%;
+  width:255px;height:510px;padding:12px;overflow:hidden;
+  border:6px solid var(--ink);border-radius:38px;background:var(--ink);
+}
+.stage-phone::before{
+  position:absolute;z-index:5;top:7px;left:50%;width:88px;height:18px;
+  border-radius:0 0 13px 13px;content:"";background:var(--ink);
+  transform:translateX(-50%);
+}
+.stage-phone-screen{
+  position:relative;width:100%;height:100%;overflow:hidden;
+  border-radius:24px;background:var(--card);
+}
+.stage-phone-screen img{
+  display:block;width:100%;height:100%;
+  object-fit:cover;object-position:left top;
+}
+
+.stage-reminder{
+  position:absolute;z-index:4;top:300px;right:0;width:305px;
+  display:grid;grid-template-columns:46px 1fr 46px;gap:13px;align-items:center;
+  padding:18px;border:1px solid var(--line);border-radius:20px;background:var(--card);
+}
+.stage-reminder-icon,.stage-reminder-check{
+  width:46px;height:46px;display:grid;place-items:center;border-radius:50%;
+}
+.stage-reminder-icon{background:var(--wash);color:var(--ink);}
+.stage-reminder-check{background:var(--green);color:#fff;font-size:22px;font-weight:700;}
+.stage-reminder-title{font-size:17px;font-weight:650;line-height:1.25;color:var(--ink);}
+.stage-reminder-time{font-size:15px;color:var(--muted);}
+
+.stage-flow{position:absolute;z-index:2;inset:0;pointer-events:none;}
+.stage-flow path{fill:none;stroke:var(--muted);stroke-width:4;
+  stroke-linecap:round;stroke-dasharray:4 11;}
+
+.stage-steps{
+  display:grid;grid-template-columns:1.65fr .55fr .55fr;
+  align-items:start;gap:38px;margin-top:44px;
+}
+.stage-step{display:grid;justify-items:center;gap:10px;text-align:center;
+  font-size:17px;line-height:24px;font-weight:650;color:var(--ink);}
+.stage-step-num{
+  width:48px;height:48px;display:grid;place-items:center;border-radius:50%;
+  background:var(--ink);color:var(--paper);
+  font-family:var(--display);font-size:22px;font-weight:600;
+}
+
+/* ---------- Features versus outcomes ---------- */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);}
+.compare-col{background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-card);overflow:hidden;}
+.compare-head{padding:28px 32px;border-bottom:1px solid var(--line);}
+.compare-col--cpp .compare-head{background:var(--wash);}
+.compare-head small{display:block;font-size:13px;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);}
+.compare-head strong{display:block;margin-top:8px;font-family:var(--display);
+  font-size:32px;font-weight:700;letter-spacing:-.02em;color:var(--ink);}
+.compare-list{padding:8px 32px 28px;}
+.compare-item{display:flex;align-items:center;gap:14px;padding:15px 0;
+  font-size:16px;font-weight:600;color:var(--ink);border-top:1px solid var(--line);}
+.compare-item:first-child{border-top:0;}
+.compare-key{width:34px;height:34px;flex:none;display:grid;place-items:center;
+  border-radius:8px;background:var(--wash);color:var(--muted);font-size:13px;font-weight:700;}
+.compare-check{width:26px;height:26px;flex:none;display:grid;place-items:center;
+  border-radius:50%;background:rgba(18,96,58,.10);color:var(--green);font-size:13px;font-weight:700;}
+
+/* ---------- Card artwork ---------- */
+.card-art{display:grid;place-items:center;padding:10px 0 14px;}
+.card-art svg{width:168px;height:auto;display:block;}
+
+/* ---------- Founder ---------- */
+.founder{display:grid;grid-template-columns:230px minmax(0,1fr);gap:48px;align-items:center;}
+.founder-photo{width:230px;height:230px;border-radius:50%;overflow:hidden;background:var(--card);
+  border:1px solid var(--line);}
+.founder-photo img{width:100%;height:100%;object-fit:cover;}
+.founder-cite{margin-top:20px;font-size:14px;color:var(--muted);}
+.founder-cite strong{color:var(--ink);font-weight:650;}
+
+/* ---------- Part-time administrator panel ---------- */
+.pt-panel{background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-card);padding:32px;}
+.pt-head{display:flex;gap:16px;align-items:center;padding-bottom:22px;
+  border-bottom:1px solid var(--line);}
+.pt-avatar{width:56px;height:56px;flex:none;display:grid;place-items:center;
+  border-radius:14px;background:var(--wash);color:var(--ink);}
+.pt-avatar svg{width:28px;height:28px;}
+.pt-label{font-size:18px;font-weight:650;color:var(--ink);}
+.pt-sub{font-size:15px;color:var(--muted);}
+.pt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px;}
+.pt-task{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;
+  border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;color:var(--ink);}
+.pt-check{width:22px;height:22px;flex:none;display:grid;place-items:center;
+  border-radius:50%;background:rgba(18,96,58,.10);color:var(--green);}
+.pt-check svg{width:12px;height:12px;}
+.pt-powered{display:flex;align-items:center;gap:10px;margin-top:22px;
+  font-size:14px;font-weight:600;color:var(--body);}
+.pt-dot{width:9px;height:9px;border-radius:50%;background:var(--ink);flex:none;}
+
+/* ---------- Tablet ---------- */
+@media (max-width:1023px){
+  .stage-layers{min-height:540px;}
+  .stage-browser{width:80%;}
+  .stage-phone{top:45px;right:5%;width:215px;height:430px;}
+  .stage-reminder{top:262px;width:250px;padding:14px;}
+  .stage-steps{grid-template-columns:1.55fr .6fr .6fr;gap:24px;}
+  .founder{grid-template-columns:180px minmax(0,1fr);gap:32px;}
+  .founder-photo{width:180px;height:180px;}
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width:767px){
+  /* One column, and the numbered labels interleave with what they describe. */
+  .stage{margin-top:36px;}
+  .stage-layers{min-height:0;display:grid;gap:22px;}
+  .stage-browser,.stage-phone,.stage-reminder{position:relative;inset:auto;}
+  .stage-browser{order:1;width:100%;border-width:4px;border-radius:16px;}
+  .stage-bar{height:28px;}
+  .stage-view{aspect-ratio:1.35/1;}
+  .stage-phone{order:2;justify-self:center;width:min(68vw,255px);height:min(140vw,510px);}
+  .stage-reminder{order:3;width:100%;max-width:390px;justify-self:center;}
+  .stage-flow{display:none;}
+  .stage-steps{grid-template-columns:1fr;gap:0;margin-top:28px;}
+  .stage-step{grid-template-columns:48px 1fr;justify-items:start;align-items:center;
+    text-align:left;gap:14px;padding:16px 0;border-top:1px solid var(--line);}
+  .compare,.pt-grid,.founder{grid-template-columns:1fr;}
+  .founder{gap:24px;justify-items:start;}
+  .compare-head{padding:22px 22px;}
+  .compare-head strong{font-size:26px;}
+  .compare-list{padding:8px 22px 22px;}
+  .pt-panel{padding:24px 20px;}
+}
+
+/* ============================================================
+   Sunday-school workflow stage — geometry from
+   churchplannerprosundayschoolhero.zip. Same treatment as the volunteer
+   stage: proportions kept, palette swapped, no shadows, no gradient ground,
+   no blue. The identity masks are baked into the image files.
+   ============================================================ */
+.workflow{
+  position:relative;aspect-ratio:16/10;overflow:hidden;
+  border-radius:var(--r-panel);background:var(--wash);
+  margin-top:56px;
+}
+.workflow .device{
+  position:absolute;z-index:2;background:var(--ink);
+  border:1px solid rgba(255,255,255,.16);
+}
+.workflow .desktop{top:7%;right:4%;width:76%;height:74%;
+  padding:clamp(5px,.7vw,10px);border-radius:clamp(18px,2.2vw,34px);}
+.workflow .phone{width:25%;aspect-ratio:1125/2436;
+  padding:clamp(4px,.6vw,9px);border-radius:clamp(22px,2.8vw,43px);z-index:4;}
+.workflow .registration{left:4%;bottom:-7%;}
+.workflow .checkin{right:12%;bottom:-5%;width:22%;z-index:5;}
+.workflow .viewport{position:relative;width:100%;height:100%;overflow:hidden;
+  border-radius:inherit;background:var(--card);}
+.workflow .viewport img{display:block;width:100%;height:100%;
+  object-fit:cover;object-position:top left;}
+.workflow .phone .viewport img{object-fit:contain;}
+
+.workflow .path{position:absolute;inset:1% 2% auto 2%;width:96%;height:68%;
+  z-index:0;overflow:visible;pointer-events:none;}
+.workflow .path path{fill:none;stroke:var(--muted);stroke-width:5;
+  stroke-linecap:round;stroke-dasharray:7 13;}
+
+/* The numerals sit on top of dark devices as often as on the ground, so they
+   carry a paper ring to stay legible against both. */
+.workflow .step{
+  position:absolute;z-index:8;display:grid;place-items:center;
+  width:clamp(44px,5vw,76px);aspect-ratio:1;
+  border:clamp(3px,.28vw,5px) solid var(--paper);border-radius:50%;
+  background:var(--ink);color:var(--paper);
+  font-family:var(--display);font-size:clamp(22px,2.7vw,38px);
+  font-weight:600;line-height:1;
+}
+.workflow .step-1{top:2.5%;left:21%;}
+.workflow .step-2{top:27%;left:1.5%;}
+.workflow .step-3{top:47%;right:29%;}
+.workflow .mobile-title{display:none;}
+
+@media (max-width:767px){
+  .workflow{aspect-ratio:auto;padding:24px 14px 30px;border-radius:16px;margin-top:36px;}
+  .workflow .path{display:none;}
+  .workflow .step{display:none;}
+  .workflow .mobile-step{position:relative;margin-bottom:22px;}
+  .workflow .mobile-step:last-child{margin-bottom:0;}
+  .workflow .mobile-title{
+    display:flex;align-items:center;gap:11px;margin:0 2px 10px;
+    font-size:16px;line-height:1.3;font-weight:650;color:var(--ink);}
+  .workflow .mobile-title b{
+    flex:0 0 auto;display:grid;place-items:center;width:34px;aspect-ratio:1;
+    border-radius:50%;background:var(--ink);color:var(--paper);
+    font-family:var(--display);font-size:18px;font-weight:600;}
+  .workflow .device{position:relative;inset:auto;width:100%;height:auto;}
+  .workflow .desktop{padding:5px;border-radius:14px;}
+  .workflow .phone{width:min(62vw,240px);margin:0 auto;padding:5px;border-radius:28px;}
+  .workflow .desktop .viewport{aspect-ratio:1.37/1;}
+}
+
+/* ============================================================
+   Integrations — circular badges. §7 and §8 both settle that integrations are
+   named in type and never carry third-party logo files, so the badges hold
+   the name rather than the mark. See the README before changing this.
+   ============================================================ */
+.integrations-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:28px clamp(18px,2.5vw,36px);align-items:center;margin-top:48px;}
+.integration{display:flex;justify-content:center;}
+.integration-badge{
+  width:min(100%,200px);aspect-ratio:1;display:grid;place-items:center;
+  padding:24px 20px;border:1px solid var(--line);border-radius:50%;
+  background:var(--card);text-align:center;
+}
+.integration-name{
+  font-family:var(--display);font-size:20px;line-height:1.15;
+  letter-spacing:-.02em;font-weight:600;color:var(--ink);text-wrap:balance;
+}
+@media (max-width:1023px){
+  .integrations-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+@media (max-width:767px){
+  .integrations-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 14px;}
+  .integration-badge{width:min(100%,160px);padding:18px 14px;}
+  .integration-name{font-size:16px;}
+}
+
+/* ---------- Platform dropdown (§7 header, extended) ---------- */
+.nav-item{position:relative;display:flex;align-items:center;}
+.nav-trigger{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:0;border:0;background:none;cursor:pointer;
+  font-family:var(--text);font-size:15px;font-weight:600;color:var(--ink);
+}
+.nav-trigger:hover{color:var(--green);}
+.nav-caret{flex:none;}
+.nav-menu{
+  display:none;position:absolute;top:calc(100% + 18px);left:-20px;z-index:50;
+  width:330px;padding:10px;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-card);
+}
+/* Opens on hover for pointers, on focus for keyboards, and on click for touch. */
+.nav-item--menu:hover .nav-menu,
+.nav-item--menu:focus-within .nav-menu,
+.nav-trigger[aria-expanded="true"]+.nav-menu{display:block;}
+.nav-menu a{
+  display:block;padding:12px 14px;border-radius:8px;text-decoration:none;
+}
+.nav-menu a:hover{background:var(--paper);}
+.nav-menu strong{display:block;font-size:15px;font-weight:650;color:var(--ink);}
+.nav-menu span{display:block;margin-top:3px;font-size:13.5px;line-height:19px;font-weight:400;color:var(--muted);}
+/* A hover bridge, so the pointer can cross the gap without the menu closing. */
+.nav-item--menu::after{content:"";position:absolute;top:100%;left:0;right:0;height:18px;}
+
+.drawer-group{
+  font-size:13px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);margin:0;
+}
+.drawer-sub{font-size:19px !important;padding-left:2px;}
+
+/* ---------- Pricing (§7) ---------- */
+.pricing{display:flex;justify-content:center;margin-top:48px;}
+.pricing-card{
+  width:100%;max-width:720px;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--r-card);padding:36px 40px;
+}
+/* The offer has a shelf life, so it lives in one removable element. Deleting
+   this pill must leave the card correct. */
+.pricing-promo{
+  display:inline-block;padding:7px 14px;border-radius:var(--r-pill);
+  background:var(--wash);color:var(--ink);
+  font-size:13px;font-weight:600;letter-spacing:.02em;
+}
+.price{display:flex;align-items:flex-start;gap:2px;margin-top:20px;color:var(--ink);}
+.price-dollars{font-family:var(--display);font-size:50px;font-weight:700;line-height:1;letter-spacing:-.03em;}
+.price-cents{font-family:var(--display);font-size:22px;font-weight:700;line-height:1.05;letter-spacing:-.02em;}
+.price-per{align-self:flex-end;margin-left:6px;font-size:14px;color:var(--muted);line-height:1.6;}
+.pricing-card>p{margin-top:14px;font-size:16px;line-height:26px;}
+/* Ten lines of what's included, paired off so the card stays roughly square
+   rather than running down the page. One column once the card narrows. */
+.pricing-included{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:0 28px;margin-top:24px;
+}
+.pricing-included li{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 0;border-bottom:1px solid var(--line);
+  font-size:15px;font-weight:600;color:var(--ink);
+}
+.pricing-tick{color:var(--green);font-weight:700;}
+.pricing-card .btn--green{width:100%;margin-top:24px;}
+.pricing-reassure{margin-top:14px;font-size:13.5px;line-height:20px;color:var(--muted);text-align:center;}
+@media (max-width:767px){
+  .pricing-card{max-width:none;padding:24px 20px;}
+  .pricing-included{grid-template-columns:1fr;}
+  .price-dollars{font-size:42px;}
+}
+
+/* A portrait screen shouldn't fill a whole desktop column — cap it and centre
+   it so the two halves of a deep-dive band stay balanced. */
+.split-media .shot--portrait{max-width:380px;margin-left:auto;margin-right:auto;}
+
+/* Integration badges carry the marks themselves. */
+.integration-badge{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+}
+.integration-logo{width:92px;height:76px;display:grid;place-items:center;}
+.integration-logo svg{display:block;width:100%;height:100%;overflow:visible;}
+@media (max-width:767px){
+  .integration-logo{width:70px;height:58px;}
+  .integration-badge{gap:10px;}
+}
+
+/* ============================================================
+   Comparison page (§13)
+   ============================================================ */
+/* Both columns are styled identically. No ticks, no red, no winner shading —
+   the table states a difference, it does not keep score. */
+.compare-table-wrap{margin-top:44px;overflow-x:auto;}
+.compare-table{
+  width:100%;border-collapse:collapse;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;
+  min-width:720px;
+}
+.compare-table th,.compare-table td{
+  padding:18px 22px;text-align:left;vertical-align:top;
+  border-bottom:1px solid var(--line);font-size:15.5px;line-height:24px;
+}
+.compare-table thead th{
+  font-family:var(--text);font-size:13px;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);background:var(--paper);
+}
+.compare-table tbody th{width:22%;font-weight:650;color:var(--ink);}
+.compare-table td{color:var(--body);width:39%;}
+.compare-table tbody tr:last-child th,
+.compare-table tbody tr:last-child td{border-bottom:0;}
+
+/* Capabilities adding up to one outcome. */
+.equation{
+  margin:32px auto 0;max-width:var(--measure);text-align:center;
+  padding:28px 24px;border:1px solid var(--line);border-radius:var(--r-card);
+  background:var(--card);
+}
+.equation-parts{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;}
+.equation-parts li{
+  padding:8px 14px;border:1px solid var(--line);border-radius:var(--r-pill);
+  font-size:14px;font-weight:600;color:var(--body);
+}
+.equation-arrow{display:block;margin:16px 0 12px;font-size:20px;color:var(--muted);}
+.equation-outcome{
+  font-family:var(--display);font-size:24px;font-weight:700;
+  letter-spacing:-.02em;color:var(--ink);
+}
+
+/* A statement that earns its own air, without becoming another box. */
+.callout{
+  margin-top:32px;padding:24px 0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.callout-line{
+  font-family:var(--display);font-size:22px;line-height:30px;
+  font-weight:600;letter-spacing:-.015em;color:var(--ink);
+}
+
+.quote-list{margin-top:18px;display:flex;flex-direction:column;gap:12px;}
+.quote-list li{
+  padding-left:18px;border-left:2px solid var(--green);
+  font-size:16px;line-height:26px;color:var(--body);
+}
+.decide-list{display:flex;flex-direction:column;gap:12px;}
+.decide-list li{
+  padding-left:18px;position:relative;font-size:15.5px;line-height:24px;color:var(--body);
+}
+.decide-list li::before{
+  content:"";position:absolute;left:0;top:11px;width:7px;height:1px;background:var(--muted);
+}
+@media (max-width:767px){
+  .compare-table th,.compare-table td{padding:14px 16px;font-size:15px;}
+  .equation{padding:22px 16px;}
+  .equation-outcome{font-size:20px;}
+  .callout-line{font-size:19px;line-height:27px;}
+}
+
+/* ============================================================
+   Blog (§13)
+   ============================================================ */
+/* A slim masthead under the site header, the way When I Work and ProsperStack
+   mark the blog as its own place. No subscribe field — there are no forms on
+   this site. */
+.blog-masthead{border-bottom:1px solid var(--line);padding:22px 0;}
+.blog-masthead .container{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;}
+.blog-masthead-title{
+  font-family:var(--display);font-size:26px;font-weight:700;
+  letter-spacing:-.02em;color:var(--ink);
+}
+.blog-masthead-line{font-size:15px;color:var(--muted);}
+.blog-masthead-title a{text-decoration:none;}
+.blog-masthead-title a:hover{color:var(--green);}
+
+.post-featured{padding-bottom:44px;border-bottom:1px solid var(--line);}
+.post-featured--only{padding-bottom:0;border-bottom:0;}
+.post-featured-title{
+  font-family:var(--display);font-size:40px;line-height:1.1;
+  letter-spacing:-.025em;color:var(--ink);font-weight:400;
+}
+.post-featured-title a{text-decoration:none;}
+.post-featured-title a:hover .bd{color:var(--green);}
+.post-meta{margin-top:14px;font-size:13.5px;line-height:20px;color:var(--muted);}
+
+/* §13: a plain list. At three posts a grid looks empty; at thirty a list still
+   scans. No cards, no thumbnails, no excerpt teasers. */
+.post-list{margin-top:8px;}
+.post-list li{padding:32px 0;border-bottom:1px solid var(--line);}
+.post-list h2{
+  font-family:var(--display);font-size:24px;line-height:32px;
+  letter-spacing:-.02em;font-weight:600;color:var(--ink);
+}
+.post-list h2 a{text-decoration:none;}
+.post-list h2 a:hover{color:var(--green);}
+.post-list p:last-child{margin-top:10px;font-size:16px;line-height:26px;}
+
+/* ---------- Article ---------- */
+.article-title{
+  font-family:var(--display);font-size:40px;line-height:1.1;
+  letter-spacing:-.025em;color:var(--ink);font-weight:400;
+}
+/* 18/30 — larger than the 16px used elsewhere, because this is the one place
+   people read for minutes rather than seconds. */
+.article-body{margin-top:36px;font-size:18px;line-height:30px;color:var(--body);}
+.article-body p+p{margin-top:20px;}
+.article-body h2{
+  font-family:var(--display);font-size:26px;line-height:34px;letter-spacing:-.02em;
+  font-weight:700;color:var(--ink);margin:48px 0 16px;
+}
+.article-body h3{
+  font-family:var(--text);font-size:20px;line-height:28px;font-weight:650;
+  color:var(--ink);margin:36px 0 12px;
+}
+.article-body ul,.article-body ol{margin-top:18px;display:flex;flex-direction:column;gap:12px;}
+.article-body li{padding-left:20px;position:relative;}
+.article-body li::before{
+  content:"";position:absolute;left:0;top:14px;width:8px;height:1px;background:var(--muted);
+}
+.article-body blockquote{
+  margin:32px 0;padding-left:20px;border-left:2px solid var(--green);
+  color:var(--ink);
+}
+.article-body pre,.article-body .table-scroll{overflow-x:auto;}
+/* Images break the measure to the full container (§13). */
+.article-body figure{
+  margin:40px calc((var(--measure) - var(--container)) / 2);
+  max-width:var(--container);
+}
+.article-body figcaption{margin-top:12px;font-size:13px;color:var(--muted);}
+.article-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap;
+}
+.article-foot .lead{max-width:52ch;}
+
+@media (max-width:1279px){
+  .article-body figure{margin-left:0;margin-right:0;max-width:100%;}
+}
+@media (max-width:767px){
+  .blog-masthead{padding:16px 0;}
+  .blog-masthead-title{font-size:22px;}
+  .post-featured-title,.article-title{font-size:30px;}
+  .post-list h2{font-size:21px;line-height:29px;}
+  .article-body{font-size:17px;line-height:29px;}
+  .article-body h2{font-size:23px;line-height:31px;margin:36px 0 14px;}
+  .article-foot{flex-direction:column;align-items:flex-start;}
+}
+
+
+/* Prototype only: one page visible at a time. */
+.proto-page{display:none;}
+.proto-page.is-current{display:block;}
+.proto-bar{
+  position:sticky;top:0;z-index:80;display:flex;align-items:center;gap:12px;
+  padding:8px 20px;background:var(--ink);color:var(--paper);
+  font-family:var(--text);font-size:12.5px;letter-spacing:.02em;
+}
+.proto-bar b{font-weight:650;}
+.proto-bar code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;
+  background:rgba(255,255,255,.13);padding:3px 8px;border-radius:5px;
+}
+.proto-bar span{margin-left:auto;opacity:.72;}
+@media print{.proto-bar{display:none;}}
+
+/* Shared marketing chrome measured against the shipped public pages. */
+.wordmark{font-family:var(--display);font-size:18px;font-weight:700;letter-spacing:-.06em;line-height:1}
+.wordmark span{display:inline}
+.wordmark-planner{font-weight:300}
+.wordmark-pro{font-size:.55em;font-weight:700;align-self:flex-start;margin:0 0 0 .033em}
+.site-footer .wordmark{font-size:17px}
+.nav-main a,.nav-trigger{font-size:14.5px;font-weight:400;line-height:1.625}
+.nav-main a{display:inline;text-align:left}
+.nav-trigger{display:inline-flex;gap:6px}
+.nav-login{font-size:14px;font-weight:400;color:var(--ink)}
+.nav-right .btn--green{display:block;border:0;border-radius:6px;padding:8px 16px;font-size:14px;line-height:1.625}
+.footer-tagline{font-size:14px;line-height:1.625;color:var(--muted);margin-top:6px}
+.footer-col h4{font-size:12px;font-weight:700;margin-bottom:14px}
+.footer-col a{font-size:14.5px;color:var(--ink)}
+.footer-base{font-size:13px}
+
+/* The live blog index uses a wider reading measure and stronger headings. */
+#page-blog .measure{max-width:672px}
+#page-blog .article-title{font-family:Outfit,system-ui,sans-serif;font-size:48px;font-weight:600;line-height:1.625;letter-spacing:normal;margin-bottom:16px}
+#page-blog .lead{font-family:Inter,system-ui,sans-serif;color:#555;line-height:29.25px}
+#page-blog .post-meta{font-family:Inter,system-ui,sans-serif;font-size:13px;font-weight:500;color:#777;line-height:1.625}
+#page-blog .post-featured-title{font-family:Outfit,system-ui,sans-serif;font-size:28px;font-weight:600;line-height:1.625;letter-spacing:normal}
+#page-blog .post-featured .lead{color:var(--ink);font-size:17px;line-height:26.35px}
+@media (max-width:767px){
+  #page-blog .article-title{font-size:32px;line-height:1.25}
+  #page-blog .post-featured-title{font-size:24px;line-height:1.4}
+}
+
+/* Jumpstart and small-church setup article */
+.jumpstart-copy{max-width:720px}.jumpstart-copy h1{font:700 48px/1.1 Outfit,Arial,sans-serif;letter-spacing:-.025em;margin-bottom:24px}.jumpstart-copy h2{font:600 32px/1.2 Outfit,Arial,sans-serif;margin:64px 0 24px}.jumpstart-copy h1+h2{font-size:36px;margin-top:0;font-weight:300}.jumpstart-copy h3{font:600 22px/1.3 Inter,Arial,sans-serif;margin:32px 0 16px}.jumpstart-copy p{margin-bottom:24px}.jumpstart-copy a{color:var(--green,#12603A)}.jumpstart-copy p:has(>a:only-child){margin:32px 0}.jumpstart-copy p>a:only-child{display:inline-flex;background:#12603A;color:#fff;border-radius:8px;padding:12px 24px;min-height:44px;text-decoration:none}.jumpstart-copy a:focus-visible{outline:3px solid #12603A;outline-offset:4px}#main-church-management-software-for-small-churches table{width:100%;border-collapse:collapse}#main-church-management-software-for-small-churches th,#main-church-management-software-for-small-churches td{padding:16px;text-align:left;vertical-align:top;border:1px solid #E3DDD2}@media(max-width:767px){.jumpstart-copy h1{font-size:32px}.jumpstart-copy h2,.jumpstart-copy h1+h2{font-size:26px;margin-top:48px}.jumpstart-copy h3{font-size:19px}#main-church-management-software-for-small-churches table,#main-church-management-software-for-small-churches tbody,#main-church-management-software-for-small-churches tr,#main-church-management-software-for-small-churches td{display:block}#main-church-management-software-for-small-churches thead{display:none}#main-church-management-software-for-small-churches td:before{content:attr(data-label);display:block;font-weight:700}}
+</style></head><body><header class="site-header">
+  <div class="container">
+    <a class="wordmark" href="marketingsite.html#home"><span class="wordmark-church">Church</span><span class="wordmark-planner">Planner</span><span class="wordmark-pro">PRO</span></a>
+    <nav class="nav-main" aria-label="Primary">
+      <div class="nav-item nav-item--menu">
+        <button class="nav-trigger" type="button" aria-expanded="false" aria-controls="platform-menu">
+          Platform <svg class="nav-caret" width="10" height="7" viewBox="0 0 10 7" fill="none" aria-hidden="true"><path d="M1 1.5 5 5.5 9 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-menu" id="platform-menu">
+          <a href="marketingsite.html#volunteer-scheduling"><strong>Volunteer scheduling</strong><span>Fill every shift without the back-and-forth</span></a>
+          <a href="marketingsite.html#programs-and-events"><strong>Programs and events</strong><span>Registration, attendance and check-in in one place</span></a>
+          <a href="marketingsite.html#church-communication"><strong>Church communication</strong><span>Reach the right people without scattered lists</span></a>
+          <a href="jumpstart.html"><strong>Jumpstart</strong><span>Hands-on data migration and setup help</span></a>
+        </div>
+      </div>
+      <a href="marketingsite.html#home/integrations">Integrations</a>
+      <a href="marketingsite.html#home/pricing">Pricing</a>
+      <a href="marketingsite.html#home/about">About</a>
+      <a href="marketingsite.html#blog">Blog</a>
+    </nav>
+    <div class="nav-right">
+      <a class="nav-login" href="https://churchplannerpro.com/admin/login">Staff login</a>
+      <a class="nav-login" href="https://churchplannerpro.com/members/login">Member login</a>
+      <span class="nav-divider" aria-hidden="true"></span>
+      <a class="btn btn--green" href="https://churchplannerpro.com/signup">Sign up</a>
+    </div>
+    <button class="icon-btn nav-toggle" data-drawer-open aria-label="Open menu" aria-controls="drawer" aria-expanded="false">
+      <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+        <path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="1.6"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" data-open="false">
+  <div class="drawer-top">
+    <span class="wordmark"><span class="wordmark-church">Church</span><span class="wordmark-planner">Planner</span><span class="wordmark-pro">PRO</span></span>
+    <button class="icon-btn" data-drawer-close aria-label="Close menu">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M1 1l14 14M15 1L1 15" stroke="currentColor" stroke-width="1.6"/>
+      </svg>
+    </button>
+  </div>
+  <nav class="drawer-links" aria-label="Mobile">
+    <p class="drawer-group">Platform</p>
+    <a class="drawer-sub" href="marketingsite.html#volunteer-scheduling">Volunteer scheduling</a>
+    <a class="drawer-sub" href="marketingsite.html#programs-and-events">Programs and events</a>
+    <a class="drawer-sub" href="marketingsite.html#church-communication">Church communication</a>
+    <a class="drawer-sub" href="jumpstart.html">Jumpstart migration &amp; setup</a>
+    <a href="marketingsite.html#home/integrations">Integrations</a>
+    <a href="marketingsite.html#home/pricing">Pricing</a>
+    <a href="marketingsite.html#home/about">About</a>
+    <a href="marketingsite.html#blog">Blog</a>
+  </nav>
+  <hr>
+  <div class="drawer-logins">
+    <a href="https://churchplannerpro.com/admin/login">Staff login</a>
+    <a href="https://churchplannerpro.com/members/login">Member login</a>
+  </div>
+  <a class="btn btn--green" href="https://churchplannerpro.com/signup">Sign up</a>
+</div>
+
+
+<div class="proto-page is-current" id="page-jumpstart" data-path="/jumpstart"><main id="main-jumpstart" class="live-platform jumpstart-page"><section class="section"><div class="container measure-center jumpstart-copy"><h1>ChurchPlannerPro Jumpstart</h1>
+<h2>Your records moved. Your first task ready.</h2>
+<p>Start where someone would welcome less work. Jumpstart is ChurchPlannerPro’s hands-on data migration and setup service, helping your church bring over its records and get started with the work that matters first.</p>
+<p><strong>Included with Software only and Fully Managed.</strong></p>
+<p><a href="mailto:andrew@churchplannerpro.com?subject=ChurchPlannerPro%20Jumpstart">Talk to us about getting started</a></p>
+<h2>Bring what you have. We’ll help with the move.</h2>
+<p>You may have a member spreadsheet, a volunteer list, or records in another church system. You don’t need to sort out the whole migration before asking for help.</p>
+<p>We’ll review what you have with you, confirm what can be transferred, and help prepare the records for ChurchPlannerPro. Your team checks the details that require knowledge of the congregation.</p>
+<h2>Four steps, with help along the way</h2>
+<h3>1. Choose the first task</h3>
+<p>Tell us where someone would welcome less work. We’ll help you start with that part of ChurchPlannerPro, whether it’s volunteer scheduling, a church program, or member records.</p>
+<h3>2. Prepare your information</h3>
+<p>We review the relevant lists or exports with you and help work through duplicates, outdated details, and missing information. We agree on which records to move before importing them.</p>
+<h3>3. Move and check your records</h3>
+<p>We help import the agreed information and verify it with your church. Keep your originals available until you’re comfortable with the new setup.</p>
+<h3>4. Get your team started</h3>
+<p>We help set up the first task and show your team how to use it. Add more when your church is ready.</p>
+<h2>Start with the work that keeps coming back.</h2>
+<p><strong>Volunteer schedules.</strong> Your coordinator publishes shifts. Volunteers see the schedule, pick up openings, swap shifts, or drop a shift for someone else to pick up. Automatic reminders reduce the messages your coordinator needs to send.</p>
+<p><strong>Sunday school and VBS.</strong> Programs brings registration, attendance, check-in, and parent communication together. We can help you get started with the program you need next.</p>
+<p><strong>Member records.</strong> Bring over the information your church relies on. We help with cleanup and import so your team can start from the records you already have.</p>
+<h2>Questions belong in the Help Center.</h2>
+<p>Help continues as people learn. Staff and congregation members can use the Help Center to ask questions, with the ChurchPlannerPro team available to help with the software. Members can also ask questions of church staff.</p>
+<p>A volunteer who needs help picking up a shift or a staff member learning a new task has somewhere to turn. We’ll introduce the Help Center during setup.</p>
+<h2>Included with either plan</h2>
+<p><strong>Software only: $9.99/month ongoing.</strong> The platform, Jumpstart migration and setup help, and the Help Center.</p>
+<p><strong>Fully Managed: $39/month ongoing.</strong> Everything above, plus a dedicated support specialist who works alongside your team on agreed recurring admin tasks.</p>
+<p>Jumpstart covers help getting started. Fully Managed adds a person to help with the ongoing work. Applicable payment processing and third-party charges remain separate.</p>
+<h2>Before you start</h2>
+<h3>Do we need to clean up our spreadsheets first?</h3>
+<p>No. Bring your existing information to the setup conversation. We’ll help identify what needs attention and work through it with you.</p>
+<h3>Can you move information from our current software?</h3>
+<p>We’ll review your current system, available exports, and the records you need. We’ll confirm what can move before you make a change; support depends on the source and the information involved.</p>
+<h3>Does the whole church need to switch at once?</h3>
+<p>No. Start with one useful task. You can keep familiar routines and introduce more of ChurchPlannerPro when it helps your team.</p>
+<h3>What does our church need to do?</h3>
+<p>Choose a starting point, provide the agreed records, and have someone who knows them check the imported information. Your church decides what is correct and who should have access.</p>
+<h3>Is Jumpstart an extra charge?</h3>
+<p>Jumpstart’s migration and setup help is included with both ChurchPlannerPro plans. Ongoing help carrying out recurring tasks is part of Fully Managed.</p>
+<h2>Where would your church welcome less work?</h2>
+<p>Tell us what you’d like help with and what you use today. We’ll help you work out the first step.</p>
+<p><a href="mailto:andrew@churchplannerpro.com?subject=ChurchPlannerPro%20Jumpstart">Talk to us about getting started</a></p>
+</div></section></main></div>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-panel">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="wordmark"><span class="wordmark-church">Church</span><span class="wordmark-planner">Planner</span><span class="wordmark-pro">PRO</span></span>
+          <p class="footer-tagline">The church management platform that does the work for you.</p>
+        </div>
+        <div class="footer-col" data-open="false">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="marketingsite.html#church-communication">Church communication</a></li>
+            <li><a href="marketingsite.html#programs-and-events">Programs and events</a></li>
+            <li><a href="marketingsite.html#volunteer-scheduling">Volunteer scheduling</a></li>
+            <li><a href="jumpstart.html">Jumpstart migration &amp; setup</a></li>
+            <li><a href="marketingsite.html#home/pricing">Pricing</a></li>
+            <li><a href="marketingsite.html#security">Security</a></li>
+          </ul>
+        </div>
+        <div class="footer-col" data-open="false">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="marketingsite.html#blog">Blog</a></li>
+            <li><a href="marketingsite.html#planning-center-alternative">Planning Center alternative</a></li>
+          </ul>
+        </div>
+        <div class="footer-col" data-open="false">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="marketingsite.html#home/about">About</a></li>
+            <li><a href="mailto:andrew@churchplannerpro.com">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col" data-open="false">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="marketingsite.html#terms">Terms</a></li>
+            <li><a href="marketingsite.html#privacy">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-base">
+        <div>&copy; 2026 ChurchPlannerPro. All rights reserved.</div>
+        <div>Made for church administrators.</div>
+      </div>
+    </div>
+  </div>
+</footer><script>
+/* ChurchPlannerPro — marketing site behaviour.
+   Three things only: the mobile drawer, the mobile footer groups,
+   and the consent bar that gates Google Analytics. Nothing animates. */
+
+(function () {
+  'use strict';
+
+  /* ---------- Mobile nav drawer (§5) ---------- */
+  var toggle = document.querySelector('[data-drawer-open]');
+  var drawer = document.getElementById('drawer');
+  var closeBtn = document.querySelector('[data-drawer-close]');
+
+  function openDrawer() {
+    drawer.setAttribute('data-open', 'true');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+  function closeDrawer() {
+    drawer.setAttribute('data-open', 'false');
+    document.body.style.overflow = '';
+    toggle.focus();
+  }
+  if (toggle && drawer && closeBtn) {
+    toggle.addEventListener('click', openDrawer);
+    closeBtn.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && drawer.getAttribute('data-open') === 'true') closeDrawer();
+    });
+    drawer.addEventListener('click', function (e) {
+      if (e.target.tagName === 'A') closeDrawer();
+    });
+  }
+
+  /* ---------- Platform dropdown ----------
+     Hover and focus open it in CSS; this adds click, for touch, plus Escape
+     and click-away to close. */
+  var trigger = document.querySelector('.nav-trigger');
+  if (trigger) {
+    trigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = trigger.getAttribute('aria-expanded') === 'true';
+      trigger.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+    document.addEventListener('click', function () {
+      trigger.setAttribute('aria-expanded', 'false');
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') trigger.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  /* ---------- Footer groups, mobile only ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('.footer-col > h2'), function (h) {
+    h.setAttribute('tabindex', '0');
+    h.setAttribute('role', 'button');
+    function flip() {
+      var col = h.parentNode;
+      col.setAttribute('data-open', col.getAttribute('data-open') === 'true' ? 'false' : 'true');
+    }
+    h.addEventListener('click', function () {
+      if (window.matchMedia('(max-width: 767px)').matches) flip();
+    });
+    h.addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.key === ' ') && window.matchMedia('(max-width: 767px)').matches) {
+        e.preventDefault();
+        flip();
+      }
+    });
+  });
+
+  /* ---------- Analytics ----------
+     The consent bar is gone by decision, so GA loads on every page view.
+     It still loads from here rather than the head — injecting it after the
+     page has parsed keeps it off the critical path.
+
+     Two things follow from having no bar, both outside this file: the privacy
+     policy has to disclose Google Analytics, and visitors from the EU or UK
+     have no way to refuse it. See the README. */
+  /* ChurchPlannerPro web stream 13234166011, property 518236825. */
+  var GA_ID = 'G-SVJ7ZLCSJY';
+
+  (function loadAnalytics() {
+    if (!GA_ID || GA_ID === 'G-XXXXXXXXXX') return;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', GA_ID);
+  })();
+})();
+
+
+
+</script></body></html>
