@@ -1,7 +1,8 @@
 # Sales video production plan
 
 Source card: [Sales video](https://trello.com/c/7HBZR0aU/9-sales-video)  
-Prepared: 2026-10-19
+Prepared: 2026-10-19  
+Pricing reconciled: 2026-10-20
 
 ## Outcome
 
@@ -14,15 +15,17 @@ Turn the existing long-form script into a recordable, proof-led video that answe
 
 Target runtime: **3:30–4:15**. The existing script has the right story but is too long for a first sales touch and asks the viewer to absorb too many product areas before the call to action.
 
-## Decision required before recording
+## Canonical public offer
 
-The script currently says **$500/year**. Current product/competitive copy says **$9.99/month**.
+The earlier **$500/year** line belongs to a separate historical outreach bundle and must not be used as the general public offer.
 
-Do not record or publish a price until the canonical offer is confirmed. Replace the price line in the recording script with:
+Owner-confirmed current public pricing is:
 
-> ChurchPlannerPro uses one straightforward price for the entire platform. [INSERT CONFIRMED PRICE AND BILLING TERM.]
+- **Software:** $9.99/month ongoing.
+- **Fully Managed:** $39/month ongoing, with a dedicated support specialist working alongside the church on recurring tasks.
+- **Both plans:** setup, cleanup, import, and verification help are included.
 
-Once confirmed, update the website, comparison pages, sales page, and Trello script together so the offer cannot drift again.
+Do not invent specialist hours, unlimited labor, onsite coverage, service response times, or a managed-plan trial. Source: [canonical pricing](https://github.com/aschneiderlbl/hive/blob/main/product/pricing.md) and [owner confirmation](https://github.com/aschneiderlbl/hive/blob/main/decisions/2026-10-10-small-church-product-confirmations.md).
 
 ## Production cut
 
@@ -35,7 +38,7 @@ Once confirmed, update the website, comparison pages, sales page, and Trello scr
 | 2:00–2:35 | Integrations / Planning Center | Keep systems that work; connect them so data or follow-up is not re-entered manually. | Connected-system screen. Avoid promising unverified sync behavior. |
 | 2:35–3:05 | Help Center / migration | Reduce implementation fear with a visible migration path and human help. | Migration checklist and help article. |
 | 3:05–3:30 | Dashboard / health center | Routine work is automated; exceptions become the work list. | Attention view with one safe demo exception. |
-| 3:30–4:00 | Andrew on camera + CTA | Invite the viewer to show their current workflow and identify what can be automated. | CTA URL/button; confirmed price only if approved. |
+| 3:30–4:00 | Andrew on camera + CTA | State the two public plans, then invite the viewer to show the workflow they want to improve. | CTA URL/button and both confirmed prices. |
 
 ## Tight recording script
 
@@ -77,13 +80,13 @@ The goal is simple: routine work happens automatically, and the system surfaces 
 
 Church administrators deserve great software, but they do not need another system to manage. ChurchPlannerPro helps take repetitive administration off your plate so you have more time for what matters to your church.
 
-[INSERT CONFIRMED PRICE AND BILLING TERM.]
+ChurchPlannerPro is $9.99 a month for software only, or $39 a month for Fully Managed, with a dedicated support specialist working alongside your church. Both options include setup, cleanup, import, and verification help.
 
 If you want to see what ChurchPlannerPro could automate for your church, show me how your week works today. I’ll walk through it with you and identify what we can make easier.
 
 ## Recording checklist
 
-- [ ] Confirm canonical price and billing term.
+- [x] Reconcile the general public offer with the owner-confirmed pricing source.
 - [ ] Confirm every demo behavior in the selected build before recording.
 - [ ] Use a demo church with no real member, giving, or pastoral-care data.
 - [ ] Record desktop at 1440p or higher; zoom browser to keep labels readable.
@@ -95,5 +98,5 @@ If you want to see what ChurchPlannerPro could automate for your church, show me
 
 ## Next owner/action
 
-**Andrew:** confirm the price, choose the demo build, and approve the 3:30–4:15 cut.  
-**Assistant/producer after approval:** convert this plan into a final teleprompter script and shot-by-shot capture checklist.
+**Andrew:** choose the demo build and approve the 3:30–4:15 cut.  
+**Assistant/producer after approval:** turn the approved cut into a shot-by-shot capture checklist and caption file.
