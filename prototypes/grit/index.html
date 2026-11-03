@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Grit: voice editing prototype</title>
+<meta name="description" content="A clickable concept prototype of Grit, a phone app for finishing drafts by talking.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F8FAFC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:#F1F5F9;color:#0F172A;font-family:Inter,-apple-system,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{transition:background-color .15s ease,border-color .15s ease,color .15s ease;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+button:disabled{cursor:default!important}
+:focus-visible{outline:2px solid #4F46E5;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.stage{min-height:100%;display:flex;align-items:center;justify-content:center;gap:56px;padding:32px}
+.intro{width:320px}
+.intro h1{font-family:Outfit,Inter,sans-serif;font-size:32px;line-height:38px;margin:0 0 12px;font-weight:300}
+.intro h1 strong{font-weight:700}
+.intro p{margin:0 0 12px;color:#475569}
+.intro ol{margin:0 0 12px;padding-left:20px;color:#475569}
+.intro li{margin-bottom:6px}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;letter-spacing:.02em;padding:3px 9px;border-radius:999px;background:#DBEAFE;color:#1E40AF;margin-bottom:12px}
+#app{flex:none;width:390px;height:844px;border-radius:14px;overflow:hidden;border:1px solid #E5E7EB;box-shadow:0 12px 32px rgba(15,23,42,.08),0 4px 12px rgba(15,23,42,.05)}
+@media (max-width:860px){.intro{display:none}.stage{padding:0}}
+@media (max-width:500px),(max-height:860px) and (max-width:860px){
+  html,body{background:#F8FAFC;overflow:hidden}
+  .stage{height:100%;min-height:0;display:block}
+  #app{width:100%;height:100dvh;border:0;border-radius:0;box-shadow:none}
+  #app>div{width:100%!important;height:100%!important}
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <aside class="intro">
+    <span class="pill">Concept prototype</span>
+    <h1>Finish drafts <strong>by talking.</strong></h1>
+    <p>Grit attaches each spoken note to the exact text it concerns, then works through your notes in a queue while you keep going.</p>
+    <ol>
+      <li>Tap a sentence, then hold the mic.</li>
+      <li>Open Listen, press play and hold to talk.</li>
+      <li>Check the Queue to review or undo changes.</li>
+    </ol>
+    <p>Nothing records your voice or calls a model. Notes, edits and answers are scripted. Read-aloud uses your browser's built-in voice.</p>
+  </aside>
+  <div id="app"></div>
+</div>
+<template id="dc-template">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; display: flex; flex-direction: column; box-sizing: border-box; background: {{rootBg}}; color: {{rootFg}}; font-family: 'Inter', system-ui, sans-serif">
+
+  <header style="height: 56px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; box-sizing: border-box; border-bottom: 1px solid {{ruleColor}}">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="font-family: 'Outfit', 'Inter', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em">Grit</span>
+      <span style="font-weight: 600; font-size: 11.5px; letter-spacing: 0.02em; padding: 3px 9px; background: #F1F5F9; color: #334155; border-radius: 999px">Grit {{grit}}</span>
+    </div>
+    <span style="font-size: 13px; color: {{mutedFg}}">Sample draft · {{wordCount}} words</span>
+  </header>
+
+  <sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+    <div role="status" style="position: absolute; top: 66px; left: 16px; right: 16px; z-index: 5; padding: 12px 14px; background: #0F172A; color: #FFFFFF; border: 1px solid #475569; border-radius: 8px; font-size: 14px; font-weight: 500">{{toastText}}</div>
+  </sc-if>
+
+  <!-- POST -->
+  <sc-if value="{{isPost}}" hint-placeholder-val="{{ true }}">
+    <main style="flex: 1 1 0; min-height: 0; overflow-y: auto; padding: 20px 20px 28px; box-sizing: border-box">
+      <sc-if value="{{showSlop}}" hint-placeholder-val="{{ false }}">
+        <section aria-label="Slop scan results" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 12px; box-shadow: 0 1px 2px rgba(15,23,42,.04); padding: 16px; margin-bottom: 20px">
+          <div style="font-weight: 700; font-size: 15px; margin-bottom: 4px">{{slopCount}} slop patterns to fix</div>
+          <div style="font-size: 14px; line-height: 1.4; color: #475569; margin-bottom: 12px">{{slopList}}</div>
+          <div style="display: flex; gap: 8px">
+            <button type="button" onClick="{{fixAll}}" style="flex: 1; min-height: 44px; border: 0; border-radius: 8px; background: #15803D; color: #FFFFFF; font: 600 14px 'Inter', sans-serif; cursor: pointer">Fix all</button>
+            <button type="button" onClick="{{dismissScan}}" style="flex: 1; min-height: 44px; border: 1px solid #D1D5DB; border-radius: 8px; background: transparent; color: #0F172A; font: 600 14px 'Inter', sans-serif; cursor: pointer">Dismiss</button>
+          </div>
+        </section>
+      </sc-if>
+      <h1 style="margin: 0 0 16px; font-weight: 700; font-size: 26px; line-height: 32px; letter-spacing: -0.01em">Why we killed our weekly status meeting</h1>
+      <sc-for list="{{postSections}}" as="sec" hint-placeholder-count="4">
+        <sc-if value="{{sec.isImage}}" hint-placeholder-val="{{ false }}">
+          <figure style="margin: 4px 0 22px">
+            <div style="height: 150px; background: #F1F5F9; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #475569; font-size: 13px">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="1.8"></circle><path d="M4 18l5-5 4 4 3-3 4 4"></path></svg>
+              Image placeholder: the team at a whiteboard
+            </div>
+            <figcaption style="margin-top: 8px; font-size: 14px; line-height: 1.45"><a href="#{{sec.cap.id}}" onClick="{{sec.cap.tap}}" style="color: {{sec.cap.fg}}; background: {{sec.cap.bg}}; border-bottom: {{sec.cap.line}}; text-decoration: none; padding: 2px 0">{{sec.cap.text}}</a></figcaption>
+          </figure>
+        </sc-if>
+        <sc-if value="{{sec.hasHeading}}" hint-placeholder-val="{{ true }}">
+          <h2 style="margin: 24px 0 10px; font-size: 20px; line-height: 1.25; font-weight: 700"><a href="#{{sec.head.id}}" onClick="{{sec.head.tap}}" style="color: {{sec.head.fg}}; background: {{sec.head.bg}}; border-bottom: {{sec.head.line}}; text-decoration: none; padding: 2px 0">{{sec.head.text}}</a></h2>
+        </sc-if>
+        <sc-if value="{{sec.hasSents}}" hint-placeholder-val="{{ true }}">
+          <p style="margin: 0 0 16px; font-size: 17px; line-height: 28px">
+            <sc-for list="{{sec.sents}}" as="s" hint-placeholder-count="3"><a href="#{{s.id}}" onClick="{{s.tap}}" style="color: {{s.fg}}; background: {{s.bg}}; border-bottom: {{s.line}}; text-decoration: none; padding: 2px 0; -webkit-box-decoration-break: clone; box-decoration-break: clone">{{s.textSp}}</a></sc-for>
+          </p>
+        </sc-if>
+      </sc-for>
+    </main>
+  </sc-if>
+
+  <!-- STRUCTURE -->
+  <sc-if value="{{isStructure}}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1 1 0; min-height: 0; overflow-y: auto; padding: 16px; box-sizing: border-box">
+      <p style="margin: 0 0 12px; font-size: 14px; line-height: 1.4; color: #475569">Tap a card and hold the mic to comment on it, or talk with nothing selected to comment on the whole post.</p>
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <sc-for list="{{cards}}" as="c" hint-placeholder-count="5">
+          <div style="display: flex; align-items: stretch; background: #FFFFFF; border: {{c.border}}; border-radius: 12px; box-shadow: 0 1px 2px rgba(15,23,42,.04); overflow: hidden">
+            <button type="button" onClick="{{c.tap}}" aria-pressed="{{c.selected}}" style="flex: 1; min-width: 0; text-align: left; border: 0; background: transparent; padding: 12px; color: #0F172A; cursor: pointer; font-family: 'Inter', sans-serif">
+              <div style="display: flex; justify-content: space-between; gap: 8px; font-size: 12px; font-weight: 500; color: #475569; margin-bottom: 6px"><span>{{c.kind}}</span><span>{{c.meta}}</span></div>
+              <sc-if value="{{c.isImage}}" hint-placeholder-val="{{ false }}">
+                <div style="height: 64px; background: #F1F5F9; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; color: #475569; font-size: 12px">Image placeholder</div>
+              </sc-if>
+              <div style="font-weight: 600; font-size: 16px; line-height: 1.3">{{c.title}}</div>
+              <div style="font-size: 14px; line-height: 1.35; color: #475569; margin-top: 3px">{{c.sub}}</div>
+            </button>
+            <div style="flex: none; display: flex; flex-direction: column; border-left: 1px solid #E5E7EB">
+              <button type="button" onClick="{{c.up}}" disabled="{{c.first}}" aria-label="Move {{c.kind}} up" style="flex: 1; width: 44px; min-height: 44px; border: 0; background: transparent; color: #0F172A; opacity: {{c.upOp}}; cursor: pointer; padding: 0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg>
+              </button>
+              <button type="button" onClick="{{c.down}}" disabled="{{c.last}}" aria-label="Move {{c.kind}} down" style="flex: 1; width: 44px; min-height: 44px; border: 0; border-top: 1px solid #E5E7EB; background: transparent; color: #0F172A; opacity: {{c.downOp}}; cursor: pointer; padding: 0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+              </button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+  </sc-if>
+
+  <!-- LISTEN -->
+  <sc-if value="{{isListen}}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; padding: 14px 20px 0; box-sizing: border-box">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px">
+        <span style="font-size: 14px; color: #94A3B8">{{listenPos}}</span>
+        <div style="display: flex; gap: 8px">
+          <button type="button" onClick="{{toggleSound}}" style="min-height: 44px; padding: 0 12px; border: 1px solid #475569; border-radius: 8px; background: transparent; color: #FFFFFF; font: 600 13px 'Inter', sans-serif; cursor: pointer">{{soundLabel}}</button>
+          <button type="button" onClick="{{cycleSpeed}}" aria-label="Playback speed {{speed}} times" style="min-height: 44px; min-width: 56px; padding: 0 10px; border: 1px solid #475569; border-radius: 8px; background: transparent; color: #FFFFFF; font: 700 13px 'Inter', sans-serif; cursor: pointer">{{speed}}x</button>
+        </div>
+      </div>
+      <sc-if value="{{hasBehind}}" hint-placeholder-val="{{ false }}">
+        <button type="button" onClick="{{replayBehind}}" style="min-height: 44px; margin-bottom: 8px; padding: 0 12px; border: 0; border-radius: 8px; background: #4F46E5; color: #FFFFFF; font: 600 14px 'Inter', sans-serif; text-align: left; cursor: pointer">{{behindLabel}}</button>
+      </sc-if>
+      <div style="flex: 1 1 0; min-height: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 18px">
+        <sc-if value="{{isRec}}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-size: 13px; font-weight: 600; color: #94A3B8; margin-bottom: 6px">Note on the line you just heard</div>
+            <div style="font-family: 'Inter', sans-serif; font-size: 18px; line-height: 1.45; color: #94A3B8; margin-bottom: 22px">{{recQuote}}</div>
+            <div aria-hidden="true" style="display: flex; align-items: center; justify-content: center; gap: 3px; height: 56px; margin-bottom: 18px">
+              <sc-for list="{{bars}}" as="b" hint-placeholder-count="24"><span style="width: 5px; height: {{b.h}}px; border-radius: 3px; background: #FFFFFF"></span></sc-for>
+            </div>
+            <div style="font-size: 22px; line-height: 1.35; font-weight: 500; color: #FFFFFF; min-height: 90px">{{recText}}</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{notRec}}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; flex-direction: column; gap: 18px">
+            <div style="font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.45; color: #94A3B8">{{prevText}}</div>
+            <div>
+              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px; font-size: 12px; font-weight: 500; color: #94A3B8"><span>{{curKind}}</span><sc-if value="{{curChanged}}" hint-placeholder-val="{{ false }}"><span style="padding: 2px 9px; border-radius: 999px; background: #DCFCE7; color: #166534; font-weight: 600">Edited</span></sc-if></div>
+              <div style="font-family: 'Inter', sans-serif; font-size: 28px; line-height: 1.32; color: #FFFFFF">{{curText}}</div>
+            </div>
+            <div style="font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.45; color: #94A3B8">{{nextText}}</div>
+          </div>
+        </sc-if>
+      </div>
+      <div style="height: 4px; background: #1E293B; border-radius: 2px; margin-top: 10px"><div style="height: 4px; width: {{progress}}%; background: #FFFFFF; border-radius: 2px"></div></div>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 22px; padding: 8px 0">
+        <button type="button" onClick="{{prevItem}}" aria-label="Previous sentence" style="width: 48px; height: 48px; border: 0; background: transparent; color: #FFFFFF; cursor: pointer; padding: 0"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 5L9 12l10 7z"></path><path d="M5 5v14"></path></svg></button>
+        <button type="button" onClick="{{togglePlay}}" aria-label="{{playLabel}}" style="width: 56px; height: 56px; border: 0; border-radius: 50%; background: #FFFFFF; color: #0F172A; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center">
+          <sc-if value="{{playing}}" hint-placeholder-val="{{ false }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14"></rect><rect x="14" y="5" width="4" height="14"></rect></svg></sc-if>
+          <sc-if value="{{notPlaying}}" hint-placeholder-val="{{ true }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l13 8-13 8z"></path></svg></sc-if>
+        </button>
+        <button type="button" onClick="{{nextItem}}" aria-label="Next sentence" style="width: 48px; height: 48px; border: 0; background: transparent; color: #FFFFFF; cursor: pointer; padding: 0"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 5l10 7-10 7z"></path><path d="M19 5v14"></path></svg></button>
+      </div>
+      <button type="button" onPointerDown="{{micDown}}" onPointerUp="{{micUp}}" onPointerLeave="{{micUp}}" onPointerCancel="{{micUp}}" onClick="{{micClick}}" style="flex: none; height: 84px; margin: 0 -4px 12px; border: 0; border-radius: 12px; background: {{holdBg}}; color: #FFFFFF; font: 700 18px 'Inter', sans-serif; cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none; display: flex; align-items: center; justify-content: center; gap: 10px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v3"></path></svg>
+        {{micLabel}}
+      </button>
+    </main>
+  </sc-if>
+
+  <!-- QUEUE -->
+  <sc-if value="{{isQueue}}" hint-placeholder-val="{{ false }}">
+    <main style="flex: 1 1 0; min-height: 0; overflow-y: auto; padding: 16px; box-sizing: border-box">
+      <sc-if value="{{queueEmpty}}" hint-placeholder-val="{{ true }}">
+        <div style="border: 1px dashed #D1D5DB; border-radius: 12px; background: #FCFDFE; padding: 38px 26px; text-align: center">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.75" aria-hidden="true" style="margin-bottom: 12px"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v3"></path></svg>
+          <h2 style="margin: 0 0 6px; font-weight: 600; font-size: 16px">Spoken notes run here</h2>
+          <p style="margin: 0 0 16px; font-size: 14px; line-height: 21px; color: #475569">Each note works in the background, so you can keep editing while it runs.</p>
+          <button type="button" onClick="{{goPost}}" style="min-height: 44px; padding: 9px 15px; border: 1px solid #D1D5DB; border-radius: 8px; background: #FFFFFF; color: #0F172A; font: 600 14px 'Inter', sans-serif; cursor: pointer">Add a note</button>
+        </div>
+      </sc-if>
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+          <div style="display: flex; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 12px; box-shadow: 0 1px 2px rgba(15,23,42,.04); overflow: hidden">
+            <button type="button" onClick="{{r.open}}" style="flex: 1; min-width: 0; padding: 12px; border: 0; background: transparent; text-align: left; color: #0F172A; font-family: 'Inter', sans-serif; cursor: pointer">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 7px">
+                <span style="font-size: 12px; font-weight: 500; color: #475569">{{r.kindLabel}} · {{r.model}} · Grit {{r.grit}}</span>
+                <span style="flex: none; font-size: 11.5px; font-weight: 600; letter-spacing: 0.02em; padding: 3px 9px; border-radius: 999px; background: {{r.badgeBg}}; color: {{r.badgeFg}}">{{r.statusLabel}}</span>
+              </div>
+              <div style="font-size: 15px; line-height: 1.35; font-weight: 500">{{r.transcript}}</div>
+              <div style="font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.4; color: #475569; margin-top: 4px">{{r.quote}}</div>
+              <sc-if value="{{r.isRunning}}" hint-placeholder-val="{{ false }}">
+                <div style="height: 3px; margin-top: 10px; background: #E5E7EB; border-radius: 2px"><div style="height: 3px; width: {{r.pct}}%; background: #2563EB; border-radius: 2px"></div></div>
+              </sc-if>
+            </button>
+            <sc-if value="{{r.hasAction}}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{r.action}}" style="flex: none; width: 66px; border: 0; border-left: 1px solid #E5E7EB; background: transparent; color: #0F172A; font: 600 13px 'Inter', sans-serif; cursor: pointer">{{r.actionLabel}}</button>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+  </sc-if>
+
+  <!-- DOCK -->
+  <sc-if value="{{showDock}}" hint-placeholder-val="{{ true }}">
+    <section aria-label="Voice note" style="flex: none; background: #FFFFFF; border-top: 1px solid #E5E7EB; padding: 10px 16px 10px; box-sizing: border-box">
+      <sc-if value="{{isRec}}" hint-placeholder-val="{{ false }}">
+        <div style="height: 128px; overflow: hidden">
+          <div style="font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.35; color: #475569; margin-bottom: 8px">{{recQuote}}</div>
+          <div aria-hidden="true" style="display: flex; align-items: center; gap: 3px; height: 30px; margin-bottom: 8px">
+            <sc-for list="{{bars}}" as="b" hint-placeholder-count="24"><span style="width: 4px; height: {{b.hs}}px; border-radius: 2px; background: #15803D"></span></sc-for>
+          </div>
+          <div style="font-size: 17px; line-height: 1.3; font-weight: 500">{{recText}}</div>
+        </div>
+      </sc-if>
+      <sc-if value="{{notRec}}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px">
+            <div style="min-width: 0">
+              <sc-if value="{{hasTargetTag}}" hint-placeholder-val="{{ false }}"><div style="font-size: 12px; font-weight: 600; color: #4F46E5">{{targetTag}}</div></sc-if>
+              <div style="font-size: 14px; line-height: 1.3; color: #475569">{{contextText}}</div>
+            </div>
+            <sc-if value="{{hasTarget}}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{clearTarget}}" aria-label="Clear selection" style="flex: none; width: 44px; height: 44px; border: 0; background: transparent; color: #0F172A; cursor: pointer; padding: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+            </sc-if>
+          </div>
+          <sc-if value="{{isClaim}}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; gap: 8px; margin: 4px 0 8px">
+              <button type="button" onClick="{{askResearch}}" style="flex: 1; min-height: 44px; border: 1px solid #D1D5DB; border-radius: 8px; background: transparent; color: #0F172A; font: 600 14px 'Inter', sans-serif; cursor: pointer">Find a source</button>
+              <button type="button" onClick="{{askBoth}}" style="flex: 1; min-height: 44px; border: 1px solid #D1D5DB; border-radius: 8px; background: transparent; color: #0F172A; font: 600 14px 'Inter', sans-serif; cursor: pointer">Check with both</button>
+            </div>
+          </sc-if>
+          <div role="group" aria-label="Grit level" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; margin-top: 4px; padding: 2px; background: #F1F5F9; border: 1px solid #D1D5DB; border-radius: 8px">
+            <sc-for list="{{gritOpts}}" as="g" hint-placeholder-count="4">
+              <button type="button" onClick="{{g.pick}}" aria-pressed="{{g.on}}" style="min-height: 44px; border: 0; border-radius: 6px; background: {{g.bg}}; color: {{g.fg}}; box-shadow: {{g.shadow}}; cursor: pointer; padding: 3px 2px; font-family: 'Inter', sans-serif">
+                <div style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">{{g.n}}</div>
+                <div style="font-size: 12px; font-weight: 500">{{g.label}}</div>
+              </button>
+            </sc-for>
+          </div>
+          <div style="font-size: 13px; color: #475569; margin-top: 6px; line-height: 1.3">{{gritHelp}}</div>
+        </div>
+      </sc-if>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px">
+        <button type="button" onClick="{{scan}}" style="width: 104px; min-height: 44px; border: 1px solid #D1D5DB; border-radius: 8px; background: transparent; color: #0F172A; font: 600 14px 'Inter', sans-serif; cursor: pointer">{{scanLabel}}</button>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 2px">
+          <button type="button" onPointerDown="{{micDown}}" onPointerUp="{{micUp}}" onPointerLeave="{{micUp}}" onPointerCancel="{{micUp}}" onClick="{{micClick}}" aria-label="Hold to record a note" style="width: 66px; height: 66px; border: 0; border-radius: 50%; background: {{holdBg}}; color: #FFFFFF; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; touch-action: none; user-select: none; -webkit-user-select: none">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v3"></path></svg>
+          </button>
+          <span style="font-size: 12px; font-weight: 600; color: #475569">{{micLabel}}</span>
+        </div>
+        <button type="button" onClick="{{cycleModel}}" aria-label="Model for the next note: {{model}}" style="width: 104px; min-height: 44px; border: 1px solid #D1D5DB; border-radius: 8px; background: transparent; color: #0F172A; font: 600 14px 'Inter', sans-serif; cursor: pointer">{{model}}</button>
+      </div>
+    </section>
+  </sc-if>
+
+  <!-- TABS -->
+  <nav aria-label="Main" style="height: 60px; flex: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid {{ruleColor}}; background: {{tabBg}}">
+    <button type="button" onClick="{{goPost}}" style="position: relative; border: 0; background: transparent; color: {{tabPost}}; font: 600 12px 'Inter', sans-serif; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 6h14M5 11h14M5 16h9"></path></svg>Post
+    </button>
+    <button type="button" onClick="{{goStructure}}" style="position: relative; border: 0; background: transparent; color: {{tabStructure}}; font: 600 12px 'Inter', sans-serif; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="16" height="5" rx="1"></rect><rect x="4" y="11" width="16" height="9" rx="1"></rect></svg>Structure
+    </button>
+    <button type="button" onClick="{{goListen}}" style="position: relative; border: 0; background: transparent; color: {{tabListen}}; font: 600 12px 'Inter', sans-serif; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"></path><rect x="3" y="14" width="4" height="6" rx="1"></rect><rect x="17" y="14" width="4" height="6" rx="1"></rect></svg>Listen
+    </button>
+    <button type="button" onClick="{{goQueue}}" style="position: relative; border: 0; background: transparent; color: {{tabQueue}}; font: 600 12px 'Inter', sans-serif; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"></path><path d="M4 6h.01M4 12h.01M4 18h.01"></path></svg>Queue
+      <sc-if value="{{hasBadge}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: 5px; left: 54%; min-width: 18px; height: 18px; line-height: 18px; text-align: center; border-radius: 9px; background: #4F46E5; color: #FFFFFF; font: 600 11px 'Inter', sans-serif">{{badge}}</span></sc-if>
+    </button>
+  </nav>
+
+  <!-- SHEET -->
+  <sc-if value="{{hasSheet}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; z-index: 10; background: rgba(15,17,18,0.55); display: flex; flex-direction: column; justify-content: flex-end">
+      <div role="dialog" aria-label="{{sheetTitle}}" style="max-height: 86%; overflow-y: auto; background: #FFFFFF; color: #0F172A; border-radius: 14px 14px 0 0; padding: 12px 18px 22px; box-sizing: border-box">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px">
+          <div style="font-weight: 700; font-size: 18px">{{sheetTitle}}</div>
+          <button type="button" onClick="{{closeSheet}}" aria-label="Close" style="width: 44px; height: 44px; margin-right: -10px; border: 0; background: transparent; color: #0F172A; cursor: pointer; padding: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+        </div>
+        <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 3px">Your note</div>
+        <div style="font-size: 15px; line-height: 1.4; margin-bottom: 14px">{{sheetTranscript}}</div>
+
+        <sc-if value="{{sheetIsChange}}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 3px">Before</div>
+            <div style="font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.5; color: #475569; margin-bottom: 14px">{{sheetBefore}}</div>
+            <div style="font-size: 12px; font-weight: 700; color: #166534; margin-bottom: 3px">After · {{sheetModel}}</div>
+            <div style="font-family: 'Inter', sans-serif; font-size: 17px; line-height: 1.5; margin-bottom: 18px">{{sheetAfter}}</div>
+            <div style="display: flex; gap: 8px">
+              <button type="button" onClick="{{sheetKeep}}" style="flex: 1; min-height: 48px; border: 0; border-radius: 8px; background: #15803D; color: #FFFFFF; font: 600 15px 'Inter', sans-serif; cursor: pointer">Keep</button>
+              <button type="button" onClick="{{sheetRevert}}" style="flex: 1; min-height: 48px; border: 1px solid #D1D5DB; border-radius: 8px; background: transparent; color: #0F172A; font: 600 15px 'Inter', sans-serif; cursor: pointer">Revert</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{sheetIsProposal}}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px">Proposed outline</div>
+            <ol style="margin: 0 0 18px; padding: 0 0 0 20px; font-size: 15px; line-height: 1.5">
+              <li>Open on “Last spring, we cancelled our Monday status meeting”</li>
+              <li>Cut the two general opening sentences</li>
+              <li>Keep “The problem” section next</li>
+              <li>Move the image below that section</li>
+              <li>Keep the remaining sections in order</li>
+            </ol>
+            <div style="display: flex; gap: 8px">
+              <button type="button" onClick="{{approveProposal}}" style="flex: 1; min-height: 48px; border: 0; border-radius: 8px; background: #15803D; color: #FFFFFF; font: 600 15px 'Inter', sans-serif; cursor: pointer">Approve</button>
+              <button type="button" onClick="{{rejectItem}}" style="flex: 1; min-height: 48px; border: 1px solid #D1D5DB; border-radius: 8px; background: transparent; color: #0F172A; font: 600 15px 'Inter', sans-serif; cursor: pointer">Not this</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{sheetIsResearch}}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 3px">The claim</div>
+            <div style="font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.5; margin-bottom: 14px">{{sheetQuote}}</div>
+            <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px">Sources found (placeholders in this prototype)</div>
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px">
+              <div style="padding: 10px 12px; border: 1px solid #E5E7EB; border-radius: 12px; font-size: 14px; line-height: 1.4"><strong>[Source title]</strong><br>[Publisher], [year]. Would show the exact figure and how it supports the claim.</div>
+              <div style="padding: 10px 12px; border: 1px solid #E5E7EB; border-radius: 12px; font-size: 14px; line-height: 1.4"><strong>[Source title]</strong><br>[Publisher], [year]. Would flag where this source disagrees with the first.</div>
+            </div>
+            <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px">What should this line become?</div>
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <button type="button" onClick="{{useOwnNumber}}" style="min-height: 48px; padding: 10px 12px; border: 0; border-radius: 8px; background: #15803D; color: #FFFFFF; font: 600 14px 'Inter', sans-serif; text-align: left; cursor: pointer">Use your own number: “For us, that was eight person-hours every week.”</button>
+              <button type="button" onClick="{{cutClaim}}" style="min-height: 48px; border: 1px solid #D1D5DB; border-radius: 8px; background: transparent; color: #0F172A; font: 600 14px 'Inter', sans-serif; cursor: pointer">Cut the claim</button>
+              <button type="button" onClick="{{rejectItem}}" style="min-height: 48px; border: 1px solid #D1D5DB; border-radius: 8px; background: transparent; color: #0F172A; font: 600 14px 'Inter', sans-serif; cursor: pointer">Leave it for now</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{sheetIsCompare}}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="padding: 10px 12px; background: #F1F5F9; border-radius: 8px; font-size: 14px; line-height: 1.4; margin-bottom: 12px"><strong>Both agree</strong> the line is too vague to verify. <strong>They differ</strong> on whether to keep it. Sample answers, not live model output.</div>
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px">
+              <div style="border: 1px solid #E5E7EB; border-radius: 12px; padding: 10px">
+                <div style="font-weight: 700; font-size: 14px; margin-bottom: 5px">Claude</div>
+                <div style="font-size: 14px; line-height: 1.4">“Studies” names no source. Replace it with a number you can stand behind, such as your own eight person-hours.</div>
+              </div>
+              <div style="border: 1px solid #E5E7EB; border-radius: 12px; padding: 10px">
+                <div style="font-weight: 700; font-size: 14px; margin-bottom: 5px">ChatGPT</div>
+                <div style="font-size: 14px; line-height: 1.4">The idea is common, but “significant” needs a figure. Keep the line only if you can add a citation.</div>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <button type="button" onClick="{{useClaude}}" style="min-height: 48px; border: 1px solid #D1D5DB; border-radius: 8px; background: #FFFFFF; color: #0F172A; font: 600 15px 'Inter', sans-serif; cursor: pointer">Use Claude's fix</button>
+              <button type="button" onClick="{{useChatGPT}}" style="min-height: 48px; border: 1px solid #D1D5DB; border-radius: 8px; background: #FFFFFF; color: #0F172A; font: 600 15px 'Inter', sans-serif; cursor: pointer">Use ChatGPT's fix</button>
+              <button type="button" onClick="{{rejectItem}}" style="min-height: 48px; border: 1px solid #D1D5DB; border-radius: 8px; background: transparent; color: #0F172A; font: 600 15px 'Inter', sans-serif; cursor: pointer">Keep it as written</button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</template>
+<script src="vendor/preact.min.js"></script>
+<script>
+(function () {
+  var h = preact.h, HOLE = /\{\{\s*([^}]+?)\s*\}\}/g, WHOLE = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/;
+  var root = document.getElementById("dc-template").content;
+  function lookup(path, scope) {
+    if (path === "true") return true;
+    if (path === "false") return false;
+    return path.split(".").reduce(function (v, k) { return v == null ? v : v[k]; }, scope);
+  }
+  function text(s, scope) { return s.replace(HOLE, function (_, p) { var v = lookup(p, scope); return v == null ? "" : String(v); }); }
+  function value(s, scope) { var m = s.match(WHOLE); return m ? lookup(m[1], scope) : text(s, scope); }
+  function kids(list, scope) {
+    var out = [];
+    Array.prototype.forEach.call(list, function (n) { var r = walk(n, scope); if (Array.isArray(r)) out.push.apply(out, r); else if (r != null) out.push(r); });
+    return out;
+  }
+  function walk(n, scope) {
+    if (n.nodeType === 3) {
+      if (/^\s*$/.test(n.nodeValue) && n.nodeValue.indexOf("\n") >= 0) return null;
+      return text(n.nodeValue, scope).replace(/\s+/g, " ");
+    }
+    if (n.nodeType !== 1) return null;
+    var tag = n.localName;
+    if (tag === "sc-if") return value(n.getAttribute("value"), scope) ? kids(n.childNodes, scope) : null;
+    if (tag === "sc-for") {
+      var as = n.getAttribute("as");
+      return (value(n.getAttribute("list"), scope) || []).reduce(function (acc, item, i) {
+        var s = Object.create(scope); s[as] = item; s.$index = i;
+        return acc.concat(kids(n.childNodes, s));
+      }, []);
+    }
+    var props = {};
+    Array.prototype.forEach.call(n.attributes, function (a) {
+      if (a.name.indexOf("hint-") !== 0) props[a.name] = value(a.value, scope);
+    });
+    return h.apply(null, [tag, props].concat(kids(n.childNodes, scope)));
+  }
+  window.DCLogic = class extends preact.Component {
+    componentWillMount() { if (this.ensure) this.ensure(); }
+    render() { return kids(root.childNodes, this.renderVals())[0]; }
+  };
+  window.__mountDC = function (C) {
+    var start = new URLSearchParams(location.search).get("screen") || undefined;
+    preact.render(h(C, { start: start }), document.getElementById("app"));
+  };
+  document.addEventListener("contextmenu", function (e) { if (e.target.closest && e.target.closest("button")) e.preventDefault(); });
+})();
+</script>
+<script>
+class Component extends DCLogic {
+  blocksData() {
+    var d = {
+      s1: { kind: "s", text: "In today’s fast-paced world, effective communication is more important than ever.", alt: "", note: "Cut this opener. It says nothing.", slop: "Filler opener" },
+      s2: { kind: "s", text: "It’s not just about meetings, it’s about building a culture of alignment.", alt: "We were spending an hour a week hearing things we could have read.", note: "Too grand. Say what actually bothered us.", slop: "“Not X, it’s Y”" },
+      s3: { kind: "s", text: "Last spring, we cancelled our Monday status meeting for good.", alt: "Last spring, we cancelled our Monday status meeting.", note: "Good line. Make it shorter." },
+      s4: { kind: "s", text: "Eight of us sat in a room for an hour while one person at a time read out a list.", alt: "Eight people, one hour, one list read aloud a person at a time.", note: "Tighten this. Keep the eight people and the hour." },
+      s5: { kind: "s", text: "Most of it was already in the tracker.", alt: "Almost all of it was already in the tracker.", note: "Keep this, but hit harder." },
+      s6: { kind: "s", text: "Studies show that meetings waste a significant amount of time.", alt: "", note: "Which studies? Find a real number or cut it.", claim: true },
+      s7: { kind: "s", text: "We replaced the meeting with a short written update every Friday.", alt: "Now everyone writes a short update every Friday.", note: "Fine, but make it plainer." },
+      s8: { kind: "s", text: "Each person answers three questions: what shipped, what’s stuck, and what needs a decision.", alt: "Three questions: what shipped, what’s stuck, what needs a decision.", note: "Shorter. Lead with the questions." },
+      s9: { kind: "s", text: "This seamless approach empowers our team to unlock new levels of productivity.", alt: "Decisions now get flagged on Friday instead of waiting for Monday.", note: "This is pure slop. Say what actually changed.", slop: "Inflated vocabulary" },
+      s10: { kind: "s", text: "Ultimately, the journey of improving communication is an ongoing one.", alt: "We got eight person-hours a week back, and nobody has asked for the meeting to return.", note: "Empty ending. Close on the hours we got back.", slop: "Empty conclusion" },
+      cap: { kind: "cap", text: "Collaboration is at the heart of everything we do.", alt: "The list we read aloud every Monday, mostly copied from the tracker.", note: "Generic. Say what’s actually on the board.", slop: "Generic caption" },
+      h_problem: { kind: "h", text: "The problem with status meetings", alt: "An hour spent reading out a tracker", note: "Make this header say the point." },
+      h_instead: { kind: "h", text: "What we did instead", alt: "A written update every Friday", note: "Fine, but be concrete." },
+      h_end: { kind: "h", text: "In conclusion", alt: "What we got back", note: "Nobody needs this header. Say what we got." }
+    };
+    Object.keys(d).forEach(function (k) { d[k].id = k; d[k].orig = d[k].text; d[k].status = "orig"; });
+    return d;
+  }
+  sections() {
+    return {
+      intro: { label: "Opening", sids: ["s1", "s2", "s3"] },
+      img: { label: "Image", image: true, sids: [] },
+      problem: { label: "Section", h: "h_problem", sids: ["s4", "s5", "s6"] },
+      instead: { label: "Section", h: "h_instead", sids: ["s7", "s8", "s9"] },
+      end: { label: "Ending", h: "h_end", sids: ["s10"] }
+    };
+  }
+  defaultOrder() { return ["intro", "img", "problem", "instead", "end"]; }
+  seed(start) {
+    var b = this.blocksData();
+    var st = { screen: "post", blocks: b, order: this.defaultOrder(), sel: null, card: null, grit: 220, model: "Claude", scanned: false, queue: [], nextId: 1, sheet: null, rec: null, toast: null, t: 0, playing: false, head: "s1", speed: 1, sound: true, behind: [], whole: false };
+    var mk = function (o) { return Object.assign({ grit: 220, model: "Claude", progress: 0, before: "", after: "" }, o); };
+    if (start === "recording") {
+      st.sel = "s9"; st.scanned = true;
+      var w = b.s9.note.split(" ");
+      st.rec = { target: "s9", kind: "edit", text: b.s9.note, words: w, shown: 6, at: 0 };
+    }
+    if (start === "structure") { st.screen = "structure"; st.card = "img"; st.grit = 60; }
+    if (start === "listen") {
+      st.screen = "listen"; st.head = "s4"; st.playing = true; st.grit = 120;
+      b.s2.text = b.s2.alt; b.s2.status = "changed"; st.behind = ["s2"];
+      b.s4.text = b.s4.alt; b.s4.status = "changed";
+      st.queue = [mk({ id: 1, kind: "edit", target: "s2", transcript: b.s2.note, status: "done", before: b.s2.orig, after: b.s2.alt })];
+    }
+    if (start === "queue") {
+      st.screen = "queue";
+      b.s9.status = "working"; b.s10.status = "working";
+      b.s2.text = b.s2.alt; b.s2.status = "changed";
+      st.queue = [
+        mk({ id: 1, kind: "compare", target: "s6", transcript: "Check this with both.", status: "needs" }),
+        mk({ id: 2, kind: "structure", target: "whole", transcript: "This buries the point. Open on the cancelled meeting.", status: "needs", grit: 60 }),
+        mk({ id: 3, kind: "edit", target: "s9", transcript: b.s9.note, status: "running", progress: 16 }),
+        mk({ id: 4, kind: "edit", target: "s10", transcript: b.s10.note, status: "waiting", model: "ChatGPT" }),
+        mk({ id: 5, kind: "edit", target: "s2", transcript: b.s2.note, status: "done", before: b.s2.orig, after: b.s2.alt })
+      ];
+    }
+    if (start === "compare") {
+      st.sel = "s6";
+      st.queue = [mk({ id: 1, kind: "compare", target: "s6", transcript: "Check this with both.", status: "needs" })];
+      st.sheet = 1;
+    }
+    if (start === "research") {
+      st.sel = "s6";
+      st.queue = [mk({ id: 1, kind: "research", target: "s6", transcript: b.s6.note, status: "needs" })];
+      st.sheet = 1;
+    }
+    return st;
+  }
+  constructor(props) {
+    super(props);
+    var start = props && props.start;
+    this.frozen = !!start;
+    this.state = this.seed(start || "post");
+    this.token = 0; this.sentAt = 0; this.est = 3000; this.utterStarted = false; this.holding = false;
+  }
+  ensure() {
+    if (this.state && this.state.order) return;
+    this.frozen = !!this.props.start;
+    this.state = Object.assign({}, this.state || {}, this.seed(this.props.start || "post"));
+  }
+  componentDidMount() {
+    var self = this;
+    this.ensure();
+    if (!this.frozen) this.timer = setInterval(function () { self.tick(); }, 120);
+  }
+  componentWillUnmount() {
+    if (this.timer) clearInterval(this.timer);
+    this.stopSpeech();
+  }
+  durFor(kind) { return kind === "comment" ? 8 : kind === "edit" ? 26 : kind === "structure" ? 34 : 40; }
+  tick() {
+    var s = this.state, now = Date.now(), self = this;
+    var hasWork = s.queue.some(function (q) { return q.status === "waiting" || q.status === "running"; });
+    if (!(s.rec || s.toast || s.playing || hasWork)) return;
+    var patch = { t: (s.t || 0) + 1 };
+    if (s.toast && now > s.toast.until) patch.toast = null;
+    if (s.rec) {
+      var n = Math.min(s.rec.words.length, 1 + Math.floor((now - s.rec.at) / 170));
+      if (n !== s.rec.shown) patch.rec = Object.assign({}, s.rec, { shown: n });
+    }
+    if (hasWork) {
+      var blocks = s.blocks, behind = s.behind, ids = this.allIds(s), headIdx = ids.indexOf(s.head);
+      var running = s.queue.filter(function (q) { return q.status === "running"; }).length;
+      var slots = 2 - running;
+      patch.queue = s.queue.map(function (q) {
+        if (q.status === "waiting" && slots > 0) { slots -= 1; return Object.assign({}, q, { status: "running", progress: 0 }); }
+        if (q.status !== "running") return q;
+        var p = q.progress + 1;
+        if (p < self.durFor(q.kind)) return Object.assign({}, q, { progress: p });
+        if (q.kind === "comment") return Object.assign({}, q, { status: "saved" });
+        if (q.kind === "edit") {
+          var b = blocks[q.target];
+          blocks = Object.assign({}, blocks);
+          blocks[q.target] = Object.assign({}, b, { text: b.alt, status: "changed" });
+          if (s.screen === "listen" && ids.indexOf(q.target) < headIdx) behind = behind.concat([q.target]);
+          return Object.assign({}, q, { status: "done", before: b.orig, after: b.alt });
+        }
+        return Object.assign({}, q, { status: "needs" });
+      });
+      patch.blocks = blocks; patch.behind = behind;
+    }
+    this.setState(patch);
+    if (s.playing && !s.rec) {
+      var limit = this.utterStarted ? this.est * 2.5 : this.est;
+      if (now - this.sentAt > limit) this.advance();
+    }
+  }
+  allIds(s) {
+    var secs = this.sections(), out = [];
+    s.order.forEach(function (id) {
+      var c = secs[id];
+      if (c.h) out.push(c.h);
+      if (c.image) out.push("cap");
+      c.sids.forEach(function (x) { out.push(x); });
+    });
+    return out;
+  }
+  liveIds(s) { return this.allIds(s).filter(function (id) { return s.blocks[id].text !== ""; }); }
+  resolveHead(s, head) {
+    var all = this.allIds(s), i = all.indexOf(head);
+    for (var k = i; k < all.length; k++) { if (s.blocks[all[k]].text !== "") return all[k]; }
+    var live = this.liveIds(s);
+    return live[live.length - 1];
+  }
+  stopSpeech() {
+    this.token = (this.token || 0) + 1;
+    try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
+  }
+  startSentence(id, speed, sound) {
+    var self = this, s = this.state, text = s.blocks[id].text;
+    this.stopSpeech();
+    var tok = this.token;
+    var sp = speed || s.speed;
+    var snd = sound === undefined ? s.sound : sound;
+    this.sentAt = Date.now();
+    this.utterStarted = false;
+    this.est = text.split(" ").length * 353 / sp + 400;
+    if (!snd) return;
+    try {
+      var u = new SpeechSynthesisUtterance(text);
+      u.rate = sp;
+      u.onstart = function () { if (tok === self.token) self.utterStarted = true; };
+      u.onend = function () { if (tok === self.token && self.state.playing && !self.state.rec) self.advance(); };
+      window.speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+  advance() {
+    var s = this.state, all = this.allIds(s), i = all.indexOf(s.head), next = null;
+    for (var k = i + 1; k < all.length; k++) { if (s.blocks[all[k]].text !== "") { next = all[k]; break; } }
+    this.stopSpeech();
+    if (!next) { this.setState({ playing: false, toast: { text: "End of post", until: Date.now() + 2200 } }); return; }
+    this.setState({ head: next });
+    this.startSentence(next);
+  }
+  chime() {
+    try {
+      var C = window.AudioContext || window.webkitAudioContext;
+      var ctx = new C(), o = ctx.createOscillator(), g = ctx.createGain();
+      o.frequency.value = 660; g.gain.value = 0.04;
+      o.connect(g); g.connect(ctx.destination);
+      o.start(); o.stop(ctx.currentTime + 0.08);
+    } catch (e) {}
+  }
+  noteFor(s, target) {
+    if (target === "whole") {
+      if (s.whole) return { kind: "comment", text: "Just a thought: this opens much better now." };
+      return { kind: "structure", text: "This buries the point. Open on the cancelled meeting." };
+    }
+    var b = s.blocks[target];
+    if (b.status !== "orig") return { kind: "comment", text: "Just a thought: check this line with the team." };
+    if (b.claim) return { kind: "research", text: b.note };
+    return { kind: "edit", text: b.note };
+  }
+  newItem(s, kind, target, text, id) {
+    return { id: id, kind: kind, target: target, transcript: text, status: "waiting", model: kind === "compare" ? "Both" : s.model, grit: s.grit, progress: 0, before: "", after: "" };
+  }
+  withWorking(blocks, target) {
+    var out = Object.assign({}, blocks);
+    out[target] = Object.assign({}, out[target], { status: "working" });
+    return out;
+  }
+  targetNow(s) {
+    if (s.screen === "listen") {
+      var head = this.resolveHead(s, s.head);
+      var live = this.liveIds(s), i = live.indexOf(head);
+      if (Date.now() - this.sentAt < 700 && i > 0) return live[i - 1];
+      return head;
+    }
+    if (s.screen === "structure") {
+      if (!s.card) return "whole";
+      var c = this.sections()[s.card];
+      if (c.image) return "cap";
+      return c.h || "whole";
+    }
+    return s.sel || "whole";
+  }
+  startRec() {
+    if (this.holding) return;
+    var s = this.state;
+    if (s.sheet) return;
+    this.holding = true;
+    var target = this.targetNow(s), note = this.noteFor(s, target);
+    this.stopSpeech();
+    this.activeRec = { target: target, kind: note.kind, text: note.text, words: note.text.split(" "), shown: 1, at: Date.now(), resume: s.playing };
+    this.setState({ rec: this.activeRec, playing: false });
+  }
+  endRec() {
+    if (!this.holding) return;
+    this.holding = false;
+    var s = this.state, r = this.activeRec;
+    this.activeRec = null;
+    if (!r) return;
+    var it = this.newItem(s, r.kind, r.target, r.text, s.nextId);
+    var blocks = (r.kind === "edit") ? this.withWorking(s.blocks, r.target) : s.blocks;
+    var patch = { rec: null, queue: s.queue.concat([it]), nextId: s.nextId + 1, blocks: blocks, sel: null, card: null, toast: { text: r.resume ? "Note queued. Picking up from this sentence." : "Note queued", until: Date.now() + 1800 } };
+    if (r.resume) patch.playing = true;
+    this.setState(patch);
+    this.chime();
+    if (r.resume) this.startSentence(this.resolveHead(s, s.head));
+  }
+  addKind(kind, target, text) {
+    var s = this.state;
+    var it = this.newItem(s, kind, target, text, s.nextId);
+    this.setState({ queue: s.queue.concat([it]), nextId: s.nextId + 1, sel: null, toast: { text: "Added to the queue", until: Date.now() + 1800 } });
+  }
+  updateItem(queue, id, fields) { return queue.map(function (q) { return q.id === id ? Object.assign({}, q, fields) : q; }); }
+  applyText(item, text, after) {
+    var s = this.state, b = s.blocks[item.target], blocks = Object.assign({}, s.blocks);
+    blocks[item.target] = Object.assign({}, b, { text: text, status: "changed" });
+    this.setState({ blocks: blocks, queue: this.updateItem(s.queue, item.id, { status: "done", before: b.orig, after: after || text, model: item.picked || item.model }), sheet: null, toast: { text: "Applied", until: Date.now() + 1500 } });
+  }
+  revertItem(item) {
+    var s = this.state, blocks = Object.assign({}, s.blocks), patch = { sheet: null, toast: { text: "Reverted", until: Date.now() + 1500 } };
+    if (item.kind === "structure") {
+      ["s1", "s2"].forEach(function (k) { blocks[k] = Object.assign({}, blocks[k], { text: blocks[k].orig, status: "orig" }); });
+      patch.order = this.defaultOrder(); patch.whole = false;
+    } else {
+      var b = blocks[item.target];
+      blocks[item.target] = Object.assign({}, b, { text: b.orig, status: "orig" });
+    }
+    patch.blocks = blocks;
+    patch.queue = this.updateItem(s.queue, item.id, { status: "reverted" });
+    this.setState(patch);
+  }
+  cancelItem(item) {
+    var s = this.state, patch = { queue: s.queue.filter(function (q) { return q.id !== item.id; }) };
+    if (item.kind === "edit") {
+      var blocks = Object.assign({}, s.blocks);
+      blocks[item.target] = Object.assign({}, blocks[item.target], { status: "orig" });
+      patch.blocks = blocks;
+    }
+    this.setState(patch);
+  }
+  quote(s, id, max) {
+    if (id === "whole") return "The whole post";
+    var t = s.blocks[id].text || s.blocks[id].orig;
+    var m = max || 70;
+    return "“" + (t.length > m ? t.slice(0, m).replace(/\s+\S*$/, "") + "…" : t) + "”";
+  }
+  latestItem(s, id) {
+    for (var i = s.queue.length - 1; i >= 0; i--) { if (s.queue[i].target === id && s.queue[i].status === "done") return s.queue[i]; }
+    return null;
+  }
+  blockView(s, id) {
+    var self = this, b = s.blocks[id];
+    var sel = s.sel === id, flagged = s.scanned && b.slop && b.status === "orig", working = b.status === "working", changed = b.status === "changed";
+    return {
+      id: id, text: b.text, textSp: b.text + " ",
+      fg: working ? "#475569" : "#0F172A",
+      bg: sel ? "#EEF2FF" : working ? "#F1F5F9" : "transparent",
+      line: changed ? "2px solid #15803D" : flagged ? "2px dotted #B45309" : sel ? "2px solid #4F46E5" : "0 none transparent",
+      tap: function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        var cur = self.state, it = changed ? self.latestItem(cur, id) : null;
+        if (it) { self.setState({ sheet: it.id }); return; }
+        self.setState({ sel: cur.sel === id ? null : id });
+      }
+    };
+  }
+  renderVals() {
+    this.ensure();
+    var self = this, s = this.state, secs = this.sections();
+    var screen = s.screen, isListen = screen === "listen", isPost = screen === "post", isStructure = screen === "structure", isQueue = screen === "queue";
+    var live = this.liveIds(s);
+    var wordCount = live.reduce(function (n, id) { return n + s.blocks[id].text.split(" ").length; }, 0);
+
+    var postSections = s.order.map(function (id) {
+      var c = secs[id];
+      var sents = c.sids.filter(function (x) { return s.blocks[x].text !== ""; }).map(function (x) { return self.blockView(s, x); });
+      return { id: id, isImage: !!c.image, cap: self.blockView(s, "cap"), hasHeading: !!c.h, head: c.h ? self.blockView(s, c.h) : { id: "", tap: null }, sents: sents, hasSents: sents.length > 0 };
+    });
+
+    var flaggedIds = Object.keys(s.blocks).filter(function (k) { return s.blocks[k].slop && s.blocks[k].status === "orig" && s.blocks[k].text !== ""; });
+    var slopNames = flaggedIds.map(function (k) { return s.blocks[k].slop; });
+
+    var move = function (id, dir) {
+      var o = self.state.order.slice(), i = o.indexOf(id), j = i + dir;
+      if (j < 0 || j >= o.length) return;
+      o[i] = o[j]; o[j] = id;
+      self.setState({ order: o });
+    };
+    var cards = s.order.map(function (id, i) {
+      var c = secs[id], selected = s.card === id;
+      var ss = c.sids.filter(function (x) { return s.blocks[x].text !== ""; });
+      var words = ss.reduce(function (n, x) { return n + s.blocks[x].text.split(" ").length; }, 0);
+      var first = i === 0, last = i === s.order.length - 1;
+      var firstText = ss.length ? s.blocks[ss[0]].text : "";
+      return {
+        id: id, kind: c.label, isImage: !!c.image, selected: selected,
+        title: c.image ? "Caption" : c.h ? s.blocks[c.h].text : "Opening, no header",
+        sub: c.image ? s.blocks.cap.text : (firstText.length > 62 ? firstText.slice(0, 62).replace(/\s+\S*$/, "") + "…" : firstText),
+        meta: c.image ? "1 image" : words + " words",
+        border: selected ? "2px solid #4F46E5" : "1px solid #E5E7EB",
+        first: first, last: last, upOp: first ? 0.3 : 1, downOp: last ? 0.3 : 1,
+        tap: function () { self.setState({ card: self.state.card === id ? null : id }); },
+        up: function () { move(id, -1); }, down: function () { move(id, 1); }
+      };
+    });
+
+    var target = isStructure ? this.targetNow(s) : (s.sel || "whole");
+    var hasTarget = isStructure ? !!s.card : !!s.sel;
+    var selBlock = s.sel ? s.blocks[s.sel] : null;
+    var contextText = hasTarget ? this.quote(s, target, 64) : (isStructure ? "Nothing selected. A note now covers the whole post." : "Tap a sentence, or talk about the whole post.");
+    var targetTag = "Note on";
+    if (selBlock && selBlock.slop && s.scanned && selBlock.status === "orig") targetTag = selBlock.slop;
+    if (selBlock && selBlock.claim) targetTag = "Unsupported claim";
+
+    var gritInfo = { 60: "Shape: reorder sections, rewrite headers and captions.", 120: "Clarity: rewrite paragraphs and flag weak claims.", 220: "Slop: change sentences, keep the meaning.", 400: "Finish: grammar, rhythm and consistency only." };
+    var gritOpts = [[60, "Shape"], [120, "Clarity"], [220, "Slop"], [400, "Finish"]].map(function (g) {
+      var on = s.grit === g[0];
+      return { n: g[0], label: g[1], on: on, bg: on ? "#FFFFFF" : "transparent", fg: on ? "#0F172A" : "#475569", shadow: on ? "0 1px 2px rgba(15,23,42,.08)" : "none", pick: function () { self.setState({ grit: g[0] }); } };
+    });
+
+    var bars = [];
+    for (var bi = 0; bi < 24; bi++) {
+      var amp = Math.abs(Math.sin((s.t || 0) * 0.7 + bi * 1.3)) * 0.8 + 0.2;
+      bars.push({ h: Math.round(8 + amp * 46), hs: Math.round(4 + amp * 26) });
+    }
+    var isRec = !!s.rec;
+    var recText = isRec ? s.rec.words.slice(0, s.rec.shown).join(" ") : "";
+    var recQuote = isRec ? this.quote(s, s.rec.target, 90) : "";
+
+    var head = this.resolveHead(s, s.head);
+    var hi = live.indexOf(head);
+    var cur = s.blocks[head];
+    var kindNames = { s: "Reading", h: "Header", cap: "Image caption" };
+
+    var rank = { needs: 0, running: 1, waiting: 2, done: 3, saved: 3, reverted: 4 };
+    var kindLabels = { edit: "Line edit", structure: "Structure", research: "Research", compare: "Comparison", comment: "Comment" };
+    var statusLabels = { needs: "Needs you", running: "Working", waiting: "Waiting", done: "Applied", saved: "Saved", reverted: "Reverted" };
+    var badgeBg = { needs: "#FEF3C7", running: "#DBEAFE", waiting: "#F1F5F9", done: "#DCFCE7", saved: "#F1F5F9", reverted: "#E2E8F0" };
+    var badgeFg = { needs: "#92400E", running: "#1E40AF", waiting: "#334155", done: "#166534", saved: "#334155", reverted: "#334155" };
+    var rows = s.queue.slice().sort(function (a, b) { return (rank[a.status] - rank[b.status]) || (b.id - a.id); }).map(function (q) {
+      var canOpen = q.status === "needs" || q.status === "done";
+      var hasAction = q.status === "done" || q.status === "waiting";
+      return {
+        id: q.id, kindLabel: kindLabels[q.kind], model: q.model, grit: q.grit, transcript: q.transcript,
+        quote: self.quote(s, q.target, 58), statusLabel: statusLabels[q.status], badgeBg: badgeBg[q.status], badgeFg: badgeFg[q.status],
+        isRunning: q.status === "running", pct: Math.round(q.progress / self.durFor(q.kind) * 100),
+        open: function () { if (canOpen) self.setState({ sheet: q.id }); },
+        hasAction: hasAction, actionLabel: q.status === "done" ? "Undo" : "Cancel",
+        action: function () { if (q.status === "done") self.revertItem(q); else self.cancelItem(q); }
+      };
+    });
+    var badge = s.queue.filter(function (q) { return q.status === "needs" || q.status === "running" || q.status === "waiting"; }).length;
+
+    var item = s.sheet ? s.queue.filter(function (q) { return q.id === s.sheet; })[0] : null;
+    var sheetIsCompare = !!item && item.status === "needs" && item.kind === "compare";
+    var sheetIsResearch = !!item && item.status === "needs" && item.kind === "research";
+    var sheetIsProposal = !!item && item.status === "needs" && item.kind === "structure";
+    var sheetIsChange = !!item && item.status === "done";
+    var titles = { compare: "Claude and ChatGPT", research: "Research", structure: "New structure", edit: "Line edit", comment: "Comment" };
+
+    var nav = function (to) {
+      return function () {
+        var cur = self.state;
+        if (cur.screen === to) return;
+        if (cur.playing) self.stopSpeech();
+        self.setState({ screen: to, playing: false });
+      };
+    };
+    var dark = isListen;
+    return {
+      rootBg: dark ? "#0F172A" : "#F8FAFC", rootFg: dark ? "#FFFFFF" : "#0F172A", ruleColor: dark ? "#1E293B" : "#E5E7EB", mutedFg: dark ? "#94A3B8" : "#475569",
+      tabBg: dark ? "#0F172A" : "#FFFFFF",
+      tabPost: isPost ? "#4F46E5" : (dark ? "#94A3B8" : "#475569"), tabStructure: isStructure ? "#4F46E5" : (dark ? "#94A3B8" : "#475569"), tabListen: isListen ? "#FFFFFF" : "#475569", tabQueue: isQueue ? "#4F46E5" : (dark ? "#94A3B8" : "#475569"),
+      grit: s.grit, wordCount: wordCount,
+      isPost: isPost, isStructure: isStructure, isListen: isListen, isQueue: isQueue, showDock: isPost || isStructure,
+      hasToast: !!s.toast, toastText: s.toast ? s.toast.text : "",
+      postSections: postSections,
+      showSlop: isPost && s.scanned && flaggedIds.length > 0, slopCount: flaggedIds.length, slopList: slopNames.join(", "),
+      fixAll: function () {
+        var cur = self.state, blocks = cur.blocks, q = cur.queue, n = cur.nextId;
+        Object.keys(cur.blocks).forEach(function (k) {
+          var b = cur.blocks[k];
+          if (b.slop && b.status === "orig" && b.text !== "") { q = q.concat([self.newItem(cur, "edit", k, b.note, n)]); n += 1; blocks = self.withWorking(blocks, k); }
+        });
+        self.setState({ queue: q, nextId: n, blocks: blocks, scanned: false, toast: { text: "Fixes added to the queue", until: Date.now() + 1800 } });
+      },
+      dismissScan: function () { self.setState({ scanned: false }); },
+      scan: function () { var c = self.state; self.setState({ scanned: !c.scanned, screen: "post" }); },
+      scanLabel: s.scanned ? "Hide slop" : "Scan slop",
+      cards: cards,
+      isRec: isRec, notRec: !isRec, recText: recText, recQuote: recQuote, bars: bars,
+      hasTarget: hasTarget, hasTargetTag: hasTarget, targetTag: targetTag, contextText: contextText,
+      clearTarget: function () { self.setState({ sel: null, card: null }); },
+      isClaim: isPost && !!selBlock && !!selBlock.claim && selBlock.status === "orig",
+      askResearch: function () { self.addKind("research", "s6", "Find a source for this."); },
+      askBoth: function () { self.addKind("compare", "s6", "Check this with both."); },
+      gritOpts: gritOpts, gritHelp: gritInfo[s.grit],
+      model: s.model,
+      cycleModel: function () { self.setState({ model: self.state.model === "Claude" ? "ChatGPT" : "Claude" }); },
+      micDown: function () { self.startRec(); },
+      micUp: function () { self.endRec(); },
+      micClick: function (e) { if (e && e.detail === 0) { self.startRec(); self.endRec(); } },
+      micLabel: isRec ? "Release to send" : "Hold to talk",
+      holdBg: isRec ? "#166534" : "#15803D",
+      listenPos: "Sentence " + (hi + 1) + " of " + live.length,
+      speed: s.speed, soundLabel: s.sound ? "Sound on" : "Sound off",
+      toggleSound: function () {
+        var c = self.state, next = !c.sound;
+        self.setState({ sound: next });
+        if (c.playing) self.startSentence(self.resolveHead(c, c.head), c.speed, next);
+      },
+      cycleSpeed: function () {
+        var c = self.state, opts = [1, 1.25, 1.5, 2], nx = opts[(opts.indexOf(c.speed) + 1) % 4];
+        self.setState({ speed: nx });
+        if (c.playing) self.startSentence(self.resolveHead(c, c.head), nx, c.sound);
+      },
+      hasBehind: s.behind.length > 0,
+      behindLabel: s.behind.length + (s.behind.length === 1 ? " line" : " lines") + " changed behind you. Replay.",
+      replayBehind: function () {
+        var c = self.state, to = c.behind[0];
+        self.setState({ head: to, behind: [], playing: true });
+        self.startSentence(self.resolveHead(c, to));
+      },
+      prevText: hi > 0 ? s.blocks[live[hi - 1]].text : "",
+      nextText: hi < live.length - 1 ? s.blocks[live[hi + 1]].text : "",
+      curText: cur.text, curKind: kindNames[cur.kind], curChanged: cur.status === "changed",
+      progress: Math.round((hi + 1) / live.length * 100),
+      playing: s.playing, notPlaying: !s.playing, playLabel: s.playing ? "Pause" : "Play",
+      togglePlay: function () {
+        var c = self.state;
+        if (c.playing) { self.stopSpeech(); self.setState({ playing: false }); return; }
+        var h = self.resolveHead(c, c.head);
+        self.setState({ playing: true, head: h });
+        self.startSentence(h);
+      },
+      prevItem: function () {
+        var c = self.state, l = self.liveIds(c), i = l.indexOf(self.resolveHead(c, c.head));
+        var to = l[Math.max(0, i - 1)];
+        self.setState({ head: to });
+        if (c.playing) self.startSentence(to);
+      },
+      nextItem: function () {
+        var c = self.state, l = self.liveIds(c), i = l.indexOf(self.resolveHead(c, c.head));
+        var to = l[Math.min(l.length - 1, i + 1)];
+        self.setState({ head: to });
+        if (c.playing) self.startSentence(to);
+      },
+      queueEmpty: s.queue.length === 0, rows: rows,
+      hasBadge: badge > 0, badge: badge,
+      goPost: nav("post"), goStructure: nav("structure"), goListen: nav("listen"), goQueue: nav("queue"),
+      hasSheet: !!item,
+      sheetTitle: item ? titles[item.kind] : "", sheetTranscript: item ? item.transcript : "",
+      sheetIsChange: sheetIsChange, sheetIsCompare: sheetIsCompare, sheetIsResearch: sheetIsResearch, sheetIsProposal: sheetIsProposal,
+      sheetModel: item ? item.model : "", sheetBefore: item ? item.before : "", sheetAfter: item ? (item.after || "Removed") : "",
+      sheetQuote: item && item.target !== "whole" ? s.blocks[item.target].text : "",
+      closeSheet: function () { self.setState({ sheet: null }); },
+      sheetKeep: function () { self.setState({ sheet: null, toast: { text: "Kept", until: Date.now() + 1200 } }); },
+      sheetRevert: function () { if (item) self.revertItem(item); },
+      rejectItem: function () { if (item) self.setState({ queue: self.updateItem(self.state.queue, item.id, { status: "reverted" }), sheet: null }); },
+      approveProposal: function () {
+        if (!item) return;
+        var c = self.state, blocks = Object.assign({}, c.blocks);
+        ["s1", "s2"].forEach(function (k) { blocks[k] = Object.assign({}, blocks[k], { text: "", status: "changed" }); });
+        self.setState({ blocks: blocks, order: ["intro", "problem", "img", "instead", "end"], whole: true, sheet: null,
+          queue: self.updateItem(c.queue, item.id, { status: "done", before: "Opens on a general statement about communication, with the image second.", after: "Opens on the cancelled meeting, with the image below the problem section." }),
+          toast: { text: "Structure updated", until: Date.now() + 1500 } });
+      },
+      useOwnNumber: function () { if (item) self.applyText(item, "For us, that was eight person-hours every week."); },
+      cutClaim: function () { if (item) self.applyText(item, ""); },
+      useClaude: function () { if (item) self.applyText(Object.assign({}, item, { picked: "Claude" }), "For us, that was eight person-hours every week."); },
+      useChatGPT: function () { if (item) self.applyText(Object.assign({}, item, { picked: "ChatGPT" }), "Research on meeting time backs this up [add citation]."); }
+    };
+  }
+}
+__mountDC(Component);
+</script>
+</body>
+</html>
