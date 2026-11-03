@@ -1,4 +1,4 @@
-# Grit prototype
+# Sandit prototype
 
 Paste an article, highlight a section, and annotate it. The selected model, ChatGPT or Claude, rewrites that section and the reply replaces it in place.
 
