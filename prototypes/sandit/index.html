@@ -50,12 +50,21 @@ textarea:focus,input:focus{outline:none;border-color:#4F46E5!important;box-shado
     <main style="flex: 1 1 0; min-height: 0; overflow-y: auto">
       <div style="max-width: 720px; height: 100%; margin: 0 auto; padding: 20px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
         <div>
-          <h1 style="margin: 0 0 4px; font-size: 22px; line-height: 28px; font-weight: 700">Paste your article</h1>
+          <h1 style="margin: 0 0 4px; font-size: 22px; line-height: 28px; font-weight: 700">Paste an article or link</h1>
           <p style="margin: 0; font-size: 14px; line-height: 21px; color: #475569">Then highlight any section and tell {{modelLabel}} what to change.</p>
         </div>
-        <label for="sandit-source" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%)">Article text</label>
-        <textarea id="sandit-source" value="{{source}}" onInput="{{onSource}}" onChange="{{onSource}}" placeholder="Paste the full article here" style="flex: 1 1 0; min-height: 200px; width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #D1D5DB; border-radius: 8px; background: #FFFFFF; color: #0F172A; font: 400 16px/25px 'Inter', sans-serif; resize: none"></textarea>
-        <button type="button" onClick="{{startEditing}}" disabled="{{noSource}}" style="flex: none; min-height: 48px; border: 0; border-radius: 8px; background: {{startBg}}; color: {{startFg}}; font: 600 15px 'Inter', sans-serif; cursor: pointer">Start editing</button>
+        <label for="sandit-source" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%)">Article text or link</label>
+        <sc-if value="{{hasStartError}}" hint-placeholder-val="{{ false }}">
+          <div role="alert" style="flex: none; padding: 10px 12px; border-radius: 8px; background: #FEE2E2; color: #991B1B; font-size: 13px; line-height: 18px">{{startError}}</div>
+        </sc-if>
+        <sc-if value="{{startPreview}}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="flex: none; padding: 10px 12px; border-radius: 8px; background: #DBEAFE; color: #1E40AF; font-size: 13px; line-height: 18px">Links can't load in this design preview. <a href="https://aschneiderlbl.github.io/churchplanner-pro/prototypes/sandit/" style="color: #1E40AF; font-weight: 600">Open the live page</a> to pull one in.</div>
+        </sc-if>
+        <textarea id="sandit-source" value="{{source}}" onInput="{{onSource}}" onChange="{{onSource}}" placeholder="Paste the full article, or a link to a public page" style="flex: 1 1 0; min-height: 200px; width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #D1D5DB; border-radius: 8px; background: #FFFFFF; color: #0F172A; font: 400 16px/25px 'Inter', sans-serif; resize: none"></textarea>
+        <sc-if value="{{isLink}}" hint-placeholder-val="{{ false }}">
+          <p style="flex: none; margin: 0; font-size: 13px; line-height: 18px; color: #475569">Pulls in the text from a public page. Images aren't included. If the site blocks this page, the link goes through Jina Reader, an outside service.</p>
+        </sc-if>
+        <button type="button" onClick="{{startEditing}}" disabled="{{startDisabled}}" style="flex: none; min-height: 48px; border: 0; border-radius: 8px; background: {{startBg}}; color: {{startFg}}; font: 600 15px 'Inter', sans-serif; cursor: pointer">{{startLabel}}</button>
         <button type="button" onClick="{{useSample}}" style="flex: none; min-height: 44px; border: 0; background: transparent; color: #475569; font: 600 14px 'Inter', sans-serif; cursor: pointer">Use a sample article</button>
       </div>
     </main>
@@ -75,7 +84,7 @@ textarea:focus,input:focus{outline:none;border-color:#4F46E5!important;box-shado
     <main style="flex: 1 1 0; min-height: 0; overflow-y: auto">
       <article id="sandit-article" onMouseDown="{{articleDown}}" onTouchStart="{{articleDown}}" style="max-width: 720px; margin: 0 auto; padding: 20px 20px 28px; box-sizing: border-box">
         <sc-for list="{{paras}}" as="p" hint-placeholder-count="3">
-          <p style="margin: 0 0 16px; font-size: 17px; line-height: 28px; white-space: pre-wrap"><sc-for list="{{p.pieces}}" as="s" hint-placeholder-count="3"><span data-start="{{s.start}}" data-sel="{{s.selFlag}}" role="button" tabindex="0" aria-pressed="{{s.isSel}}" onClick="{{s.tap}}" onKeyDown="{{s.key}}" style="background: {{s.bg}}; border-bottom: {{s.line}}; color: #0F172A; padding: 2px 0; cursor: pointer; -webkit-box-decoration-break: clone; box-decoration-break: clone">{{s.text}}</span></sc-for></p>
+          <p role="{{p.role}}" aria-level="{{p.level}}" style="margin: {{p.margin}}; font-size: {{p.size}}; line-height: {{p.lineHeight}}; font-weight: {{p.weight}}; white-space: pre-wrap"><sc-for list="{{p.pieces}}" as="s" hint-placeholder-count="3"><span data-start="{{s.start}}" data-sel="{{s.selFlag}}" role="button" tabindex="0" aria-pressed="{{s.isSel}}" onClick="{{s.tap}}" onKeyDown="{{s.key}}" style="background: {{s.bg}}; border-bottom: {{s.line}}; color: #0F172A; padding: 2px 0; cursor: pointer; -webkit-box-decoration-break: clone; box-decoration-break: clone">{{s.text}}</span></sc-for></p>
         </sc-for>
       </article>
     </main>
@@ -220,6 +229,118 @@ class Component extends DCLogic {
   normalize(raw) {
     return String(raw).replace(/\r\n?/g, "\n").replace(/[ \t ]+/g, " ").split("\n").map(function (l) { return l.trim(); }).filter(function (l) { return l; }).join("\n\n");
   }
+  linkFrom(raw) {
+    var s = String(raw).trim();
+    if (/\s/.test(s) || !s) return null;
+    if (!/^https?:\/\//i.test(s)) {
+      if (!/^[\w-]+(\.[\w-]+)+\/\S*$/.test(s)) return null;
+      s = "https://" + s;
+    }
+    try { var u = new URL(s); return /^https?:$/.test(u.protocol) ? u.href : null; } catch (e) { return null; }
+  }
+  textOf(node) {
+    var self = this;
+    if (node.nodeType === 3) return node.nodeValue.replace(/\s+/g, " ");
+    if (node.nodeType !== 1) return "";
+    if (node.localName === "br") return "\n";
+    if (this.isSkipped(node)) return "";
+    return Array.prototype.map.call(node.childNodes, function (c) { return self.textOf(c); }).join("");
+  }
+  isSkipped(el) {
+    if (el.matches("script,style,noscript,template,nav,aside,footer,form,button,svg,iframe,select,input,textarea,[hidden],[aria-hidden='true']")) return true;
+    if (el.localName === "header" && !el.querySelector("h1")) return true;
+    var name = ((el.getAttribute("class") || "") + " " + (el.getAttribute("id") || "")).toLowerCase();
+    return /(^|[\s_-])(toc|share|sharing|social|related|sidebar|breadcrumbs?|comments?|newsletter|subscribe|promo|cookie|skip|menu|navbar)([\s_-]|$)/.test(name);
+  }
+  extractArticle(html) {
+    var self = this, doc = new DOMParser().parseFromString(html, "text/html");
+    var blocks = "p,h1,h2,h3,h4,h5,h6,li,ul,ol,blockquote,pre,figure,figcaption,table,tr,dl,dt,dd,div,section,article,main,header,td,th";
+    var size = function (el) { return el.textContent.replace(/\s+/g, " ").trim().length; };
+    var linkless = function (el) {
+      var n = size(el);
+      Array.prototype.forEach.call(el.querySelectorAll("a"), function (a) { n -= size(a); });
+      return n;
+    };
+    var root = null;
+    ["article", "main", "[role='main']"].forEach(function (sel) {
+      Array.prototype.forEach.call(doc.querySelectorAll(sel), function (el) {
+        if (!root && size(el) > 200 && !self.isSkipped(el)) root = el;
+      });
+    });
+    if (!root) {
+      var total = linkless(doc.body), best = doc.body;
+      Array.prototype.forEach.call(doc.body.querySelectorAll("div,section,td"), function (el) {
+        if (linkless(el) >= total * 0.7 && size(el) <= size(best) && !self.isSkipped(el)) best = el;
+      });
+      root = best;
+    }
+    var lines = [];
+    var emit = function (text, prefix) {
+      text.split("\n").forEach(function (l) {
+        var t = l.replace(/\s+/g, " ").trim();
+        if (t) lines.push((prefix || "") + t);
+      });
+    };
+    var walk = function (el) {
+      if (self.isSkipped(el)) return;
+      var tag = el.localName, m = tag.match(/^h([1-6])$/);
+      if (m) { emit(self.textOf(el).replace(/\n/g, " "), new Array(Number(m[1]) + 1).join("#") + " "); return; }
+      if (tag === "tr") {
+        emit(Array.prototype.map.call(el.children, function (c) { return self.textOf(c).replace(/\s+/g, " ").trim(); }).join(" | "));
+        return;
+      }
+      if (tag === "pre") { emit(el.textContent); return; }
+      var buffer = "", prefix = tag === "li" ? "- " : "";
+      var flush = function () { emit(buffer, prefix); buffer = ""; };
+      Array.prototype.forEach.call(el.childNodes, function (c) {
+        if (c.nodeType === 1 && !self.isSkipped(c) && (c.matches(blocks) || c.querySelector(blocks))) { flush(); walk(c); }
+        else buffer += self.textOf(c);
+      });
+      flush();
+    };
+    walk(root);
+    var outerH1 = doc.querySelector("h1");
+    if (!lines.some(function (l) { return /^# /.test(l); })) {
+      var title = outerH1 ? self.textOf(outerH1) : (doc.title || "");
+      if (title.trim()) lines.unshift("# " + title.replace(/\s+/g, " ").trim());
+    }
+    return self.normalize(lines.filter(function (l, i) { return l !== lines[i - 1]; }).join("\n"));
+  }
+  fetchText(url, options) {
+    var ctl = window.AbortController ? new AbortController() : null;
+    var timer = ctl ? setTimeout(function () { ctl.abort(); }, 30000) : null;
+    var opts = Object.assign({ credentials: "omit" }, options || {}, ctl ? { signal: ctl.signal } : {});
+    return fetch(url, opts).then(function (r) {
+      return r.text().then(function (body) { if (timer) clearTimeout(timer); return { status: r.status, ok: r.ok, body: body }; });
+    }, function (e) { if (timer) clearTimeout(timer); throw e; });
+  }
+  pullLink(url) {
+    var self = this;
+    if (!window.SANDIT_LIVE) { this.setState({ startPreview: true, startError: "" }); return; }
+    this.setState({ pulling: true, startError: "", startPreview: false });
+    var finish = function (text) {
+      self.saveArticle(text);
+      self.setState({ pulling: false, screen: "edit", text: text, source: "", range: null, native: null, change: null, history: [], draft: "", error: "" });
+    };
+    var fail = function (msg) { self.setState({ pulling: false, startError: msg }); };
+    var viaReader = function () {
+      return self.fetchText("https://r.jina.ai/" + url, { headers: { "X-Return-Format": "html", "Accept": "application/json" } }).then(function (res) {
+        var data = {};
+        try { data = JSON.parse(res.body).data || {}; } catch (e) {}
+        if (!res.ok || data.httpStatus >= 400) throw new Error("reader");
+        var text = self.extractArticle(data.html || data.content || "");
+        if (text.length < 200) throw new Error("reader");
+        finish(text);
+      }).catch(function () { fail("Couldn't pull in that page. It may be private or blocking outside tools, so paste the text instead."); });
+    };
+    this.fetchText(url).then(function (res) {
+      if (res.status === 404) { fail("That page wasn't found. Check the link and try again."); return; }
+      if (!res.ok) return viaReader();
+      var text = self.extractArticle(res.body);
+      if (text.length < 200) return viaReader();
+      finish(text);
+    }, viaReader).catch(function () { fail("Couldn't read that page, so paste the text instead."); });
+  }
   sentences(par) {
     try {
       var seg = new Intl.Segmenter("en", { granularity: "sentence" });
@@ -355,9 +476,9 @@ class Component extends DCLogic {
     var r = s.range, c = s.change, paras = [], pos = 0;
     if (s.screen === "edit") {
       s.text.split("\n\n").forEach(function (par) {
-        var pieces = [];
-        self.sentences(par).forEach(function (st) {
-          var a = pos + st.start, b = pos + st.end, cuts = [a, b];
+        var pieces = [], mark = par.match(/^(#{1,6}) +/), skip = mark ? mark[0].length : 0, level = mark ? mark[1].length : 0;
+        self.sentences(par.slice(skip)).forEach(function (st) {
+          var a = pos + skip + st.start, b = pos + skip + st.end, cuts = [a, b];
           [r && r.start, r && r.end, c && c.start, c && c.end].forEach(function (x) { if (typeof x === "number" && x > a && x < b) cuts.push(x); });
           cuts.sort(function (x, y) { return x - y; });
           for (var i = 0; i < cuts.length - 1; i++) {
@@ -374,7 +495,14 @@ class Component extends DCLogic {
             })(cuts[i], cuts[i + 1]);
           }
         });
-        paras.push({ pieces: pieces });
+        paras.push({
+          pieces: pieces,
+          role: level ? "heading" : null, level: level || null,
+          size: level === 1 ? "26px" : level ? "20px" : "17px",
+          lineHeight: level === 1 ? "32px" : "28px",
+          weight: level ? "700" : "400",
+          margin: level === 1 ? "0 0 16px" : level ? "24px 0 8px" : "0 0 16px"
+        });
         pos += par.length + 2;
       });
     }
@@ -383,12 +511,17 @@ class Component extends DCLogic {
     if (quote.length > 96) quote = quote.slice(0, 96).replace(/\s+\S*$/, "") + "…";
     var draftOk = s.draft.trim().length > 0, cantSend = s.pending || !target || !draftOk;
     var noSource = !s.source.trim();
-    var words = s.text ? s.text.trim().split(/\s+/).length : 0;
+    var words = s.text ? s.text.replace(/^#{1,6} +/gm, "").trim().split(/\s+/).length : 0;
+    var link = this.linkFrom(s.source), startDisabled = noSource || s.pulling;
     return {
       isStart: s.screen === "start", isEdit: s.screen === "edit", modelOpts: modelOpts, modelLabel: model.label,
-      source: s.source, onSource: function (e) { self.setState({ source: e.target.value }); },
-      noSource: noSource, startBg: noSource ? "#E5E7EB" : "#15803D", startFg: noSource ? "#475569" : "#FFFFFF",
+      source: s.source, onSource: function (e) { self.setState({ source: e.target.value, startError: "", startPreview: false }); },
+      isLink: !!link, startDisabled: startDisabled, startLabel: s.pulling ? "Pulling in article…" : link ? "Pull in article" : "Start editing",
+      hasStartError: !!s.startError, startError: s.startError || "", startPreview: !!s.startPreview,
+      startBg: startDisabled ? "#E5E7EB" : "#15803D", startFg: startDisabled ? "#475569" : "#FFFFFF",
       startEditing: function () {
+        var url = self.linkFrom(self.state.source);
+        if (url) { self.pullLink(url); return; }
         var text = self.normalize(self.state.source);
         if (!text) return;
         self.saveArticle(text);
