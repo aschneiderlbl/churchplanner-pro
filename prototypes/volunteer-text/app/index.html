@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Home · ChurchPlannerPro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#121826}
+a{color:#AEB5FF}a:hover{color:#D3D7FF}
+.side{flex:0 0 84px;display:flex;flex-direction:column;align-items:center;gap:10px;padding:22px 0;background:#161D2E;border-right:1px solid #232B3F;box-sizing:border-box}
+.navi{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#A3ACC2}
+.navi:hover{background:#1D2436;color:#E8EBF2}
+.navi.on{background:#2A3350;color:#FFFFFF}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+@media (max-width:760px){.side{flex:1 1 100%;flex-direction:row;justify-content:center;padding:10px;border-right:0;border-bottom:1px solid #232B3F}.spacer{display:none}.grid2{grid-template-columns:repeat(1,minmax(0,1fr))}}
+</style>
+<style>[hidden]{display:none !important}</style>
+</head>
+<body>
+<div style="font-family: Figtree, system-ui, sans-serif; color: #E8EBF2; background: #121826; min-height: 100vh; display: flex; flex-wrap: wrap">
+
+<nav class="side" aria-label="Main">
+<div style="width: 44px; height: 44px; border-radius: 50%; background: #5566F0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; margin-bottom: 18px">A</div>
+<a class="navi on" href="index.html" aria-label="Home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg></a>
+<a class="navi" href="schedule.html" aria-label="Schedule"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.4 3.3-5.5 6.5-5.5s5.7 2.1 6.5 5.5"></path><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.9.8 3.1 2.6 3.5 5.2"></path></svg></a>
+<a class="navi" href="tasks.html" aria-label="Tasks"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"></rect><path d="M8.5 12l2.5 2.5 4.5-5"></path></svg></a>
+<a class="navi" href="connectors.html" aria-label="Connectors"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg></a>
+<div class="spacer" style="flex: 1 1 auto"></div>
+<div style="width: 40px; height: 40px; border-radius: 50%; background: #2A3350; color: #E8EBF2; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px">BW</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 72px 24px 64px; box-sizing: border-box">
+<div style="max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px">
+
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center">
+<div style="font-size: 15px; color: #A3ACC2">Grace Community Church · Friday, Nov 13</div>
+<h1 style="margin: 0; font-size: 52px; letter-spacing: -0.03em; font-weight: 800">Good morning, Beth.</h1>
+<p style="margin: 0; font-size: 18px; color: #C5CBD9">Sunday is almost covered. One spot needs you.</p>
+</div>
+
+<form style="display: flex; align-items: center; gap: 12px; background: #1D2436; border: 1px solid #2A3247; border-radius: 999px; padding: 8px 8px 8px 24px">
+<label for="ask" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Ask Andrew</label>
+<input id="ask" type="text" placeholder="Ask Andrew… e.g. who’s on nursery Sunday?" style="flex: 1 1 auto; min-width: 0; background: transparent; border: 0; outline: none; color: #E8EBF2; font: inherit; font-size: 17px; height: 44px">
+<button type="button" aria-label="Send" style="width: 48px; height: 48px; border-radius: 50%; border: 0; background: #5566F0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"></path></svg></button>
+</form>
+
+<div class="grid2">
+<section style="background: #1D2436; border: 1px solid #2A3247; border-radius: 22px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+<h2 style="margin: 0; font-size: 18px; font-weight: 700">This Sunday · Nov 15</h2>
+<a href="schedule.html" style="font-size: 14px; font-weight: 600">Open schedule</a>
+</div>
+<div style="display: flex; align-items: baseline; gap: 10px"><span style="font-size: 44px; font-weight: 800; color: #6EE7A0; letter-spacing: -0.02em">8 of 10</span><span style="font-size: 16px; color: #A3ACC2">spots filled</span></div>
+<div style="height: 8px; border-radius: 999px; background: #2A3247; overflow: hidden"><div style="width: 80%; height: 8px; background: #6EE7A0; border-radius: 999px"></div></div>
+<div style="display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #2A3247">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Nursery · 9:00</span><span style="font-size: 13px; color: #A3ACC2">Andrew is asking 3 backups</span></div>
+<span style="font-size: 12px; font-weight: 700; color: #1A1406; background: #F7C46C; border-radius: 999px; padding: 4px 10px">Open</span>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid #2A3247">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Sound booth · 11:00</span><span style="font-size: 13px; color: #A3ACC2">No backups left. Want me to ask the youth parents?</span></div>
+<span style="font-size: 12px; font-weight: 700; color: #FFFFFF; background: #5566F0; border-radius: 999px; padding: 4px 10px; white-space: nowrap">Needs you</span>
+</div>
+</div>
+</section>
+
+<section style="background: #1D2436; border: 1px solid #2A3247; border-radius: 22px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-size: 18px; font-weight: 700">What Andrew did this week</h2>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px">
+<li style="display: flex; gap: 12px"><span style="flex: 0 0 8px; height: 8px; margin-top: 7px; border-radius: 50%; background: #6EE7A0"></span><div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px">Marcus swapped out of greeter. Dana said yes in 6 minutes.</span><span style="font-size: 13px; color: #A3ACC2">Thu 10:14 AM</span></div></li>
+<li style="display: flex; gap: 12px"><span style="flex: 0 0 8px; height: 8px; margin-top: 7px; border-radius: 50%; background: #6EE7A0"></span><div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px">Confirmations sent to 10 volunteers. 8 replied YES.</span><span style="font-size: 13px; color: #A3ACC2">Thu 10:00 AM</span></div></li>
+<li style="display: flex; gap: 12px"><span style="flex: 0 0 8px; height: 8px; margin-top: 7px; border-radius: 50%; background: #AEB5FF"></span><div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px">Added the Okafor family to the nursery rotation from your text.</span><span style="font-size: 13px; color: #A3ACC2">Mon 4:32 PM</span></div></li>
+<li style="display: flex; gap: 12px"><span style="flex: 0 0 8px; height: 8px; margin-top: 7px; border-radius: 50%; background: #A3ACC2"></span><div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px">Next: Saturday reminders at 5:00 PM.</span><span style="font-size: 13px; color: #A3ACC2">Tomorrow</span></div></li>
+</ul>
+</section>
+</div>
+
+<section style="background: #1D2436; border: 1px solid #2A3247; border-radius: 22px; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<div style="display: flex; align-items: center; gap: 14px">
+<div style="width: 44px; height: 44px; border-radius: 50%; background: #5566F0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800">A</div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 700">Text Andrew anytime</span><span style="font-size: 14px; color: #A3ACC2">(202) 555-0147 · or add me to your staff group chat</span></div>
+</div>
+<a href="sms:+12025550147" style="background: #5566F0; color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: 15px; padding: 12px 20px; border-radius: 999px">Open Messages</a>
+</section>
+
+</div>
+</main>
+</div>
+
+</body>
+</html>

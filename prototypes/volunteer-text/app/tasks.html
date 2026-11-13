@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Tasks · ChurchPlannerPro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#121826}
+a{color:#AEB5FF}a:hover{color:#D3D7FF}
+.side{flex:0 0 84px;display:flex;flex-direction:column;align-items:center;gap:10px;padding:22px 0;background:#161D2E;border-right:1px solid #232B3F;box-sizing:border-box}
+.navi{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#A3ACC2}
+.navi:hover{background:#1D2436;color:#E8EBF2}
+.navi.on{background:#2A3350;color:#FFFFFF}
+.row{display:grid;grid-template-columns:1.4fr 0.8fr 1.2fr 0.9fr 2fr;gap:16px;align-items:center;padding:16px 20px;border-top:1px solid #2A3247;min-width:820px}
+@media (max-width:760px){.side{flex:1 1 100%;flex-direction:row;justify-content:center;padding:10px;border-right:0;border-bottom:1px solid #232B3F}.spacer{display:none}}
+</style>
+<style>[hidden]{display:none !important}</style>
+</head>
+<body>
+<div style="font-family: Figtree, system-ui, sans-serif; color: #E8EBF2; background: #121826; min-height: 100vh; display: flex; flex-wrap: wrap">
+
+<nav class="side" aria-label="Main">
+<div style="width: 44px; height: 44px; border-radius: 50%; background: #5566F0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; margin-bottom: 18px">A</div>
+<a class="navi" href="index.html" aria-label="Home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg></a>
+<a class="navi" href="schedule.html" aria-label="Schedule"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.4 3.3-5.5 6.5-5.5s5.7 2.1 6.5 5.5"></path><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.9.8 3.1 2.6 3.5 5.2"></path></svg></a>
+<a class="navi on" href="tasks.html" aria-label="Tasks"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"></rect><path d="M8.5 12l2.5 2.5 4.5-5"></path></svg></a>
+<a class="navi" href="connectors.html" aria-label="Connectors"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg></a>
+<div class="spacer" style="flex: 1 1 auto"></div>
+<div style="width: 40px; height: 40px; border-radius: 50%; background: #2A3350; color: #E8EBF2; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px">BW</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 72px 24px 64px; box-sizing: border-box">
+<div style="max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h1 style="margin: 0; font-size: 34px; letter-spacing: -0.02em; font-weight: 800">Tasks</h1>
+<p style="margin: 0; font-size: 17px; color: #C5CBD9">The routine Andrew runs for your church every week. Text him to change any of it.</p>
+</div>
+
+<div style="display: inline-flex; align-self: flex-start; gap: 4px; background: #1D2436; border: 1px solid #2A3247; border-radius: 999px; padding: 4px">
+<button type="button" data-tab="weekly" aria-pressed="true" style="height: 40px; padding: 0 18px; border: 0; border-radius: 999px; background: #2A3350; color: #FFFFFF; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer">Weekly routine 5</button>
+<button type="button" data-tab="follow" aria-pressed="false" style="height: 40px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; color: #C5CBD9; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Follow-ups 2</button>
+</div>
+
+<div data-show="weekly">
+<section style="background: #1D2436; border: 1px solid #2A3247; border-radius: 22px; overflow-x: auto">
+<div class="row" style="border-top: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: #A3ACC2"><span>TASK</span><span>STATUS</span><span>CADENCE</span><span>NEXT RUN</span><span>WHAT IT DOES</span></div>
+<div class="row">
+<span style="font-size: 15px; font-weight: 600">Confirm Sunday volunteers</span>
+<span style="justify-self: start; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 4px 10px; color: #0B2416; background: #6EE7A0">Active</span>
+<span style="font-size: 14px; color: #C5CBD9">Weekly · Thu 10:00 AM</span>
+<span style="font-size: 14px; color: #E8EBF2">Nov 19</span>
+<span style="font-size: 14px; line-height: 1.45; color: #C5CBD9">Text everyone on the schedule. They reply YES or SWAP.</span>
+</div>
+<div class="row">
+<span style="font-size: 15px; font-weight: 600">Fill open spots</span>
+<span style="justify-self: start; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 4px 10px; color: #1A1406; background: #F7C46C">Running</span>
+<span style="font-size: 14px; color: #C5CBD9">As needed</span>
+<span style="font-size: 14px; color: #E8EBF2">Now</span>
+<span style="font-size: 14px; line-height: 1.45; color: #C5CBD9">Ask backups in order until someone says yes. Text you only if nobody can.</span>
+</div>
+<div class="row">
+<span style="font-size: 15px; font-weight: 600">Saturday reminders</span>
+<span style="justify-self: start; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 4px 10px; color: #0B2416; background: #6EE7A0">Active</span>
+<span style="font-size: 14px; color: #C5CBD9">Weekly · Sat 5:00 PM</span>
+<span style="font-size: 14px; color: #E8EBF2">Tomorrow</span>
+<span style="font-size: 14px; line-height: 1.45; color: #C5CBD9">Time, role and where to check in.</span>
+</div>
+<div class="row">
+<span style="font-size: 15px; font-weight: 600">Sunday morning summary</span>
+<span style="justify-self: start; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 4px 10px; color: #0B2416; background: #6EE7A0">Active</span>
+<span style="font-size: 14px; color: #C5CBD9">Weekly · Sun 7:00 AM</span>
+<span style="font-size: 14px; color: #E8EBF2">Nov 15</span>
+<span style="font-size: 14px; line-height: 1.45; color: #C5CBD9">One text to staff: who’s serving and any gaps.</span>
+</div>
+<div class="row">
+<span style="font-size: 15px; font-weight: 600">Next month’s availability</span>
+<span style="justify-self: start; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 4px 10px; color: #0B2416; background: #6EE7A0">Active</span>
+<span style="font-size: 14px; color: #C5CBD9">Monthly · the 20th</span>
+<span style="font-size: 14px; color: #E8EBF2">Nov 20</span>
+<span style="font-size: 14px; line-height: 1.45; color: #C5CBD9">Ask every volunteer which December Sundays they can’t serve, then build the schedule.</span>
+</div>
+</section>
+</div>
+
+<div data-show="follow" hidden>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<section style="background: #1D2436; border: 1px solid #2A3247; border-radius: 22px; padding: 22px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 360px">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: #AEB5FF">NEEDS YOU</span>
+<span style="font-size: 17px; font-weight: 700">Sound booth · 11:00 AM Sunday</span>
+<span style="font-size: 15px; line-height: 1.5; color: #C5CBD9">All 4 backups said no. Want me to ask the youth group parents, or run it from a laptop this week?</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button type="button" style="height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: #5566F0; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Ask youth parents</button>
+<button type="button" style="height: 44px; padding: 0 18px; border: 1px solid #3A4360; border-radius: 999px; background: transparent; color: #E8EBF2; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Reply by text</button>
+</div>
+</section>
+<section style="background: #1D2436; border: 1px solid #2A3247; border-radius: 22px; padding: 22px 24px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: #A3ACC2">ANDREW IS ON IT</span>
+<span style="font-size: 17px; font-weight: 700">Jake Kim hasn’t confirmed livestream</span>
+<span style="font-size: 15px; line-height: 1.5; color: #C5CBD9">I’ll text again Saturday at 9 AM. If he doesn’t answer by noon, I’ll ask Chris, who ran it last month.</span>
+</section>
+</div>
+</div>
+
+<p style="margin: 0; font-size: 14px; color: #A3ACC2">Want something new on the list? Text Andrew, e.g. “Every Sunday, remind the deacons about communion setup.”</p>
+
+</div>
+</main>
+</div>
+<script>
+document.querySelectorAll('[data-tab]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var t = btn.getAttribute('data-tab');
+    document.querySelectorAll('[data-tab]').forEach(function (b) {
+      var on = b === btn;
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.style.cssText = on ? 'height: 40px; padding: 0 18px; border: 0; border-radius: 999px; background: #2A3350; color: #FFFFFF; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer' : 'height: 40px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; color: #C5CBD9; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer';
+    });
+    document.querySelectorAll('[data-show]').forEach(function (el) {
+      var show = el.getAttribute('data-show').split(' ').indexOf(t) !== -1;
+      el.hidden = !show;
+    });
+  });
+});
+</script>
+</body>
+</html>

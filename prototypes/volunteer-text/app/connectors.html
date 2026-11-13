@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Connectors · ChurchPlannerPro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#121826}
+a{color:#AEB5FF}a:hover{color:#D3D7FF}
+.side{flex:0 0 84px;display:flex;flex-direction:column;align-items:center;gap:10px;padding:22px 0;background:#161D2E;border-right:1px solid #232B3F;box-sizing:border-box}
+.navi{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#A3ACC2}
+.navi:hover{background:#1D2436;color:#E8EBF2}
+.navi.on{background:#2A3350;color:#FFFFFF}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:1100px){.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:760px){.side{flex:1 1 100%;flex-direction:row;justify-content:center;padding:10px;border-right:0;border-bottom:1px solid #232B3F}.spacer{display:none}.grid4{grid-template-columns:repeat(1,minmax(0,1fr))}}
+</style>
+<style>[hidden]{display:none !important}</style>
+</head>
+<body>
+<div style="font-family: Figtree, system-ui, sans-serif; color: #E8EBF2; background: #121826; min-height: 100vh; display: flex; flex-wrap: wrap">
+
+<nav class="side" aria-label="Main">
+<div style="width: 44px; height: 44px; border-radius: 50%; background: #5566F0; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; margin-bottom: 18px">A</div>
+<a class="navi" href="index.html" aria-label="Home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg></a>
+<a class="navi" href="schedule.html" aria-label="Schedule"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.4 3.3-5.5 6.5-5.5s5.7 2.1 6.5 5.5"></path><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.9.8 3.1 2.6 3.5 5.2"></path></svg></a>
+<a class="navi" href="tasks.html" aria-label="Tasks"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"></rect><path d="M8.5 12l2.5 2.5 4.5-5"></path></svg></a>
+<a class="navi on" href="connectors.html" aria-label="Connectors"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg></a>
+<div class="spacer" style="flex: 1 1 auto"></div>
+<div style="width: 40px; height: 40px; border-radius: 50%; background: #2A3350; color: #E8EBF2; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px">BW</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 72px 24px 64px; box-sizing: border-box">
+<div style="max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px">
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h1 style="margin: 0; font-size: 34px; letter-spacing: -0.02em; font-weight: 800">Your volunteer list</h1>
+<p style="margin: 0; font-size: 17px; color: #C5CBD9">Wherever you keep it now, Andrew can work from it. Pick one.</p>
+</div>
+
+<div class="grid4">
+<section style="background: #1D2436; border: 1px solid #3A4A8F; border-radius: 22px; padding: 22px; display: flex; flex-direction: column; gap: 12px">
+<div style="width: 44px; height: 44px; border-radius: 12px; background: #2A3350; color: #E8EBF2; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px">P</div>
+<h2 style="margin: 0; font-size: 18px; font-weight: 700">Planning Center</h2>
+<p style="margin: 0; font-size: 14px; line-height: 1.5; color: #C5CBD9; flex: 1 1 auto">Services teams, positions and blockout dates stay in sync both ways.</p>
+<div style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #6EE7A0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>Connected · 42 volunteers</div>
+</section>
+<section style="background: #1D2436; border: 1px solid #2A3247; border-radius: 22px; padding: 22px; display: flex; flex-direction: column; gap: 12px">
+<div style="width: 44px; height: 44px; border-radius: 12px; background: #2A3350; color: #E8EBF2; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M4 9h16M4 15h16M10 3v18"></path></svg></div>
+<h2 style="margin: 0; font-size: 18px; font-weight: 700">A spreadsheet</h2>
+<p style="margin: 0; font-size: 14px; line-height: 1.5; color: #C5CBD9; flex: 1 1 auto">Share a Google Sheet or upload Excel. Andrew keeps it updated as people swap.</p>
+<button type="button" style="align-self: flex-start; height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: #5566F0; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Connect</button>
+</section>
+<section style="background: #1D2436; border: 1px solid #2A3247; border-radius: 22px; padding: 22px; display: flex; flex-direction: column; gap: 12px">
+<div style="width: 44px; height: 44px; border-radius: 12px; background: #2A3350; color: #E8EBF2; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"></path><circle cx="12" cy="13" r="3.5"></circle></svg></div>
+<h2 style="margin: 0; font-size: 18px; font-weight: 700">A photo of the sign-up sheet</h2>
+<p style="margin: 0; font-size: 14px; line-height: 1.5; color: #C5CBD9; flex: 1 1 auto">The clipboard in the lobby works. Text Andrew a picture and he’ll type it up.</p>
+<a href="sms:+12025550147?body=Here%E2%80%99s%20our%20sign-up%20sheet%3A" style="align-self: flex-start; height: 44px; box-sizing: border-box; padding: 0 18px; border-radius: 999px; background: #5566F0; color: #FFFFFF; text-decoration: none; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center">Text a photo</a>
+</section>
+<section style="background: #1D2436; border: 1px solid #2A3247; border-radius: 22px; padding: 22px; display: flex; flex-direction: column; gap: 12px">
+<div style="width: 44px; height: 44px; border-radius: 12px; background: #2A3350; color: #E8EBF2; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></div>
+<h2 style="margin: 0; font-size: 18px; font-weight: 700">Email</h2>
+<p style="margin: 0; font-size: 14px; line-height: 1.5; color: #C5CBD9; flex: 1 1 auto">Forward sign-ups and “can’t make it” emails. Andrew updates the schedule.</p>
+<button type="button" style="align-self: flex-start; height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: #5566F0; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Connect</button>
+</section>
+</div>
+
+<section style="background: #1D2436; border: 1px solid #2A3247; border-radius: 22px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-size: 18px; font-weight: 700">Where Andrew can reach you</h2>
+<div style="display: flex; flex-direction: column">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid #2A3247">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Text messages</span><span style="font-size: 14px; color: #A3ACC2">Beth · (555) 010-2231</span></div>
+<span style="font-size: 14px; font-weight: 600; color: #6EE7A0">On</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid #2A3247">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Staff group chat</span><span style="font-size: 14px; color: #A3ACC2">Add (202) 555-0147 to your group like any contact</span></div>
+<a href="sms:+12025550147" style="font-size: 14px; font-weight: 600">How to add</a>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid #2A3247">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">Sunday summary goes to</span><span style="font-size: 14px; color: #A3ACC2">Beth, Pastor Mark</span></div>
+<button type="button" style="height: 40px; padding: 0 16px; border: 1px solid #3A4360; border-radius: 999px; background: transparent; color: #E8EBF2; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Edit</button>
+</div>
+</div>
+</section>
+
+</div>
+</main>
+</div>
+
+</body>
+</html>
