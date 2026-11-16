@@ -12,6 +12,7 @@
 <style>
 body{margin:0;background:#faf7f2}
 a{color:#12603a}a:hover{color:#0d4a2c}
+.drawer:not([hidden]){display:flex !important}
 .cta:hover{background:#0f5231 !important}
 @media (max-width: 860px){
   .hero{grid-template-columns:1fr !important;padding-top:40px !important}
@@ -19,7 +20,11 @@ a{color:#12603a}a:hover{color:#0d4a2c}
   .three{grid-template-columns:1fr !important}
   .six{grid-template-columns:1fr !important}
   .navlinks{display:none !important}
+  .menu-btn{display:inline-flex !important}
   .foot{grid-template-columns:1fr 1fr !important}
+}
+@media (max-width: 480px){
+  header nav > a.cta{display:none !important}
 }
 </style>
 </head>
@@ -43,8 +48,29 @@ a{color:#12603a}a:hover{color:#0d4a2c}
         <a href="https://churchplannerpro.com/members/login" style="color: #5a5751; text-decoration: none">Member login</a>
       </div>
       <a class="cta" href="sms:+16515055520" data-sms style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 8px; background: #12603a; color: #ffffff; font-weight: 600; text-decoration: none; white-space: nowrap">Get started</a>
+      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="drawer" style="display: none; width: 44px; height: 44px; align-items: center; justify-content: center; border: 1px solid #e3ddd2; border-radius: 8px; background: #ffffff; color: #0b1220; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     </nav>
   </header>
+
+  <div class="drawer" id="drawer" hidden style="position: fixed; inset: 0; z-index: 50; background: #faf7f2; padding: 16px 24px 24px; flex-direction: column">
+    <div style="display: flex; justify-content: space-between; align-items: center; height: 48px; margin-bottom: 16px">
+      <span style="color: #0b1220; font-family: Outfit, Arial, sans-serif; font-weight: 300; font-size: 22px"><strong style="font-weight: 700">Church</strong>Planner</span>
+      <button class="close-btn" type="button" aria-label="Close menu" style="display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; border: 1px solid #e3ddd2; border-radius: 8px; background: #ffffff; color: #0b1220; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <nav aria-label="Main" style="font-size: 22px; font-weight: 500">
+      <a href="#how" style="display: block; padding: 14px 0; color: #0b1220; text-decoration: none">How it works</a>
+      <a href="#handles" style="display: block; padding: 14px 0; color: #0b1220; text-decoration: none">What it handles</a>
+      <a href="#pricing" style="display: block; padding: 14px 0; color: #0b1220; text-decoration: none">Pricing</a>
+      <a href="#security" style="display: block; padding: 14px 0; color: #0b1220; text-decoration: none">Security</a>
+      <a href="#faq" style="display: block; padding: 14px 0; color: #0b1220; text-decoration: none">FAQ</a>
+    </nav>
+    <hr style="border: 0; border-top: 1px solid #e3ddd2; margin: 12px 0">
+    <div style="font-size: 17px">
+      <a href="prototypes/volunteer-text/app/" style="display: block; padding: 14px 0; color: #0b1220; text-decoration: none; padding: 12px 0">Staff login</a>
+      <a href="https://churchplannerpro.com/members/login" style="display: block; padding: 14px 0; color: #0b1220; text-decoration: none; padding: 12px 0">Member login</a>
+    </div>
+    <a class="cta" href="sms:+16515055520" data-sms style="margin-top: auto; display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 10px; background: #12603a; color: #ffffff; font-size: 17px; font-weight: 600; text-decoration: none">Text Church Assistant</a>
+  </div>
 
   <section class="hero" style="max-width: 1180px; margin: 0 auto; padding: 72px 24px 80px; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 64px; align-items: center">
     <div>
@@ -274,6 +300,7 @@ a{color:#12603a}a:hover{color:#0d4a2c}
       <div style="border-top: 1px solid #e3ddd2; padding: 20px 0"><h3 style="margin: 0 0 6px; color: #0b1220; font-size: 18px">Do volunteers need an app?</h3><p style="margin: 0">No. They get texts and reply, on any phone, including a flip phone.</p></div>
       <div style="border-top: 1px solid #e3ddd2; padding: 20px 0"><h3 style="margin: 0 0 6px; color: #0b1220; font-size: 18px">Will volunteers know Church Assistant is AI?</h3><p style="margin: 0">Yes. The first time Church Assistant texts a volunteer, it introduces itself as AI working for your church.</p></div>
       <div style="border-top: 1px solid #e3ddd2; padding: 20px 0"><h3 style="margin: 0 0 6px; color: #0b1220; font-size: 18px">Does anything go out without my OK?</h3><p style="margin: 0">Confirmations and reminders go out on a schedule you set up together. Anything unusual, like a sick volunteer at 7 AM, comes to you.</p></div>
+      <div style="border-top: 1px solid #e3ddd2; padding: 20px 0"><h3 style="margin: 0 0 6px; color: #0b1220; font-size: 18px">What happens after 90 days?</h3><p style="margin: 0">You start paying $9.99 a month. If you’d rather not, cancel and nothing is charged. We don’t take a card to start.</p></div>
       <div style="border-top: 1px solid #e3ddd2; border-bottom: 1px solid #e3ddd2; padding: 20px 0"><h3 style="margin: 0 0 6px; color: #0b1220; font-size: 18px">How do I stop?</h3><p style="margin: 0">Remove Church Assistant from the thread, or just tell it to stop texting you. Volunteers can do the same anytime.</p></div>
     </div>
   </section>
@@ -297,6 +324,14 @@ a{color:#12603a}a:hover{color:#0d4a2c}
   var href='sms:+16515055520?&body='+encodeURIComponent('Hi Church Assistant! I’d like help with our volunteer schedule. My code is '+code);
   document.querySelectorAll('[data-code]').forEach(function(e){e.textContent=code;});
   document.querySelectorAll('[data-sms]').forEach(function(e){e.setAttribute('href',href);});
+})();
+(function(){
+  var open=document.querySelector('.menu-btn'),drawer=document.getElementById('drawer'),close=drawer.querySelector('.close-btn');
+  function set(on){drawer.hidden=!on;open.setAttribute('aria-expanded',on?'true':'false');document.body.style.overflow=on?'hidden':'';(on?close:open).focus();}
+  open.addEventListener('click',function(){set(true);});
+  close.addEventListener('click',function(){set(false);});
+  drawer.addEventListener('click',function(e){if(e.target.closest('a'))set(false);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!drawer.hidden)set(false);});
 })();
 </script>
 </body>
